@@ -1,0 +1,64 @@
+﻿App.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/CookieConsent.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/HelpTooltip.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/Layout.tsx(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/Loading.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/RelatedTools.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/SEO.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/widgets/AvailabilityChart.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/widgets/AvailabilityChart.tsx(80,13): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+components/widgets/AvailabilityChart.tsx(80,14): error TS2786: 'ReferenceLine' cannot be used as a JSX component.
+  Its instance type 'ReferenceLine' is not a valid JSX element.
+    Type 'ReferenceLine' is missing the following properties from type 'ElementClass': context, setState, forceUpdate, props, and 2 more.
+components/widgets/FailureModeIdentifier.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+components/widgets/SparesForecastWidget.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+constants.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+context/ThemeContext.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+index.tsx(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+index.tsx(2,8): error TS1192: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react-dom/client"' has no default export.
+pages/About.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/ArticleView.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Contact.tsx(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Downloads.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Faq.tsx(3,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Glossary.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Home.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/KnowledgeHub.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/KnowledgeHub.tsx(193,25): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+pages/KnowledgeHub.tsx(193,26): error TS2786: 'ReferenceArea' cannot be used as a JSX component.
+  Its instance type 'ReferenceArea' is not a valid JSX element.
+    Type 'ReferenceArea' is missing the following properties from type 'ElementClass': context, setState, forceUpdate, props, and 2 more.
+pages/KnowledgeHub.tsx(194,25): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+pages/KnowledgeHub.tsx(194,26): error TS2786: 'ReferenceArea' cannot be used as a JSX component.
+  Its instance type 'ReferenceArea' is not a valid JSX element.
+pages/KnowledgeHub.tsx(195,25): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+pages/KnowledgeHub.tsx(195,26): error TS2786: 'ReferenceArea' cannot be used as a JSX component.
+  Its instance type 'ReferenceArea' is not a valid JSX element.
+pages/LearningCenter.tsx(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Legal.tsx(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/AvailabilityCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/AvailabilityCalculator.tsx(543,17): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+pages/Tools/AvailabilityCalculator.tsx(543,18): error TS2786: 'ReferenceLine' cannot be used as a JSX component.
+  Its instance type 'ReferenceLine' is not a valid JSX element.
+pages/Tools/ConfidenceInterval.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/EoqCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/FmeaCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/KOutOfN.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/LccCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/MaturityAssessment.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/MtbfCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/MttrCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/OeeCalculator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/OptimalReplacement.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/OptimalReplacement.tsx(145,23): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+pages/Tools/OptimalReplacement.tsx(145,24): error TS2786: 'ReferenceLine' cannot be used as a JSX component.
+  Its instance type 'ReferenceLine' is not a valid JSX element.
+pages/Tools/PmScheduler.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/RbdTool.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/SilVerification.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/SparePartEstimator.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/TestPlanner.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/UnitConverter.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+pages/Tools/WeibullAnalysis.tsx(2,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+types.ts(1,8): error TS1259: Module '"E:/GOOGLE AI STUDIO/RELIABILITY TOOLS/Reliability Tools Unzipped/node_modules/@types/react/ts5.0/index"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
+vite.config.ts(1,8): error TS1259: Module '"path"' can only be default-imported using the 'allowSyntheticDefaultImports' flag
