@@ -42,10 +42,13 @@ const PrivacyPolicy = lazy(() => import('./pages/Legal').then(module => ({ defau
 const TermsOfService = lazy(() => import('./pages/Legal').then(module => ({ default: module.TermsOfService })));
 const CookiePolicy = lazy(() => import('./pages/Legal').then(module => ({ default: module.CookiePolicy })));
 
+import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
+
 const App: React.FC = () => {
   return (
     <ThemeProvider>
       <Router>
+        <GoogleAnalyticsTracker />
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -53,9 +56,9 @@ const App: React.FC = () => {
               <Route path="about" element={<About />} />
               <Route path="contact" element={<Contact />} />
               <Route path="downloads" element={<Downloads />} />
-              
+
               {/* Tools */}
-              <Route path="tools" element={<Home />} /> 
+              <Route path="tools" element={<Home />} />
               <Route path="tools/mtbf" element={<MtbfCalculator />} />
               <Route path="tools/weibull" element={<WeibullAnalysis />} />
               <Route path="tools/rbd" element={<RbdTool />} />
@@ -75,14 +78,14 @@ const App: React.FC = () => {
               <Route path="tools/fmea" element={<FmeaCalculator />} />
               <Route path="tools/confidence-interval" element={<ConfidenceInterval />} />
               <Route path="tools/k-out-of-n" element={<KOutOfN />} />
-              
+
               {/* Content */}
               <Route path="learning" element={<LearningCenter />} />
               <Route path="knowledge-hub" element={<KnowledgeHub />} /> {/* New Route */}
               <Route path="learning/:articleId" element={<ArticleView />} />
               <Route path="faq" element={<Faq />} />
               <Route path="glossary" element={<Glossary />} />
-              
+
               {/* Legal */}
               <Route path="legal/privacy" element={<PrivacyPolicy />} />
               <Route path="legal/terms" element={<TermsOfService />} />

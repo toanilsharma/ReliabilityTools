@@ -1,40 +1,48 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Industrial Reliability Engineering Tools – MTBF, Weibull & Availability</title>
-    <meta name="description" content="Free industrial reliability engineering tools. Calculate MTBF, MTTF, perform Weibull Analysis, estimate Availability, and model Reliability Block Diagrams." />
-    
-    <!-- Google Analytics (GA4) Placeholder -->
-    <!-- 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script> 
-    -->
 
-    <!-- Google AdSense Placeholder -->
-    <!-- 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-    -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Industrial Reliability Engineering Tools – MTBF, Weibull & Availability</title>
+  <meta name="description"
+    content="Free industrial reliability engineering tools. Calculate MTBF, MTTF, perform Weibull Analysis, estimate Availability, and model Reliability Block Diagrams." />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Industrial Reliability Engineering Tools" />
-    <meta property="og:description" content="Professional grade reliability calculators for MTBF, Weibull Analysis, and Maintenance Planning." />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Industrial Reliability Engineering Tools" />
-    <meta property="twitter:description" content="Professional grade reliability calculators for MTBF, Weibull Analysis, and Maintenance Planning." />
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="manifest" href="/favicons/site.webmanifest">
 
-    <!-- JSON-LD Schema: Global Organization & Website -->
-    <script type="application/ld+json">
+  <!-- Google Analytics (GA4) Placeholder -->
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-95EY3EDXMR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-95EY3EDXMR');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6734659962945791"
+    crossorigin="anonymous"></script>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Industrial Reliability Engineering Tools" />
+  <meta property="og:description"
+    content="Professional grade reliability calculators for MTBF, Weibull Analysis, and Maintenance Planning." />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="Industrial Reliability Engineering Tools" />
+  <meta property="twitter:description"
+    content="Professional grade reliability calculators for MTBF, Weibull Analysis, and Maintenance Planning." />
+
+  <!-- JSON-LD Schema: Global Organization & Website -->
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -47,8 +55,8 @@
       "description": "A comprehensive suite of industrial reliability engineering calculators."
     }
     </script>
-    
-    <script type="application/ld+json">
+
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -62,72 +70,79 @@
       }
     }
     </script>
-    
-    <link rel="manifest" href="/manifest.json">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              slate: {
-                850: '#151f32',
-                900: '#0f172a',
-                950: '#020617',
-              },
-              cyan: {
-                450: '#15aabf',
-              }
+  <link rel="manifest" href="/manifest.json">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#151f32',
+              900: '#0f172a',
+              950: '#020617',
             },
-            fontFamily: {
-              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            cyan: {
+              450: '#15aabf',
             }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
           }
         }
       }
-    </script>
-    <style>
-      /* Custom scrollbar for industrial look */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      /* Dark mode scrollbar */
-      .dark ::-webkit-scrollbar-track {
-        background: #0f172a; 
-      }
-      .dark ::-webkit-scrollbar-thumb {
-        background: #334155; 
-        border-radius: 4px;
-      }
-      .dark ::-webkit-scrollbar-thumb:hover {
-        background: #475569; 
-      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for industrial look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
 
-      /* Light mode scrollbar */
-      ::-webkit-scrollbar-track {
-        background: #f1f5f9; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8; 
-      }
+    /* Dark mode scrollbar */
+    .dark ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
 
-      body {
-        @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-e2e8f0;
-        background-color: #f8fafc; /* Fallback light */
-        color: #0f172a;
-      }
-      .dark body {
-        background-color: #0f172a;
-        color: #e2e8f0;
-      }
-    </style>
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Light mode scrollbar */
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    body {
+      @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-e2e8f0;
+      background-color: #f8fafc;
+      /* Fallback light */
+      color: #0f172a;
+    }
+
+    .dark body {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -141,10 +156,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>

@@ -1,14 +1,14 @@
 
 import React, { useState, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, 
-  BarChart2, 
-  Clock, 
-  Settings, 
-  Activity, 
-  Calculator, 
-  Shield, 
+import {
+  ArrowRight,
+  BarChart2,
+  Clock,
+  Settings,
+  Activity,
+  Calculator,
+  Shield,
   CheckCircle,
   FileSpreadsheet,
   ExternalLink,
@@ -35,7 +35,7 @@ const AccordionItem: React.FC<{ title: string, children: React.ReactNode }> = ({
 
   return (
     <div className="border-b border-slate-200 dark:border-slate-700 last:border-0">
-      <button 
+      <button
         className="w-full flex justify-between items-center py-4 text-left focus:outline-none group"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
@@ -49,7 +49,7 @@ const AccordionItem: React.FC<{ title: string, children: React.ReactNode }> = ({
           <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors shrink-0" />
         )}
       </button>
-      <div 
+      <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-4' : 'max-h-0 opacity-0'}`}
       >
         <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
@@ -115,7 +115,13 @@ const Home: React.FC = () => {
 
   return (
     <div className="space-y-24 pb-12">
-      <SEO schema={faqSchema} />
+      <SEO
+        title="Industrial Reliability Engineering Tools | MTBF & Weibull Calculator"
+        description="Free professional grade reliability engineering calculators. Perform Weibull Analysis, calculate MTBF, modeling Reliability Block Diagrams (RBD), and optimize maintenance schedules."
+        keywords="reliability engineering, mtbf calculator, weibull analysis, rbd tool, reliability block diagram, maintenance planning, predictive maintenance, availability calculator"
+        canonicalUrl="https://reliabilitytools.example.com/"
+        schema={faqSchema}
+      />
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-32 overflow-hidden">
@@ -131,29 +137,29 @@ const Home: React.FC = () => {
             <Shield className="w-4 h-4" />
             <span>Free, Private, & Secure Engineering Tools</span>
           </div>
-          
+
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight">
-             Industrial Reliability <br className="hidden lg:block" />
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
-               Engineering Suite
-             </span>
+            Industrial Reliability <br className="hidden lg:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
+              Engineering Suite
+            </span>
           </h1>
-          
+
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Maximize asset uptime and optimize maintenance strategies. 
+            Maximize asset uptime and optimize maintenance strategies.
             Calculate <span className="font-semibold text-slate-900 dark:text-white">MTBF</span>, perform <span className="font-semibold text-slate-900 dark:text-white">Weibull Analysis</span>, and model <span className="font-semibold text-slate-900 dark:text-white">System Availability</span> directly in your browser.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link 
-              to="/tools/mtbf" 
+            <Link
+              to="/tools/mtbf"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Clock className="w-5 h-5" />
               Start MTBF Calculator
             </Link>
-            <Link 
-              to="/tools/weibull" 
+            <Link
+              to="/tools/weibull"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Activity className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
@@ -191,7 +197,7 @@ const Home: React.FC = () => {
             <p className="text-slate-600 dark:text-slate-400">Tailored tools for the entire asset management hierarchy.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
+
             <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-cyan-500/50 transition-colors">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center mb-4">
                 <Wrench className="w-6 h-6" />
@@ -239,69 +245,69 @@ const Home: React.FC = () => {
       {/* Engineering Micro-Tools & Widgets */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
-             <Zap className="w-3 h-3" /> Live Interactive Previews
-           </span>
-           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Engineering Micro-Tools</h2>
-           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-             Test drive our calculators right here. These are <strong>mini-versions</strong> designed for quick checks. Launch the full tools for professional analysis and reporting.
-           </p>
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
+            <Zap className="w-3 h-3" /> Live Interactive Previews
+          </span>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Engineering Micro-Tools</h2>
+          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Test drive our calculators right here. These are <strong>mini-versions</strong> designed for quick checks. Launch the full tools for professional analysis and reporting.
+          </p>
         </div>
-        
-        <div className="grid md:grid-cols-3 gap-8">
-           {/* Availability Widget Card */}
-           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
-              <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
-                Mini Version
-              </div>
-              <div className="p-6 flex-grow">
-                <Suspense fallback={<WidgetSkeleton />}>
-                  <AvailabilityChartWidget />
-                </Suspense>
-              </div>
-              <Link to="/tools/availability" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
-                <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Launch Full Availability Tool</span>
-                <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </Link>
-           </div>
-           
-           {/* Failure Mode Widget Card */}
-           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
-              <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
-                Mini Version
-              </div>
-              <div className="p-6 flex-grow">
-                <Suspense fallback={<WidgetSkeleton />}>
-                  <FailureModeIdentifier />
-                </Suspense>
-              </div>
-              <Link to="/learning" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
-                <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Open Knowledge Base</span>
-                <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </Link>
-           </div>
 
-           {/* Spares Widget Card */}
-           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
-              <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
-                Mini Version
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Availability Widget Card */}
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+            <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
+              Mini Version
+            </div>
+            <div className="p-6 flex-grow">
+              <Suspense fallback={<WidgetSkeleton />}>
+                <AvailabilityChartWidget />
+              </Suspense>
+            </div>
+            <Link to="/tools/availability" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+              <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Launch Full Availability Tool</span>
+              <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
+                <ArrowRight className="w-4 h-4" />
               </div>
-              <div className="p-6 flex-grow">
-                <Suspense fallback={<WidgetSkeleton />}>
-                  <SparesForecastWidget />
-                </Suspense>
+            </Link>
+          </div>
+
+          {/* Failure Mode Widget Card */}
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+            <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
+              Mini Version
+            </div>
+            <div className="p-6 flex-grow">
+              <Suspense fallback={<WidgetSkeleton />}>
+                <FailureModeIdentifier />
+              </Suspense>
+            </div>
+            <Link to="/learning" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+              <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Open Knowledge Base</span>
+              <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
+                <ArrowRight className="w-4 h-4" />
               </div>
-              <Link to="/tools/spares" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
-                <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Complete Spares Estimator</span>
-                <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </Link>
-           </div>
+            </Link>
+          </div>
+
+          {/* Spares Widget Card */}
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+            <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
+              Mini Version
+            </div>
+            <div className="p-6 flex-grow">
+              <Suspense fallback={<WidgetSkeleton />}>
+                <SparesForecastWidget />
+              </Suspense>
+            </div>
+            <Link to="/tools/spares" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+              <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Complete Spares Estimator</span>
+              <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -318,12 +324,12 @@ const Home: React.FC = () => {
                 <p className="text-sm text-slate-500 dark:text-slate-400">See how instantly our calculators work.</p>
               </div>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-6 items-end">
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">Operational Hours</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={demoHours}
                   onChange={(e) => setDemoHours(e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-shadow"
@@ -331,14 +337,14 @@ const Home: React.FC = () => {
               </div>
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">Total Failures</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={demoFailures}
                   onChange={(e) => setDemoFailures(e.target.value)}
                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-shadow"
                 />
               </div>
-              <button 
+              <button
                 onClick={handleDemoCalc}
                 className="h-[50px] bg-slate-900 dark:bg-white hover:bg-cyan-600 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-bold rounded-lg transition-colors"
               >
@@ -357,52 +363,52 @@ const Home: React.FC = () => {
       {/* Templates & Downloads Teaser */}
       <section className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="grid md:grid-cols-2 gap-12 items-center">
-             <div>
-               <h2 className="text-3xl md:text-4xl font-extrabold mb-4">Free Engineering Templates</h2>
-               <p className="text-lg text-slate-300 dark:text-slate-600 mb-8">
-                 Save hours of work with our pre-formatted Excel/CSV templates. 
-                 Download industry-standard forms for FMEA, Root Cause Analysis, and Maintenance Planning instantly.
-               </p>
-               <ul className="space-y-3 mb-8">
-                 <li className="flex items-center gap-3">
-                   <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
-                   <span className="font-medium">FMEA & RCA Log Sheets</span>
-                 </li>
-                 <li className="flex items-center gap-3">
-                   <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
-                   <span className="font-medium">Asset Criticality Ranking Matrix</span>
-                 </li>
-                 <li className="flex items-center gap-3">
-                   <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
-                   <span className="font-medium">Spare Part Stocking Calculator</span>
-                 </li>
-               </ul>
-               <Link to="/downloads" className="inline-flex items-center px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-cyan-500/30">
-                 Browse Templates <ArrowRight className="ml-2 w-5 h-5" />
-               </Link>
-             </div>
-             <div className="bg-white/10 dark:bg-black/5 p-8 rounded-2xl border border-white/10 dark:border-black/10 backdrop-blur-sm">
-                <div className="grid grid-cols-2 gap-4">
-                   <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
-                      <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
-                      <div className="text-slate-900 font-bold text-sm">FMEA_Template.csv</div>
-                   </div>
-                   <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
-                      <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
-                      <div className="text-slate-900 font-bold text-sm">RCA_5_Whys.csv</div>
-                   </div>
-                   <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
-                      <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
-                      <div className="text-slate-900 font-bold text-sm">PM_Schedule.csv</div>
-                   </div>
-                   <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
-                      <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
-                      <div className="text-slate-900 font-bold text-sm">MTBF_Log.csv</div>
-                   </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-4">Free Engineering Templates</h2>
+              <p className="text-lg text-slate-300 dark:text-slate-600 mb-8">
+                Save hours of work with our pre-formatted Excel/CSV templates.
+                Download industry-standard forms for FMEA, Root Cause Analysis, and Maintenance Planning instantly.
+              </p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
+                  <span className="font-medium">FMEA & RCA Log Sheets</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
+                  <span className="font-medium">Asset Criticality Ranking Matrix</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-cyan-400 dark:text-cyan-600" />
+                  <span className="font-medium">Spare Part Stocking Calculator</span>
+                </li>
+              </ul>
+              <Link to="/downloads" className="inline-flex items-center px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-cyan-500/30">
+                Browse Templates <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </div>
+            <div className="bg-white/10 dark:bg-black/5 p-8 rounded-2xl border border-white/10 dark:border-black/10 backdrop-blur-sm">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                  <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
+                  <div className="text-slate-900 font-bold text-sm">FMEA_Template.csv</div>
                 </div>
-             </div>
-           </div>
+                <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                  <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
+                  <div className="text-slate-900 font-bold text-sm">RCA_5_Whys.csv</div>
+                </div>
+                <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                  <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
+                  <div className="text-slate-900 font-bold text-sm">PM_Schedule.csv</div>
+                </div>
+                <div className="bg-white dark:bg-white p-4 rounded-xl shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                  <FileSpreadsheet className="w-8 h-8 text-green-600 mb-2" />
+                  <div className="text-slate-900 font-bold text-sm">MTBF_Log.csv</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -413,16 +419,16 @@ const Home: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {TOOLS.map((tool) => (
-            <Link 
-              key={tool.id} 
+            <Link
+              key={tool.id}
               to={tool.path}
               className="group block p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-lg text-cyan-600 dark:text-cyan-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
-                  {tool.id === 'mtbf' || tool.id === 'mttr' ? <Clock /> : 
-                   tool.id === 'weibull' ? <Activity /> :
-                   tool.id === 'rbd' ? <Settings /> : <BarChart2 />}
+                  {tool.id === 'mtbf' || tool.id === 'mttr' ? <Clock /> :
+                    tool.id === 'weibull' ? <Activity /> :
+                      tool.id === 'rbd' ? <Settings /> : <BarChart2 />}
                 </div>
                 <span className="text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded uppercase tracking-wider">
                   {tool.category}
@@ -466,7 +472,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white text-center mb-4">Real-World Use Cases</h2>
           <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">See how reliability engineering principles apply to actual industrial challenges.</p>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Case 1 */}
             <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-colors">

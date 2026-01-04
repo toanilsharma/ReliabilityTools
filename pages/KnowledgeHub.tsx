@@ -31,9 +31,13 @@ import SEO from '../components/SEO';
 
 const KnowledgeHub: React.FC = () => {
 
-  useEffect(() => {
-    document.title = "Reliability Engineering Knowledge Hub | History, Theory & Standards";
-  }, []);
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const pageSchema = {
     "@context": "https://schema.org",
@@ -55,7 +59,13 @@ const KnowledgeHub: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <SEO schema={pageSchema} />
+      <SEO
+        title="Reliability Engineering Knowledge Hub | History, Theory & Standards"
+        description="Master the basics of Reliability Engineering. Learn about the Bathtub Curve, P-F Interval, and perform Weibull Analysis with free tools."
+        keywords="bathtub curve, pf interval, reliability history, reliability theory, reliability standards, mil-hdbk-217f"
+        canonicalUrl="https://reliabilitytools.example.com/knowledge-hub"
+        schema={pageSchema}
+      />
 
       {/* Hero Header */}
       <div className="bg-slate-900 text-white py-20 relative overflow-hidden">
@@ -86,19 +96,19 @@ const KnowledgeHub: React.FC = () => {
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Table of Contents</h3>
                 <nav className="space-y-1 border-l-2 border-slate-200 dark:border-slate-800">
-                  <a href="#history" className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
+                  <a href="#history" onClick={(e) => scrollToSection(e, 'history')} className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
                     1. History & Origins
                   </a>
-                  <a href="#theory" className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
+                  <a href="#theory" onClick={(e) => scrollToSection(e, 'theory')} className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
                     2. The Bathtub Curve
                   </a>
-                  <a href="#pf-interval" className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
+                  <a href="#pf-interval" onClick={(e) => scrollToSection(e, 'pf-interval')} className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
                     3. The P-F Interval
                   </a>
-                  <a href="#cases" className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
+                  <a href="#cases" onClick={(e) => scrollToSection(e, 'cases')} className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
                     4. Case Studies
                   </a>
-                  <a href="#modern" className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
+                  <a href="#modern" onClick={(e) => scrollToSection(e, 'modern')} className="block pl-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-l-2 hover:-ml-[2px] border-transparent hover:border-blue-600 transition-all">
                     5. Modern Era (PdM)
                   </a>
                 </nav>
