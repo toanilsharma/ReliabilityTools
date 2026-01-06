@@ -1,0 +1,36 @@
+# Industrial Reliability Engineering Tools
+
+Professional grade reliability calculators for MTBF, Weibull Analysis, and Maintenance Planning.
+
+## Core Tools
+- [MTBF Calculator](/tools/mtbf): Calculate Mean Time Between Failures
+- [Weibull Analysis](/tools/weibull): Perform life data analysis
+- [RBD Tool](/tools/rbd): Model Reliability Block Diagrams
+- [Availability Calculator](/tools/availability): Estimate system availability
+- [MTTR Calculator](/tools/mttr): Calculate Mean Time To Repair
+- [Spare Part Estimator](/tools/spares): Optimize spare parts inventory
+- [PM Scheduler](/tools/pm): Plan preventive maintenance
+- [LCC Calculator](/tools/lcc): Life Cycle Cost analysis
+- [OEE Calculator](/tools/oee): Overall Equipment Effectiveness
+- [Test Planner](/tools/test-planner): Design reliability tests
+- [Maturity Assessment](/tools/assessment): Assess reliability maturity
+- [Unit Converter](/tools/converter): Engineering unit conversion
+
+## Advanced Tools
+- [Optimal Replacement](/tools/optimal-replacement): Determine replacement timing
+- [EOQ Calculator](/tools/eoq): Economic Order Quantity
+- [SIL Verification](/tools/sil): Safety Integrity Level verification
+- [FMEA Calculator](/tools/fmea): Failure Mode and Effects Analysis
+- [Confidence Interval](/tools/confidence-interval): Statistical confidence intervals
+- [K-out-of-N System](/tools/k-out-of-n): Redundancy calculations
+
+## educational Resources
+- [Learning Center](/learning): Guides and tutorials
+- [Knowledge Hub](/knowledge-hub): In-depth articles
+- [Glossary](/glossary): Reliability engineering terms
+- [FAQ](/faq): Frequently asked questions
+
+## Legal
+- [Privacy Policy](/legal/privacy)
+- [Terms of Service](/legal/terms)
+- [Cookie Policy](/legal/cookies)
