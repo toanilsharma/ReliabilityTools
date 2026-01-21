@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://reliabilitytools.example.com/sitemap.xml
+Sitemap: https://reliabilitytools.co.in/sitemap.xml

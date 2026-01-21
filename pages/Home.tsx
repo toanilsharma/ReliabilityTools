@@ -119,7 +119,7 @@ const Home: React.FC = () => {
         title="Industrial Reliability Engineering Tools | MTBF & Weibull Calculator"
         description="Free professional grade reliability engineering calculators. Perform Weibull Analysis, calculate MTBF, modeling Reliability Block Diagrams (RBD), and optimize maintenance schedules."
         keywords="reliability engineering, mtbf calculator, weibull analysis, rbd tool, reliability block diagram, maintenance planning, predictive maintenance, availability calculator"
-        canonicalUrl="https://reliabilitytools.example.com/"
+        canonicalUrl="https://reliabilitytools.co.in/"
         schema={faqSchema}
       />
 

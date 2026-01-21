@@ -63,7 +63,7 @@ const KnowledgeHub: React.FC = () => {
         title="Reliability Engineering Knowledge Hub | History, Theory & Standards"
         description="Master the basics of Reliability Engineering. Learn about the Bathtub Curve, P-F Interval, and perform Weibull Analysis with free tools."
         keywords="bathtub curve, pf interval, reliability history, reliability theory, reliability standards, mil-hdbk-217f"
-        canonicalUrl="https://reliabilitytools.example.com/knowledge-hub"
+        canonicalUrl="https://reliabilitytools.co.in/knowledge-hub"
         schema={pageSchema}
       />
 

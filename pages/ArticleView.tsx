@@ -22,7 +22,7 @@ const ArticleView: React.FC = () => {
     "@type": "TechArticle",
     "headline": article.title,
     "description": article.summary,
-    "image": "https://reliabilitytools.example.com/logo.png",
+    "image": "https://reliabilitytools.co.in/logo.png",
     "author": {
       "@type": "Person",
       "name": article.author
@@ -32,13 +32,13 @@ const ArticleView: React.FC = () => {
       "name": "Reliability Tools",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://reliabilitytools.example.com/logo.png"
+        "url": "https://reliabilitytools.co.in/logo.png"
       }
     },
     "datePublished": article.date,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://reliabilitytools.example.com/learning/${article.id}`
+      "@id": `https://reliabilitytools.co.in/learning/${article.id}`
     }
   };
 
@@ -46,14 +46,14 @@ const ArticleView: React.FC = () => {
   const renderMathContent = (latex: string) => {
     // Handle superscripts: e^{-t} -> e<sup>-t</sup>
     const parts = latex.split(/(\^\{.*?\}|\^.)/g);
-    
+
     return parts.map((part, i) => {
       // Match ^{...} or ^x
       if (part.startsWith('^')) {
         let content = part.startsWith('^{') ? part.slice(2, -1) : part.slice(1);
         return <sup key={i} className="text-xs">{content}</sup>;
       }
-      
+
       // Basic symbol replacement for the base text
       let text = part
         .replace(/\\approx/g, '≈')
@@ -113,7 +113,7 @@ const ArticleView: React.FC = () => {
   // Top Level Parser: Handles Links first
   const parseText = (text: string) => {
     const parts = text.split(/(\[.*?\]\(.*?\))/g);
-    
+
     return parts.map((part, i) => {
       const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
       if (linkMatch) {
@@ -130,7 +130,7 @@ const ArticleView: React.FC = () => {
   const renderContent = (content: string) => {
     const lines = content.split('\n');
     const elements: React.ReactNode[] = [];
-    
+
     let tableBuffer: string[] = [];
     let inTable = false;
 
@@ -162,14 +162,14 @@ const ArticleView: React.FC = () => {
             {line.replace('### ', '')}
           </h3>
         );
-      } 
+      }
       // Bullets
       else if (line.startsWith('• ') || line.startsWith('- ')) {
         elements.push(
           <div key={i} className="flex items-start gap-3 mb-3 ml-2">
             <CheckCircle2 className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-1 shrink-0" />
             <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg">
-               {parseText(line.replace(/^[-•] /, ''))}
+              {parseText(line.replace(/^[-•] /, ''))}
             </span>
           </div>
         );
@@ -179,7 +179,7 @@ const ArticleView: React.FC = () => {
         elements.push(
           <div key={i} className="bg-slate-50 dark:bg-slate-800 border-l-4 border-cyan-500 p-6 my-8 rounded-r-lg shadow-sm">
             <div className="text-slate-700 dark:text-slate-300 italic leading-relaxed text-lg font-serif">
-               {parseText(line.replace('> ', ''))}
+              {parseText(line.replace('> ', ''))}
             </div>
           </div>
         );
@@ -243,15 +243,15 @@ const ArticleView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto animate-fade-in">
       <SEO schema={articleSchema} />
-      
+
       <div className="flex justify-between items-center mb-6 no-print">
-        <Link 
+        <Link
           to="/learning"
           className="flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors font-medium group"
         >
           <ChevronRight className="w-4 h-4 rotate-180 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Articles
         </Link>
-        <button 
+        <button
           onClick={handlePrint}
           className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors text-sm font-medium"
         >
@@ -276,7 +276,7 @@ const ArticleView: React.FC = () => {
             </div>
           </div>
         </header>
-        
+
         <div className="max-w-none">
           {renderContent(article.content)}
         </div>
@@ -287,27 +287,27 @@ const ArticleView: React.FC = () => {
               <Wrench className="w-5 h-5 text-cyan-600" /> Tools Mentioned
             </h4>
             <div className="grid sm:grid-cols-2 gap-4">
-               {TOOLS.slice(0, 3).map(tool => (
-                 <Link key={tool.id} to={tool.path} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
-                   <div>
-                     <div className="font-bold text-slate-900 dark:text-white">{tool.name}</div>
-                     <div className="text-xs text-slate-500">{tool.category}</div>
-                   </div>
-                   <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-600 transition-colors" />
-                 </Link>
-               ))}
+              {TOOLS.slice(0, 3).map(tool => (
+                <Link key={tool.id} to={tool.path} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
+                  <div>
+                    <div className="font-bold text-slate-900 dark:text-white">{tool.name}</div>
+                    <div className="text-xs text-slate-500">{tool.category}</div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-600 transition-colors" />
+                </Link>
+              ))}
             </div>
           </div>
 
           <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl">
-             <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg">
-               {article.author.charAt(0)}
-             </div>
-             <div>
-               <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Written By</div>
-               <div className="text-xl font-bold text-slate-900 dark:text-white">{article.author}</div>
-               <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Technical Professional & Reliability Expert</div>
-             </div>
+            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg">
+              {article.author.charAt(0)}
+            </div>
+            <div>
+              <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Written By</div>
+              <div className="text-xl font-bold text-slate-900 dark:text-white">{article.author}</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Technical Professional & Reliability Expert</div>
+            </div>
           </div>
         </div>
       </article>

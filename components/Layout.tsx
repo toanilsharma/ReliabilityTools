@@ -22,7 +22,7 @@ const Layout: React.FC = () => {
   // Generate Dynamic Breadcrumb Schema
   const generateBreadcrumbSchema = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    const baseUrl = 'https://reliabilitytools.example.com';
+    const baseUrl = 'https://reliabilitytools.co.in';
 
     const items = [
       {
