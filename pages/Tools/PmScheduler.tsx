@@ -1,28 +1,27 @@
 
 import React, { useState } from 'react';
 import { PMTask } from '../../types';
-import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingUp, Sliders } from 'lucide-react';
+import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingUp, Sliders, CheckSquare, Clock } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
-import RelatedTools from '../../components/RelatedTools';
+import ToolContentLayout from '../../components/ToolContentLayout';
 
 const PmScheduler: React.FC = () => {
   const [tasks, setTasks] = useState<PMTask[]>([
     { id: '1', name: 'Inspect Hydraulic Seals', intervalDays: 30, lastPerformed: '2023-10-01' },
     { id: '2', name: 'Replace Oil Filter', intervalDays: 90, lastPerformed: '2023-09-15' },
+    { id: '3', name: 'Calibrate Sensors', intervalDays: 180, lastPerformed: '2023-06-01' },
   ]);
-  
+
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskInterval, setNewTaskInterval] = useState('');
   const [newTaskLastDate, setNewTaskLastDate] = useState('');
-
-  // Recommender State
   const [recMtbf, setRecMtbf] = useState(5000);
-  const [recCriticality, setRecCriticality] = useState(2); // 1 Low, 2 Med, 3 High
+  const [recCriticality, setRecCriticality] = useState(2);
 
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskName || !newTaskInterval || !newTaskLastDate) return;
-    
+
     const task: PMTask = {
       id: Math.random().toString(36).substr(2, 9),
       name: newTaskName,
@@ -39,7 +38,6 @@ const PmScheduler: React.FC = () => {
     setTasks(tasks.filter(t => t.id !== id));
   };
 
-  // Generate Schedule for next 3 months simplified for grid
   const generateSchedule = () => {
     const events: { date: Date; taskName: string }[] = [];
     const today = new Date();
@@ -49,13 +47,10 @@ const PmScheduler: React.FC = () => {
     tasks.forEach(task => {
       let nextDate = new Date(task.lastPerformed);
       nextDate.setDate(nextDate.getDate() + task.intervalDays);
-      
+
       while (nextDate <= endDate) {
         if (nextDate >= today) {
-          events.push({
-             date: new Date(nextDate),
-             taskName: task.name
-          });
+          events.push({ date: new Date(nextDate), taskName: task.name });
         }
         nextDate.setDate(nextDate.getDate() + task.intervalDays);
       }
@@ -76,223 +71,183 @@ const PmScheduler: React.FC = () => {
     a.click();
   };
 
-  // Recommendation Logic
   const getRecommendation = () => {
-    // Basic rule of thumb: PM interval should be much shorter than failure rate
-    // High Criticality: MTBF / 8
-    // Med Criticality: MTBF / 6
-    // Low Criticality: MTBF / 3
     const factor = recCriticality === 3 ? 8 : recCriticality === 2 ? 6 : 3;
     const intervalHours = recMtbf / factor;
-    const intervalDays = Math.round(intervalHours / 24); // Assuming 24h operation
+    const intervalDays = Math.round(intervalHours / 24);
     return { hours: Math.round(intervalHours), days: intervalDays };
   };
 
   const rec = getRecommendation();
 
-  return (
-    <div className="max-w-5xl mx-auto space-y-12">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">PM Scheduler</h1>
-        <p className="text-slate-600 dark:text-slate-400">
-          Create a simple Preventive Maintenance schedule based on fixed time intervals. 
-          Add tasks below to generate a forecast.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Task Entry */}
-        <div className="md:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg">
-            <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2"><Plus className="w-4 h-4" /> Add Task</h3>
-            <form onSubmit={addTask} className="space-y-4">
+  // --- Tool Component ---
+  const ToolComponent = (
+    <div className="grid lg:grid-cols-3 gap-8">
+      {/* Input Panel */}
+      <div className="lg:col-span-1 space-y-6">
+        <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+          <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <Plus className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> Add New Task
+          </h3>
+          <form onSubmit={addTask} className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Task Description</label>
+              <input value={newTaskName} onChange={e => setNewTaskName(e.target.value)} placeholder="e.g. Inspect Belt" className="w-full p-2 rounded border border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-cyan-500 outline-none" required />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-slate-500 dark:text-slate-400">
-                  Task Name
-                  <HelpTooltip text="Description of the maintenance task. Source: OEM Manual." />
-                </label>
-                <input 
-                  value={newTaskName}
-                  onChange={e => setNewTaskName(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-2 text-slate-900 dark:text-white text-sm focus:border-cyan-500 outline-none"
-                  placeholder="e.g. Inspect Belt"
-                  required
-                />
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Interval (Days)</label>
+                <input type="number" value={newTaskInterval} onChange={e => setNewTaskInterval(e.target.value)} placeholder="30" className="w-full p-2 rounded border border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-cyan-500 outline-none" required />
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-xs text-slate-500 dark:text-slate-400">
-                    Interval (Days)
-                    <HelpTooltip text="Frequency of the task. Source: OEM recommendation or RCM analysis." />
-                  </label>
-                  <input 
-                    type="number"
-                    value={newTaskInterval}
-                    onChange={e => setNewTaskInterval(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-2 text-slate-900 dark:text-white text-sm focus:border-cyan-500 outline-none"
-                    placeholder="30"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 dark:text-slate-400">
-                    Last Done
-                    <HelpTooltip text="Date the task was last completed. Source: Maintenance records." />
-                  </label>
-                  <input 
-                    type="date"
-                    value={newTaskLastDate}
-                    onChange={e => setNewTaskLastDate(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded p-2 text-slate-900 dark:text-white text-sm focus:border-cyan-500 outline-none"
-                    required
-                  />
-                </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Last Done</label>
+                <input type="date" value={newTaskLastDate} onChange={e => setNewTaskLastDate(e.target.value)} className="w-full p-2 rounded border border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-cyan-500 outline-none" required />
               </div>
-              <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold py-2 rounded transition-colors">
-                Add to Plan
-              </button>
-            </form>
-          </div>
-
-          {/* New Interval Optimizer Widget */}
-          <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
-             <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-               <Sliders className="w-4 h-4 text-cyan-600" /> Interval Recommender
-             </h3>
-             <div className="space-y-3">
-               <div>
-                 <label className="text-xs text-slate-500 mb-1 block">Component MTBF (Hrs)</label>
-                 <input 
-                   type="number" 
-                   value={recMtbf} 
-                   onChange={e => setRecMtbf(Number(e.target.value))}
-                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded p-1.5 text-sm"
-                 />
-               </div>
-               <div>
-                 <label className="text-xs text-slate-500 mb-1 block">Criticality Risk</label>
-                 <select 
-                   value={recCriticality} 
-                   onChange={e => setRecCriticality(Number(e.target.value))}
-                   className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded p-1.5 text-sm"
-                 >
-                   <option value={1}>Low - Run to Failure OK</option>
-                   <option value={2}>Medium - Production Impact</option>
-                   <option value={3}>High - Safety/Env Impact</option>
-                 </select>
-               </div>
-               <div className="mt-2 bg-white dark:bg-slate-800 p-3 rounded border border-slate-200 dark:border-slate-700">
-                 <div className="text-xs text-slate-500 uppercase">Suggested PM Interval</div>
-                 <div className="text-lg font-bold text-cyan-600 dark:text-cyan-400">
-                   {rec.days} Days <span className="text-xs font-normal text-slate-400">({rec.hours} hrs)</span>
-                 </div>
-               </div>
-             </div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg">
-             <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Current Tasks ({tasks.length})</h3>
-             <div className="space-y-2 max-h-[300px] overflow-y-auto">
-               {tasks.map(task => (
-                 <div key={task.id} className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-800">
-                   <div>
-                     <div className="text-sm font-medium text-slate-900 dark:text-white">{task.name}</div>
-                     <div className="text-xs text-slate-500">Every {task.intervalDays} days</div>
-                   </div>
-                   <button onClick={() => removeTask(task.id)} className="text-slate-500 hover:text-red-500">
-                     <Trash2 className="w-4 h-4" />
-                   </button>
-                 </div>
-               ))}
-               {tasks.length === 0 && <div className="text-slate-500 text-sm italic">No tasks defined.</div>}
-             </div>
-          </div>
+            </div>
+            <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-lg transition-colors shadow-lg shadow-cyan-500/20">Add Task</button>
+          </form>
         </div>
 
-        {/* Calendar/List View */}
-        <div className="md:col-span-2">
-           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col h-full shadow-lg">
-             <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
-               <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                 <Calendar className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> 
-                 Upcoming Schedule (Next 3 Months)
-               </h3>
-               <button 
-                 onClick={handleExport}
-                 className="flex items-center gap-1 text-xs bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-cyan-600 dark:text-cyan-400 border border-slate-300 dark:border-slate-700 px-3 py-1.5 rounded transition-colors"
-               >
-                 <Download className="w-3 h-3" /> Export CSV
-               </button>
-             </div>
-             
-             <div className="flex-grow p-0 overflow-y-auto max-h-[600px]">
-               {schedule.length > 0 ? (
-                 <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                   {schedule.map((event, idx) => (
-                     <div key={idx} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors flex items-center gap-4">
-                       <div className="flex-shrink-0 w-16 text-center">
-                         <div className="text-xs text-slate-500 uppercase">{event.date.toLocaleString('default', { month: 'short' })}</div>
-                         <div className="text-xl font-bold text-slate-900 dark:text-white">{event.date.getDate()}</div>
-                       </div>
-                       <div className="flex-grow">
-                         <div className="font-medium text-slate-800 dark:text-slate-200">{event.taskName}</div>
-                         <div className="text-xs text-slate-500">{event.date.toLocaleDateString()}</div>
-                       </div>
-                       <div className="flex-shrink-0">
-                         <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 <div className="h-full flex flex-col items-center justify-center text-slate-500 p-12">
-                   <FileText className="w-12 h-12 mb-4 opacity-20" />
-                   <p>No upcoming tasks found based on current intervals.</p>
-                 </div>
-               )}
-             </div>
-           </div>
+        {/* Recommender */}
+        <div className="bg-gradient-to-br from-purple-50 to-white dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl border border-purple-100 dark:border-slate-700">
+          <h3 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-purple-600" /> AI Interval Optimizer
+          </h3>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-slate-500 mb-1 block">Component MTBF (Hours)</label>
+              <input type="number" value={recMtbf} onChange={e => setRecMtbf(Number(e.target.value))} className="w-full border border-slate-200 dark:border-slate-700 rounded p-1.5 text-sm dark:bg-slate-800" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-500 mb-1 block">Criticality</label>
+              <select value={recCriticality} onChange={e => setRecCriticality(Number(e.target.value))} className="w-full border border-slate-200 dark:border-slate-700 rounded p-1.5 text-sm dark:bg-slate-800">
+                <option value={1}>Low (Run to Failure)</option>
+                <option value={2}>Medium (Production Loss)</option>
+                <option value={3}>High (Safety/Env)</option>
+              </select>
+            </div>
+            <div className="mt-3 bg-white dark:bg-slate-800 p-3 rounded-lg border border-purple-100 dark:border-slate-600 text-center">
+              <div className="text-xs text-slate-400 uppercase font-bold">Recommended Interval</div>
+              <div className="text-lg font-bold text-purple-600 dark:text-purple-400">{rec.days} Days</div>
+              <div className="text-xs text-slate-500">({rec.hours} operating hours)</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Educational Content */}
-      <section className="grid md:grid-cols-3 gap-8 pt-8 border-t border-slate-200 dark:border-slate-800">
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-            <BookOpen className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-            About PM Scheduling
+      {/* Schedule View */}
+      <div className="lg:col-span-2 flex flex-col h-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+          <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-cyan-600" /> 3-Month Forecast
           </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Preventive Maintenance (PM) is time-based maintenance aimed at preventing breakdowns before they occur. This tool helps you generate a forward-looking calendar based on simple fixed intervals (e.g., Monthly, Quarterly).
-          </p>
+          <button onClick={handleExport} className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-cyan-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded transition-colors">
+            <Download className="w-3 h-3" /> Export CSV
+          </button>
+        </div>
+        <div className="flex-grow overflow-y-auto p-0 custom-scrollbar max-h-[500px]">
+          {schedule.length > 0 ? (
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              {schedule.map((event, idx) => (
+                <div key={idx} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center gap-4 group">
+                  <div className="flex-shrink-0 w-16 text-center bg-slate-100 dark:bg-slate-800 rounded-lg p-2 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                    <div className="text-[10px] text-slate-500 uppercase font-bold">{event.date.toLocaleString('default', { month: 'short' })}</div>
+                    <div className="text-xl font-bold text-slate-900 dark:text-white">{event.date.getDate()}</div>
+                  </div>
+                  <div className="flex-grow">
+                    <div className="font-bold text-slate-800 dark:text-slate-200">{event.taskName}</div>
+                    <div className="text-xs text-slate-500 flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> Due: {event.date.toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button className="text-xs bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 px-3 py-1 rounded shadow-sm hover:text-green-600 flex items-center gap-1">
+                      <CheckSquare className="w-3 h-3" /> Mark Done
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center text-slate-400 p-12">
+              <FileText className="w-16 h-16 mb-4 opacity-20" />
+              <p>No upcoming tasks. Add a task to generate a schedule.</p>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-            <Target className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-            Why Schedule?
-          </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Without a plan, maintenance becomes purely reactive (fighting fires). Scheduling ensures compliance tasks (safety checks) and routine care (lubrication) are not forgotten, extending asset life and reducing unplanned downtime.
-          </p>
+        {/* Task List Mini */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+          <h4 className="text-xs font-bold text-slate-500 uppercase mb-3">Active Definitions ({tasks.length})</h4>
+          <div className="flex flex-wrap gap-2">
+            {tasks.map(t => (
+              <div key={t.id} className="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+                <span className="text-xs font-medium dark:text-slate-300">{t.name}</span>
+                <span className="text-[10px] bg-slate-100 dark:bg-slate-700 px-1.5 rounded text-slate-500">{t.intervalDays}d</span>
+                <button onClick={() => removeTask(t.id)} className="text-slate-400 hover:text-red-500 ml-1"><Trash2 className="w-3 h-3" /></button>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-            <TrendingUp className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-            How to use this tool?
-          </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            1. Add your critical tasks with their frequency.<br/>
-            2. Enter the last date performed.<br/>
-            3. The tool automatically projects the due dates for the next 3 months.<br/>
-            4. Export the CSV to share with your technician team.
-          </p>
-        </div>
-      </section>
-
-      <RelatedTools currentToolId="pm" />
+      </div>
     </div>
+  );
+
+  const Content = (
+    <div>
+      <h2 id="overview">What is PM Scheduling?</h2>
+      <p>
+        <strong>Preventive Maintenance (PM)</strong> is a proactive strategy where assets are serviced at regular intervals (time-based) or usage thresholds (meter-based) to reduce the likelihood of failure.
+      </p>
+      <p>
+        A good PM schedule balances the cost of maintenance against the cost of failure. If you maintain too often, you waste money and risk introducing human error ("Infant Mortality"). If you maintain too rarely, you risk catastrophic breakdown.
+      </p>
+
+      <h2 id="optimization">Optimizing Intervals</h2>
+      <p>
+        The "Sweet Spot" for PM intervals is often determined by the <strong>P-F Curve</strong>. You want the interval to be smaller than the P-F Interval (the time between a detectable potential failure and functional failure).
+      </p>
+      <ul>
+        <li><strong>Rule of Thumb:</strong> Set PM interval to <strong>1/2 to 1/6</strong> of the PF Interval.</li>
+        <li><strong>Example:</strong> If a bearing vibrates for 3 months before seizing (PF Interval = 90 days), check it every 1 month (30 days) to catch it in time.</li>
+      </ul>
+
+      <h2 id="compliance">Compliance vs. Reliability</h2>
+      <p>
+        Some PMs are mandatory for regulatory compliance (e.g., Fire Safety Inspections, Pressure Vessel Testing). Others are discretionary for reliability. This tool helps you track both in a single view.
+      </p>
+    </div>
+  );
+
+  const faqs = [
+    {
+      question: "What is the difference between PM and PdM?",
+      answer: "<strong>PM (Preventive)</strong> is time-based (e.g., replace oil every 3 months). <strong>PdM (Predictive)</strong> is condition-based (e.g., replace oil only when analysis shows it's degraded). PdM is generally more cost-effective but requires sensors/data."
+    },
+    {
+      question: "Can I use this for non-time based tasks?",
+      answer: "This simplified scheduler uses calendar days. For usage-based PMs (e.g., every 500 running hours), you would need to estimate the average daily usage to convert 'hours' into 'days'."
+    },
+    {
+      question: "Why does the recommender ask for criticality?",
+      answer: "Critical assets justify more frequent checks. A failure on a critical pump stops the whole plant (High Risk), so we check it often. A failure on a bathroom exhaust fan (Low Risk) is annoying but tolerable, so we check it rarely."
+    }
+  ];
+
+  return (
+    <ToolContentLayout
+      title="Preventive Maintenance (PM) Scheduler"
+      description="Create a proactive maintenance calendar. Visualize upcoming tasks, optimize intervals based on asset criticality, and export your plan to CSV."
+      toolComponent={ToolComponent}
+      content={Content}
+      faqs={faqs}
+      schema={{
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "PM Scheduler",
+        "applicationCategory": "ProductivityApplication"
+      }}
+    />
   );
 };
 

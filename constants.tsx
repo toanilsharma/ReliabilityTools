@@ -835,7 +835,11 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   { term: 'Reliability', definition: 'The probability that an item will perform its intended function for a specific interval under stated conditions.', category: 'General' },
   { term: 'Reliability Block Diagram (RBD)', definition: 'A graphical representation of the reliability-wise connection of components (Series/Parallel) needed for a system to operate.', category: 'Statistics' },
   { term: 'Root Cause Analysis (RCA)', definition: 'A method of problem solving used for identifying the root causes of faults or problems.', category: 'Maintenance' },
+  { term: 'Failure Rate (λ)', definition: 'The frequency with which an engineered system or component fails, expressed in failures per unit of time. It is the inverse of MTBF (for constant failure rate systems).', category: 'Statistics' },
+  { term: 'PFD', definition: 'Probability of Failure on Demand. A value that indicates the probability that a system will fail to perform a specified safety function when called upon.', category: 'Statistics' },
+  { term: 'SIL', definition: 'Safety Integrity Level. A relative level of risk-reduction provided by a safety function, ranging from SIL 1 (lowest) to SIL 4 (highest).', category: 'General' },
   { term: 'Weibull Distribution', definition: 'A continuous probability distribution used to analyze life data and determine failure modes, capable of modeling infant mortality, random failures, and wear-out.', category: 'Statistics' },
+  { term: 'Weibull Analysis', definition: 'A statistical method used to interpret life data (failures and running times) to forecast failure trends and determine the optimal replacement time for parts.', category: 'Statistics' },
 ];
 
 export const ASSET_BENCHMARKS = {

@@ -6,10 +6,11 @@ interface SEOProps {
   description?: string;
   keywords?: string;
   canonicalUrl?: string;
+  image?: string;
   schema?: object;
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, schema }) => {
+const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, image, schema }) => {
   useEffect(() => {
     // 1. Update Title
     if (title) {
@@ -67,7 +68,13 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, s
       updateOgTag('twitter:title', title);
     }
 
-    // 7. Inject Schema
+    // 7. Update Social Image
+    const socialImage = image || 'https://reliabilitytools.co.in/social-preview.png';
+    updateOgTag('og:image', socialImage);
+    updateOgTag('twitter:image', socialImage);
+    updateOgTag('twitter:card', 'summary_large_image');
+
+    // 8. Inject Schema
     if (schema) {
       const script = document.createElement('script');
       script.type = 'application/ld+json';
@@ -78,7 +85,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, s
         document.head.removeChild(script);
       };
     }
-  }, [title, description, keywords, canonicalUrl, schema]);
+  }, [title, description, keywords, canonicalUrl, schema, image]);
 
   return null;
 };

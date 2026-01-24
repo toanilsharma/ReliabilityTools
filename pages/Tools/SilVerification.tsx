@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
 import { calculateSIL } from '../../services/reliabilityMath';
-import { ShieldAlert, Activity, CheckCircle, AlertOctagon, BookOpen } from 'lucide-react';
+import { ShieldAlert, Activity, CheckCircle, AlertOctagon, BookOpen, Calculator, Info } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
-import SEO from '../../components/SEO';
-import RelatedTools from '../../components/RelatedTools';
+import ToolContentLayout from '../../components/ToolContentLayout';
 
 const SilVerification: React.FC = () => {
   const [lambdaDU, setLambdaDU] = useState<string>('1.5e-6');
@@ -14,16 +13,8 @@ const SilVerification: React.FC = () => {
   // Logic to parse scientific notation or float
   const l = parseFloat(lambdaDU);
   const t = parseFloat(testInterval);
-  
-  const result = (!isNaN(l) && !isNaN(t)) ? calculateSIL(l, t, arch) : null;
 
-  const toolSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "SIL Verification Calculator",
-    "description": "Calculate PFDavg and determine Safety Integrity Level (SIL) for low demand mode per IEC 61508.",
-    "applicationCategory": "UtilitiesApplication"
-  };
+  const result = (!isNaN(l) && !isNaN(t)) ? calculateSIL(l, t, arch) : null;
 
   const getSilColor = (level: number) => {
     if (level === 4) return 'bg-purple-600';
@@ -33,138 +24,181 @@ const SilVerification: React.FC = () => {
     return 'bg-slate-500';
   };
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-12">
-      <SEO schema={toolSchema} />
+  const ToolComponent = (
+    <div className="grid lg:grid-cols-2 gap-8">
+      {/* Input */}
+      <div className="bg-slate-50 dark:bg-slate-900/50 p-8 rounded-xl border border-slate-200 dark:border-slate-700 space-y-6">
+        <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Activity className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> SIF Parameters
+        </h3>
 
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">SIL Verification (PFDavg)</h1>
-        <p className="text-slate-600 dark:text-slate-400">
-          Calculate the Probability of Failure on Demand (PFDavg) for low-demand safety functions. Determine the achieved Safety Integrity Level (SIL) based on simplified formulas from <strong>IEC 61508</strong> and <strong>IEC 61511</strong>.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Input */}
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg space-y-6">
-          <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> SIF Parameters
-          </h3>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Architecture (Voting)
-              <HelpTooltip text="1oo1: Single channel. 1oo2: Redundant (safe). 2oo2: Redundant (reliable but less safe). 2oo3: TMR." />
-            </label>
-            <div className="grid grid-cols-4 gap-2">
-              {(['1oo1', '1oo2', '2oo2', '2oo3'] as const).map(a => (
-                <button
-                  key={a}
-                  onClick={() => setArch(a)}
-                  className={`py-2 text-sm font-bold rounded-lg border transition-all ${
-                    arch === a 
-                      ? 'bg-cyan-600 text-white border-cyan-600' 
-                      : 'bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-700 hover:border-cyan-400'
+        <div>
+          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">
+            Architecture (Voting)
+            <HelpTooltip text="1oo1: Single channel. 1oo2: Redundant (safe). 2oo2: Redundant (reliable but less safe). 2oo3: TMR." />
+          </label>
+          <div className="grid grid-cols-4 gap-2">
+            {(['1oo1', '1oo2', '2oo2', '2oo3'] as const).map(a => (
+              <button
+                key={a}
+                onClick={() => setArch(a)}
+                className={`py-2 text-sm font-bold rounded-lg border transition-all ${arch === a
+                    ? 'bg-cyan-600 text-white border-cyan-600 shadow-md'
+                    : 'bg-white dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700 hover:border-cyan-400'
                   }`}
-                >
-                  {a}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Lambda DU (Failures/Hour)
-              <HelpTooltip text="Dangerous Undetected failure rate. e.g. 1.5e-6" />
-            </label>
-            <input 
-              type="text" 
-              value={lambdaDU} 
-              onChange={e => setLambdaDU(e.target.value)} 
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 font-mono" 
-              placeholder="1.5e-6"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Proof Test Interval (Hours)
-              <HelpTooltip text="Time between full functional tests. 8760 = 1 Year." />
-            </label>
-            <input 
-              type="number" 
-              value={testInterval} 
-              onChange={e => setTestInterval(e.target.value)} 
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" 
-            />
-            <div className="flex gap-2 mt-2">
-               <button onClick={() => setTestInterval('4380')} className="text-xs bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded hover:bg-slate-200">6 Mo</button>
-               <button onClick={() => setTestInterval('8760')} className="text-xs bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded hover:bg-slate-200">1 Yr</button>
-               <button onClick={() => setTestInterval('17520')} className="text-xs bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded hover:bg-slate-200">2 Yrs</button>
-            </div>
+              >
+                {a}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Results */}
-        <div className="space-y-6">
-          {result && (
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg text-center">
-               <div className="text-sm font-bold text-slate-500 uppercase mb-4">Achieved Level</div>
-               
-               <div className={`inline-flex items-center justify-center w-32 h-32 rounded-full ${getSilColor(result.silLevel)} text-white shadow-xl mb-6`}>
-                 <div>
-                   <div className="text-4xl font-extrabold">SIL {result.silLevel}</div>
-                   {result.silLevel === 0 && <div className="text-xs">None</div>}
-                 </div>
-               </div>
+        <div>
+          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">
+            Lambda DU (Failures/Hour)
+            <HelpTooltip text="Dangerous Undetected failure rate. e.g. 1.5e-6" />
+          </label>
+          <input
+            type="text"
+            value={lambdaDU}
+            onChange={e => setLambdaDU(e.target.value)}
+            className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 font-mono text-slate-900 dark:text-white"
+            placeholder="1.5e-6"
+          />
+        </div>
 
-               <div className="grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-700 pt-6">
-                 <div>
-                   <div className="text-xs text-slate-500 uppercase font-bold">PFDavg</div>
-                   <div className="text-xl font-mono font-bold text-slate-800 dark:text-slate-200">{result.pfd.toExponential(3)}</div>
-                 </div>
-                 <div>
-                   <div className="text-xs text-slate-500 uppercase font-bold">RRF</div>
-                   <div className="text-xl font-mono font-bold text-slate-800 dark:text-slate-200">{Math.round(result.rrf).toLocaleString()}</div>
-                 </div>
-               </div>
-            </div>
-          )}
-
-          <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
-             <h4 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-               <ShieldAlert className="w-4 h-4 text-cyan-600" /> SIL Table (IEC 61508 Low Demand)
-             </h4>
-             <div className="text-xs space-y-1 text-slate-600 dark:text-slate-400 font-mono">
-               <div className="flex justify-between"><span>SIL 4</span> <span>≥ 10⁻⁵ to &lt; 10⁻⁴</span></div>
-               <div className="flex justify-between"><span>SIL 3</span> <span>≥ 10⁻⁴ to &lt; 10⁻³</span></div>
-               <div className="flex justify-between"><span>SIL 2</span> <span>≥ 10⁻³ to &lt; 10⁻²</span></div>
-               <div className="flex justify-between"><span>SIL 1</span> <span>≥ 10⁻² to &lt; 10⁻¹</span></div>
-             </div>
+        <div>
+          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">
+            Proof Test Interval (Hours)
+            <HelpTooltip text="Time between full functional tests. 8760 = 1 Year." />
+          </label>
+          <input
+            type="number"
+            value={testInterval}
+            onChange={e => setTestInterval(e.target.value)}
+            className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500 text-slate-900 dark:text-white"
+          />
+          <div className="flex gap-2 mt-2">
+            <button onClick={() => setTestInterval('4380')} className="text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400">6 Mo</button>
+            <button onClick={() => setTestInterval('8760')} className="text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400">1 Yr</button>
+            <button onClick={() => setTestInterval('17520')} className="text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400">2 Yrs</button>
           </div>
         </div>
       </div>
 
-      {/* Standards Reference Section */}
-      <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
-        <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
-          <h3 className="flex items-center gap-2 font-bold text-slate-900 dark:text-white mb-3">
-            <BookOpen className="w-5 h-5 text-cyan-600" /> Applicable Standards
-          </h3>
-          <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
-            <li>
-              <strong>IEC 61508-6:</strong> Functional safety of electrical/electronic/programmable electronic safety-related systems. (Simplified equations for PFDavg).
-            </li>
-            <li>
-              <strong>IEC 61511:</strong> Functional safety - Safety instrumented systems for the process industry sector.
-            </li>
-          </ul>
+      {/* Results */}
+      <div className="space-y-6">
+        {result ? (
+          <div className="bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl text-center relative overflow-hidden">
+
+            <div className="relative z-10">
+              <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Achieved Performance</div>
+
+              <div className={`inline-flex items-center justify-center w-40 h-40 rounded-full ${getSilColor(result.silLevel)} text-white shadow-2xl mb-8 ring-4 ring-white dark:ring-slate-800`}>
+                <div className="flex flex-col items-center">
+                  <div className="text-5xl font-black tracking-tighter">SIL {result.silLevel}</div>
+                  {result.silLevel === 0 && <div className="text-xs opacity-80 mt-1 font-bold">Unrated</div>}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
+                <div className="bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <div className="text-[10px] text-slate-400 uppercase font-bold mb-1">PFD (Avg)</div>
+                  <div className="text-lg font-mono font-bold text-slate-800 dark:text-slate-200">{result.pfd.toExponential(2)}</div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <div className="text-[10px] text-slate-400 uppercase font-bold mb-1">RRF</div>
+                  <div className="text-lg font-mono font-bold text-slate-800 dark:text-slate-200">{Math.round(result.rrf).toLocaleString()}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-12 text-slate-400">
+            <Calculator className="w-16 h-16 mb-4 opacity-20" />
+            <p>Enter failure rates to calculate SIL.</p>
+          </div>
+        )}
+
+        <div className="bg-slate-100 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+          <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
+            <ShieldAlert className="w-4 h-4 text-slate-500" /> Reference Table (Low Demand)
+          </h4>
+          <div className="space-y-2 text-xs font-mono">
+            {[
+              { sil: 4, range: '≥ 10⁻⁵ to < 10⁻⁴', color: 'text-purple-600' },
+              { sil: 3, range: '≥ 10⁻⁴ to < 10⁻³', color: 'text-red-600' },
+              { sil: 2, range: '≥ 10⁻³ to < 10⁻²', color: 'text-orange-600' },
+              { sil: 1, range: '≥ 10⁻² to < 10⁻¹', color: 'text-yellow-600' },
+            ].map((row) => (
+              <div key={row.sil} className={`flex justify-between items-center p-2 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${result?.silLevel === row.sil ? 'ring-2 ring-cyan-500' : 'opacity-60'}`}>
+                <span className={`font-bold ${row.color}`}>SIL {row.sil}</span>
+                <span className="text-slate-500">{row.range}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      <RelatedTools currentToolId="sil-verification" />
     </div>
+  );
+
+  const Content = (
+    <div>
+      <h2 id="overview">What is SIL Verification?</h2>
+      <p>
+        <strong>Safety Integrity Level (SIL)</strong> is a measure of the reliability of a Safety Instrumented Function (SIF). It defines the probability that a safety system (like an Emergency Shutdown Valve) will successfully perform its function when a dangerous condition occurs.
+      </p>
+
+      <h2 id="pfd">PFDavg and RRF</h2>
+      <p>
+        For Low Demand Mode (systems activated less than once per year), SIL is determined by the <strong>Average Probability of Failure on Demand (PFDavg)</strong>.
+      </p>
+      <ul>
+        <li><strong>PFDavg:</strong> The likelihood the system is broken when you need it. Lower is better.</li>
+        <li><strong>RRF (Risk Reduction Factor):</strong> The inverse of PFD (1/PFD). It represents how many times the risk is reduced. Higher is better. (e.g. RRF 100 means the risk is cut simply by 100 times).</li>
+      </ul>
+
+      <h2 id="architecture">Voting Logic</h2>
+      <p>
+        The architecture (1oo1, 1oo2, etc.) dramatically affects PFD.
+      </p>
+      <ul>
+        <li><strong>1oo1 (No Redundancy):</strong> Simple but prone to failure.</li>
+        <li><strong>1oo2 (Safety Redundancy):</strong> Two sensors, if <em>either</em> trips, the system trips. Very safe, but higher false trip rate.</li>
+        <li><strong>2oo3 (TMR):</strong> Triple Modular Redundancy. Needs 2 out of 3 to trip. High safety AND high availability (fewer false trips).</li>
+      </ul>
+    </div>
+  );
+
+  const faqs = [
+    {
+      question: "Does this tool replace a HAZOP/LOPA?",
+      answer: "<strong>Absolutely not.</strong> This tool performs the mathematical <em>verification</em> step (Step 4 of the Safety Lifecycle). You must determined the <em>Required</em> SIL through risk analysis (LOPA) before verifying if your hardware meets it."
+    },
+    {
+      question: "What is Proof Testing?",
+      answer: "Safety systems can fail silently (Dangerous Undetected). A Proof Test is a periodic manual test to find and fix these hidden failures. More frequent proof testing lowers the PFDavg and improves SIL."
+    },
+    {
+      question: "Where do I get Lambda DU values?",
+      answer: "From the manufacturer's safety manual (certified data), or industry databases like OREDA or exida SERH."
+    }
+  ];
+
+  return (
+    <ToolContentLayout
+      title="SIL Verification Calculator"
+      description="Verify the Safety Integrity Level (SIL) of your Safety Instrumented Functions (SIF). Calculate PFDavg and Risk Reduction Factor (RRF) according to IEC 61508."
+      toolComponent={ToolComponent}
+      content={Content}
+      faqs={faqs}
+      schema={{
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "SIL Calculator",
+        "applicationCategory": "UtilitiesApplication"
+      }}
+    />
   );
 };
 

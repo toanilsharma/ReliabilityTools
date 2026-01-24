@@ -31,6 +31,9 @@ const SilVerification = lazy(() => import('./pages/Tools/SilVerification'));
 const FmeaCalculator = lazy(() => import('./pages/Tools/FmeaCalculator'));
 const ConfidenceInterval = lazy(() => import('./pages/Tools/ConfidenceInterval'));
 const KOutOfN = lazy(() => import('./pages/Tools/KOutOfN'));
+const HazardRateCalculator = lazy(() => import('./pages/Tools/HazardRateCalculator'));
+const SystemReliabilityValidator = lazy(() => import('./pages/Tools/SystemReliabilityValidator'));
+const FishboneDiagramGenerator = lazy(() => import('./pages/Tools/FishboneDiagramGenerator'));
 
 // Content & Legal
 const LearningCenter = lazy(() => import('./pages/LearningCenter'));
@@ -78,6 +81,9 @@ const App: React.FC = () => {
               <Route path="tools/fmea" element={<FmeaCalculator />} />
               <Route path="tools/confidence-interval" element={<ConfidenceInterval />} />
               <Route path="tools/k-out-of-n" element={<KOutOfN />} />
+              <Route path="tools/hazard-rate" element={<HazardRateCalculator />} />
+              <Route path="tools/validator" element={<SystemReliabilityValidator />} />
+              <Route path="tools/fishbone" element={<FishboneDiagramGenerator />} />
 
               {/* Content */}
               <Route path="learning" element={<LearningCenter />} />
