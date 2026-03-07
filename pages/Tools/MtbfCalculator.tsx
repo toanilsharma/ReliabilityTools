@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { calculateMTBF } from "../../services/reliabilityMath";
+import 'katex/dist/katex.min.css';
+import { BlockMath } from 'react-katex';
+import { reliabilityStandards, getGroupedStandards } from "../../data/standards";
 import {
   Clock,
   RotateCcw,
@@ -24,6 +27,7 @@ const MtbfCalculator: React.FC = () => {
   const [mode, setMode] = useState<"MTBF" | "MTTF">("MTBF");
   const [totalHours, setTotalHours] = useState<string>("");
   const [failures, setFailures] = useState<string>("");
+  const [selectedStandardId, setSelectedStandardId] = useState<string>("");
   const [result, setResult] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<{ hours?: string; failures?: string }>({});
@@ -94,6 +98,22 @@ const MtbfCalculator: React.FC = () => {
     }
   };
 
+  const handleStandardSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value;
+    setSelectedStandardId(id);
+    if (!id) return;
+    
+    const comp = reliabilityStandards.find(c => c.id === id);
+    if (comp) {
+       // comp.failureRate is in Failures Per Million Hours (FPMH)
+       const mHours = 1000000 / comp.failureRate;
+       setTotalHours("1000000");
+       setFailures(comp.failureRate.toString());
+       setResult(mHours);
+       setErrors({});
+    }
+  };
+
   const generateLookupTable = () => {
     const basis = 8760;
     return [0.5, 1, 2, 4, 12, 52].map((f) => ({
@@ -131,6 +151,29 @@ const MtbfCalculator: React.FC = () => {
           >
             MTTF (Non-Repairable)
           </button>
+        </div>
+
+        <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-cyan-600" /> Standard Component Library
+            <HelpTooltip text="Auto-fill failure rates from industry standards like MIL-HDBK-217F or Telcordia (values in Failures Per Million Hours)." />
+          </label>
+          <select 
+            value={selectedStandardId}
+            onChange={handleStandardSelect}
+            className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg p-3 text-sm text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-cyan-500 outline-none"
+          >
+            <option value="">-- Custom Input --</option>
+            {Object.entries(getGroupedStandards()).map(([std, comps]) => (
+              <optgroup key={std} label={std}>
+                {comps.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.category} - {c.name} ({c.failureRate} FPMH)
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
         </div>
 
         <form onSubmit={handleCalculate} className="space-y-4">
@@ -223,14 +266,15 @@ const MtbfCalculator: React.FC = () => {
       </div>
 
       <div className="space-y-6">
-        {/* Formula Box */}
-        <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
+        {/* Formula Box - Live Math Rendering */}
+        <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto">
           <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white mb-3">
-            <RotateCcw className="w-4 h-4 text-cyan-600" /> Calculation Formula
+            <RotateCcw className="w-4 h-4 text-cyan-600" /> Live Equation
+            <HelpTooltip text="Mathematical representation of the current inputs. Updates automatically as you type." />
           </h3>
-          <code className="block bg-white dark:bg-black/20 p-3 rounded text-center text-cyan-700 dark:text-cyan-300 font-mono text-sm border border-slate-200 dark:border-transparent">
-            {mode} = Total Time / {mode === "MTBF" ? "Failures" : "Count"}
-          </code>
+          <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">
+             <BlockMath math={`\\text{${mode}} = \\frac{\\text{Total Time}}{\\text{Failures}} = \\frac{${totalHours || 'T'}}{${failures || 'F'}} ${result ? `= \\mathbf{${result.toLocaleString(undefined, { maximumFractionDigits: 1 })}}` : ''}`} />
+          </div>
         </div>
 
         {/* Benchmarks */}

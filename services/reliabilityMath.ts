@@ -1,35 +1,53 @@
 
 import { WeibullDataPoint, WeibullResult } from '../types';
 
-// Simple linear regression for Weibull parameter estimation (Rank Regression)
-export const calculateWeibull = (times: number[]): WeibullResult => {
-  const sortedTimes = [...times].sort((a, b) => a - b);
-  const n = sortedTimes.length;
+// Support for Rank Adjustment Method with Suspensions (Right-Censored Data)
+export const calculateWeibull = (dataInput: { time: number; suspended?: boolean }[]): WeibullResult => {
+  // Sort by time
+  const sortedData = [...dataInput].sort((a, b) => a.time - b.time);
+  const n = sortedData.length;
   
   const points: WeibullDataPoint[] = [];
-  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-  let sumYY = 0; // Added for R-Squared calculation
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0, sumYY = 0;
 
+  // Rank Adjustment Method calculations
+  let previousAdjustedRank = 0;
+  
   for (let i = 0; i < n; i++) {
-    const rank = i + 1;
-    // Benard's Approximation for Median Ranks (Standard Industry Method)
-    const medianRank = (rank - 0.3) / (n + 0.4);
-    const t = sortedTimes[i];
-    if (t <= 0) continue;
+    const item = sortedData[i];
+    if (item.time <= 0) continue;
 
-    const x = Math.log(t); // ln(t)
-    const y = Math.log(-Math.log(1 - medianRank)); // ln(-ln(1-R))
+    const remainingItems = n - i;
+    
+    // Only calculate for failed items
+    if (!item.suspended) {
+      const increment = (n + 1 - previousAdjustedRank) / (1 + remainingItems);
+      const adjustedRank = previousAdjustedRank + increment;
+      previousAdjustedRank = adjustedRank;
 
-    points.push({ time: t, rank, medianRank });
+      // Benard's Approximation for Median Ranks
+      const medianRank = (adjustedRank - 0.3) / (n + 0.4);
+      
+      const x = Math.log(item.time); // ln(t)
+      const y = Math.log(-Math.log(1 - medianRank)); // ln(-ln(1-R))
 
-    sumX += x;
-    sumY += y;
-    sumXY += x * y;
-    sumXX += x * x;
-    sumYY += y * y;
+      points.push({ time: item.time, suspended: false, rank: adjustedRank, medianRank });
+
+      sumX += x;
+      sumY += y;
+      sumXY += x * y;
+      sumXX += x * x;
+      sumYY += y * y;
+    } else {
+      // Just record suspended point for visualization, no math
+      points.push({ time: item.time, suspended: true });
+    }
   }
 
-  const count = points.length;
+  // Filter out suspended points to count actual failures for regression
+  const failures = points.filter(p => !p.suspended);
+  const count = failures.length;
+
   if (count < 2) {
     return { beta: 0, eta: 0, rSquared: 0, points, linePoints: [], b10: 0 };
   }
@@ -39,33 +57,101 @@ export const calculateWeibull = (times: number[]): WeibullResult => {
   const intercept = (sumY - beta * sumX) / count;
   
   // Calculate Eta (Scale)
-  // Intercept = -beta * ln(eta)  =>  ln(eta) = -Intercept/beta  => eta = exp(-Intercept/beta)
   const eta = Math.exp(-intercept / beta);
   
-  // Calculate actual R-Squared (Coefficient of Determination)
-  // Formula: (n*sumXY - sumX*sumY)^2 / ((n*sumXX - sumX^2)(n*sumYY - sumY^2))
+  // Calculate R-Squared
   const numerator = (count * sumXY - sumX * sumY);
   const denominator = Math.sqrt((count * sumXX - sumX * sumX) * (count * sumYY - sumY * sumY));
   const rSquared = denominator !== 0 ? Math.pow(numerator / denominator, 2) : 0;
 
-  // B10 Life Calculation: Time at which 10% of population fails (Reliability = 90%)
-  // Formula: Eta * (-ln(0.9))^(1/Beta)
+  // B10 Life Calculation
   const b10 = eta * Math.pow(-Math.log(0.9), 1 / beta);
-
-  // Generate Regression Line points for plotting (Probability Plot)
-  const minTime = points[0].time;
-  const maxTime = points[points.length - 1].time;
   
-  // We plot the line from slightly before min to slightly after max
-  const startT = minTime * 0.5;
-  const endT = maxTime * 1.5;
+  // Simple regression variance for confidence bounds (Fisher Matrix approx)
+  const meanX = sumX / count;
+  const sxx = sumXX - (sumX * sumX) / count;
+  const syy = sumYY - (sumY * sumY) / count;
+  const sxy = sumXY - (sumX * sumY) / count;
+  const sigmaSq = Math.max(0, (syy - beta * sxy) / (count - 2 || 1));
+  
+  const varBeta = sigmaSq / sxx;
+  const varA = sigmaSq * (1 / count + (meanX * meanX) / sxx);
+  
+  // 90% Confidence bounds (Z = 1.645 approx)
+  const z = 1.645;
+  const betaLower = beta - z * Math.sqrt(varBeta);
+  const betaUpper = beta + z * Math.sqrt(varBeta);
+  
+  // Eta variance (requires delta method since eta = exp(-a/beta), simplifying for standard approx)
+  // Simple boundary projection using intercept bounds
+  const aLower = intercept - z * Math.sqrt(varA);
+  const aUpper = intercept + z * Math.sqrt(varA);
+  const etaLower = Math.exp(-aUpper / beta); // Inverted due to negative sign
+  const etaUpper = Math.exp(-aLower / beta);
+
+  const startT = failures[0].time * 0.5;
+  const endT = failures[count - 1].time * 1.5;
 
   const linePoints = [
     { time: startT, medianRank: 1 - Math.exp(-Math.pow(startT/eta, beta)) },
     { time: endT, medianRank: 1 - Math.exp(-Math.pow(endT/eta, beta)) }
   ];
 
-  return { beta, eta, rSquared, points, linePoints, b10 };
+  return { 
+    beta, eta, rSquared, points, linePoints, b10, 
+    bounds: { betaLower, betaUpper, etaLower, etaUpper, varBeta, varEta: varA } 
+  };
+};
+
+export const calculate3ParameterWeibull = (dataInput: { time: number; suspended?: boolean }[]): WeibullResult => {
+  const failedTimes = dataInput.filter(d => !d.suspended).map(d => d.time);
+  if (failedTimes.length < 3) return calculateWeibull(dataInput);
+
+  const minT = Math.min(...failedTimes);
+  let bestT0 = 0;
+  let bestR2 = -1;
+  let bestResult = calculateWeibull(dataInput);
+  
+  const steps = 100;
+  const stepSize = minT / steps;
+  
+  for (let i = 0; i < steps; i++) {
+    const t0 = i * stepSize;
+    if (t0 >= minT - 1e-5) break; 
+    
+    const shiftedData = dataInput.map(d => ({ 
+      time: Math.max(0.0001, d.time - t0), 
+      suspended: d.suspended 
+    }));
+    
+    const res = calculateWeibull(shiftedData);
+    // Prefer higher R-squared AND penalize heavily if R-squared drops
+    if (res.rSquared > bestR2) {
+      bestR2 = res.rSquared;
+      bestT0 = t0;
+      bestResult = res;
+    }
+  }
+  
+  return { ...bestResult, t0: bestT0 };
+};
+
+export const generateContourPlotData = (beta: number, eta: number, varBeta: number, varEta: number) => {
+  // A simple grid generator for visualization of parameter likelihood bounds
+  const data = [];
+  const bStep = (beta * 0.2) / 10;
+  const eStep = (eta * 0.2) / 10;
+  
+  for (let b = beta * 0.8; b <= beta * 1.2; b += bStep) {
+    for (let e = eta * 0.8; e <= eta * 1.2; e += eStep) {
+      // Gaussian 2D likelihood approximation based on regression variance
+      const zBeta = (b - beta) / Math.sqrt(varBeta || 1);
+      const zEta = (e - eta) / Math.sqrt(varEta || 1);
+      const likelihood = Math.exp(-0.5 * (zBeta * zBeta + zEta * zEta));
+      data.push({ beta: b, eta: e, likelihood });
+    }
+  }
+  return data;
 };
 
 // Generate data points for PDF, CDF, Reliability, and Hazard curves
@@ -129,6 +215,54 @@ export const calculateParallelReliability = (reliabilities: number[]): number =>
 export const calculateSeriesReliability = (reliabilities: number[]): number => {
   // R_series = product(R_i)
   return reliabilities.reduce((acc, r) => acc * r, 1);
+};
+
+export const calculateMonteCarloRBD = (
+  reliabilities: number[], 
+  mode: 'SERIES' | 'PARALLEL', 
+  iterations: number = 10000,
+  ccfBeta: number = 0 // Common Cause Failure factor (0 to 1)
+): number => {
+  let systemSuccessCount = 0;
+
+  for (let i = 0; i < iterations; i++) {
+    let ccfOccurred = false;
+
+    // CCF: Common Cause Failure (Beta factor model)
+    // Beta is the fraction of overall failure rate due to common cause.
+    // Given only reliabilities R, unreliability Q = 1 - R.
+    // If all blocks share a CCF susceptibility, they might all fail simultaneously.
+    if (ccfBeta > 0 && mode === 'PARALLEL' && reliabilities.length > 1) {
+      const avgUnrel = 1 - (reliabilities.reduce((a, b) => a + b, 0) / reliabilities.length);
+      const ccfProb = ccfBeta * avgUnrel;
+      if (Math.random() <= ccfProb) {
+        ccfOccurred = true;
+      }
+    }
+
+    if (ccfOccurred) {
+      // CCF wipes out the entire parallel redundant structure
+      continue;
+    }
+
+    const blockStates = reliabilities.map(r => {
+      // If CCF applies, we should theoretically adjust individual R to remove CCF portion
+      // Adjusted R = 1 - (Unrel * (1 - Beta)) = R + Unrel * Beta. For simplicity, we approximate.
+      const adjustedR = ccfBeta > 0 && mode === 'PARALLEL' ? r + ((1 - r) * ccfBeta) : r;
+      return Math.random() <= adjustedR;
+    });
+
+    let isSystemSuccess = false;
+    if (mode === 'SERIES') {
+      isSystemSuccess = blockStates.every(state => state === true);
+    } else { // PARALLEL
+      isSystemSuccess = blockStates.some(state => state === true);
+    }
+
+    if (isSystemSuccess) systemSuccessCount++;
+  }
+
+  return systemSuccessCount / iterations;
 };
 
 export const calculateSpareParts = (

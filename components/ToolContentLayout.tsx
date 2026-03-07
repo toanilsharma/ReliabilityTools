@@ -1,8 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ChevronDown, ChevronUp, Share2, Printer } from 'lucide-react';
+import { ChevronDown, ChevronUp, Share2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import EmbedCodeGenerator from './EmbedCodeGenerator';
+import ContextGlossaryPanel from './ContextGlossaryPanel';
 
 interface FAQItem {
     question: string;
@@ -30,8 +31,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 }) => {
     const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
     const location = useLocation();
-    
-    // Extract tool ID from path, e.g. /mtbf-calculator -> mtbf-calculator
+
     const toolId = location.pathname.split('/').pop() || '';
 
     const toggleFaq = (index: number) => {
@@ -41,21 +41,20 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
     const cleanDescription = description.replace(/<[^>]*>?/gm, '');
 
     const faqSchema = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": faqs.map(faq => ({
-            "@type": "Question",
-            "name": faq.question,
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": faq.answer
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(faq => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer
             }
         }))
     };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* SEO */}
             <Helmet>
                 <title>{`${title} | Reliability Tools`}</title>
                 <meta name="description" content={cleanDescription} />
@@ -68,7 +67,6 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                 </script>
             </Helmet>
 
-            {/* Hero Section */}
             <div className="mb-10 text-center max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
                     {title}
@@ -78,7 +76,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                 </p>
                 <div className="flex justify-center gap-4">
                     <button
-                        onClick={() => window.scrollTo({ top: document.getElementById('tool-container')?.offsetTop! - 100, behavior: 'smooth' })}
+                        onClick={() => window.scrollTo({ top: (document.getElementById('tool-container')?.offsetTop ?? 0) - 100, behavior: 'smooth' })}
                         className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:-translate-y-1"
                     >
                         Use Tool Now
@@ -103,7 +101,6 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                 </div>
             </div>
 
-            {/* Tool Container */}
             <div id="tool-container" className="scroll-mt-24 mb-16">
                 <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                     <div className="p-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 opacity-20 dark:opacity-40"></div>
@@ -111,19 +108,16 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                         {toolComponent}
                     </div>
                 </div>
-                
+
                 <EmbedCodeGenerator toolId={toolId} title={title.split('–')[0].trim()} />
             </div>
 
             <div className="grid lg:grid-cols-4 gap-12">
-                {/* Main Content */}
                 <div className="lg:col-span-3 space-y-12">
-                    {/* Article Section */}
                     <article className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-a:text-cyan-600 dark:prose-a:text-cyan-400 hover:prose-a:text-cyan-500">
                         {content}
                     </article>
 
-                    {/* FAQ Section */}
                     <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>
                         <div className="space-y-4">
@@ -157,10 +151,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     </section>
                 </div>
 
-                {/* Sidebar */}
                 <div className="lg:col-span-1 space-y-8">
                     <div className="sticky top-24 space-y-8">
-                        {/* Table of Contents or Ad space could go here */}
                         <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 border border-slate-100 dark:border-slate-700/50">
                             <h3 className="font-bold text-slate-900 dark:text-white mb-4">Table of Contents</h3>
                             <nav className="space-y-2 text-sm">
@@ -171,6 +163,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                                 <a href="#standards" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Standards</a>
                             </nav>
                         </div>
+
+                        <ContextGlossaryPanel />
 
                         <div className="bg-gradient-to-br from-cyan-900 to-slate-900 rounded-xl p-6 text-white shadow-lg">
                             <h3 className="font-bold text-lg mb-2">Need Help?</h3>

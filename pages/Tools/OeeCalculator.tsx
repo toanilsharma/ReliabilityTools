@@ -100,6 +100,16 @@ const OeeCalculator: React.FC = () => {
               <input type="number" value={rejects} onChange={e => setRejects(e.target.value)} className="w-full p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-900 outline-none focus:ring-2 focus:ring-cyan-500" />
             </div>
           </div>
+          {/* Feature 13 Validation */}
+          {(result.oee > 1 || result.availability > 1 || result.performance > 1 || result.quality > 1) && (
+            <div className="p-4 rounded-lg border-l-4 bg-red-50 dark:bg-red-900/20 border-red-500 text-red-800 dark:text-red-200 text-sm flex items-start gap-3 mt-4">
+              <AlertOctagon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-bold mb-1">Impossible Physics Detected</h4>
+                <p>One of your OEE metrics is calculated over 100%. Please check that <strong>Ideal Cycle Time</strong> and <strong>Total Count</strong> do not exceed the actual running time, and that <strong>Rejects</strong> are not greater than <strong>Total Count</strong>.</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

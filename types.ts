@@ -30,6 +30,7 @@ export interface LearningArticle {
 
 export interface WeibullDataPoint {
   time: number;
+  suspended?: boolean;
   rank?: number;
   medianRank?: number;
 }
@@ -37,10 +38,19 @@ export interface WeibullDataPoint {
 export interface WeibullResult {
   beta: number; // Shape
   eta: number;  // Scale
+  t0?: number;  // Location (Guarantee Time)
   rSquared: number;
   points: WeibullDataPoint[];
   linePoints: { time: number; medianRank: number }[];
   b10: number;
+  bounds?: {
+    betaLower: number;
+    betaUpper: number;
+    etaLower: number;
+    etaUpper: number;
+    varBeta: number;
+    varEta: number;
+  };
 }
 
 export enum RBDBlockType {

@@ -1,6 +1,7 @@
-
 import React, { useState, useMemo } from 'react';
-import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle, AlertCircle, ArrowRight, Clock, Shield, AlertTriangle, Settings, Info, BarChart2 } from 'lucide-react';
+import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle, AlertCircle, ArrowRight, Clock, Shield, AlertTriangle, Settings, Info, BarChart2, RotateCcw } from 'lucide-react';
+import 'katex/dist/katex.min.css';
+import { BlockMath } from 'react-katex';
 import ToolContentLayout from '../../components/ToolContentLayout';
 
 // Mock function if service is missing or not exposed properly, 
@@ -86,12 +87,16 @@ const LccCalculator: React.FC = () => {
     <div className="space-y-6">
       {/* Global Settings */}
       <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-wrap gap-4 items-center justify-between">
-        <div className="flex gap-4">
-          <div className="w-32">
+        <div className="flex flex-wrap gap-4">
+          <div className="w-28">
             <label className="text-xs font-bold text-slate-500">Discount Rate %</label>
             <input type="number" value={params.discountRate} onChange={e => handleChange('discountRate', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
           </div>
-          <div className="w-32">
+          <div className="w-28">
+            <label className="text-xs font-bold text-slate-500">Inflation Rate %</label>
+            <input type="number" value={params.inflationRate} onChange={e => handleChange('inflationRate', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+          </div>
+          <div className="w-28">
             <label className="text-xs font-bold text-slate-500">Lifespan (Yrs)</label>
             <input type="number" value={params.lifespan} onChange={e => handleChange('lifespan', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
           </div>
@@ -154,6 +159,16 @@ const LccCalculator: React.FC = () => {
             <div className="text-xs text-slate-400 uppercase font-bold">ROI / Savings</div>
             <div className="text-xl font-bold text-green-500">{savingsPercent.toFixed(1)}%</div>
           </div>
+        </div>
+
+        {/* Live Math Rendering */}
+        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-lg mt-6 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 overflow-x-auto shadow-inner">
+           <h4 className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+             <RotateCcw className="w-3 h-3 text-cyan-500" /> Live Equation (NPV for ${isBBetter ? 'Option B' : 'Option A'})
+           </h4>
+           <div className="text-sm">
+             <BlockMath math={`\\text{NPV} = \\text{Capex} + \\sum_{t=1}^{${params.lifespan}} \\frac{\\text{Recurring Costs}}{(1 + ${params.discountRate/100} - ${params.inflationRate/100})^t} = \\mathbf{\\$${(isBBetter ? analysisB.npv : analysisA.npv).toLocaleString(undefined, { maximumFractionDigits: 0 })}}`} />
+           </div>
         </div>
       </div>
     </div>

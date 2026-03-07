@@ -34,6 +34,11 @@ const KOutOfN = lazy(() => import('./pages/Tools/KOutOfN'));
 const HazardRateCalculator = lazy(() => import('./pages/Tools/HazardRateCalculator'));
 const SystemReliabilityValidator = lazy(() => import('./pages/Tools/SystemReliabilityValidator'));
 const FishboneDiagramGenerator = lazy(() => import('./pages/Tools/FishboneDiagramGenerator'));
+const FaultTreeAnalysis = lazy(() => import('./pages/Tools/FaultTreeAnalysis'));
+const MarkovChainTool = lazy(() => import('./pages/Tools/MarkovChainTool'));
+const ReliabilityGrowth = lazy(() => import('./pages/Tools/ReliabilityGrowth'));
+const WarrantyPrediction = lazy(() => import('./pages/Tools/WarrantyPrediction'));
+const CostRiskOptimization = lazy(() => import('./pages/Tools/CostRiskOptimization'));
 
 // Content & Legal
 const LearningCenter = lazy(() => import('./pages/LearningCenter'));
@@ -49,6 +54,7 @@ const CookiePolicy = lazy(() => import('./pages/Legal').then(module => ({ defaul
 const EmbedView = lazy(() => import('./components/EmbedView'));
 
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
+import ContextGlossary from './components/ContextGlossary';
 
 const App: React.FC = () => {
   return (
@@ -87,6 +93,11 @@ const App: React.FC = () => {
               <Route path="tools/hazard-rate" element={<HazardRateCalculator />} />
               <Route path="tools/validator" element={<SystemReliabilityValidator />} />
               <Route path="tools/fishbone" element={<FishboneDiagramGenerator />} />
+              <Route path="tools/fta" element={<FaultTreeAnalysis />} />
+              <Route path="tools/markov" element={<MarkovChainTool />} />
+              <Route path="tools/growth" element={<ReliabilityGrowth />} />
+              <Route path="tools/warranty" element={<WarrantyPrediction />} />
+              <Route path="tools/cost-risk" element={<CostRiskOptimization />} />
 
               {/* Content */}
               <Route path="learning" element={<LearningCenter />} />
@@ -106,6 +117,7 @@ const App: React.FC = () => {
             <Route path="/embed/:toolId" element={<EmbedView />} />
           </Routes>
         </Suspense>
+        <ContextGlossary />
       </Router>
     </ThemeProvider>
   );

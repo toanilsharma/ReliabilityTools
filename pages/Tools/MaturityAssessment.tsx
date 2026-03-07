@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
-import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip } from 'recharts';
-import { CheckCircle2, TrendingUp, AlertTriangle, Printer, BarChart, CheckSquare, Target, BookOpen } from 'lucide-react';
+import ReactECharts from 'echarts-for-react';
+import { CheckCircle2, TrendingUp, AlertTriangle, Printer, BarChart, CheckSquare } from 'lucide-react';
 import RelatedTools from '../../components/RelatedTools';
 import ToolContentLayout from '../../components/ToolContentLayout';
 
@@ -12,21 +11,16 @@ interface Question {
 }
 
 const QUESTIONS: Question[] = [
-  // Strategy
-  { id: 1, category: 'Strategy', text: 'Does your organization have defined reliability goals aligned with business objectives?' },
-  { id: 2, category: 'Strategy', text: 'Is there a formal asset criticality ranking used to prioritize work?' },
-  // Data
-  { id: 3, category: 'Data', text: 'Is maintenance data (failure codes, costs, hours) accurately captured in a CMMS?' },
-  { id: 4, category: 'Data', text: 'Are bad actors (worst performing assets) identified and tracked monthly?' },
-  // Analysis
-  { id: 5, category: 'Analysis', text: 'Do you perform Root Cause Analysis (RCA) on all critical failures?' },
-  { id: 6, category: 'Analysis', text: 'Are preventive maintenance intervals optimized using data (Weibull/MTBF)?' },
-  // Execution
-  { id: 7, category: 'Execution', text: 'Is the ratio of Preventive to Corrective maintenance greater than 60:40?' },
-  { id: 8, category: 'Execution', text: 'Are spare parts kitted and available before a job starts?' },
-  // Culture
-  { id: 9, category: 'Culture', text: 'Are operators involved in basic equipment care (Autonomous Maintenance)?' },
-  { id: 10, category: 'Culture', text: 'Does management support long-term reliability over short-term production fixes?' },
+  { id: 1, category: 'Strategy', text: 'Does your organization have reliability goals tied to business outcomes?' },
+  { id: 2, category: 'Strategy', text: 'Is asset criticality ranking used to prioritize work?' },
+  { id: 3, category: 'Data', text: 'Is CMMS failure/cost data complete and accurate?' },
+  { id: 4, category: 'Data', text: 'Are bad actors tracked monthly?' },
+  { id: 5, category: 'Analysis', text: 'Do you run RCA on critical failures?' },
+  { id: 6, category: 'Analysis', text: 'Are PM intervals data-optimized?' },
+  { id: 7, category: 'Execution', text: 'Is PM:CM ratio better than 60:40?' },
+  { id: 8, category: 'Execution', text: 'Are parts kitted before jobs?' },
+  { id: 9, category: 'Culture', text: 'Are operators involved in autonomous care?' },
+  { id: 10, category: 'Culture', text: 'Does leadership prioritize long-term reliability?' },
 ];
 
 const CATEGORIES = ['Strategy', 'Data', 'Analysis', 'Execution', 'Culture'];
@@ -39,31 +33,41 @@ const MaturityAssessment: React.FC = () => {
     setScores(prev => ({ ...prev, [id]: val }));
   };
 
-  const calculateResults = () => {
-    const data = CATEGORIES.map(cat => {
-      const catQuestions = QUESTIONS.filter(q => q.category === cat);
-      const totalScore = catQuestions.reduce((acc, q) => acc + (scores[q.id] || 0), 0);
-      const maxScore = catQuestions.length * 5;
-      const normalized = (totalScore / maxScore) * 100;
-      return { subject: cat, A: Math.round(normalized), fullMark: 100 };
-    });
-    return data;
-  };
+  const chartData = CATEGORIES.map(cat => {
+    const catQuestions = QUESTIONS.filter(q => q.category === cat);
+    const totalScore = catQuestions.reduce((acc, q) => acc + (scores[q.id] || 0), 0);
+    const maxScore = catQuestions.length * 5;
+    const normalized = (totalScore / maxScore) * 100;
+    return { category: cat, value: Math.round(normalized) };
+  });
 
-  const chartData = calculateResults();
-  const overallScore = Math.round(chartData.reduce((acc, d) => acc + d.A, 0) / CATEGORIES.length);
+  const overallScore = Math.round(chartData.reduce((acc, d) => acc + d.value, 0) / CATEGORIES.length);
 
   const getLevel = (score: number) => {
-    if (score < 40) return { label: 'Reactive', color: 'text-red-500', bg: 'bg-red-100', desc: 'Fire-fighting mode. Maintenance is driven by breakdowns.' };
-    if (score < 70) return { label: 'Planned', color: 'text-yellow-500', bg: 'bg-yellow-100', desc: 'Basic PMs are in place, but optimization is lacking.' };
-    if (score < 90) return { label: 'Proactive', color: 'text-blue-500', bg: 'bg-blue-100', desc: 'Data-driven decisions and RCA are standard practice.' };
-    return { label: 'World Class', color: 'text-green-500', bg: 'bg-green-100', desc: 'Reliability is part of the DNA. Continuous improvement is autonomous.' };
+    if (score < 40) return { label: 'Reactive', color: 'text-red-500', bg: 'bg-red-100', desc: 'Breakdown-driven and highly unstable.' };
+    if (score < 70) return { label: 'Planned', color: 'text-yellow-500', bg: 'bg-yellow-100', desc: 'Basic controls in place, optimization still weak.' };
+    if (score < 90) return { label: 'Proactive', color: 'text-blue-500', bg: 'bg-blue-100', desc: 'Data and RCA are routine across teams.' };
+    return { label: 'World Class', color: 'text-green-500', bg: 'bg-green-100', desc: 'Reliability is embedded in culture and design.' };
   };
 
   const level = getLevel(overallScore);
 
-  const handlePrint = () => {
-    window.print();
+  const radarOption = {
+    tooltip: {},
+    radar: {
+      indicator: chartData.map((d) => ({ name: d.category, max: 100 })),
+      splitLine: { lineStyle: { color: '#94a3b8' } },
+      axisLine: { lineStyle: { color: '#cbd5e1' } },
+      splitArea: { areaStyle: { color: ['rgba(148,163,184,0.03)'] } },
+    },
+    series: [{
+      type: 'radar',
+      data: [{
+        value: chartData.map((d) => d.value),
+        areaStyle: { color: 'rgba(6,182,212,0.4)' },
+        lineStyle: { color: '#06b6d4', width: 3 },
+      }],
+    }],
   };
 
   const ToolComponent = (
@@ -89,10 +93,7 @@ const MaturityAssessment: React.FC = () => {
                     <button
                       key={val}
                       onClick={() => handleScoreChange(q.id, val)}
-                      className={`w-10 h-10 rounded-lg font-bold transition-all border border-slate-200 dark:border-slate-700 ${scores[q.id] === val
-                          ? 'bg-cyan-600 text-white shadow-md scale-110 border-cyan-600 ring-2 ring-cyan-200 dark:ring-cyan-900'
-                          : 'bg-white dark:bg-slate-800 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
-                        }`}
+                      className={`w-10 h-10 rounded-lg font-bold transition-all border border-slate-200 dark:border-slate-700 ${scores[q.id] === val ? 'bg-cyan-600 text-white shadow-md scale-110 border-cyan-600' : 'bg-white dark:bg-slate-800 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
                     >
                       {val}
                     </button>
@@ -118,30 +119,15 @@ const MaturityAssessment: React.FC = () => {
       ) : (
         <div className="space-y-8 animate-fade-in">
           <div className="flex justify-between items-center no-print">
-            <button onClick={() => setShowResult(false)} className="text-sm text-slate-500 hover:text-cyan-600 font-bold">← Back to Assessment</button>
-            <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 text-sm font-bold"><Printer className="w-4 h-4" /> Print Report</button>
+            <button onClick={() => setShowResult(false)} className="text-sm text-slate-500 hover:text-cyan-600 font-bold">Back to Assessment</button>
+            <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 text-sm font-bold"><Printer className="w-4 h-4" /> Print Report</button>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg flex flex-col items-center justify-center">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider">Maturity Radar</h3>
-              <div className="w-full h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                    <PolarGrid stroke="#94a3b8" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 'bold' }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                    <Radar
-                      name="Score"
-                      dataKey="A"
-                      stroke="#06b6d4"
-                      strokeWidth={3}
-                      fill="#06b6d4"
-                      fillOpacity={0.5}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>
+              <div className="w-full h-[320px]">
+                <ReactECharts option={radarOption} opts={{ renderer: 'svg' }} style={{ height: '100%', width: '100%' }} />
               </div>
             </div>
 
@@ -153,7 +139,7 @@ const MaturityAssessment: React.FC = () => {
                   {level.label}
                 </div>
                 <p className="mt-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic">
-                  "{level.desc}"
+                  {level.desc}
                 </p>
               </div>
 
@@ -162,17 +148,17 @@ const MaturityAssessment: React.FC = () => {
                   <TrendingUp className="w-4 h-4 text-cyan-600" /> Improvement Plan
                 </h4>
                 <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
-                  {chartData.filter(d => d.A < 60).length > 0 ? (
-                    chartData.filter(d => d.A < 60).map(d => (
-                      <li key={d.subject} className="flex items-start gap-2 bg-white dark:bg-slate-800 p-2 rounded shadow-sm border border-slate-100 dark:border-slate-700">
+                  {chartData.filter(d => d.value < 60).length > 0 ? (
+                    chartData.filter(d => d.value < 60).map(d => (
+                      <li key={d.category} className="flex items-start gap-2 bg-white dark:bg-slate-800 p-2 rounded shadow-sm border border-slate-100 dark:border-slate-700">
                         <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                        <span><strong>{d.subject}:</strong> Score is critical. Prioritize this area immediately.</span>
+                        <span><strong>{d.category}:</strong> Score is critical. Prioritize this area.</span>
                       </li>
                     ))
                   ) : (
                     <li className="flex items-start gap-2 bg-green-50 dark:bg-green-900/10 p-2 rounded text-green-700 dark:text-green-400">
                       <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-                      <span>Excellent! No critical weaknesses found. Focus on sustaining your high performance.</span>
+                      <span>No critical weaknesses found.</span>
                     </li>
                   )}
                 </ul>
@@ -186,57 +172,26 @@ const MaturityAssessment: React.FC = () => {
 
   const Content = (
     <div>
-      <h2 id="overview">What is Reliability Maturity?</h2>
+      <h2 id="overview">Reliability Maturity</h2>
       <p>
-        Reliability Maturity measures how "evolved" your maintenance organization is. It tracks the shift from a reactive "fix it when it breaks" culture to a proactive "predict and prevent" culture.
+        This assessment benchmarks your maintenance organization across strategy, data, analysis, execution, and culture.
       </p>
-
-      <h2 id="levels">The Maturity Ladder</h2>
-      <ul className="list-none pl-0 space-y-4">
-        <li className="flex gap-4 items-start">
-          <div className="bg-red-100 text-red-700 font-bold px-3 py-1 rounded">Level 1</div>
-          <div><strong>Reactive (Chaos):</strong> Maintenance is viewed as a cost center. High overtime, frequent emergency repairs. "We don't have time to fix it right."</div>
-        </li>
-        <li className="flex gap-4 items-start">
-          <div className="bg-yellow-100 text-yellow-700 font-bold px-3 py-1 rounded">Level 2</div>
-          <div><strong>Planned (Control):</strong> Work is scheduled. PM compliance is tracked. Basic parts manageemnt is in place. "We are getting organized."</div>
-        </li>
-        <li className="flex gap-4 items-start">
-          <div className="bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded">Level 3</div>
-          <div><strong>Proactive (Improvement):</strong> Defect elimination. Root Cause Analysis is standard. Condition Monitoring is used. "We are fixing the root causes."</div>
-        </li>
-        <li className="flex gap-4 items-start">
-          <div className="bg-green-100 text-green-700 font-bold px-3 py-1 rounded">Level 4</div>
-          <div><strong>Strategic (Excellence):</strong> Reliability is designed in. Maintenance and Operations are partners. Lowest total cost of ownership is achieved. "Reliability is everyone's job."</div>
-        </li>
-      </ul>
     </div>
   );
-
-  const faqs = [
-    {
-      question: "How often should I assess maturity?",
-      answer: "Annually. Cultural change takes time. Use this tool once a year to track trend improvements and validate if your initiatives are working."
-    },
-    {
-      question: "Why focus on 'Culture'?",
-      answer: "Peter Drucker said 'Culture eats strategy for breakfast'. You can buy the best software and sensors (Strategy/Data), but if technicians don't care to use them (Culture), reliability will fail."
-    }
-  ];
 
   return (
     <ToolContentLayout
       title="Reliability Maturity Assessment"
-      description="Evaluate your organization's maintenance culture against world-class standards. Identify gaps in Strategy, Data, Analysis, Execution, and Culture."
+      description="Evaluate maintenance culture and process maturity with a radar report and targeted improvement focus."
       toolComponent={ToolComponent}
-      content={Content}
-      faqs={faqs}
-      schema={{
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Maturity Assessment",
-        "applicationCategory": "BusinessApplication"
-      }}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="assessment" />
+        </>
+      }
+      faqs={[]}
+      schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Maturity Assessment', applicationCategory: 'BusinessApplication' }}
     />
   );
 };
