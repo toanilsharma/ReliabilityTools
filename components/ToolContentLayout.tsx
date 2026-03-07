@@ -1,6 +1,8 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp, Share2, Printer } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import EmbedCodeGenerator from './EmbedCodeGenerator';
 
 interface FAQItem {
     question: string;
@@ -27,6 +29,10 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
     schema
 }) => {
     const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
+    const location = useLocation();
+    
+    // Extract tool ID from path, e.g. /mtbf-calculator -> mtbf-calculator
+    const toolId = location.pathname.split('/').pop() || '';
 
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -105,6 +111,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                         {toolComponent}
                     </div>
                 </div>
+                
+                <EmbedCodeGenerator toolId={toolId} title={title.split('–')[0].trim()} />
             </div>
 
             <div className="grid lg:grid-cols-4 gap-12">

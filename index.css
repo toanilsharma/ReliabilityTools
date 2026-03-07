@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,28 +8,33 @@
   height: 8px;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
 /* Dark Mode Scrollbar */
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a; 
+  background: #0f172a;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155; 
+  background: #334155;
   border-radius: 4px;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569; 
+  background: #475569;
 }
 
 /* Light Mode Scrollbar */
 ::-webkit-scrollbar-track {
-  background: #f1f5f9; 
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; 
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; 
+  background: #94a3b8;
 }
 
 body {
@@ -54,15 +58,23 @@ body {
   }
 
   /* 2. Hide Non-Essential Elements (Chrome) */
-  header, footer, nav, .no-print, button, [role="button"], iframe {
+  header,
+  footer,
+  nav,
+  .no-print,
+  button,
+  [role="button"],
+  iframe {
     display: none !important;
   }
 
   /* 3. Global Print Reset */
-  body, #root {
+  body,
+  #root {
     background-color: white !important;
     color: black !important;
-    font-family: "Georgia", "Times New Roman", serif; /* Serif fonts are better for printed reading */
+    font-family:
+      "Georgia", "Times New Roman", serif; /* Serif fonts are better for printed reading */
     font-size: 11pt;
     line-height: 1.5;
     margin: 0 !important;
@@ -71,7 +83,13 @@ body {
   }
 
   /* 4. Flatten Layout Containers */
-  .max-w-4xl, .max-w-5xl, .max-w-6xl, .max-w-7xl, .container, .mx-auto, article {
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-6xl,
+  .max-w-7xl,
+  .container,
+  .mx-auto,
+  article {
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 !important;
@@ -109,17 +127,19 @@ body {
     page-break-after: avoid;
   }
 
-  p, li {
+  p,
+  li {
     font-size: 11pt !important;
     color: #1a1a1a !important;
     margin-bottom: 0.3cm !important;
     orphans: 3; /* Prevent single lines at bottom of page */
-    widows: 3;  /* Prevent single lines at top of page */
+    widows: 3; /* Prevent single lines at top of page */
   }
 
   /* 6. Formatting Elements */
   /* Remove colored backgrounds/badges */
-  *[class*="bg-"], *[class*="text-"] {
+  *[class*="bg-"],
+  *[class*="text-"] {
     background-color: transparent !important;
     color: black !important;
   }
@@ -139,14 +159,14 @@ body {
     margin-bottom: 1cm !important;
     font-size: 10pt;
   }
-  
+
   th {
     border-bottom: 2px solid #000 !important;
     font-weight: bold !important;
     text-align: left !important;
     padding: 4px 8px !important;
   }
-  
+
   td {
     border-bottom: 1px solid #ddd !important;
     padding: 4px 8px !important;
@@ -162,7 +182,7 @@ body {
     color: black !important;
     font-weight: normal;
   }
-  
+
   /* 7. Hide "Tools Mentioned" and Navigation clutter inside articles */
   /* This targets specific visual patterns common in web layout */
   .group-hover\:translate-x-2 {

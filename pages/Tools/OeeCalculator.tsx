@@ -4,6 +4,10 @@ import { calculateOEE } from '../../services/reliabilityMath';
 import { Gauge, Play, Pause, AlertOctagon, ClipboardList, BookOpen, Target, TrendingUp, Printer } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import RelatedTools from '../../components/RelatedTools';
+import ShareResult from '../../components/ShareResult';
+import { useRecentTools } from '../../hooks/useRecentTools';
+import { useLocation } from 'react-router-dom';
 
 const OeeCalculator: React.FC = () => {
   const [shiftLength, setShiftLength] = useState<string>('480'); // 8 hours
@@ -12,6 +16,32 @@ const OeeCalculator: React.FC = () => {
   const [idealCycle, setIdealCycle] = useState<string>('60'); // 60 sec/part
   const [totalCount, setTotalCount] = useState<string>('350');
   const [rejects, setRejects] = useState<string>('10');
+  
+  const { addRecentTool } = useRecentTools();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    addRecentTool({
+        id: 'oee-calculator',
+        name: 'OEE Calculator',
+        path: '/oee-calculator'
+    });
+
+    const searchParams = new URLSearchParams(location.search);
+    const s = searchParams.get('shiftLength');
+    const b = searchParams.get('breaks');
+    const d = searchParams.get('downtime');
+    const ic = searchParams.get('idealCycle');
+    const t = searchParams.get('totalCount');
+    const r = searchParams.get('rejects');
+    
+    if (s && !isNaN(parseFloat(s))) setShiftLength(s);
+    if (b && !isNaN(parseFloat(b))) setBreaks(b);
+    if (d && !isNaN(parseFloat(d))) setDowntime(d);
+    if (ic && !isNaN(parseFloat(ic))) setIdealCycle(ic);
+    if (t && !isNaN(parseFloat(t))) setTotalCount(t);
+    if (r && !isNaN(parseFloat(r))) setRejects(r);
+  }, [location.search]);
 
   const result = calculateOEE(
     parseFloat(shiftLength) || 0,
@@ -110,11 +140,18 @@ const OeeCalculator: React.FC = () => {
         <div className="md:col-span-3 bg-slate-900 dark:bg-slate-100 p-8 rounded-xl shadow-lg flex items-center justify-between mt-4">
           <div>
             <h3 className="text-xl font-bold text-white dark:text-slate-900 mb-1">OEE Score</h3>
-            <p className="text-slate-400 dark:text-slate-500 text-sm">Target: World Class > 85%</p>
+            <p className="text-slate-400 dark:text-slate-500 text-sm">Target: World Class &gt; 85%</p>
           </div>
           <div className="text-6xl font-extrabold text-cyan-400 dark:text-cyan-600">
             {formatPct(result.oee)}
           </div>
+        </div>
+        
+        <div className="md:col-span-3 mt-4">
+            <ShareResult 
+                title="Overall Equipment Effectiveness (OEE)" 
+                params={{ shiftLength, breaks, downtime, idealCycle, totalCount, rejects }} 
+            />
         </div>
       </div>
     </div>
@@ -193,15 +230,20 @@ const OeeCalculator: React.FC = () => {
 
   return (
     <ToolContentLayout
-      title="OEE Calculator"
+      title="Free OEE Calculator – Overall Equipment Effectiveness"
       description="Calculate Overall Equipment Effectiveness (OEE) to pinpoint production losses. Measure Availability, Performance, and Quality against the ISO 22400 standard."
       toolComponent={ToolComponent}
-      content={Content}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="oee" />
+        </>
+      }
       faqs={faqs}
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "OEE Calculator",
+        "name": "Free OEE Calculator – Overall Equipment Effectiveness",
         "applicationCategory": "BusinessApplication"
       }}
     />

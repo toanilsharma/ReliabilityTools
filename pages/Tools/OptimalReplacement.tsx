@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { calculateOptimalReplacementAge } from '../../services/reliabilityMath';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
-import { RefreshCcw, DollarSign, TrendingUp, AlertTriangle, Calculator, BookOpen, Target, Settings } from 'lucide-react';
+import { RefreshCcw, DollarSign, TrendingUp, AlertTriangle, Calculator, BookOpen, Target, Settings, Clock } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 

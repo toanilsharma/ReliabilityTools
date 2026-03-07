@@ -4,11 +4,35 @@ import { calculateRPN } from '../../services/reliabilityMath';
 import { AlertCircle, ClipboardList, Target, BookOpen, Sliders, Shield } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import RelatedTools from '../../components/RelatedTools';
+import ShareResult from '../../components/ShareResult';
+import { useRecentTools } from '../../hooks/useRecentTools';
+import { useLocation } from 'react-router-dom';
 
 const FmeaCalculator: React.FC = () => {
   const [severity, setSeverity] = useState(5);
   const [occurrence, setOccurrence] = useState(5);
   const [detection, setDetection] = useState(5);
+  
+  const { addRecentTool } = useRecentTools();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    addRecentTool({
+        id: 'fmea-tool',
+        name: 'FMEA Calculator',
+        path: '/fmea-tool'
+    });
+
+    const searchParams = new URLSearchParams(location.search);
+    const s = searchParams.get('severity');
+    const o = searchParams.get('occurrence');
+    const d = searchParams.get('detection');
+    
+    if (s && !isNaN(parseInt(s))) setSeverity(parseInt(s));
+    if (o && !isNaN(parseInt(o))) setOccurrence(parseInt(o));
+    if (d && !isNaN(parseInt(d))) setDetection(parseInt(d));
+  }, [location.search]);
 
   const rpn = calculateRPN(severity, occurrence, detection);
 
@@ -95,6 +119,13 @@ const FmeaCalculator: React.FC = () => {
             <p><strong>Acceptable:</strong> Keep under observation. No immediate design change needed unless Severity is 9-10.</p>
           )}
         </div>
+        
+        <div className="mt-4 w-full">
+            <ShareResult 
+                title="FMEA Risk Priority Number" 
+                params={{ severity, occurrence, detection }} 
+            />
+        </div>
       </div>
     </div>
   );
@@ -155,15 +186,20 @@ const FmeaCalculator: React.FC = () => {
 
   return (
     <ToolContentLayout
-      title="FMEA Calculator (RPN)"
+      title="Free FMEA Template & RPN Calculator Online"
       description="Assess risk using Failure Modes and Effects Analysis. Calculate the Risk Priority Number (RPN) to prioritize which failure modes need immediate attention."
       toolComponent={ToolComponent}
-      content={Content}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="fmea-calculator" />
+        </>
+      }
       faqs={faqs}
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "FMEA Calculator",
+        "name": "Free FMEA Template & RPN Calculator Online",
         "applicationCategory": "UtilitiesApplication"
       }}
     />

@@ -1,9 +1,24 @@
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { ARTICLES, TOOLS } from '../constants';
 import { ChevronRight, Calendar, User, Printer, Info, CheckCircle2, Wrench } from 'lucide-react';
 import SEO from '../components/SEO';
+
+const MtbfCalculator = lazy(() => import('./Tools/MtbfCalculator'));
+const WeibullAnalysis = lazy(() => import('./Tools/WeibullAnalysis'));
+const FmeaCalculator = lazy(() => import('./Tools/FmeaCalculator'));
+const OeeCalculator = lazy(() => import('./Tools/OeeCalculator'));
+
+const renderCalculator = (id: string) => {
+  switch (id) {
+    case 'mtbf': return <MtbfCalculator />;
+    case 'weibull': return <WeibullAnalysis />;
+    case 'fmea': return <FmeaCalculator />;
+    case 'oee': return <OeeCalculator />;
+    default: return null;
+  }
+};
 
 const ArticleView: React.FC = () => {
   const { articleId } = useParams<{ articleId: string }>();
@@ -181,6 +196,18 @@ const ArticleView: React.FC = () => {
             <div className="text-slate-700 dark:text-slate-300 italic leading-relaxed text-lg font-serif">
               {parseText(line.replace('> ', ''))}
             </div>
+          </div>
+        );
+      }
+      // Embeds
+      else if (line.trim().startsWith('{{CALCULATOR:') && line.trim().endsWith('}}')) {
+        const id = line.trim().replace('{{CALCULATOR:', '').replace('}}', '');
+        elements.push(
+          <div key={i} className="my-12 p-1 pt-6 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl relative bg-white dark:bg-slate-900 border-t-4 border-t-cyan-500">
+             <div className="absolute top-0 right-8 bg-cyan-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg z-10">Interactive Tool</div>
+             <Suspense fallback={<div className="p-12 text-center text-slate-500">Loading Calculator...</div>}>
+               {renderCalculator(id)}
+             </Suspense>
           </div>
         );
       }

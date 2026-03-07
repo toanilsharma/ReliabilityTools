@@ -24,6 +24,9 @@ import {
 import { TOOLS, ARTICLES } from '../constants';
 import { calculateMTBF } from '../services/reliabilityMath';
 import SEO from '../components/SEO';
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { useCounterAnimation } from '../hooks/useCounterAnimation';
+import RecentTools from '../components/RecentTools';
 
 // Lazy load widgets to avoid loading Recharts library on initial page load
 const AvailabilityChartWidget = React.lazy(() => import('../components/widgets/AvailabilityChart'));
@@ -96,6 +99,9 @@ const Home: React.FC = () => {
     }
   };
 
+  const observeElt = useIntersectionObserver();
+  const { count: trustScore, countRef: trustRef } = useCounterAnimation(100, 1500);
+
   const WidgetSkeleton = () => (
     <div className="h-full w-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse min-h-[300px]"></div>
   );
@@ -138,7 +144,7 @@ const Home: React.FC = () => {
             <span>Free, Private, & Secure Engineering Tools</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight">
+          <h1 className="font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight" style={{ fontSize: 'clamp(2.5rem, 6vw + 1rem, 4.5rem)' }}>
             Industrial Reliability <br className="hidden lg:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
               Engineering Suite
@@ -168,9 +174,9 @@ const Home: React.FC = () => {
           </div>
 
           {/* Trust Indicators */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-slate-500 dark:text-slate-400 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-slate-500 dark:text-slate-400 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8" ref={observeElt}>
             <div className="flex flex-col items-center">
-              <div className="font-bold text-2xl text-slate-900 dark:text-white">100%</div>
+              <div className="font-bold text-2xl text-slate-900 dark:text-white" ref={trustRef}>{trustScore}%</div>
               <div className="text-sm">Client-Side Privacy</div>
             </div>
             <div className="flex flex-col items-center">
@@ -256,7 +262,7 @@ const Home: React.FC = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Availability Widget Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+          <div ref={observeElt} className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
             <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
               Mini Version
             </div>
@@ -274,7 +280,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Failure Mode Widget Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+          <div ref={observeElt} className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
             <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
               Mini Version
             </div>
@@ -292,7 +298,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Spares Widget Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
+          <div ref={observeElt} className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col relative group hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl">
             <div className="absolute top-0 right-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 uppercase tracking-wide border-b border-l border-slate-200 dark:border-slate-600">
               Mini Version
             </div>
@@ -414,6 +420,8 @@ const Home: React.FC = () => {
 
       {/* Tools Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <RecentTools />
+        
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
         </div>
@@ -422,6 +430,7 @@ const Home: React.FC = () => {
             <Link
               key={tool.id}
               to={tool.path}
+              ref={observeElt}
               className="group block p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md"
             >
               <div className="flex items-start justify-between mb-4">
@@ -475,7 +484,7 @@ const Home: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Case 1 */}
-            <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-colors">
+            <div ref={observeElt} className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-colors">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-cyan-900/30 rounded-lg text-cyan-400">
                   <Activity className="w-6 h-6" />
@@ -501,7 +510,7 @@ const Home: React.FC = () => {
             </div>
 
             {/* Case 2 */}
-            <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+            <div ref={observeElt} className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition-colors">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-blue-900/30 rounded-lg text-blue-400">
                   <FileSpreadsheet className="w-6 h-6" />
@@ -527,7 +536,7 @@ const Home: React.FC = () => {
             </div>
 
             {/* Case 3 */}
-            <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors">
+            <div ref={observeElt} className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-purple-500/50 transition-colors">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-purple-900/30 rounded-lg text-purple-400">
                   <Settings className="w-6 h-6" />

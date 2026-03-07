@@ -5,6 +5,8 @@ import { TOOLS, AUTHOR_NAME, ARTICLES } from '../constants';
 import CookieConsent from './CookieConsent';
 import { useTheme } from '../context/ThemeContext';
 import SEO from './SEO';
+import BackToTop from './BackToTop';
+import MobileCTA from './MobileCTA';
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -174,7 +176,33 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {location.pathname !== '/' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            <nav aria-label="breadcrumb">
+              <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex flex-wrap items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+                {generateBreadcrumbSchema().itemListElement.map((item: any, idx: number, arr: any[]) => (
+                  <li key={idx} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="flex items-center">
+                    {idx < arr.length - 1 ? (
+                      <>
+                        <Link itemProp="item" to={item.item.replace('https://reliabilitytools.co.in', '') || '/'} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
+                          <span itemProp="name">{item.name}</span>
+                        </Link>
+                        <meta itemProp="position" content={String(item.position)} />
+                        <span className="mx-2 text-slate-300 dark:text-slate-600">/</span>
+                      </>
+                    ) : (
+                      <>
+                        <span itemProp="name" className="text-slate-700 dark:text-slate-300 font-medium">{item.name}</span>
+                        <meta itemProp="position" content={String(item.position)} />
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </div>
+        )}
+        <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname !== '/' ? 'py-6' : 'py-12'}`}>
           <Outlet />
         </div>
       </main>
@@ -185,7 +213,7 @@ const Layout: React.FC = () => {
       {/* Footer */}
       <footer className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-900 pt-16 pb-12 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <ShieldCheck className="h-6 w-6 text-cyan-400" />
@@ -265,6 +293,18 @@ const Layout: React.FC = () => {
           </div>
 
           <div className="border-t border-slate-800 pt-12 flex flex-col items-center">
+            {/* SEO Keyword Links */}
+            <div className="mb-10 text-center text-xs text-slate-500 flex flex-wrap justify-center gap-2 max-w-4xl mx-auto leading-loose items-center">
+              <Link to="/mtbf-calculator" className="hover:text-cyan-400 transition-colors font-medium">MTBF Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/mttr" className="hover:text-cyan-400 transition-colors font-medium">MTTR Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/weibull-analysis" className="hover:text-cyan-400 transition-colors font-medium">Weibull Analysis Tool</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/fmea-tool" className="hover:text-cyan-400 transition-colors font-medium">FMEA Template</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/oee-calculator" className="hover:text-cyan-400 transition-colors font-medium">OEE Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/lcc" className="hover:text-cyan-400 transition-colors font-medium">Life Cycle Cost Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools" className="hover:text-cyan-400 transition-colors font-medium">Reliability Engineering Tools</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/pm" className="hover:text-cyan-400 transition-colors font-medium">Preventive Maintenance Calculator</Link>
+            </div>
+
             {/* Disclaimer Box */}
             <div className="w-full max-w-4xl bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 backdrop-blur-sm mb-8">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 text-center sm:text-left">
@@ -285,6 +325,8 @@ const Layout: React.FC = () => {
           </div>
         </div>
       </footer>
+      <BackToTop />
+      <MobileCTA />
     </div>
   );
 };

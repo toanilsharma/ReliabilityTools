@@ -41,9 +41,12 @@ const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub')); // New Import
 const ArticleView = lazy(() => import('./pages/ArticleView'));
 const Faq = lazy(() => import('./pages/Faq'));
 const Glossary = lazy(() => import('./pages/Glossary'));
+const Methodology = lazy(() => import('./pages/Methodology'));
 const PrivacyPolicy = lazy(() => import('./pages/Legal').then(module => ({ default: module.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/Legal').then(module => ({ default: module.TermsOfService })));
 const CookiePolicy = lazy(() => import('./pages/Legal').then(module => ({ default: module.CookiePolicy })));
+
+const EmbedView = lazy(() => import('./components/EmbedView'));
 
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 
@@ -62,15 +65,15 @@ const App: React.FC = () => {
 
               {/* Tools */}
               <Route path="tools" element={<Home />} />
-              <Route path="tools/mtbf" element={<MtbfCalculator />} />
-              <Route path="tools/weibull" element={<WeibullAnalysis />} />
+              <Route path="mtbf-calculator" element={<MtbfCalculator />} />
+              <Route path="weibull-analysis" element={<WeibullAnalysis />} />
               <Route path="tools/rbd" element={<RbdTool />} />
               <Route path="tools/availability" element={<AvailabilityCalculator />} />
               <Route path="tools/mttr" element={<MttrCalculator />} />
               <Route path="tools/pm" element={<PmScheduler />} />
               <Route path="tools/spares" element={<SparePartEstimator />} />
               <Route path="tools/lcc" element={<LccCalculator />} />
-              <Route path="tools/oee" element={<OeeCalculator />} />
+              <Route path="oee-calculator" element={<OeeCalculator />} />
               <Route path="tools/test-planner" element={<TestPlanner />} />
               <Route path="tools/assessment" element={<MaturityAssessment />} />
               <Route path="tools/converter" element={<UnitConverter />} />
@@ -78,7 +81,7 @@ const App: React.FC = () => {
               <Route path="tools/optimal-replacement" element={<OptimalReplacement />} />
               <Route path="tools/eoq" element={<EoqCalculator />} />
               <Route path="tools/sil" element={<SilVerification />} />
-              <Route path="tools/fmea" element={<FmeaCalculator />} />
+              <Route path="fmea-tool" element={<FmeaCalculator />} />
               <Route path="tools/confidence-interval" element={<ConfidenceInterval />} />
               <Route path="tools/k-out-of-n" element={<KOutOfN />} />
               <Route path="tools/hazard-rate" element={<HazardRateCalculator />} />
@@ -90,13 +93,17 @@ const App: React.FC = () => {
               <Route path="knowledge-hub" element={<KnowledgeHub />} /> {/* New Route */}
               <Route path="learning/:articleId" element={<ArticleView />} />
               <Route path="faq" element={<Faq />} />
-              <Route path="glossary" element={<Glossary />} />
+              <Route path="reliability-engineering-glossary" element={<Glossary />} />
+              <Route path="methodology" element={<Methodology />} />
 
               {/* Legal */}
               <Route path="legal/privacy" element={<PrivacyPolicy />} />
               <Route path="legal/terms" element={<TermsOfService />} />
               <Route path="legal/cookies" element={<CookiePolicy />} />
             </Route>
+
+            {/* Standalone Route for Embeds */}
+            <Route path="/embed/:toolId" element={<EmbedView />} />
           </Routes>
         </Suspense>
       </Router>

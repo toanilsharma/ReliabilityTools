@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { RBDBlock, RBDBlockType } from '../../types';
 import { calculateSeriesReliability, calculateParallelReliability } from '../../services/reliabilityMath';
-import { Plus, Trash2, Layers, ArrowRight, Download, Calculator, BookOpen, Target, TrendingUp, Network } from 'lucide-react';
+import { Plus, Trash2, Layers, ArrowRight, Download, Calculator, BookOpen, Target, TrendingUp, Network, Check } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 

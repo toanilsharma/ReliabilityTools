@@ -10,6 +10,9 @@ import HelpTooltip from '../../components/HelpTooltip';
 import { downloadSvgAsPng } from '../../services/exportUtils';
 import RelatedTools from '../../components/RelatedTools';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import ShareResult from '../../components/ShareResult';
+import { useRecentTools } from '../../hooks/useRecentTools';
+import { useLocation } from 'react-router-dom';
 
 const WeibullAnalysis: React.FC = () => {
   const [inputData, setInputData] = useState<string>('120\n245\n310\n550\n900');
@@ -18,6 +21,28 @@ const WeibullAnalysis: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chartRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
+  
+  const { addRecentTool } = useRecentTools();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    addRecentTool({
+        id: 'weibull',
+        name: 'Weibull Analysis',
+        path: '/weibull-analysis'
+    });
+
+    const searchParams = new URLSearchParams(location.search);
+    const data = searchParams.get('data');
+    if (data) {
+        const decoded = decodeURIComponent(data);
+        setInputData(decoded);
+        setTimeout(() => {
+            const times = decoded.split(/[\n,]+/).map(s => parseFloat(s.trim())).filter(n => !isNaN(n) && n > 0);
+            if (times.length >= 2) setResult(calculateWeibull(times));
+        }, 100);
+    }
+  }, [location.search]);
 
   // --- Tool Logic (Refactored from original file) ---
   const handleAnalyze = () => {
@@ -139,6 +164,11 @@ const WeibullAnalysis: React.FC = () => {
             </div>
 
             <div className="text-xs text-slate-400 text-center">R² Fit: {result.rSquared.toFixed(3)} | B10 Life: {result.b10.toFixed(1)}</div>
+            
+            <ShareResult 
+                title="Weibull Analysis" 
+                params={{ data: encodeURIComponent(inputData) }} 
+            />
           </div>
         )}
       </div>
@@ -301,15 +331,20 @@ const WeibullAnalysis: React.FC = () => {
 
   return (
     <ToolContentLayout
-      title="Weibull Analysis Calculator"
+      title="Free Weibull Analysis Calculator – Beta & Eta Estimation"
       description="Perform 2-parameter Weibull analysis compliant with IEC 61649. Calculate Shape (Beta) and Scale (Eta) parameters, visualize Probability and Hazard plots, and determine the optimal maintenance strategy for your assets."
       toolComponent={ToolComponent}
-      content={Content}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="weibull" />
+        </>
+      }
       faqs={faqs}
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Weibull Analysis Calculator",
+        "name": "Free Weibull Analysis Calculator – Beta & Eta Estimation",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Any",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }

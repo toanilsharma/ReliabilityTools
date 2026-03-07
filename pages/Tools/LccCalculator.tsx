@@ -1,6 +1,5 @@
 
 import React, { useState, useMemo } from 'react';
-import { calculateAdvancedLCC } from '../../services/reliabilityMath';
 import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle, AlertCircle, ArrowRight, Clock, Shield, AlertTriangle, Settings, Info, BarChart2 } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 
