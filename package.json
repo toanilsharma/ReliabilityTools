@@ -4,8 +4,9 @@
   "description": "Industrial Reliability Engineering Calculators",
   "main": "index.tsx",
   "scripts": {
-    "start": "vite",
-    "build": "npx tsc && vite build",
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "react-snap",
     "preview": "vite preview",
     "test": "vitest"
   },
@@ -37,6 +38,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
+    "react-snap": "^1.23.0",
     "typescript": "^4.9.5",
     "vite": "^5.1.4"
   },
@@ -51,5 +53,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "reactSnap": {
+    "source": "dist",
+    "inlineCss": true
   }
 }
