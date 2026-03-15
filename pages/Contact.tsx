@@ -96,39 +96,60 @@ const Contact: React.FC = () => {
         {/* Contact Form Simulation */}
         <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Send a Message</h2>
-          <form className="space-y-6" onSubmit={(e) => {
-            e.preventDefault();
-            alert("Thank you! Your message has been simulated. Please use the email link to contact us directly.");
-          }}>
+          <form 
+            name="contact" 
+            method="POST" 
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            className="space-y-6" 
+            onSubmit={(e) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const formData = new FormData(form);
+              
+              fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData as any).toString(),
+              })
+                .then(() => alert("Thank you! Your message has been sent successfully via Netlify Forms."))
+                .catch((error) => alert("Error: " + error));
+            }}
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <p className="hidden">
+              <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+            </p>
+
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">First Name</label>
-                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
+                <input type="text" name="firstName" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Last Name</label>
-                <input type="text" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
+                <input type="text" name="lastName" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
-              <input type="email" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
+              <input type="email" name="email" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Subject</label>
-              <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500">
-                <option>General Inquiry</option>
-                <option>Report a Bug</option>
-                <option>Suggestion</option>
-                <option>Partnership</option>
+              <select name="subject" className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500">
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Report a Bug">Report a Bug</option>
+                <option value="Suggestion">Suggestion</option>
+                <option value="Partnership">Partnership</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Message</label>
-              <textarea rows={5} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required></textarea>
+              <textarea name="message" rows={5} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-500" required></textarea>
             </div>
 
             <button type="submit" className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-cyan-500/25">
