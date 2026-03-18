@@ -167,7 +167,7 @@ const KnowledgeHub: React.FC = () => {
                 <p>
                   This realization changed engineering forever. It proved that complex systems require exponentially higher component quality to function.
                   This led to the 1952 <strong>AGREE Report</strong> (Advisory Group on Reliability of Electronic Equipment) by the US Department of Defense,
-                  which standardized the definitions of reliability and <Link to="/tools/mtbf" className="text-blue-600 hover:underline font-bold">MTBF</Link> we use today.
+                  which standardized the definitions of reliability and <Link to="/mtbf-calculator" className="text-blue-600 hover:underline font-bold">MTBF</Link> we use today.
                 </p>
               </article>
             </section>
@@ -228,7 +228,7 @@ const KnowledgeHub: React.FC = () => {
                     </div>
                     <div className="p-6">
                       <h4 className="font-bold text-emerald-600 mb-2 flex items-center gap-2">2. Useful Life</h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">Constant, low failure rate. Failures are random (stress &gt; strength). This is where <Link to="/tools/mtbf" className="text-emerald-600 hover:underline">MTBF</Link> applies.</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Constant, low failure rate. Failures are random (stress &gt; strength). This is where <Link to="/mtbf-calculator" className="text-emerald-600 hover:underline">MTBF</Link> applies.</p>
                     </div>
                     <div className="p-6">
                       <h4 className="font-bold text-amber-600 mb-2 flex items-center gap-2">3. Wear Out</h4>
@@ -315,10 +315,10 @@ const KnowledgeHub: React.FC = () => {
                     <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800 mb-6 flex-1">
                       <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Reliability Lesson</h4>
                       <p className="text-sm text-slate-700 dark:text-slate-300">
-                        <Link to="/tools/weibull" className="text-blue-600 hover:underline font-bold">Weibull analysis</Link> of test data would have shown that O-ring reliability was heavily dependent on temperature. Launching at 31°F (well below the test envelope) effectively reduced the reliability to zero.
+                        <Link to="/weibull-analysis" className="text-blue-600 hover:underline font-bold">Weibull analysis</Link> of test data would have shown that O-ring reliability was heavily dependent on temperature. Launching at 31°F (well below the test envelope) effectively reduced the reliability to zero.
                       </p>
                     </div>
-                    <Link to="/tools/weibull" className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 text-sm font-bold rounded-lg transition-all shadow-md group-hover:shadow-lg">
+                    <Link to="/weibull-analysis" className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 text-sm font-bold rounded-lg transition-all shadow-md group-hover:shadow-lg">
                       Run Weibull Analysis on Your Data <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -340,7 +340,7 @@ const KnowledgeHub: React.FC = () => {
                     <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800 flex-1">
                       <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Reliability Lesson</h4>
                       <p className="text-sm text-slate-700 dark:text-slate-300">
-                        A proper <Link to="/tools/fmea" className="text-blue-600 hover:underline font-bold">FMEA</Link> (Failure Mode and Effects Analysis) during design would have identified "High Wind" + "Flexible Deck" as a critical failure mode leading to "Aeroelastic Flutter".
+                        A proper <Link to="/fmea-tool" className="text-blue-600 hover:underline font-bold">FMEA</Link> (Failure Mode and Effects Analysis) during design would have identified "High Wind" + "Flexible Deck" as a critical failure mode leading to "Aeroelastic Flutter".
                       </p>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import { Settings, Clock, DollarSign, Shield, Activity, AlertTriangle, CheckCirc
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
+import RelatedTools from '../../components/RelatedTools';
 
 type AvailabilityScenario = {
   label: 'Design A' | 'Design B';
@@ -199,16 +200,22 @@ const AvailabilityCalculator: React.FC = () => {
           <div className="space-y-6">
             <div>
               <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">MTBF (Hours)</label>
-                <span className="text-sm font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/30 px-2 rounded">{draftMtbf} h</span>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-cyan-600 transition-colors cursor-pointer" onClick={() => setDraftMtbf(1000)}>MTBF (Hours)</label>
+                <div className="flex items-center">
+                  <input type="number" min="0" value={draftMtbf} onChange={(e) => setDraftMtbf(Number(e.target.value))} className="w-20 text-right text-sm font-mono text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-900/40 px-2 py-0.5 rounded-l border border-cyan-200 dark:border-cyan-800 outline-none focus:ring-1 focus:ring-cyan-500" />
+                  <span className="text-sm font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-900/60 px-2 py-0.5 border border-l-0 border-cyan-200 dark:border-cyan-800 rounded-r">h</span>
+                </div>
               </div>
               <input type="range" min="100" max="10000" step="50" value={draftMtbf} onChange={(e) => setDraftMtbf(Number(e.target.value))} className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-600" />
             </div>
 
             <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
               <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">MTTR (Hours)</label>
-                <span className="text-sm font-mono text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-2 rounded">{draftMttr} h</span>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-pink-600 transition-colors cursor-pointer" onClick={() => setDraftMttr(10)}>MTTR (Hours)</label>
+                <div className="flex items-center">
+                  <input type="number" min="0" step="0.5" value={draftMttr} onChange={(e) => setDraftMttr(Number(e.target.value))} className="w-20 text-right text-sm font-mono text-pink-700 dark:text-pink-300 bg-pink-50 dark:bg-pink-900/40 px-2 py-0.5 rounded-l border border-pink-200 dark:border-pink-800 outline-none focus:ring-1 focus:ring-pink-500" />
+                  <span className="text-sm font-mono text-pink-600 dark:text-pink-400 bg-pink-100 dark:bg-pink-900/60 px-2 py-0.5 border border-l-0 border-pink-200 dark:border-pink-800 rounded-r">h</span>
+                </div>
               </div>
               <input type="range" min="0.5" max="60" step="0.5" value={draftMttr} onChange={(e) => setDraftMttr(Number(e.target.value))} className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500" />
             </div>
@@ -329,36 +336,112 @@ const AvailabilityCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is Inherent Availability?</h2>
-      <p>
-        Inherent Availability is the steady-state probability that the system is operational when only corrective maintenance is considered.
-      </p>
-      <div className="bg-slate-900 text-slate-200 p-4 rounded-lg font-mono text-center my-4 overflow-x-auto">
-        A = MTBF / (MTBF + MTTR)
-      </div>
-      <h2 id="applications">Tier 2 enhancements</h2>
-      <ul>
-        <li>Smart tolerance warnings for unrealistic MTTR/MTBF ratios.</li>
-        <li>"Did you mean?" fallback for impossible availability values.</li>
-        <li>Side-by-side scenario overlays for Design A vs Design B.</li>
-        <li>Animated calculate flow and high-resolution SVG/EPS exports.</li>
-      </ul>
+    <div className="space-y-8">
+      <section>
+        <h2 id="overview" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">What is Inherent Availability?</h2>
+        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          <strong>Inherent Availability (A<sub>i</sub>)</strong> is the steady-state probability that a system or piece of equipment will operate satisfactorily at any given time when operating under specified conditions, considering <em>only</em> the downtime associated with active corrective maintenance (repair time).
+        </p>
+        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          It specifically excludes preventive maintenance downtime, logistical delays, administrative delays, and supply chain issues (waiting for spare parts). Because it assumes an ideal repair environment, Inherent Availability represents the <strong>maximum possible availability</strong> dictated solely by the asset's engineering design.
+        </p>
+        <div className="bg-slate-900 text-cyan-400 p-6 rounded-xl font-mono text-center my-6 flex flex-col items-center justify-center border border-slate-700 shadow-inner">
+          <span className="text-sm text-slate-400 mb-2 uppercase tracking-widest font-sans">Formula</span>
+          <span className="text-xl md:text-2xl">A<sub>i</sub> = MTBF / (MTBF + MTTR)</span>
+        </div>
+      </section>
+
+      <section>
+        <h2 id="operational-vs-inherent" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Operational vs. Inherent Availability</h2>
+        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          While engineers design for <em>Inherent Availability</em>, plant managers live in the reality of <em>Operational Availability (A<sub>o</sub>)</em>.
+        </p>
+        <div className="grid md:grid-cols-2 gap-6 my-6">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h3 className="text-lg font-bold text-cyan-700 dark:text-cyan-400 mb-2">Inherent Availability (A<sub>i</sub>)</h3>
+            <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
+              <li>Based purely on MTBF and active MTTR.</li>
+              <li>Ignores waiting for parts or technicians.</li>
+              <li>Used by design engineers to benchmark inherent equipment reliability.</li>
+              <li>Always higher than Operational Availability.</li>
+            </ul>
+          </div>
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h3 className="text-lg font-bold text-indigo-700 dark:text-indigo-400 mb-2">Operational Availability (A<sub>o</sub>)</h3>
+            <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
+              <li>Includes purely administrative downtime (waiting for permits).</li>
+              <li>Includes logistics downtime (waiting for a spare motor from Germany).</li>
+              <li>Includes planned preventive maintenance time.</li>
+              <li>The actual uptime percentage experienced by the factory floor.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 id="improving-availability" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">How to Improve System Availability</h2>
+        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
+          To move the needle on availability, you have exactly two levers to pull: increase reliability (MTBF) or improve maintainability (MTTR).
+        </p>
+        <div className="space-y-4">
+          <div className="p-4 border-l-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/10 rounded-r-lg">
+            <h4 className="font-bold text-emerald-800 dark:text-emerald-300 mb-1">Lever 1: Extend MTBF (Reliability)</h4>
+            <p className="text-sm text-emerald-900/80 dark:text-emerald-200/70">Implement Condition-Based Monitoring (CbM), redesign the system for greater strength, use higher quality components, or introduce redundancy (e.g., parallel pumps).</p>
+          </div>
+          <div className="p-4 border-l-4 border-pink-500 bg-pink-50 dark:bg-pink-900/10 rounded-r-lg">
+            <h4 className="font-bold text-pink-800 dark:text-pink-300 mb-1">Lever 2: Reduce MTTR (Maintainability)</h4>
+            <p className="text-sm text-pink-900/80 dark:text-pink-200/70">Implement "plug-and-play" modular designs, keep critical spares in local inventory, train maintenance technicians thoroughly, and use rapid diagnostic software.</p>
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-slate-500 italic">
+          <strong>Pro Tip:</strong> Mathematically and financially, it is often much cheaper and faster to reduce a 10-hour MTTR to 5 hours than it is to double a 1,000-hour MTBF to 2,000 hours. Always attack MTTR first.
+        </p>
+      </section>
+      
+      <section>
+        <h2 id="glossary" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Reliability Engineering Glossary</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-cyan-500">
+            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">MTBF</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Mean Time Between Failures. The average predicted elapsed time between breakdowns during normal operation.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-pink-500">
+            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">MTTR</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Mean Time To Repair. The average time required to functionally restore a failed asset back to operating condition.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-indigo-500">
+            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">Maintainability</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400">The ease and speed with which a system can be restored to operational status after a failure occurs.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-amber-500">
+            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">Downtime</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400">The total period during which a system is non-operational, including active repair time, logistical delays, and administrative delays.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 
   const faqs = [
     {
-      question: 'Can availability be above 100%?',
-      answer: 'No. Availability is a probability and must remain between 0% and 100%.'
+      question: 'Can availability be greater than 100%?',
+      answer: 'No. Availability is a probability expressed as a percentage. The theoretical maximum is 100%, which would imply a system that never fails (MTBF = infinity) or takes literally zero seconds to repair (MTTR = 0).'
     },
     {
-      question: 'Why compare Design A and Design B?',
-      answer: 'Scenario overlays make design tradeoffs visible before committing engineering budget.'
+      question: 'Why does the calculator use Inherent Availability instead of Operational Availability?',
+      answer: 'Inherent Availability focuses purely on the equipment\'s design (MTBF and active repair time). Operational Availability includes highly variable logistical factors (like shipping delays for a spare part from another country), making it difficult to benchmark pure engineering design tradeoffs.'
+    },
+    {
+      question: 'What is the "Five Nines" standard?',
+      answer: 'In industries like telecommunications and data centers, "Five Nines" refers to an availability of 99.999%. This equates to an allowable downtime of only 5.26 minutes per year.'
     },
     {
       question: 'What is the fastest way to improve availability?',
-      answer: 'In many plants, reducing MTTR gives quicker gains than attempting large MTBF redesigns.'
+      answer: 'In almost all industrial settings, reducing MTTR provides much faster and computationally higher gains in availability than attempting to engineer large MTBF improvements. Focus on modular repairs, better tooling, and staging spare parts locally.'
+    },
+    {
+      question: 'Why test Design A against Design B in the scenario analyzer?',
+      answer: 'Scenario overlays allow engineers to visualize tradeoffs. For example, Design A might use expensive ultra-reliable parts (High MTBF, High Repair Time), while Design B uses cheaper, modular parts (Lower MTBF, but very fast MTTR). The overlay instantly shows which design yields better overall uptime.'
     }
   ];
 
@@ -367,7 +450,12 @@ const AvailabilityCalculator: React.FC = () => {
       title="Availability Calculator"
       description="Calculate Inherent Availability, visualize MTTR sensitivity at scale, and compare Design A/B scenarios with high-resolution exports."
       toolComponent={ToolComponent}
-      content={Content}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="availability" />
+        </>
+      }
       faqs={faqs}
       schema={{
         '@context': 'https://schema.org',

@@ -158,14 +158,14 @@ const Home: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Link
-              to="/tools/mtbf"
+              to="/mtbf-calculator"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Clock className="w-5 h-5" />
               Start MTBF Calculator
             </Link>
             <Link
-              to="/tools/weibull"
+              to="/weibull-analysis"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Activity className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
@@ -498,7 +498,7 @@ const Home: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solution</span>
-                  <p className="text-slate-300 text-sm mt-1">Used <Link to="/tools/weibull" className="text-cyan-400 hover:underline">Weibull Analysis</Link> to determine failure mode was 'wear-out' (Beta {'>'} 2.5), not random.</p>
+                  <p className="text-slate-300 text-sm mt-1">Used <Link to="/weibull-analysis" className="text-cyan-400 hover:underline">Weibull Analysis</Link> to determine failure mode was 'wear-out' (Beta {'>'} 2.5), not random.</p>
                 </div>
                 <div className="pt-4 border-t border-slate-700">
                   <div className="flex items-center gap-2 text-green-400 font-bold">
