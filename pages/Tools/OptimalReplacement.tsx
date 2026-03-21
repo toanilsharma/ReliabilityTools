@@ -4,6 +4,7 @@ import ReactECharts from 'echarts-for-react';
 import { RefreshCcw, AlertTriangle, Settings, Clock } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const OptimalReplacement: React.FC = () => {
   const [costPreventive, setCostPreventive] = useState<string>('500');
@@ -139,11 +140,34 @@ const OptimalReplacement: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Optimal Replacement Age</h2>
-      <p>
-        Balance preventive and corrective maintenance cost to find the lowest long-run cost rate.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Total Cost Optimization</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Discover the absolute lowest operating cost point by mathematically balancing preventive replacements against the financial penalty of unplanned failure downtime.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The Cost Equation"
+          icon={<Settings className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The optimization engine finds the minimum point of the cost rate function where the mathematical derivative equals zero. This requires the Weibull shape and scale parameters to predict wear-out.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Prerequisites for PM Effectiveness"
+          icon={<AlertTriangle className="w-5 h-5 text-amber-500" />}
+          delay={0.2}
+        >
+          <ul className="space-y-2 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Wear-Out Profile:</strong> The asset must exhibit a definite wear-out characteristic (Weibull <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">\beta &gt; 1</span>). Scheduled maintenance is completely ineffective for random failures.</li>
+            <li><strong>Economic Advantage:</strong> The cost of unplanned failure (<span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">C_f</span>) must be strictly greater than a planned replacement cost (<span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">C_p</span>).</li>
+          </ul>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

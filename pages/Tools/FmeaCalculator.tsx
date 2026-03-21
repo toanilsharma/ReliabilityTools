@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { calculateRPN } from '../../services/reliabilityMath';
-import { Sliders, Table as TableIcon, Undo, Redo, Plus } from 'lucide-react';
+import { Sliders, Table as TableIcon, Undo, Redo, Plus, AlertTriangle, Activity, Search } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 import RelatedTools from '../../components/RelatedTools';
 
 interface FmeaRow {
@@ -165,41 +166,57 @@ const FmeaCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is FMEA?</h2>
-      <p>
-        <strong>Failure Modes and Effects Analysis (FMEA)</strong> is a systematic method for evaluating a process to identify where and how it might fail, and to assess the relative impact of different failures to identify the parts of the process that are most in need of change.
-      </p>
-
-      <h2 id="rpn">The RPN Formula</h2>
-      <p>
-        The Risk Priority Number (RPN) is calculated by multiplying three factors (scored 1-10):
-      </p>
-      <div className="grid md:grid-cols-3 gap-4 my-6">
-        <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-900/30">
-          <strong className="text-red-700 dark:text-red-400 block mb-1">Severity (S)</strong>
-          <span className="text-xs text-red-800/70 dark:text-red-200/70">How bad is it if it fails? (10 = Hazardous)</span>
-        </div>
-        <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg border border-orange-100 dark:border-orange-900/30">
-          <strong className="text-orange-700 dark:text-orange-400 block mb-1">Occurrence (O)</strong>
-          <span className="text-xs text-orange-800/70 dark:text-orange-200/70">How often does the cause happen? (10 = Always)</span>
-        </div>
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
-          <strong className="text-blue-700 dark:text-blue-400 block mb-1">Detection (D)</strong>
-          <span className="text-xs text-blue-800/70 dark:text-blue-200/70">Can we catch it before it fails? (10 = Blind)</span>
-        </div>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">FMEA Methodology</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Failure Modes and Effects Analysis (FMEA) is a systematic, bottom-up approach for identifying all possible failures in a design, manufacturing process, or service.</p>
       </div>
-      <p className="text-center font-mono text-lg font-bold bg-slate-100 dark:bg-slate-800 p-3 rounded-lg">
-        RPN = Severity × Occurrence × Detection
-      </p>
 
-      <h2 id="standard">IEC 60812 Standard</h2>
-      <p>
-        This tool follows the methodology described in <strong>IEC 60812</strong>. Note that while RPN is the classic metric, newer standards (like AIAG-VDA 2019) are moving towards "Action Priority" (AP) tables because RPN can be misleading (e.g., S=10, O=1, D=1 gives RPN=10, which looks low but is actually a severe safety hazard).
-      </p>
-      <p>
-        <strong>Always prioritize high Severity (9-10) regardless of the RPN score.</strong>
-      </p>
+      <div className="grid md:grid-cols-3 gap-6">
+        <TheoryBlock 
+          title="Severity (S)"
+          icon={<AlertTriangle className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            An assessment of how serious the <strong>Effect</strong> of the potential failure mode is to the customer or system functionality. A score of 10 represents a perilous hazard without warning.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Occurrence (O)"
+          icon={<Activity className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The estimated likelihood that the specific <strong>Cause</strong> of the failure mode will happen. A score of 10 means the failure is absolutely inevitable.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Detection (D)"
+          icon={<Search className="w-5 h-5" />}
+          delay={0.3}
+        >
+          <p>
+            An assessment of the probability that the <strong>Current Controls</strong> will detect the cause or failure mode before it reaches the customer. A score of 10 means the defect will blindly pass through (no detection capability).
+          </p>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Risk Priority Number (RPN)</h3>
+        <TheoryBlock 
+          title="The RPN Evaluation"
+          icon={<Sliders className="w-5 h-5 border-transparent" />}
+          formula="\text{RPN} = S \times O \times D"
+          delay={0.4}
+        >
+          <p>
+            The classical quantitative metric for risk prioritization. While an RPN of <code>1000</code> is the theoretical maximum, modern reliability standards (IEC 60812, AIAG-VDA) stipulate that any high Severity (e.g., S=9 or 10) necessitates immediate mitigation, <strong>regardless of the resulting overall RPN score.</strong>
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 
@@ -230,6 +247,8 @@ const FmeaCalculator: React.FC = () => {
         </>
       }
       faqs={faqs}
+      keywords="FMEA calculator, RPN calculator online, failure mode effects analysis, FMEA tool free, risk priority number, FMEA India, FMEA worksheet, IEC 60812, DFMEA PFMEA"
+      canonicalUrl="https://reliabilitytools.co.in/#/fmea-tool"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

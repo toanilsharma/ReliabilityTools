@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { Network, Plus, Trash2, ArrowRightCircle, Target } from 'lucide-react';
+import { Network, Plus, Trash2, ArrowRightCircle, Target, GitMerge, Settings } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
+import TheoryBlock from '../../components/TheoryBlock';
 
 // Simple Gaussian Elimination to solve linear systems A * x = B
 const solveLinearSystem = (A: number[][], B: number[]) => {
@@ -248,21 +249,34 @@ const MarkovChainTool: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2>What is Markov Chain Modeling?</h2>
-      <p>
-        A <strong>Continuous-Time Markov Chain (CTMC)</strong> is a mathematical model used to analyze the reliability and availability of complex, repairable systems. Unlike Fault Trees or RBDs which assume components are either perfectly distinct or not dynamically repairable, Markov chains map the exact probability of jumping from one fluid "State" to another over time.
-      </p>
-      
-      <h3>The Transition Rate Matrix (Q-Matrix)</h3>
-      <p>
-        The table you fill out defines the failure rates ($\lambda$) and repair rates ($\mu$) between states. The diagonal elements are calculated automatically to equal the negative sum of the rest of the row, so that each row sums to zero.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Markov Chain Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">A Continuous-Time Markov Chain (CTMC) is a stochastic model used to analyze the dynamic reliability and availability of highly complex, repairable systems over time.</p>
+      </div>
 
-      <h3>Steady-State Probabilities</h3>
-      <p>
-        By solving the linear algebra equation <code>P × Q = 0</code>, the tool finds the equilibrium (steady-state) probability of finding the system in any given state if it runs for a very long time. True System Availability is simply the sum of the probabilities of all "working" states.
-      </p>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Transition Rate Matrix (Q)"
+          icon={<Network className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            Unlike static fault trees, Markov models capture the exact probability flux of leaping from one operational state to another, defining failure rates (\lambda) and repair rates (\mu) concurrently.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Steady-State Equilibrium"
+          icon={<Target className="w-5 h-5" />}
+          formula="P \times \mathbf{Q} = 0"
+          delay={0.2}
+        >
+          <p>
+            By solving this core linear algebra identity (where the sum of all state probabilities equals 1), the system reveals the ultimate convergence of availability mathematically over an infinite time horizon.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

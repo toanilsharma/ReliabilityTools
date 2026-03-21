@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
-import { CheckSquare, Shield, AlertTriangle, FileText, ClipboardCheck, ThumbsUp } from 'lucide-react';
+import { CheckSquare, Shield, AlertTriangle, FileText, ClipboardCheck, ThumbsUp, Scale, ZapOff } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const SystemReliabilityValidator: React.FC = () => {
     const [checklist, setChecklist] = useState([
@@ -77,21 +78,39 @@ const SystemReliabilityValidator: React.FC = () => {
     );
 
     const Content = (
-        <div>
-            <h2 id="overview">What is Reliability Validation?</h2>
-            <p>
-                System Reliability Validation is not just testing; it's a process of ensuring that reliability is engineered into the product from Day 1. This checklist is inspired by the <strong>NASA Reliability Design Handbook</strong>.
-            </p>
+        <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+            <div className="text-center mb-10">
+                <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Design for Reliability (DfR)</h2>
+                <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">System Reliability Validation is not just testing; it's a proactive engineering process of ensuring that reliability is engineered into the product from Day 1.</p>
+            </div>
 
-            <h2 id="derating">Importance of Derating</h2>
-            <p>
-                <strong>Derating</strong> is the practice of operating a component at less than its rated maximum limit (e.g., using a 50V capacitor in a 25V circuit). This significantly reduces stress and increases life expectancy (Arrhenius Law).
-            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+                <TheoryBlock 
+                    title="Component Derating"
+                    icon={<Scale className="w-5 h-5" />}
+                    delay={0.1}
+                >
+                    <p>
+                        <strong>Derating</strong> is the practice of operating a component at significantly less than its rated maximum limit (e.g., using a 50V capacitor in a 12V circuit). 
+                    </p>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                        Per the Arrhenius Equation, reducing thermal and electrical stress exponentially increases the life expectancy of electronic components.
+                    </p>
+                </TheoryBlock>
 
-            <h2 id="spof">No Single Points of Failure</h2>
-            <p>
-                A <strong>Single Point of Failure (SPOF)</strong> is a part of a system that, if it fails, will stop the entire system from working. Good design eliminates SPOFs through redundancy or effectively designs them out.
-            </p>
+                <TheoryBlock 
+                    title="Single Point of Failure (SPOF)"
+                    icon={<ZapOff className="w-5 h-5" />}
+                    delay={0.2}
+                >
+                    <p>
+                        A <strong>Single Point of Failure (SPOF)</strong> is a node in a system architecture that, if it fails, will halt the entire system from working.
+                    </p>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                        A robust reliability design explicitly identifies and eliminates SPOFs through redundant pathways, fail-safe mechanisms, or structural reinforcement.
+                    </p>
+                </TheoryBlock>
+            </div>
         </div>
     );
 

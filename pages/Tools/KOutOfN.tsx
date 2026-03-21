@@ -4,6 +4,7 @@ import { calculateKOutOfN } from '../../services/reliabilityMath';
 import { Layers, Cuboid, Zap, CheckCircle2, AlertOctagon, Target, Info, Server } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const KOutOfN: React.FC = () => {
   const [n, setN] = useState<string>('3');
@@ -103,32 +104,54 @@ const KOutOfN: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is K-out-of-N Redundancy?</h2>
-      <p>
-        <strong>K-out-of-N</strong> is a flexible redundancy calculation used when a system has <code>N</code> identical components, but only <code>K</code> are required for the system to function successfully.
-      </p>
-      <ul>
-        <li><strong>Parallel Redundancy (1oo2):</strong> 1 out of 2. Only requires 1 to work. High reliability.</li>
-        <li><strong>Dual Modular Redundancy (2oo2):</strong> 2 out of 2. Requires both to work. Low reliability (series).</li>
-        <li><strong>Triple Modular Redundancy (2oo3):</strong> 2 out of 3. Voting logic. Ideal balance of safety and availability.</li>
-      </ul>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">K-out-of-N Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">K-out-of-N is a flexible redundancy calculation used when a system has <code>N</code> identical components, but only <code>K</code> are required for the system to function successfully.</p>
+      </div>
 
-      <h2 id="examples">Real World Examples</h2>
-      <ul>
-        <li><strong>Pumps:</strong> You have 3 pumps installed (N=3). The flow requirement can be met by 2 pumps running (K=2). The system only fails if 2 or more pumps fail.</li>
-        <li><strong>Data Centers:</strong> You have 10 hard drives in a RAID array. The data is safe as long as at least 8 drives are alive (K=8).</li>
-        <li><strong>Power Grid:</strong> 4 Generators available. Peak load requires 3 Generators.</li>
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Binomial Probability"
+          icon={<Target className="w-5 h-5" />}
+          formula="R_{sys} = \sum_{i=K}^{N} \binom{N}{i} R^i (1-R)^{N-i}"
+          delay={0.1}
+        >
+          <p>
+            The mathematical foundation of partial redundancy. It calculates the cumulative probability that at least <code>K</code> out of <code>N</code> independent units survive a specified mission time, where every unit has reliability <code>R</code>.
+          </p>
+        </TheoryBlock>
 
-      <h2 id="formula">The Math</h2>
-      <p>
-        It calculates the cumulative binomial probability:
-        <br />
-        <code>R_system = Σ [N! / (i!(N-i)!)] * R^i * (1-R)^(N-i)</code>
-        <br />
-        Summed from i = K to N.
-      </p>
+        <TheoryBlock 
+          title="Common Redundancy Types"
+          icon={<Layers className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <ul className="space-y-3 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong className="text-cyan-700 dark:text-cyan-400">1-out-of-2 (1oo2):</strong> Simple Parallel Redundancy. Provides maximum reliability; only requires 1 to work.</li>
+            <li><strong className="text-pink-700 dark:text-pink-400">2-out-of-2 (2oo2):</strong> Series Configuration. Requires both to work. Decreases reliability but ensures system fails safe if either faults.</li>
+            <li><strong className="text-purple-700 dark:text-purple-400">2-out-of-3 (2oo3):</strong> Triple Modular Redundancy (TMR). Uses voting logic to balance extreme reliability with safety against false trips.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Real-World Applications</h3>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-2"><Cuboid className="w-4 h-4 text-cyan-600" /> Pumps & Motors</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-400">A facility has 3 massive cooling pumps installed (N=3). The maximum summer thermal load requires the flow of exactly 2 pumps (K=2). The system only fails if multiple pumps drop out simultaneously.</p>
+          </div>
+          <div className="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-2"><Server className="w-4 h-4 text-cyan-600" /> Data Centers</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-400">A high-availability RAID array utilizes 10 hard drives. Operational continuity is guaranteed as long as at least 8 drives remain readable (K=8).</p>
+          </div>
+          <div className="p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-cyan-600" /> Power Grid</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-400">An offshore rig has 4 turbine generators available. Peak operational load requires 3 generators running to maintain voltage stability.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 

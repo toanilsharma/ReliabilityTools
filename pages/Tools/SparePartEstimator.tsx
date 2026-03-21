@@ -5,6 +5,8 @@ import { SERVICE_LEVELS } from '../../constants';
 import { Package, ShoppingCart, Info, BookOpen, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 const SparePartEstimator: React.FC = () => {
   const [mtbf, setMtbf] = useState<string>('5000');
@@ -140,36 +142,41 @@ const SparePartEstimator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Why Statistical Spare Parts Estimation?</h2>
-      <p>
-        Carrying inventory costs money (roughly 20-25% of the part's value per year in storage, insurance, and depreciation). However, running out of a critical spare part costs even more in lost production.
-      </p>
-      <p>
-        Instead of guessing ("let's buy 2 just in case"), this tool uses your equipment's reliability data (MTBF) to statistically calculate exactly how many parts you need to achieve a desired service level.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Statistical Inventory Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Carrying arbitrary inventory costs approximately 20-25% of the capital value per year. Conversely, a stock-out of a critical spare costs orders of magnitude more in raw downtime.</p>
+      </div>
 
-      <h2 id="service-level">Understanding Service Level</h2>
-      <p>
-        <strong>Service Level</strong> is the probability that a part will be on the shelf when you reach for it.
-      </p>
-      <ul>
-        <li><strong>99% (High Criticality):</strong> For A-critical assets where downtime is unacceptable. High safety stock.</li>
-        <li><strong>95% (Standard):</strong> The industry standard balance between cost and risk.</li>
-        <li><strong>80% (Low Criticality):</strong> For non-essential items where waiting a few days is acceptable.</li>
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Reorder Point (ROP)"
+          icon={<TrendingUp className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The critical inventory threshold triggering a replenishment order. Composed of your expected consumption while awaiting the shipment, plus your buffered safety stock.
+          </p>
+          <code className="block mt-2 font-mono text-center bg-slate-100 dark:bg-slate-900 p-2 rounded text-slate-600 dark:text-slate-400">
+            ROP = (Lead Time Demand) + Safety Stock
+          </code>
+        </TheoryBlock>
 
-      <h2 id="definitions">Key Definitions</h2>
-      <dl>
-        <dt><strong>Reorder Point (ROP):</strong></dt>
-        <dd>The inventory level that triggers a new order. <code>ROP = Lead Time Demand + Safety Stock</code>.</dd>
-
-        <dt><strong>Safety Stock:</strong></dt>
-        <dd>Extra inventory held to protect against variability in demand or supplier delays.</dd>
-
-        <dt><strong>Lead Time Demand:</strong></dt>
-        <dd>How many parts you will consume while waiting for the shipment to arrive.</dd>
-      </dl>
+        <TheoryBlock 
+          title="Safety Stock Tolerance"
+          icon={<AlertTriangle className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The "Service Level" defines the statistical probability that a part is available the second maintenance reaches for it.
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-400">
+            <li><strong>99% (High):</strong> "A-Class" critical assets. Unacceptable downtime.</li>
+            <li><strong>95% (Standard):</strong> The baseline median for optimal risk-to-cost ratios.</li>
+            <li><strong>80% (Low):</strong> Non-essential hardware. Stock-outs are permitted.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

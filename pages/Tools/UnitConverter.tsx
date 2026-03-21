@@ -4,6 +4,7 @@ import {
   ArrowRightLeft, Thermometer, Clock, Gauge, Zap, Activity, Droplets, RotateCw, Ruler, Waves, Weight, Beaker, Hammer
 } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 // Helper for card styling
 interface ConversionCardProps {
@@ -342,12 +343,32 @@ const UnitConverter: React.FC = () => {
     </div>
   );
 
+  const Content = (
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Engineering Standardization</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Ensure uniformity across global reliability engineering databases by converting disparate OEM operating metrics into single standard units prior to Weibull analysis or PM scheduling.</p>
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+         <TheoryBlock 
+            title="Importance of Metric Harmony"
+            icon={<Hammer className="w-5 h-5" />}
+            delay={0.1}
+          >
+            <p>
+              Applying statistical distributions like normal or lognormal requires all failure timestamps to be recorded under the exact same standard. Mixing hours, days, and cycles in a single dataset will corrupt the calculation of MTTF and Beta shaping.
+            </p>
+         </TheoryBlock>
+      </div>
+    </div>
+  );
+
   return (
     <ToolContentLayout
       title="Engineering Unit Converter"
       description="Essential conversions for reliability engineering. Quickly convert between Time, Vibration, Pressure, Temperature, Flow, and Power units."
       toolComponent={ToolComponent}
-      content={<div></div>} // No extra content needed for simple converter
+      content={Content}
       faqs={[]}
       schema={{
         "@context": "https://schema.org",

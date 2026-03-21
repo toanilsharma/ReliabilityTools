@@ -3,6 +3,8 @@ import ReactECharts from 'echarts-for-react';
 import { CheckCircle2, TrendingUp, AlertTriangle, Printer, BarChart, CheckSquare } from 'lucide-react';
 import RelatedTools from '../../components/RelatedTools';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 interface Question {
   id: number;
@@ -171,11 +173,39 @@ const MaturityAssessment: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Reliability Maturity</h2>
-      <p>
-        This assessment benchmarks your maintenance organization across strategy, data, analysis, execution, and culture.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Maturity Benchmarking</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Reliability is a journey, not a destination. This assessment benchmarks your maintenance organization across five critical pillars to identify bottlenecks and strategic growth gaps.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The Maturity Spectrum"
+          icon={<BarChart className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <ul className="space-y-2 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Level 1 (Reactive):</strong> Maintenance is a cost center. "Fix it when it breaks."</li>
+            <li><strong>Level 2 (Planned):</strong> Work order controls are in place. Basic preventive maintenance (PM) starts.</li>
+            <li><strong>Level 3 (Proactive):</strong> Data-driven decision making. Root Cause Analysis (RCA) is mandatory.</li>
+            <li><strong>Level 4 (World Class):</strong> Reliability is designed-in. Operators own autonomous maintenance.</li>
+          </ul>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Quantitative Scoring"
+          icon={<CheckSquare className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The overall maturity index is calculated as a normalized percentage of your agreement with industry best practices across Strategy, Data, Analysis, Execution, and Culture.
+          </p>
+          <div className="mt-4">
+            <BlockMath math={"M_{index} = \\frac{\\sum_{i=1}^{n} S_i}{\\sum_{i=1}^{n} Max(S_i)}"} />
+          </div>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

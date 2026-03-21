@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Activity, Zap } from 'lucide-react';
+import { Activity, Zap, TrendingDown, TrendingUp, MinusCircle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const HazardRateCalculator: React.FC = () => {
   const [beta, setBeta] = useState<string>('1.5');
@@ -99,16 +100,46 @@ const HazardRateCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Hazard Rate Interpretation</h2>
-      <p>
-        Hazard rate captures instantaneous failure risk conditional on survival up to time t.
-      </p>
-      <ul>
-        <li><strong>beta &lt; 1:</strong> Decreasing hazard (infant mortality).</li>
-        <li><strong>beta = 1:</strong> Constant hazard (random failures).</li>
-        <li><strong>beta &gt; 1:</strong> Increasing hazard (wear out).</li>
-      </ul>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Hazard Rate Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The instantaneous failure rate h(t) describes the conditional probability of failure in the next instant, given survival up to time t.</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        <TheoryBlock 
+          title="Infant Mortality"
+          icon={<TrendingDown className="w-5 h-5" />}
+          formula="\beta < 1"
+          delay={0.1}
+        >
+          <p>
+            The failure rate is high initially but decreases over time. This indicates early-life failures due to manufacturing defects, installation errors, or material flaws.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Random Failures"
+          icon={<MinusCircle className="w-5 h-5" />}
+          formula="\beta = 1"
+          delay={0.2}
+        >
+          <p>
+            The failure rate is constant. The asset does not "age" in a reliability sense; a component that has survived 10 years is just as likely to fail in the next hour as a brand new component.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Wear-Out"
+          icon={<TrendingUp className="w-5 h-5" />}
+          formula="\beta > 1"
+          delay={0.3}
+        >
+          <p>
+            The failure rate increases over time. This indicates components degrading due to fatigue, friction, corrosion, or simple aging. Preventive maintenance is highly effective here.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

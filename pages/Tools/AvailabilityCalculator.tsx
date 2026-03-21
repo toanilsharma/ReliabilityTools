@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Settings, Clock, DollarSign, Shield, Activity, AlertTriangle, CheckCircle2, Save, Loader2, Download } from 'lucide-react';
+import { Settings, Clock, DollarSign, Shield, Activity, AlertTriangle, CheckCircle2, Save, Loader2, Download, BookOpen, TrendingUp, Cpu, Wrench } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
 import RelatedTools from '../../components/RelatedTools';
+import AnimatedContainer from '../../components/AnimatedContainer';
+import TheoryBlock from '../../components/TheoryBlock';
 
 type AvailabilityScenario = {
   label: 'Design A' | 'Design B';
@@ -191,8 +193,8 @@ const AvailabilityCalculator: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-12 gap-6 animate-fadeIn">
-      <div className="lg:col-span-4 space-y-6">
+    <div className="grid lg:grid-cols-12 gap-6">
+      <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-4 space-y-6">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6 h-full border-t-4 border-t-cyan-500">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
             <Settings className="w-5 h-5" /> Input Parameters
@@ -260,20 +262,20 @@ const AvailabilityCalculator: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+      </AnimatedContainer>
 
-      <div className="lg:col-span-8 space-y-6">
+      <AnimatedContainer animation="staggerContainer" delay={0.2} className="lg:col-span-8 space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6 flex flex-col items-center justify-center relative">
+          <AnimatedContainer animation="scaleUp" className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6 flex flex-col items-center justify-center relative">
             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-6">System Health</h3>
             <DonutChart percentage={availability * 100} />
             <div className="w-full mt-6 p-3 rounded-lg border bg-slate-50 dark:bg-slate-900/50 flex justify-between text-sm">
               <span className="font-semibold">Risk Level</span>
               <span className={`${riskLevel === 'Critical' ? 'text-red-600' : riskLevel === 'Moderate' ? 'text-amber-600' : 'text-emerald-600'} font-bold`}>{riskLevel}</span>
             </div>
-          </div>
+          </AnimatedContainer>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6">
+          <AnimatedContainer animation="slideUp" className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6">
             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-6">Annual Impact</h3>
             <div className="space-y-6">
               <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/30">
@@ -298,10 +300,10 @@ const AvailabilityCalculator: React.FC = () => {
                 <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 font-mono">${yearlyLoss.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
               </div>
             </div>
-          </div>
+          </AnimatedContainer>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6">
+        <AnimatedContainer animation="slideUp" className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6">
           <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
             <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sensitivity Analysis and Scenario Overlay</h3>
             <div className="flex gap-2">
@@ -330,95 +332,78 @@ const AvailabilityCalculator: React.FC = () => {
               {availability >= 0.99 ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Shield className="w-4 h-4 text-amber-500" />} Current availability: <strong>{(availability * 100).toFixed(4)}%</strong>
             </div>
           </div>
-        </div>
-      </div>
+        </AnimatedContainer>
+      </AnimatedContainer>
     </div>
   );
 
   const Content = (
-    <div className="space-y-8">
-      <section>
-        <h2 id="overview" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">What is Inherent Availability?</h2>
-        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
-          <strong>Inherent Availability (A<sub>i</sub>)</strong> is the steady-state probability that a system or piece of equipment will operate satisfactorily at any given time when operating under specified conditions, considering <em>only</em> the downtime associated with active corrective maintenance (repair time).
-        </p>
-        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
-          It specifically excludes preventive maintenance downtime, logistical delays, administrative delays, and supply chain issues (waiting for spare parts). Because it assumes an ideal repair environment, Inherent Availability represents the <strong>maximum possible availability</strong> dictated solely by the asset's engineering design.
-        </p>
-        <div className="bg-slate-900 text-cyan-400 p-6 rounded-xl font-mono text-center my-6 flex flex-col items-center justify-center border border-slate-700 shadow-inner">
-          <span className="text-sm text-slate-400 mb-2 uppercase tracking-widest font-sans">Formula</span>
-          <span className="text-xl md:text-2xl">A<sub>i</sub> = MTBF / (MTBF + MTTR)</span>
-        </div>
-      </section>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Availability Engineering Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Availability is the ultimate measure of system readiness. Here is how operational uptime is mathematically determined.</p>
+      </div>
 
-      <section>
-        <h2 id="operational-vs-inherent" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Operational vs. Inherent Availability</h2>
-        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
-          While engineers design for <em>Inherent Availability</em>, plant managers live in the reality of <em>Operational Availability (A<sub>o</sub>)</em>.
-        </p>
-        <div className="grid md:grid-cols-2 gap-6 my-6">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="text-lg font-bold text-cyan-700 dark:text-cyan-400 mb-2">Inherent Availability (A<sub>i</sub>)</h3>
-            <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
-              <li>Based purely on MTBF and active MTTR.</li>
-              <li>Ignores waiting for parts or technicians.</li>
-              <li>Used by design engineers to benchmark inherent equipment reliability.</li>
-              <li>Always higher than Operational Availability.</li>
-            </ul>
-          </div>
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="text-lg font-bold text-indigo-700 dark:text-indigo-400 mb-2">Operational Availability (A<sub>o</sub>)</h3>
-            <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
-              <li>Includes purely administrative downtime (waiting for permits).</li>
-              <li>Includes logistics downtime (waiting for a spare motor from Germany).</li>
-              <li>Includes planned preventive maintenance time.</li>
-              <li>The actual uptime percentage experienced by the factory floor.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Inherent Availability (A_i)"
+          icon={<Cpu className="w-5 h-5" />}
+          formula="A_i = \frac{MTBF}{MTBF + MTTR}"
+          delay={0.1}
+        >
+          <p>
+            The steady-state probability that a system will operate satisfactorily, considering <em>only</em> active corrective maintenance (repair time).
+          </p>
+          <p>
+            It explicitly excludes preventive maintenance, logistical delays (waiting for parts), and administrative delays. This represents the <strong>maximum possible availability</strong> dictated solely by the engineering design.
+          </p>
+        </TheoryBlock>
 
-      <section>
-        <h2 id="improving-availability" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">How to Improve System Availability</h2>
-        <p className="text-slate-700 dark:text-slate-300 mb-4 leading-relaxed">
-          To move the needle on availability, you have exactly two levers to pull: increase reliability (MTBF) or improve maintainability (MTTR).
-        </p>
-        <div className="space-y-4">
-          <div className="p-4 border-l-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/10 rounded-r-lg">
-            <h4 className="font-bold text-emerald-800 dark:text-emerald-300 mb-1">Lever 1: Extend MTBF (Reliability)</h4>
-            <p className="text-sm text-emerald-900/80 dark:text-emerald-200/70">Implement Condition-Based Monitoring (CbM), redesign the system for greater strength, use higher quality components, or introduce redundancy (e.g., parallel pumps).</p>
-          </div>
-          <div className="p-4 border-l-4 border-pink-500 bg-pink-50 dark:bg-pink-900/10 rounded-r-lg">
-            <h4 className="font-bold text-pink-800 dark:text-pink-300 mb-1">Lever 2: Reduce MTTR (Maintainability)</h4>
-            <p className="text-sm text-pink-900/80 dark:text-pink-200/70">Implement "plug-and-play" modular designs, keep critical spares in local inventory, train maintenance technicians thoroughly, and use rapid diagnostic software.</p>
-          </div>
+        <TheoryBlock 
+          title="Operational Availability (A_o)"
+          icon={<Clock className="w-5 h-5" />}
+          formula="A_o = \frac{MTBM}{MTBM + MDT}"
+          delay={0.2}
+        >
+          <p>
+            While engineers design for Inherent Availability, plant managers live in the reality of Operational Availability.
+          </p>
+          <ul className="list-disc pl-5 mt-2 space-y-1 text-sm dark:text-slate-300">
+            <li>Includes pure administrative downtime (waiting for permits).</li>
+            <li>Includes logistics downtime (waiting for parts to ship).</li>
+            <li>Includes planned preventive maintenance time.</li>
+            <li>Always lower than Inherent Availability.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Levers to Improve System Availability</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <TheoryBlock 
+            title="Extend Reliability (MTBF)"
+            icon={<TrendingUp className="w-5 h-5" />}
+            delay={0.3}
+          >
+            <p>
+              Implement Condition-Based Monitoring (CbM), redesign the system for greater strength, use higher quality components, or introduce physical redundancy (e.g., parallel pumps).
+            </p>
+          </TheoryBlock>
+          
+          <TheoryBlock 
+            title="Reduce Maintainability (MTTR)"
+            icon={<Wrench className="w-5 h-5" />}
+            delay={0.4}
+          >
+            <p>
+              Implement "plug-and-play" modular designs, keep critical spares in local inventory, train maintenance technicians thoroughly, and use rapid diagnostic software.
+            </p>
+            <div className="mt-4 p-3 bg-cyan-50 dark:bg-cyan-900/10 border border-cyan-100 dark:border-cyan-800/50 rounded-lg text-xs font-medium text-cyan-800 dark:text-cyan-300">
+              <strong>Pro Tip:</strong> Mathematically, it is much cheaper and faster to reduce a 10-hour MTTR to 5 hours than it is to double a 1,000-hour MTBF to 2,000 hours. Always attack MTTR first.
+            </div>
+          </TheoryBlock>
         </div>
-        <p className="mt-4 text-sm text-slate-500 italic">
-          <strong>Pro Tip:</strong> Mathematically and financially, it is often much cheaper and faster to reduce a 10-hour MTTR to 5 hours than it is to double a 1,000-hour MTBF to 2,000 hours. Always attack MTTR first.
-        </p>
-      </section>
-      
-      <section>
-        <h2 id="glossary" className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Reliability Engineering Glossary</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-cyan-500">
-            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">MTBF</span>
-            <p className="text-xs text-slate-600 dark:text-slate-400">Mean Time Between Failures. The average predicted elapsed time between breakdowns during normal operation.</p>
-          </div>
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-pink-500">
-            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">MTTR</span>
-            <p className="text-xs text-slate-600 dark:text-slate-400">Mean Time To Repair. The average time required to functionally restore a failed asset back to operating condition.</p>
-          </div>
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-indigo-500">
-            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">Maintainability</span>
-            <p className="text-xs text-slate-600 dark:text-slate-400">The ease and speed with which a system can be restored to operational status after a failure occurs.</p>
-          </div>
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 border-l-2 border-l-amber-500">
-            <span className="font-bold text-slate-800 dark:text-slate-200 mb-1 block">Downtime</span>
-            <p className="text-xs text-slate-600 dark:text-slate-400">The total period during which a system is non-operational, including active repair time, logistical delays, and administrative delays.</p>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 
@@ -457,6 +442,8 @@ const AvailabilityCalculator: React.FC = () => {
         </>
       }
       faqs={faqs}
+      keywords="availability calculator, system availability, MTBF MTTR availability, inherent availability, operational availability India, five nines, uptime calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/availability"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

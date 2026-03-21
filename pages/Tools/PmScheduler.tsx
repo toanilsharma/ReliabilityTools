@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { PMTask } from '../../types';
-import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingUp, Sliders, CheckSquare, Clock } from 'lucide-react';
+import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingUp, Sliders, CheckSquare, Clock, AlertTriangle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const PmScheduler: React.FC = () => {
   const [tasks, setTasks] = useState<PMTask[]>([
@@ -111,7 +112,7 @@ const PmScheduler: React.FC = () => {
         {/* Recommender */}
         <div className="bg-gradient-to-br from-purple-50 to-white dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl border border-purple-100 dark:border-slate-700">
           <h3 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-purple-600" /> AI Interval Optimizer
+            <Sliders className="w-4 h-4 text-purple-600" /> Optimal Interval Calculator
           </h3>
           <div className="space-y-3">
             <div>
@@ -194,28 +195,36 @@ const PmScheduler: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is PM Scheduling?</h2>
-      <p>
-        <strong>Preventive Maintenance (PM)</strong> is a proactive strategy where assets are serviced at regular intervals (time-based) or usage thresholds (meter-based) to reduce the likelihood of failure.
-      </p>
-      <p>
-        A good PM schedule balances the cost of maintenance against the cost of failure. If you maintain too often, you waste money and risk introducing human error ("Infant Mortality"). If you maintain too rarely, you risk catastrophic breakdown.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Preventive Maintenance Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Preventive Maintenance (PM) is a proactive calendar or usage-based strategy engineered to service assets just before their probability of failure spikes.</p>
+      </div>
 
-      <h2 id="optimization">Optimizing Intervals</h2>
-      <p>
-        The "Sweet Spot" for PM intervals is often determined by the <strong>P-F Curve</strong>. You want the interval to be smaller than the P-F Interval (the time between a detectable potential failure and functional failure).
-      </p>
-      <ul>
-        <li><strong>Rule of Thumb:</strong> Set PM interval to <strong>1/2 to 1/6</strong> of the PF Interval.</li>
-        <li><strong>Example:</strong> If a bearing vibrates for 3 months before seizing (PF Interval = 90 days), check it every 1 month (30 days) to catch it in time.</li>
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The P-F Interval Curve"
+          icon={<TrendingUp className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The "Sweet Spot" for PM intervals is determined by the <strong>P-F Curve</strong>. The P-F interval is the delta between a detectable potential failure (P) and functional failure (F).
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Rule of Thumb:</strong> Task intervals should strictly be <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">1/2 to 1/6</span> of the PF Interval.</li>
+          </ul>
+        </TheoryBlock>
 
-      <h2 id="compliance">Compliance vs. Reliability</h2>
-      <p>
-        Some PMs are mandatory for regulatory compliance (e.g., Fire Safety Inspections, Pressure Vessel Testing). Others are discretionary for reliability. This tool helps you track both in a single view.
-      </p>
+        <TheoryBlock 
+          title="Infant Mortality Risk"
+          icon={<AlertTriangle className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            A common trap is over-maintaining machinery. Excessive invasive servicing ironically increases the likelihood of human error or defective spare part introduction. PM should balance the cost of maintenance against the cost of catastrophic failure.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Plus, Trash2, GitMerge, LayoutList, Download, Activity, FileText } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 type NodeType = 'AND' | 'OR' | 'EVENT';
 
@@ -174,24 +176,34 @@ const FaultTreeAnalysis: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2>What is Fault Tree Analysis (FTA)?</h2>
-      <p>
-        FTA is a top-down, deductive failure analysis in which an undesired state of a system is analyzed using Boolean logic to combine a series of lower-level events. It is primarily used in safety engineering and reliability engineering to understand how systems can fail, to identify the best ways to reduce risk, or to determine event rates of a safety accident.
-      </p>
-      
-      <h2>Logic Gates</h2>
-      <div className="grid md:grid-cols-2 gap-6 my-6">
-        <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg border border-blue-200">
-          <h3 className="font-bold text-blue-800 dark:text-blue-300">AND Gate</h3>
-          <p className="text-sm mt-2">The output event occurs only if ALL of the input events occur.</p>
-          <code className="block mt-2 text-xs bg-white dark:bg-slate-800 p-2 rounded">P = P(A) × P(B)</code>
-        </div>
-        <div className="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-lg border border-amber-200">
-          <h3 className="font-bold text-amber-800 dark:text-amber-300">OR Gate</h3>
-          <p className="text-sm mt-2">The output event occurs if ANY of the input events occur.</p>
-          <code className="block mt-2 text-xs bg-white dark:bg-slate-800 p-2 rounded">P = 1 - (1-P(A)) × (1-P(B))</code>
-        </div>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Fault Tree Analysis (FTA)</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">FTA is a top-down, deductive failure analysis where an undesired system state is investigated using Boolean logic to combine a series of lower-level component events.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="AND Gate Logic"
+          icon={<LayoutList className="w-5 h-5" />}
+          formula="P_{out} = \prod_{i=1}^{N} P_i"
+          delay={0.1}
+        >
+          <p>
+            The output event occurs <strong>only</strong> if ALL of the input events occur. Used to model parallel systems or robust redundant fail-safes.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="OR Gate Logic"
+          icon={<GitMerge className="w-5 h-5" />}
+          formula="P_{out} = 1 - \prod_{i=1}^{N} (1 - P_i)"
+          delay={0.2}
+        >
+          <p>
+            The output event occurs if <strong>ANY</strong> of the input events occur. Used to model single points of failure (series systems) or independent component breakdowns.
+          </p>
+        </TheoryBlock>
       </div>
     </div>
   );

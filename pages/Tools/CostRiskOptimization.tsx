@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
 import { Target, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath, InlineMath } from 'react-katex';
 
 const CostRiskOptimization: React.FC = () => {
   const [beta, setBeta] = useState<number>(2.5);
@@ -143,11 +144,38 @@ const CostRiskOptimization: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2>Cost-Risk Optimization</h2>
-      <p>
-        Age replacement creates a U-shaped total-cost curve. This chart finds the minimum cost operating point based on Weibull wear-out behavior and maintenance economics.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">The U-Shaped Cost Curve</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Age-based replacement logic creates a fundamental financial trade-off. This model identifies the exact interval that balances planned costs against the risk of catastrophic unplanned downtime.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Total Cost of Ownership"
+          icon={<DollarSign className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The total cost rate is the expected value of maintenance over an infinite horizon, considering the probability of the asset surviving until the next scheduled intervention.
+          </p>
+          <div className="mt-4">
+            <BlockMath math={"C(t) = \\frac{C_{pm} \cdot R(t) + C_{cm} \cdot [1-R(t)]}{\\int_0^t R(x)dx}"} />
+          </div>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Optimization Dynamics"
+          icon={<TrendingDown className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <ul className="space-y-2 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Preventive Cost (<InlineMath math="C_{pm}" />):</strong> Low-cost, planned action. Reduces the probability of <InlineMath math="C_{cm}" />.</li>
+            <li><strong>Corrective Cost (<InlineMath math="C_{cm}" />):</strong> High-cost failure event. Includes secondary damage and production losses.</li>
+            <li><strong>The Bottom Loop:</strong> The tool solves the equation where <InlineMath math="\frac{d}{dt}C(t) = 0" /> to find the absolute financial sweet spot.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

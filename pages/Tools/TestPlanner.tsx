@@ -4,6 +4,8 @@ import { calculateTestTimeForMTBF, calculateSuccessRunSampleSize } from '../../s
 import { Microscope, Clock, Users, BookOpen, Target, TrendingUp, Printer } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 const TestPlanner: React.FC = () => {
   const [mode, setMode] = useState<'MTBF' | 'Reliability'>('MTBF');
@@ -148,27 +150,33 @@ const TestPlanner: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Success Run Qualification</h2>
-      <p>
-        Reliability testing is expensive and time-consuming. The <strong>Success Run Theorem</strong> (Zero-Failure Test) allows you to demonstrate a reliability target with the minimum possible sample size and test duration, assuming no failures occur.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Success Run Theorem</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Physical reliability testing burns immense capital and time. The Success Run (Zero-Failure) qualification allows you to statistically bypass infinitely long test phases by front-loading highly parallel testing with zero failure tolerance.</p>
+      </div>
 
-      <h2 id="mtbf-demo">Option 1: Demonstrate MTBF</h2>
-      <p>
-        Use this when your target is a failure rate (e.g., "Must achieve 50,000 hours MTBF"). The tool calculates the total <strong>accumulated test hours</strong> needed.
-      </p>
-      <ul>
-        <li><strong>Example:</strong> To prove 1000h MTBF with 90% confidence, you need ~2300 total test hours. You can run 1 unit for 2300h, or 10 units for 230h.</li>
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="MTBF Demonstration"
+          icon={<Clock className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            When aiming for continuous operation targets (e.g., "50k hour MTBF"), calculating <strong>accumulated test hours</strong> proves statistical confidence. By running <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">10</span> physical units in parallel for <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">230 hours</span>, you effectively simulate <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">2,300 hours</span> of field survival—assuming all 10 survive identically.
+          </p>
+        </TheoryBlock>
 
-      <h2 id="reliability-demo">Option 2: Demonstrate Reliability</h2>
-      <p>
-        Use this for "One-Shot" devices or mission reliability (e.g., "99% reliability for a 1-year mission"). The tool calculates the <strong>sample size</strong> needed.
-      </p>
-      <ul>
-        <li><strong>Example:</strong> To prove 95% reliability with 90% confidence, you must test 45 units for the full mission duration with zero failures.</li>
-      </ul>
+        <TheoryBlock 
+          title="Mission Reliability %"
+          icon={<Target className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            When addressing "One-Shot" explosive devices or isolated spacecraft missions, testing calculates rigid <strong>Sample Sizes</strong> rather than hours. Proving 95% rocket deployment reliability with 90% confidence dictates testing precisely 45 rockets flawlessly prior to launch.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

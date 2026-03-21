@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, AlertCircle, LineChart, ShieldCheck } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
+import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
@@ -190,20 +191,46 @@ const ReliabilityGrowth: React.FC = () => {
   );
 
   const Content = (
-    <div className="prose dark:prose-invert max-w-none">
-      <h2>Reliability Growth (Crow-AMSAA)</h2>
-      <p>
-        The Crow-AMSAA model tracks the effectiveness of "Test-Analyze-Fix" programs. By plotting the cumulative number of failures against cumulative test time, we can calculate the **Beta (β)** growth parameter.
-      </p>
-      <div className="grid md:grid-cols-2 gap-4 mt-6">
-        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
-          <h4 className="text-emerald-800 dark:text-emerald-400 font-black text-xs uppercase mb-2">Growth (β &lt; 1.0)</h4>
-          <p className="text-xs">Corrective actions are preventing recurrence. The time between failures is increasing.</p>
-        </div>
-        <div className="p-4 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/30">
-          <h4 className="text-red-800 dark:text-red-400 font-black text-xs uppercase mb-2">Degradation (β &gt; 1.0)</h4>
-          <p className="text-xs">System reliability is worsening. New defects are being introduced during the fix process.</p>
-        </div>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Crow-AMSAA Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Crow-AMSAA model tracks the effectiveness of TAAF (Test-Analyze-And-Fix) programs by plotting cumulative failures against cumulative test time.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Reliability Growth (\beta < 1)"
+          icon={<TrendingUp className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            Corrective actions are successfully preventing recurrence. The time between failures is increasing, indicating the system is maturing and shedding defects.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Degradation (\beta > 1)"
+          icon={<TrendingDown className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            System reliability is worsening. The design fixes are ineffective, or the repair process itself is introducing new, more frequent defects into the system.
+          </p>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">The Power Law Equation</h3>
+        <TheoryBlock 
+          title="Cumulative Expected Failures"
+          icon={<LineChart className="w-5 h-5" />}
+          formula="N(t) = \lambda \cdot t^\beta"
+          delay={0.3}
+        >
+          <p>
+            The mathematical foundation of the model. By taking the logarithm of both sides, the power law becomes a straight line, allowing us to perform linear regression to establish the Growth Rate (\beta) and Scale (\lambda).
+          </p>
+        </TheoryBlock>
       </div>
     </div>
   );

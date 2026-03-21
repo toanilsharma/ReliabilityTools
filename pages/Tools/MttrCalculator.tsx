@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { calculateMTTR } from '../../services/reliabilityMath';
-import { Wrench, Clock, AlertCircle, Copy, Check, BookOpen, Target, TrendingUp, BarChart } from 'lucide-react';
+import { Wrench, Clock, AlertCircle, Copy, Check, BookOpen, Target, TrendingUp, BarChart, Search, CheckCircle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const MttrCalculator: React.FC = () => {
   const [downtime, setDowntime] = useState<string>('');
@@ -107,42 +108,64 @@ const MttrCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is MTTR?</h2>
-      <p>
-        <strong>Mean Time To Repair (MTTR)</strong> is the "speedometer" of your maintenance team. It measures the average time required to troubleshoot and repair a failed component and return it to normal operating conditions.
-      </p>
-      <p>
-        While MTBF measures reliability (how often it breaks), MTTR measures <strong>maintainability</strong> (how fast you can fix it). It is a critical metric for minimizing downtime and production losses.
-      </p>
-
-      <div className="bg-yellow-50 dark:bg-yellow-900/10 p-6 rounded-xl border border-yellow-100 dark:border-yellow-800/30 my-8">
-        <h3 className="text-lg font-bold text-yellow-800 dark:text-yellow-500 mb-2 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5" /> Warning: Define Your Terms
-        </h3>
-        <p className="text-sm text-yellow-900/80 dark:text-yellow-200/70">
-          Does your MTTR include "Lead Time" for spare parts?
-          <br /><br />
-          Strictly speaking, MTTR is "Wrench Time" + Diagnosis. If you include logistics delays, you are calculating <strong>Mean Down Time (MDT)</strong>. Be sure your organization agrees on the definition!
-        </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">MTTR Engineering Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Mean Time To Repair (MTTR) is the master metric for maintenance efficiency. Where MTBF measures reliability, MTTR dictates maintainability.</p>
       </div>
 
-      <h2 id="components">The 4 Stages of Repair</h2>
-      <p>To reduce MTTR, you must analyze its four components:</p>
-      <ol>
-        <li><strong>Notification:</strong> Time from failure to when the technician is alerted.</li>
-        <li><strong>Diagnosis:</strong> Time to figure out <em>what</em> is wrong. (Often the longest part!)</li>
-        <li><strong>Repair:</strong> Time to replace the part or fix the issue.</li>
-        <li><strong>Verification:</strong> Time to test and calibrate the machine before handing it back to Ops.</li>
-      </ol>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The MTTR Formula"
+          icon={<Wrench className="w-5 h-5" />}
+          formula="\text{MTTR} = \frac{\text{Total Maintenance Time}}{\text{Total Number of Repairs}}"
+          delay={0.1}
+        >
+          <p>
+            MTTR measures the average time required to functionally restore a failed asset back to operating condition. Lower MTTR directly yields higher system availability.
+          </p>
+          <div className="bg-yellow-50 dark:bg-yellow-900/10 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800/30 mt-3 flex gap-2 text-sm text-yellow-800 dark:text-yellow-400">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <p><strong>Warning:</strong> MTTR mathematically assumes only active repair time ("Wrench Time"). If you include logistical wait time, you are actually calculating Mean Down Time (MDT).</p>
+          </div>
+        </TheoryBlock>
 
-      <h2 id="strategies">Strategies to Reduce MTTR</h2>
-      <ul>
-        <li><strong>Better Documentation:</strong> Ensure wiring diagrams and manuals are instantly accessible.</li>
-        <li><strong>Training:</strong> Upskill technicians on root cause analysis.</li>
-        <li><strong>Modular Design:</strong> Use "plug-and-play" components (e.g., quick-disconnect motors).</li>
-        <li><strong>Kitting:</strong> Have repair kits (tools + parts) ready for critical assets.</li>
-      </ul>
+        <TheoryBlock 
+          title="The 4 Stages of Repair"
+          icon={<Clock className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>To reduce MTTR, you must analyze and optimize its distinct components:</p>
+          <ul className="space-y-2 mt-3 text-sm text-slate-700 dark:text-slate-300">
+            <li className="flex gap-2 items-start"><AlertCircle className="w-4 h-4 mt-1 text-red-500 flex-shrink-0" /> <strong>Notification:</strong> Time from failure until a tech is alerted.</li>
+            <li className="flex gap-2 items-start"><Search className="w-4 h-4 mt-1 text-amber-500 flex-shrink-0" /> <strong>Diagnosis:</strong> Time to isolate the root cause (often the longest stage).</li>
+            <li className="flex gap-2 items-start"><Wrench className="w-4 h-4 mt-1 text-blue-500 flex-shrink-0" /> <strong>Repair:</strong> Time to execute the physical fix or replacement.</li>
+            <li className="flex gap-2 items-start"><CheckCircle className="w-4 h-4 mt-1 text-emerald-500 flex-shrink-0" /> <strong>Verification:</strong> Time to test performance before returning to ops.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Strategies to Reduce MTTR</h3>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-sm text-cyan-700 dark:text-cyan-400 mb-1">Advanced Diagnostics</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Utilize fault codes and IIoT sensors to bypass lengthy manual troubleshooting.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-sm text-cyan-700 dark:text-cyan-400 mb-1">Modular Design</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Implement components that can be quickly swapped out completely ("plug-and-play") rather than repaired in-situ.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-sm text-cyan-700 dark:text-cyan-400 mb-1">Standardized Kitting</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Pre-package required tools, lock-out tags, and spare parts near critical machines.</p>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+            <h4 className="font-bold text-sm text-cyan-700 dark:text-cyan-400 mb-1">Digital Documentation</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Eliminate time spent searching for schematics via mobile-first digital asset management.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 

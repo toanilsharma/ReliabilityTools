@@ -15,9 +15,10 @@ import {
 import '@xyflow/react/dist/style.css';
 import { RBDBlock, RBDBlockType } from '../../types';
 import { calculateSeriesReliability, calculateParallelReliability, calculateMonteCarloRBD } from '../../services/reliabilityMath';
-import { Plus, Trash2, Download, Check, Link2 } from 'lucide-react';
+import { Plus, Trash2, Download, Check, Link2, Map as MapIcon } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const RbdTool: React.FC = () => {
   const [mode, setMode] = useState<RBDBlockType>(RBDBlockType.SERIES);
@@ -261,17 +262,25 @@ const RbdTool: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Interactive RBD Builder</h2>
-      <p>
-        Drag and place blocks directly on the canvas and wire custom connector lines when manual wiring is enabled.
-      </p>
-      <h2 id="applications">Tier 2 improvements</h2>
-      <ul>
-        <li>Canvas node dragging with persistent placement.</li>
-        <li>Connector editing mode for custom wiring paths.</li>
-        <li>JSON export now includes visual layout and edges.</li>
-      </ul>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Interactive RBD Builder</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Build complex system architectures by dragging graphical nodes onto the canvas and wiring custom connector lines to calculate aggregated system availability and reliability.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Canvas Interface Features"
+          icon={<MapIcon className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <ul className="space-y-2 mt-3 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Persistent Placement:</strong> Drag nodes freely across the workspace without layout snapping.</li>
+            <li><strong>Custom Paths:</strong> Enable 'Manual Connector Lines' to wire precise redundant pathways instead of relying on auto-layout.</li>
+            <li><strong>Data Integrity:</strong> Download the entire simulated network, including physical 2D node coordinates and edge vectors, via JSON export.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

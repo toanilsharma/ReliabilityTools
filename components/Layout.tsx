@@ -75,7 +75,7 @@ const Layout: React.FC = () => {
       <SEO schema={generateBreadcrumbSchema()} />
 
       {/* Navigation */}
-      <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+      <header role="banner" className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -89,7 +89,7 @@ const Layout: React.FC = () => {
             </div>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-4">
+            <nav aria-label="Main navigation" className="hidden md:flex items-center gap-4">
               <div className="ml-10 flex items-baseline space-x-4">
                 <Link to="/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</Link>
 
@@ -130,7 +130,7 @@ const Layout: React.FC = () => {
               >
                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
-            </div>
+            </nav>
 
             {/* Mobile Menu Button */}
             <div className="-mr-2 flex md:hidden items-center gap-2">
@@ -143,6 +143,8 @@ const Layout: React.FC = () => {
               <button
                 onClick={toggleMenu}
                 className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none"
+                aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={isMenuOpen}
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -152,7 +154,7 @@ const Layout: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
+          <nav aria-label="Mobile navigation" className="md:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link to="/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Home</Link>
 
@@ -170,12 +172,12 @@ const Layout: React.FC = () => {
               <Link to="/about" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">About</Link>
               <Link to="/contact" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Contact</Link>
             </div>
-          </div>
+          </nav>
         )}
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow transition-colors duration-300">
+      <main id="main-content" role="main" className="flex-grow transition-colors duration-300">
         {location.pathname !== '/' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
             <nav aria-label="breadcrumb">
@@ -211,7 +213,7 @@ const Layout: React.FC = () => {
       <CookieConsent />
 
       {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-900 pt-16 pb-12 transition-colors duration-300">
+      <footer role="contentinfo" className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-900 pt-16 pb-12 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
             <div>
@@ -238,10 +240,10 @@ const Layout: React.FC = () => {
                   <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Facebook">
                     <Facebook className="h-5 w-5" />
                   </a>
-                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20this%20tool!`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
+                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20these%2025%2B%20free%20industrial%20reliability%20engineering%20tools!%20%23ReliabilityEngineering`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
                     <Twitter className="h-5 w-5" />
                   </a>
-                  <a href={`mailto:?subject=Reliability%20Tools&body=Check%20out%20this%20website:%20${encodeURIComponent(shareUrl)}`} className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share via Email">
+                  <a href={`mailto:?subject=Free%20Reliability%20Engineering%20Tools&body=I%20found%20this%20awesome%20suite%20of%20free%20reliability%20engineering%20calculators%20(MTBF,%20Weibull,%20OEE).%20Check%20it%20out:%20${encodeURIComponent(shareUrl)}`} className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share via Email">
                     <Mail className="h-5 w-5" />
                   </a>
                 </div>

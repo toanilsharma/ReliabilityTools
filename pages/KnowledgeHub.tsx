@@ -389,7 +389,7 @@ const KnowledgeHub: React.FC = () => {
               <ul className="text-xs text-slate-500 dark:text-slate-500 space-y-2 font-mono">
                 <li>• MIL-HDBK-217F: Reliability Prediction of Electronic Equipment</li>
                 <li>• IEC 61508: Functional Safety of Electrical/Electronic/Programmable Electronic Safety-related Systems</li>
-                <li>• NASA System Engineering Handbook, Rev 2</li>
+                <li>• Aerospace System Engineering Handbook, Rev 2</li>
                 <li>• OREDA: Offshore and Onshore Reliability Data Handbook</li>
               </ul>
             </footer>

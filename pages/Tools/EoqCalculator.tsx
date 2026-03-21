@@ -4,6 +4,8 @@ import { calculateEOQ } from '../../services/reliabilityMath';
 import { Package, ShoppingCart, TrendingUp, Archive, Settings, Info } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 const EoqCalculator: React.FC = () => {
   const [demand, setDemand] = useState<string>('1000');
@@ -72,28 +74,35 @@ const EoqCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is EOQ?</h2>
-      <p>
-        <strong>Economic Order Quantity (EOQ)</strong> is a formula used to calculate the ideal quantity of inventory to order for a given product. The goal is to minimize total inventory costs.
-      </p>
-
-      <h2 id="formula">The Formula</h2>
-      <p>
-        There is a trade-off:
-      </p>
-      <ul>
-        <li><strong>Order often (small batches):</strong> High ordering costs (shipping/admin), but low holding costs (less space).</li>
-        <li><strong>Order rarely (large batches):</strong> Low ordering costs (bulk), but high holding costs (warehouse space, capital tied up).</li>
-      </ul>
-      <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg font-mono text-center my-4 overflow-x-auto text-sm">
-        EOQ = √ [ (2 × Demand × OrderCost) / HoldingCost ]
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Inventory Optimization Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Economic Order Quantity (EOQ) is an inventory management formula used to determine the ideal order volume to precisely minimize the total costs of warehouse space, capital tie-up, and shipping logistics.</p>
       </div>
 
-      <h2 id="application">When to use</h2>
-      <p>
-        Use EOQ for parts with <strong>steady, predictable demand</strong> (like filters, lubricants, or belts). Do not use EOQ for critical spares that are rarely used (use the Spare Part Estimator tool instead).
-      </p>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The Trade-off Balance"
+          icon={<ShoppingCart className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Frequent Small Batches:</strong> Generates high administrative/shipping overhead, but frees up warehouse space and liquid capital.</li>
+            <li><strong>Infrequent Large Batches:</strong> Maximizes bulk discounts and minimizes logistics, but spikes holding costs (insurance, footprint) and risks obsolescence.</li>
+          </ul>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Optimal Quantity Equation"
+          icon={<TrendingUp className="w-5 h-5" />}
+          formula="EOQ = \sqrt{\frac{2 \cdot D \cdot O}{H}}"
+          delay={0.2}
+        >
+          <p>
+            Where <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">D</span> = Annual Demand, <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">O</span> = Ordering Cost, and <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">H</span> = Holding Cost. This differential calculation definitively proves the lowest point on the Total Cost curve.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

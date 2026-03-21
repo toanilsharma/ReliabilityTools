@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { calculateSIL } from '../../services/reliabilityMath';
-import { ShieldAlert, Activity, ChevronRight, ChevronLeft, Sparkles, Loader2 } from 'lucide-react';
+import { ShieldAlert, Activity, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
-
+import TheoryBlock from '../../components/TheoryBlock';
 import WizardWrapper from '../../components/WizardWrapper';
 
 const SilVerification: React.FC = () => {
@@ -217,15 +217,33 @@ const SilVerification: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Guided SIL Verification</h2>
-      <p>
-        The Tier 2 update adds a wizard mode that walks engineers through architecture, dangerous undetected rate, and proof test interval before calculation.
-      </p>
-      <h2 id="applications">Why this matters</h2>
-      <p>
-        Safety reviews are often done by mixed teams. Guided mode reduces input mistakes and keeps the PFD reasoning explicit.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">SIL Verification Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Verify Safety Integrity Levels by mapping system architectures to Probability of Failure on Demand (PFD) averages in low-demand usage.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Guided Workflow"
+          icon={<ShieldAlert className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The newly implemented wizard mode safely guides process engineers step-by-step through calculating the Target Architectures, Dangerous Undetected failure rate, and Proof Test Interval variables.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Mitigating Human Error"
+          icon={<Activity className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            Because risk assessments are collaboratively determined across teams (HAZOP), guided calculators strictly isolate human variable entry to reduce catastrophic downstream mathematical flaws.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { GitBranch, Plus, X, Download, HelpCircle, ZoomIn } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { Settings, Users, Hammer, Ruler, Waves, Microscope } from 'lucide-react';
 
 interface Bone {
     category: string;
@@ -156,27 +158,41 @@ const FishboneDiagramGenerator: React.FC = () => {
         </div>
     );
 
-    const Content = (
-        <div>
-            <h2 id="overview">What is a Fishbone Diagram?</h2>
-            <p>
-                Also known as the <strong>Ishikawa Diagram</strong> or Cause-and-Effect Diagram, this tool is fundamental for <strong>Root Cause Analysis (RCA)</strong>. It helps categorize likely causes of problems to identify the root cause systematically.
-            </p>
+  const Content = (
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Visualizing Root Causality</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Ishikawa (Fishbone) diagram is the premier tool for brainstorming failure modes. It forces a 360-degree view of an event, preventing the "tunnel vision" that often plagues initial RCA sessions.</p>
+      </div>
 
-            <h2 id="6m">The 6Ms Framework</h2>
-            <p>
-                The standard categories for manufacturing RCA are:
-            </p>
-            <ul>
-                <li><strong>Machine:</strong> Failures in equipment, tools, or facilities.</li>
-                <li><strong>Method:</strong> Flaws in processes, procedures, or rules.</li>
-                <li><strong>Material:</strong> Defects in raw materials or parts.</li>
-                <li><strong>Man (People):</strong> Human error, lack of training, or fatigue.</li>
-                <li><strong>Measurement:</strong> Errors in data, calibration, or inspection.</li>
-                <li><strong>Mother Nature (Environment):</strong> Heat, humidity, vibration, or dust.</li>
-            </ul>
-        </div>
-    );
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The 6Ms Framework"
+          icon={<Settings className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <ul className="space-y-2 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Machine:</strong> Equipment flaws, wear, or design defects.</li>
+            <li><strong>Method:</strong> Flaws in operating procedures or PM schedules.</li>
+            <li><strong>Material:</strong> Poor raw material quality or incorrect parts.</li>
+            <li><strong>Man (People):</strong> Skill gaps, fatigue, or communication errors.</li>
+            <li><strong>Measurement:</strong> Sensor drift, miscalibration, or bad data.</li>
+            <li><strong>Mother Nature:</strong> Heat, dust, vibration, and humidity.</li>
+          </ul>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="From Effect to Cause"
+          icon={<Microscope className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The "Head" represents the Effect (the problem statement). The "Bones" represent the Categories. To find the root, ask "Why?" for each cause until you reach a point where a corrective action can be taken.
+          </p>
+        </TheoryBlock>
+      </div>
+    </div>
+  );
 
     const faqs = [
         {

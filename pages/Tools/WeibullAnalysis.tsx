@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { calculateWeibull, generateWeibullCurves, calculate3ParameterWeibull, generateContourPlotData } from '../../services/reliabilityMath';
 import { WeibullResult } from '../../types';
-import { Activity, Upload, AlertTriangle, CheckCircle2, Download, RotateCcw, Save, Loader2 } from 'lucide-react';
+import { Activity, Upload, AlertTriangle, CheckCircle2, Download, RotateCcw, Save, Loader2, BookOpen, TrendingUp, BarChart2 } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
@@ -10,7 +10,9 @@ import Papa from 'papaparse';
 import HelpTooltip from '../../components/HelpTooltip';
 import RelatedTools from '../../components/RelatedTools';
 import ToolContentLayout from '../../components/ToolContentLayout';
-import ShareResult from '../../components/ShareResult';
+import ShareAndExport from '../../components/ShareAndExport';
+import AnimatedContainer from '../../components/AnimatedContainer';
+import TheoryBlock from '../../components/TheoryBlock';
 import { useRecentTools } from '../../hooks/useRecentTools';
 import { useLocation } from 'react-router-dom';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
@@ -39,10 +41,15 @@ const WeibullAnalysis: React.FC = () => {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chartRef = useRef<ReactECharts>(null);
+  const toolWrapperRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
 
   const { addRecentTool } = useRecentTools();
   const location = useLocation();
+
+  const shareUrl = typeof window !== 'undefined' 
+    ? `${window.location.origin}${window.location.pathname}#/weibull-analysis?data=${encodeURIComponent(inputData)}`
+    : '';
 
   const parseRawData = React.useCallback((raw: string) => {
     return raw
@@ -333,10 +340,9 @@ const WeibullAnalysis: React.FC = () => {
     if (format === 'svg') downloadSvgElement(svg, `${baseName}.svg`);
     else await downloadSvgAsEps(svg, `${baseName}.eps`);
   };
-
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-1 space-y-6">
+    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6" ref={toolWrapperRef}>
+      <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-1 space-y-6">
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center">
@@ -451,16 +457,11 @@ const WeibullAnalysis: React.FC = () => {
                 </div>
               )}
             </div>
-
-            <ShareResult
-              title="Weibull Analysis"
-              params={{ data: encodeURIComponent(inputData) }}
-            />
           </div>
         )}
-      </div>
+      </AnimatedContainer>
 
-      <div className="lg:col-span-2">
+      <AnimatedContainer animation="staggerContainer" delay={0.2} className="lg:col-span-2">
         {activeModel ? (
           <div className="h-[520px] flex flex-col">
             <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
@@ -490,7 +491,13 @@ const WeibullAnalysis: React.FC = () => {
                     progressive: 4000,
                     grid: { left: '8%', right: '5%', bottom: '14%' },
                     dataZoom: [{ type: 'inside' }, { type: 'slider', height: 16 }],
-                    tooltip: { trigger: 'item', formatter: (p: any) => `Time: ${Number(p.value[0]).toFixed(2)}<br/>Rank: ${(p.value[1] * 100).toFixed(2)}%` },
+                    tooltip: { 
+                      trigger: 'item', 
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      borderColor: '#334155',
+                      textStyle: { color: '#f8fafc' },
+                      formatter: (p: any) => `<div class="font-bold border-b border-slate-700 pb-1 mb-1">${p.seriesName}</div><div class="flex justify-between gap-4 text-xs mt-1"><span>Time (t):</span> <span class="text-cyan-400 font-mono">${Number(p.value[0]).toFixed(2)}</span></div><div class="flex justify-between gap-4 text-xs mt-1"><span>Rank:</span> <span class="text-cyan-400 font-mono">${(p.value[1] * 100).toFixed(2)}%</span></div>` 
+                    },
                     xAxis: { type: 'log', name: 'Time (t)', nameLocation: 'middle', nameGap: 30, splitLine: { lineStyle: { type: 'dashed', color: chartColors.grid } }, axisLabel: { color: chartColors.axis } },
                     yAxis: { type: 'value', min: 0.01, max: 0.99, splitLine: { lineStyle: { type: 'dashed', color: chartColors.grid } }, axisLabel: { color: chartColors.axis, formatter: (v: number) => `${(v * 100).toFixed(0)}%` } },
                     backgroundColor: 'transparent',
@@ -572,27 +579,93 @@ const WeibullAnalysis: React.FC = () => {
             <p>Enter data and click Calculate</p>
           </div>
         )}
-      </div>
+      </AnimatedContainer>
+      
+      {activeModel && (
+        <AnimatedContainer animation="slideUp" delay={0.3} className="lg:col-span-3">
+          <ShareAndExport 
+            toolName="Weibull Analysis"
+            shareUrl={shareUrl}
+            chartRef={toolWrapperRef}
+            resultSummary={`\u03B2=${activeModel.beta.toFixed(2)}, \u03B7=${activeModel.eta.toFixed(0)}`}
+            exportData={[
+              { Parameter: "Shape Parameter (\u03B2)", Value: activeModel.beta },
+              { Parameter: "Scale Parameter / Characteristic Life (\u03B7)", Value: activeModel.eta },
+            { Parameter: "Location Parameter (\u03B3)", Value: activeModel.t0 || 0 },
+            { Parameter: "B10 Life", Value: activeModel.b10 },
+            { Parameter: "R-Squared", Value: activeModel.rSquared },
+            {}, // Empty row for separation
+            { Parameter: "--- DATA POINTS ---", Value: "" },
+            ...activeModel.points.map(p => ({
+              "Time (t)": p.time,
+              "Status": p.suspended ? "Suspended" : "Failed",
+              "Median Rank": p.medianRank || "N/A"
+            }))
+          ]}
+        />
+        </AnimatedContainer>
+      )}
     </div>
   );
 
   const Content = (
-    <div>
-      <h2 id="how-to">Interactive Weibull Analysis</h2>
-      <p>
-        This version supports direct manipulation of the fitted line on the probability plot. Drag the two handle points to immediately recalculate beta and eta.
-      </p>
-      <h2 id="applications">What changed in Tier 2</h2>
-      <ul>
-        <li>Interactive drag handles for live parameter updates.</li>
-        <li>Outlier highlighting based on residuals from the trendline.</li>
-        <li>Scenario overlays for side-by-side design comparison.</li>
-        <li>High-resolution export in SVG and EPS.</li>
-      </ul>
-      <h2 id="standards">Math Basis</h2>
-      <p>
-        The tool uses rank regression on transformed Weibull coordinates and keeps the equation rendered live beneath the form.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Weibull Analysis Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Weibull Analysis is the premier method for examining life data. Its primary strength lies in its profound flexibility to model various life behaviors simply by adjusting its parameters.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The Shape Parameter (Beta β)"
+          icon={<TrendingUp className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The Shape Parameter (<span className="font-serif italic font-bold">β</span>) is the slope of the line on a Weibull probability plot. It fundamentally defines the failure mode of the asset:
+          </p>
+          <ul className="list-disc pl-5 mt-3 space-y-2 text-sm dark:text-slate-300">
+            <li><strong>β &lt; 1 (Infant Mortality):</strong> The failure rate decreases over time. Often caused by manufacturing defects or installation errors.</li>
+            <li><strong>β = 1 (Random Failures):</strong> A constant failure rate. The Weibull distribution becomes identical to the Exponential distribution.</li>
+            <li><strong>β &gt; 1 (Wear-Out):</strong> The failure rate increases over time due to aging, friction, or fatigue.</li>
+          </ul>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="The Scale Parameter (Eta η)"
+          icon={<BarChart2 className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The Scale Parameter (<span className="font-serif italic font-bold">η</span>), also known as characteristic life, determines the spread of the distribution data. 
+          </p>
+          <p className="mt-2">
+            By definition, it is the time at which <strong>63.2%</strong> of the units will have failed. If <span className="font-serif italic font-bold">η</span> increases while <span className="font-serif italic font-bold">β</span> remains constant, the distribution stretches out to the right (representing a longer effective life) while its absolute peak height drops.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Probability Density Function (PDF)"
+          icon={<BookOpen className="w-5 h-5" />}
+          formula="f(T) = \frac{\beta}{\eta} \left( \frac{T}{\eta} \right)^{\beta-1} e^{-\left(\frac{T}{\eta}\right)^\beta}"
+          delay={0.3}
+        >
+          <p>
+            The PDF defines the probability that a unit will fail within an infinitesimally small interval of time. It illustrates the relative frequency of failures across the asset's lifespan.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Cumulative Distribution Function (CDF)"
+          icon={<Activity className="w-5 h-5" />}
+          formula="F(T) = 1 - e^{-\left(\frac{T}{\eta}\right)^\beta}"
+          delay={0.4}
+        >
+          <p>
+            The CDF (Unreliability) gives the total fraction of units that will have failed by time T. Consequently, Reliability is simply <code>R(T) = 1 - F(T)</code>.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 
@@ -623,6 +696,8 @@ const WeibullAnalysis: React.FC = () => {
         </>
       }
       faqs={faqs}
+      keywords="Weibull analysis tool, free Weibull calculator, Weibull distribution, beta eta parameters, reliability analysis India, life data analysis, B10 life, characteristic life"
+      canonicalUrl="https://reliabilitytools.co.in/#/weibull-analysis"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

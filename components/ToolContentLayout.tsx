@@ -17,6 +17,7 @@ interface ToolContentLayoutProps {
     content: React.ReactNode;
     faqs: FAQItem[];
     keywords?: string;
+    canonicalUrl?: string;
     schema?: any;
 }
 
@@ -27,6 +28,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
     content,
     faqs,
     keywords,
+    canonicalUrl,
     schema
 }) => {
     const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
@@ -59,6 +61,15 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                 <title>{`${title} | Reliability Tools`}</title>
                 <meta name="description" content={cleanDescription} />
                 {keywords && <meta name="keywords" content={keywords} />}
+                {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={cleanDescription} />
+                {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="Reliability Tools India" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content={title} />
+                <meta property="twitter:description" content={cleanDescription} />
                 <script type="application/ld+json">
                     {JSON.stringify(schema || {})}
                 </script>
@@ -109,7 +120,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     </div>
                 </div>
 
-                <EmbedCodeGenerator toolId={toolId} title={title.split('–')[0].trim()} />
+                <EmbedCodeGenerator toolId={toolId} title={title.split('-')[0].trim()} />
             </div>
 
             <div className="grid lg:grid-cols-4 gap-12">

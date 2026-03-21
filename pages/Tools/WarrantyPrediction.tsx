@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { ShieldAlert } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 const WarrantyPrediction: React.FC = () => {
   const [beta, setBeta] = useState<number>(1.5);
@@ -142,11 +143,22 @@ const WarrantyPrediction: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2>Warranty Prediction Model</h2>
-      <p>
-        Forecast return volume and financial liability by combining Weibull reliability with cohort sales history.
-      </p>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Warranty Forecasting Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Accurately predict future return volumes and financial liability by cross-referencing Weibull reliability characteristics with historical cohort sales data.</p>
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Cohort Superposition"
+          icon={<ShieldAlert className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            Unlike naive forecasting, this model superimposes the Cumulative Distribution Function (CDF) of the Weibull curve across staggering months of sales. It isolates exactly how many units from Month 1's sales will fail in Month 6, and aggregates the total liability.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

@@ -112,7 +112,7 @@ const Contact: React.FC = () => {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams(formData as any).toString(),
               })
-                .then(() => alert("Thank you! Your message has been sent successfully via Netlify Forms."))
+                .then(() => alert("Thank you! Your message has been sent successfully."))
                 .catch((error) => alert("Error: " + error));
             }}
           >

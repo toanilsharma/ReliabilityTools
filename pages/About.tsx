@@ -15,7 +15,7 @@ const About: React.FC = () => {
           </p>
           <p>
             Our mission is to democratize reliability engineering knowledge by providing open, transparent, and standard-compliant tools that run directly in your browser.
-            No data is sent to servers—all calculations happen locally on your device, ensuring privacy and speed.
+            No data is sent to servers-all calculations happen locally on your device, ensuring privacy and speed.
           </p>
         </div>
       </section>

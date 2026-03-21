@@ -321,7 +321,7 @@ const Downloads: React.FC = () => {
         <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
             <h4 className="font-bold text-slate-900 dark:text-white mb-2">Universal Compatibility</h4>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-                Files are generated in standard UTF-8 CSV format. They import directly into SAP, Maximo, Oracle eAM, and Microsoft Excel without formatting issues.
+                Files are generated in standard UTF-8 CSV format. They import directly into all major ERP, CMMS, EAM, and spreadsheet applications without formatting issues.
             </p>
         </div>
         <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">

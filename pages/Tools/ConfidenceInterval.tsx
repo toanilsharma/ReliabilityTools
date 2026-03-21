@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
+import { Target, BarChart2, AlertTriangle, Calculator } from 'lucide-react';
 import { calculateMTBFConfidence } from '../../services/reliabilityMath';
-import { Target, BarChart2, BookOpen, AlertTriangle, Calculator, Divide } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
+import { BlockMath } from 'react-katex';
 
 const ConfidenceInterval: React.FC = () => {
   const [hours, setHours] = useState('10000');
@@ -133,34 +134,39 @@ const ConfidenceInterval: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">Why Confidence Intervals?</h2>
-      <p>
-        Reliability data is inherently uncertain. If you test 10 units and 1 fails at 1000 hours, calculating an MTBF of 10,000 hours (Total Hours / Failures) is just a <strong>Point Estimate</strong>. It is "probably" wrong.
-      </p>
-      <p>
-        A <strong>Confidence Interval</strong> gives you a range (e.g., 2,500 to 45,000 hours) where the "True" MTBF actually lives.
-      </p>
-
-      <h2 id="chisquare">The Chi-Square Method</h2>
-      <p>
-        For constant failure rate (Exponential distribution), the confidence limits are calculated using the <strong>Chi-Square ($\chi^2$)</strong> distribution formula:
-      </p>
-      <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg font-mono text-xs my-4 overflow-x-auto text-slate-600 dark:text-slate-300">
-        MTBF_lower = 2 * TotalHours / χ²(α/2, 2r+2)<br />
-        MTBF_upper = 2 * TotalHours / χ²(1-α/2, 2r)
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Statistical Confidence Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Reliability data is inherently uncertain. A single MTBF number is only a "point estimate". Confidence intervals establish the mathematical boundaries where the true system reliability likely resides.</p>
       </div>
-      <p>
-        Where <code>r</code> is number of failures and <code>α</code> is (1 - Confidence).
-      </p>
 
-      <h2 id="interpretation">Interpretation</h2>
-      <ul>
-        <li><strong>Lower Limit:</strong> The pessimistic view. "At worst, the MTBF is..." (Used for Safety/Warranty calculations).</li>
-        <li><strong>Upper Limit:</strong> The optimistic view. "At best, the MTBF is..."</li>
-        <li><strong>Narrow Gap:</strong> Good data. We are sure.</li>
-        <li><strong>Wide Gap:</strong> Bad data (too few failures). We are guessing.</li>
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="The Chi-Square Method"
+          icon={<Calculator className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            For time-terminated tests with an exponential distribution, we utilize the Chi-Square ($\chi^2$) distribution to calculate upper and lower bounds based on the number of failures recorded.
+          </p>
+          <div className="mt-4 space-y-2">
+            <BlockMath math={"MTBF_{lower} = \\frac{2 \cdot T}{\chi^2_{\alpha/2, 2r+2}}"} />
+            <BlockMath math={"MTBF_{upper} = \\frac{2 \cdot T}{\chi^2_{1-\alpha/2, 2r}}"} />
+          </div>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Data Interpretation"
+          icon={<AlertTriangle className="w-5 h-5 text-amber-500" />}
+          delay={0.2}
+        >
+          <ul className="space-y-2 mt-2 text-sm text-slate-700 dark:text-slate-300">
+            <li><strong>Lower Limit:</strong> The "Conservative" estimate. Essential for safety-critical systems and warranty reserve planning.</li>
+            <li><strong>Upper Limit:</strong> The "Optimistic" ceiling. Useful for marketing and long-term asset life projections.</li>
+            <li><strong>Sample Size:</strong> A narrow interval indicates high data volume. A wide interval alerts you to statistically insignificant results.</li>
+          </ul>
+        </TheoryBlock>
+      </div>
     </div>
   );
 

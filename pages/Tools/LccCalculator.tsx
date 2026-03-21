@@ -3,6 +3,7 @@ import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle,
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import ToolContentLayout from '../../components/ToolContentLayout';
+import TheoryBlock from '../../components/TheoryBlock';
 
 // Mock function if service is missing or not exposed properly, 
 // though we usually expect services to be there. 
@@ -175,41 +176,50 @@ const LccCalculator: React.FC = () => {
   );
 
   const Content = (
-    <div>
-      <h2 id="overview">What is Life Cycle Costing (LCC)?</h2>
-      <p>
-        <strong>Life Cycle Costing</strong> is an economic analysis used to select the most cost-effective alternative over the asset's entire life span. It moves beyond "lowest purchase price" thinking to consider the Total Cost of Ownership (TCO).
-      </p>
-
-      <div className="grid md:grid-cols-2 gap-6 my-8">
-        <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-          <h3 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2"><ArrowRight className="w-5 h-5 text-red-500" /> Capex (Capital Expenditure)</h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            The upfront cost to buy and install. This is the "Tip of the Iceberg", typically only <strong>10-20%</strong> of the total cost.
-          </p>
-        </div>
-        <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-          <h3 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2"><ArrowRight className="w-5 h-5 text-blue-500" /> Opex (Operational Expenditure)</h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            The ongoing cost to run, maintain, and power the asset. This is the submerged part of the iceberg, often <strong>80-90%</strong> of the total cost.
-          </p>
-        </div>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+      <div className="text-center mb-10">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Total Cost of Ownership (TCO) Theory</h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Life Cycle Costing (LCC) is a rigorous economic analysis used to select the most cost-effective alternative over an asset's entire life span.</p>
       </div>
 
-      <h2 id="npv">Why uses Net Present Value (NPV)?</h2>
-      <p>
-        Money today is worth more than money tomorrow. A dollar spent 10 years from now is less painful than a dollar spent today.
-      </p>
-      <p>
-        <strong>LCC</strong> uses discounted cash flow analysis to convert all future costs into "Present Value" dollars, allowing for a fair "apples-to-apples" comparison between a cheap asset with high running costs and an expensive asset with low running costs.
-      </p>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TheoryBlock 
+          title="Capex (Capital Expenditure)"
+          icon={<DollarSign className="w-5 h-5" />}
+          delay={0.1}
+        >
+          <p>
+            The upfront cost to buy and install the equipment. This is the "Tip of the Iceberg", typically representing only <strong>10-20%</strong> of the total cost.
+          </p>
+        </TheoryBlock>
 
-      <h2 id="applications">Applications</h2>
-      <ul>
-        <li><strong>Equipment Selection:</strong> Choosing between a Standard Efficiency Motor ($1,000) and a Premium Efficiency Motor ($1,500).</li>
-        <li><strong>Repair vs. Replace:</strong> Deciding whether to rebuild an old pump or buy a new one.</li>
-        <li><strong>Project Justification:</strong> Proving that a higher initial investment will yield massive long-term savings.</li>
-      </ul>
+        <TheoryBlock 
+          title="Opex (Operational Expenditure)"
+          icon={<Activity className="w-5 h-5" />}
+          delay={0.2}
+        >
+          <p>
+            The ongoing cost to run, maintain, and power the asset. This is the submerged part of the iceberg, commonly responsible for <strong>80-90%</strong> of the total lifetime cost.
+          </p>
+        </TheoryBlock>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Net Present Value (NPV) Justification</h3>
+        <TheoryBlock 
+          title="The Time Value of Money"
+          icon={<TrendingUp className="w-5 h-5" />}
+          formula="\text{NPV} = \sum_{t=1}^{N} \frac{\text{Cash Flow}_t}{(1 + r)^t} - \text{Initial Investment}"
+          delay={0.3}
+        >
+          <p>
+            Money today is worth more than money tomorrow. A dollar spent 10 years from now mathematically hurts less than a dollar spent today due to the potential earning power of capital.
+          </p>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            LCC uses discounted cash flow analysis to convert all future Operational Expenditures into "Present Value" dollars. This allows for an equal comparison between a cheap asset with high running costs and an expensive asset with low running costs.
+          </p>
+        </TheoryBlock>
+      </div>
     </div>
   );
 
