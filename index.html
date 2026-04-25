@@ -4,6 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    (function(l) {
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) { 
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location))
+  </script>
   <title>Free MTBF Calculator & Weibull Analysis Tool | Reliability Tools India</title>
   <meta name="description"
     content="Free online MTBF calculator, Weibull analysis tool, FMEA worksheet, OEE calculator, and availability calculator for Indian industry. ISO/IEC standard reliability engineering formulas. No installation required." />
@@ -232,19 +246,7 @@
       }
     }
   </style>
-  <script type="importmap">
-      {
-        "imports": {
-          "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-          "react/": "https://aistudiocdn.com/react@^19.2.0/",
-          "react": "https://aistudiocdn.com/react@^19.2.0",
-          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-          "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
-          "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
-          "papaparse": "https://aistudiocdn.com/papaparse@^5.5.3"
-        }
-      }
-    </script>
+
   <link rel="stylesheet" href="/index.css" />
 </head>
 
