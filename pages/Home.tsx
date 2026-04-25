@@ -146,7 +146,7 @@ const Home: React.FC = () => {
     <div className="space-y-24 pb-12">
       <SEO
         title="Free MTBF Calculator & Reliability Engineering Tools | India"
-        description="25+ free reliability engineering tools: MTBF calculator, Weibull analysis, FMEA worksheet, OEE calculator. Used by maintenance engineers, plant managers & engineering students across India. No signup. ISO/IEC formulas."
+        description="20 free reliability engineering tools: MTBF calculator, Weibull analysis, FMEA worksheet, OEE calculator. Used by maintenance engineers, plant managers & engineering students across India. No signup. ISO/IEC formulas."
         keywords="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator, OEE calculator, availability calculator, predictive maintenance, engineering interview preparation, reliability exam preparation"
         canonicalUrl="https://reliabilitytools.co.in/"
         schema={faqSchema}
@@ -175,7 +175,7 @@ const Home: React.FC = () => {
           </h1>
 
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-            <span className="font-semibold text-slate-900 dark:text-white">25+ professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
+            <span className="font-semibold text-slate-900 dark:text-white">20 professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
             Master MTBF, Weibull, FMEA, OEE & more - directly in your browser.
           </p>
 
@@ -183,7 +183,7 @@ const Home: React.FC = () => {
             Whether you're optimizing plant KPIs, teaching engineering concepts, or cracking competitive exams - avoid expensive certification fees and enterprise software with our 100% free toolset.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <Link
               to="/mtbf-calculator"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
@@ -200,10 +200,31 @@ const Home: React.FC = () => {
             </Link>
           </div>
 
+          {/* BIG Show All Tools Button */}
+          <div className="flex justify-center mb-16">
+            <Link
+              to="/tools"
+              id="show-all-tools-btn"
+              className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg text-white overflow-hidden shadow-2xl shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-cyan-500/50"
+              style={{
+                background: 'linear-gradient(135deg, #0891b2 0%, #2563eb 50%, #7c3aed 100%)',
+              }}
+            >
+              {/* Animated shimmer overlay */}
+              <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+              <Calculator className="w-6 h-6 flex-shrink-0" />
+              <span>View All Reliability Tools Free</span>
+              <span className="flex items-center gap-1 bg-white/20 text-white text-sm font-bold px-3 py-1 rounded-full border border-white/30">
+                <ArrowRight className="w-4 h-4" />
+                Free
+              </span>
+            </Link>
+          </div>
+
           {/* Trust Indicators */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-slate-500 dark:text-slate-400 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8" ref={observeElt}>
             <div className="flex flex-col items-center">
-              <div className="font-bold text-2xl text-slate-900 dark:text-white">25+</div>
+              <div className="font-bold text-2xl text-slate-900 dark:text-white">20</div>
               <div className="text-sm">Engineering Tools</div>
             </div>
             <div className="flex flex-col items-center">
@@ -649,11 +670,21 @@ const Home: React.FC = () => {
       </section>
 
       {/* Tools Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <section id="all-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 scroll-mt-20">
         <RecentTools />
         
-        <div className="flex items-center justify-between mb-8 mt-12">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 mt-12">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1">20 professional-grade tools. Free. No signup required.</p>
+          </div>
+          <Link
+            to="/tools"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-md transition-all hover:-translate-y-0.5"
+          >
+            <Calculator className="w-4 h-4" />
+            Full Tools Directory
+          </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {TOOLS.map((tool) => {

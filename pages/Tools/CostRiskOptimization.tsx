@@ -1,3 +1,4 @@
+import React, { useState, useMemo } from 'react';
 import { Target, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import ToolContentLayout from '../../components/ToolContentLayout';

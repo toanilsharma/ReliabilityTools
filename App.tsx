@@ -10,6 +10,7 @@ const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Downloads = lazy(() => import('./pages/Downloads'));
+const AllTools = lazy(() => import('./pages/AllTools'));
 
 // Tools
 const MtbfCalculator = lazy(() => import('./pages/Tools/MtbfCalculator'));
@@ -72,7 +73,7 @@ const App: React.FC = () => {
               <Route path="downloads" element={<Downloads />} />
 
               {/* Tools */}
-              <Route path="tools" element={<Home />} />
+              <Route path="tools" element={<AllTools />} />
               <Route path="mtbf-calculator" element={<MtbfCalculator />} />
               <Route path="weibull-analysis" element={<WeibullAnalysis />} />
               <Route path="tools/rbd" element={<RbdTool />} />

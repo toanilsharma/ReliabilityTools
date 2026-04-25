@@ -1,15 +1,57 @@
-# ReliabilityTools
+# ReliabilityTools - Engineering Directory
 > Free industrial reliability engineering calculators for maintenance engineers
 
-ReliabilityTools provides free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and 10+ more reliability engineering tools. No signup required.
+ReliabilityTools provides 20 free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and advanced industrial reliability engineering.
 
-## Tools Available
-- MTBF / MTTF Calculator
-- Weibull Analysis & Plotting
-- FMEA Builder with RPN scoring
-- OEE Calculator
-- Life Cycle Cost Calculator
-- PM Scheduler
+## Tool Categories & Description
 
-## Audience
-Reliability engineers, maintenance engineers, plant managers, industrial engineering students
+### Core Reliability Calculators
+- **MTBF / MTTF Calculator**: Calculate Mean Time Between Failures for repairable systems and Mean Time To Failure for non-repairable components.
+- **MTTR Calculator**: Determine Mean Time To Repair and analyze maintainability trends.
+- **Availability Calculator**: Calculate operational availability based on MTBF and MTTR.
+- **Confidence Interval (MTBF)**: Statistical bounds for MTBF using Chi-Square distribution (Lower/Upper bounds).
+
+### Statistical Failure Analysis
+- **Weibull Analysis**: Advanced life data analysis to determine failure modes (Infant Mortality, Random, Wear Out) using Beta (shape) and Eta (scale) parameters.
+- **Reliability Growth (Duane/Crow-AMSAA)**: Track reliability improvement over time during development or testing.
+- **Hazard Rate Calculator**: Instantaneous failure rate modeling.
+- **Poisson & Binomial Distribution**: Reliability modeling for discrete events and spare parts.
+- **Markov Chain Modeling**: State-transition probability for complex redundant systems.
+
+### System Modeling & Risk
+- **RBD Builder (Reliability Block Diagram)**: Visual modeling of series and parallel system reliability.
+- **FMEA Worksheet & RPN Calculator**: Failure Mode and Effects Analysis with Risk Priority Number (S x O x D) ranking.
+- **Fault Tree Analysis (FTA)**: Top-down deductive failure path logic.
+- **Fishbone Diagram (Ishikawa)**: Root Cause Analysis (RCA) visual mapping.
+- **K-out-of-N Redundancy**: Reliability of systems requiring a minimum number of operating units.
+- **SIL Verification**: Safety Integrity Level (PFDavg) verification for safety instrumented systems.
+
+### Maintenance & Asset Management
+- **Optimal Replacement Age**: Cost-based optimization (Cp vs Cf) to determine the best preventive maintenance interval.
+- **Spare Part Estimator**: Poisson-based inventory optimization for critical spares and reorder points.
+- **Life Cycle Cost (LCC)**: Total Cost of Ownership (TCO) comparison for Capex and Opex.
+- **OEE Calculator**: Overall Equipment Effectiveness (Availability x Performance x Quality).
+- **PM Scheduler**: Usage-based preventive maintenance frequency planner.
+- **EOQ Calculator**: Economic Order Quantity for warehouse optimization.
+
+### Component-Specific Tools
+- **Gearbox Reliability (AGMA)**: Reliability factors for mechanical gear trains.
+- **Lubricant Life Optimizer**: Remaining useful life based on Arrhenius rate and contamination levels.
+- **Unit Converter**: Engineering conversions for reliability metrics.
+
+## Resources & Education
+- **Learning Center**: Deep-dive guides on RCM (Reliability Centered Maintenance), FMEA, and Statistical Analysis.
+- **Knowledge Hub**: Case studies on textile, chemical, and automotive plant reliability improvements.
+- **Glossary**: 250+ reliability engineering terms defined (ALARP, Beta, RBD, etc.).
+- **Methodology**: Technical references for all formulas based on ISO/IEC standards.
+
+## Usage Note
+All tools are client-side only. No data is stored on servers. No signup required.
+
+## Target Audience
+Reliability Engineers, Maintenance Managers, Asset Managers, Plant Engineers, SREs, and Industrial Engineering Students.
+
+## Site Metadata
+- **Domain**: https://reliabilitytools.co.in/
+- **Author**: Anil Sharma
+- **License**: Free for professional and educational use.

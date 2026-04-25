@@ -1,155 +1,88 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Pages -->
   <url>
     <loc>https://reliabilitytools.co.in/</loc>
-    <lastmod>2026-01-24</lastmod>
+    <lastmod>2026-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://reliabilitytools.co.in/tools/mtbf</loc>
-    <lastmod>2026-01-24</lastmod>
+    <loc>https://reliabilitytools.co.in/about</loc>
+    <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://reliabilitytools.co.in/tools/weibull</loc>
-    <lastmod>2026-01-24</lastmod>
+    <loc>https://reliabilitytools.co.in/contact</loc>
+    <lastmod>2026-04-25</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.5</priority>
   </url>
+
   <url>
-    <loc>https://reliabilitytools.co.in/tools/rbd</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/availability</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/mttr</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/pm</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/spares</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/lcc</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/oee</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/test-planner</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/assessment</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/converter</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/confidence-interval</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/k-out-of-n</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/optimal-replacement</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/fmea</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/sil</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/tools/eoq</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/learning</loc>
-    <lastmod>2026-01-24</lastmod>
+    <loc>https://reliabilitytools.co.in/tools</loc>
+    <lastmod>2026-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/knowledge-hub</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/articles/rcm-complete-guide</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/articles/fmea-india-guide</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/articles/free-mtbf-calculator-guide</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://reliabilitytools.co.in/articles/preventive-vs-predictive-maintenance</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-</urlset>
 
+  <!-- High Traffic Tools -->
+  <url>
+    <loc>https://reliabilitytools.co.in/mtbf-calculator</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/weibull-analysis</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/fmea-tool</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/oee-calculator</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Standard Tools -->
+  <url><loc>https://reliabilitytools.co.in/tools/rbd</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/availability</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/mttr</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/pm</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/spares</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/lcc</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/test-planner</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/assessment</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/converter</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/optimal-replacement</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/eoq</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/sil</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/confidence-interval</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/k-out-of-n</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/hazard-rate</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/validator</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/fishbone</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/fta</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/markov</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/growth</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/warranty</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/cost-risk</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/gearbox</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+  <url><loc>https://reliabilitytools.co.in/tools/lubricant-life</loc><lastmod>2026-04-25</lastmod><priority>0.8</priority></url>
+
+  <!-- Content & Resources -->
+  <url><loc>https://reliabilitytools.co.in/learning</loc><lastmod>2026-04-25</lastmod><priority>0.7</priority></url>
+  <url><loc>https://reliabilitytools.co.in/knowledge-hub</loc><lastmod>2026-04-25</lastmod><priority>0.7</priority></url>
+  <url><loc>https://reliabilitytools.co.in/reliability-engineering-glossary</loc><lastmod>2026-04-25</lastmod><priority>0.7</priority></url>
+  <url><loc>https://reliabilitytools.co.in/faq</loc><lastmod>2026-04-25</lastmod><priority>0.6</priority></url>
+  <url><loc>https://reliabilitytools.co.in/methodology</loc><lastmod>2026-04-25</lastmod><priority>0.6</priority></url>
+</urlset>
