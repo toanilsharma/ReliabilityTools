@@ -21,126 +21,180 @@ export const TOOLS: ToolDefinition[] = [
     name: 'MTBF / MTTF Calculator',
     description: 'Calculate Mean Time Between Failures based on operational hours and failure counts.',
     path: '/mtbf-calculator',
-    category: 'Calculator'
+    category: 'Calculator',
+    iconName: 'Activity',
+    colorTheme: 'cyan'
   },
   {
     id: 'confidence-interval',
     name: 'MTBF Confidence Interval',
     description: 'Calculate the statistical range (Lower/Upper bounds) of your MTBF using Chi-Square distribution.',
     path: '/tools/confidence-interval',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'BarChart2',
+    colorTheme: 'indigo'
   },
   {
     id: 'k-out-of-n',
     name: 'K-out-of-N Redundancy',
     description: 'Calculate reliability for complex redundancy systems where k units out of n must operate.',
     path: '/tools/k-out-of-n',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'Layers',
+    colorTheme: 'blue'
   },
   {
     id: 'optimal-replacement',
     name: 'Optimal Replacement Age',
     description: 'Calculate the exact time to preventively replace a part to minimize total cost (Cp vs Cf).',
     path: '/tools/optimal-replacement',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Clock',
+    colorTheme: 'amber'
   },
   {
     id: 'fmea-calculator',
     name: 'FMEA RPN Calculator',
     description: 'Quickly calculate Risk Priority Numbers (Severity × Occurrence × Detection) with risk highlighting.',
     path: '/fmea-tool',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'AlertTriangle',
+    colorTheme: 'rose'
   },
   {
     id: 'sil-verification',
     name: 'SIL Verification (PFD)',
     description: 'Calculate Probability of Failure on Demand (PFDavg) for Safety Instrumented Functions.',
     path: '/tools/sil',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'ShieldCheck',
+    colorTheme: 'emerald'
   },
   {
     id: 'eoq',
     name: 'EOQ Calculator',
     description: 'Determine the Economic Order Quantity for spares to balance holding and ordering costs.',
     path: '/tools/eoq',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Package',
+    colorTheme: 'amber'
   },
   {
     id: 'weibull',
     name: 'Weibull Analysis',
     description: 'Fit life data to a Weibull distribution to determine characteristic life and failure modes.',
     path: '/weibull-analysis',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'TrendingUp',
+    colorTheme: 'purple'
   },
   {
     id: 'converter',
     name: 'Engineering Unit Converter',
     description: 'Quick conversions for Reliability (Hours/Years), Temperature, Pressure, and Power.',
     path: '/tools/converter',
-    category: 'Calculator'
+    category: 'Calculator',
+    iconName: 'ArrowRightLeft',
+    colorTheme: 'slate'
   },
   {
     id: 'availability',
     name: 'Availability Calculator',
     description: 'Determine system availability using MTBF and MTTR inputs.',
     path: '/tools/availability',
-    category: 'Calculator'
+    category: 'Calculator',
+    iconName: 'CheckCircle',
+    colorTheme: 'teal'
   },
   {
     id: 'mttr',
     name: 'MTTR Calculator',
     description: 'Calculate Mean Time To Repair and analyze the impact on production uptime.',
     path: '/tools/mttr',
-    category: 'Calculator'
+    category: 'Calculator',
+    iconName: 'Wrench',
+    colorTheme: 'orange'
   },
   {
     id: 'lcc',
     name: 'Life Cycle Cost (LCC)',
     description: 'Compare the Total Cost of Ownership (Capex + Opex) of assets over their lifespan.',
     path: '/tools/lcc',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Banknote',
+    colorTheme: 'emerald'
   },
   {
     id: 'oee',
     name: 'OEE Calculator',
     description: 'Calculate Overall Equipment Effectiveness (Availability × Performance × Quality).',
     path: '/oee-calculator',
-    category: 'Calculator'
+    category: 'Calculator',
+    iconName: 'Gauge',
+    colorTheme: 'fuchsia'
   },
   {
     id: 'rbd',
     name: 'RBD Builder',
     description: 'Reliability Block Diagram tool to model complex system reliability (Series/Parallel).',
     path: '/tools/rbd',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'Network',
+    colorTheme: 'indigo'
   },
   {
     id: 'spares',
     name: 'Spare Part Estimator',
     description: 'Estimate spare part consumption and reorder points based on failure rates.',
     path: '/tools/spares',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Box',
+    colorTheme: 'amber'
   },
   {
     id: 'pm',
     name: 'PM Scheduler',
     description: 'Simple Preventive Maintenance scheduling tool based on usage intervals.',
     path: '/tools/pm',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Calendar',
+    colorTheme: 'blue'
   },
   {
     id: 'test-planner',
     name: 'Reliability Test Planner',
     description: 'Calculate required sample sizes and test durations to demonstrate reliability targets (Zero-Failure).',
     path: '/tools/test-planner',
-    category: 'Planning'
+    category: 'Planning',
+    iconName: 'Target',
+    colorTheme: 'rose'
   },
   {
     id: 'assessment',
     name: 'Maturity Assessment',
     description: 'Interactive audit tool to score your facility\'s reliability culture and processes.',
     path: '/tools/assessment',
-    category: 'Analysis'
+    category: 'Analysis',
+    iconName: 'ClipboardList',
+    colorTheme: 'teal'
+  },
+  {
+    id: 'gearbox-agma',
+    name: 'Gearbox Reliability (AGMA)',
+    description: 'Calculate required reliability factors and failure probability for gears based on ANSI/AGMA 2001-D04.',
+    path: '/tools/gearbox',
+    category: 'Analysis',
+    iconName: 'Settings',
+    colorTheme: 'slate'
+  },
+  {
+    id: 'lubricant-life',
+    name: 'Lubricant Life Optimizer',
+    description: 'Predict remaining useful life based on the Arrhenius rate rule, ISO 4406 particulate, and water contamination.',
+    path: '/tools/lubricant-life',
+    category: 'Analysis',
+    iconName: 'Droplets',
+    colorTheme: 'cyan'
   }
 ];
 

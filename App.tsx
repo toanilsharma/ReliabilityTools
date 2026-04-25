@@ -39,6 +39,8 @@ const MarkovChainTool = lazy(() => import('./pages/Tools/MarkovChainTool'));
 const ReliabilityGrowth = lazy(() => import('./pages/Tools/ReliabilityGrowth'));
 const WarrantyPrediction = lazy(() => import('./pages/Tools/WarrantyPrediction'));
 const CostRiskOptimization = lazy(() => import('./pages/Tools/CostRiskOptimization'));
+const GearboxReliability = lazy(() => import('./pages/Tools/GearboxReliability'));
+const LubricantLifeOptimizer = lazy(() => import('./pages/Tools/LubricantLifeOptimizer'));
 
 // Content & Legal
 const LearningCenter = lazy(() => import('./pages/LearningCenter'));
@@ -98,6 +100,8 @@ const App: React.FC = () => {
               <Route path="tools/growth" element={<ReliabilityGrowth />} />
               <Route path="tools/warranty" element={<WarrantyPrediction />} />
               <Route path="tools/cost-risk" element={<CostRiskOptimization />} />
+              <Route path="tools/gearbox" element={<GearboxReliability />} />
+              <Route path="tools/lubricant-life" element={<LubricantLifeOptimizer />} />
 
               {/* Content */}
               <Route path="learning" element={<LearningCenter />} />

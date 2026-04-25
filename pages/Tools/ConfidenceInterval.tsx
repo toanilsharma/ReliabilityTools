@@ -5,6 +5,8 @@ import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const ConfidenceInterval: React.FC = () => {
   const [hours, setHours] = useState('10000');
@@ -16,6 +18,29 @@ const ConfidenceInterval: React.FC = () => {
     parseFloat(failures) || 0,
     parseFloat(confidence) || 90
   );
+
+  const { theme } = useTheme();
+  
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+    area: theme === 'dark' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(6, 182, 212, 0.1)',
+  };
+
+  const generateBellCurve = React.useMemo(() => {
+    if (!result) return [];
+    const stdDev = (result.upper - result.lower) / 3.5; 
+    const minX = Math.max(0, result.mean - stdDev * 4);
+    const maxX = result.mean + stdDev * 4;
+    const step = (maxX - minX) / 100;
+    
+    const data = [];
+    for (let x = minX; x <= maxX; x += step) {
+      const y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - result.mean) / stdDev, 2));
+      data.push([x, y]);
+    }
+    return data;
+  }, [result]);
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-2 gap-8">
@@ -97,24 +122,64 @@ const ConfidenceInterval: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative pt-8 pb-4 px-4 z-10">
-              {/* Visual Range Bar */}
-              <div className="h-6 bg-slate-100 dark:bg-slate-700 rounded-full relative w-full overflow-hidden">
-                <div className="absolute top-0 bottom-0 left-[10%] right-[10%] bg-gradient-to-r from-cyan-400/20 via-cyan-400/60 to-cyan-400/20 border-x border-cyan-400/50"></div>
+            <div className="h-64 w-full relative z-10 mt-6">
+              <ReactECharts
+                option={{
+                  animation: false,
+                  grid: { left: '5%', right: '5%', top: '10%', bottom: '15%' },
+                  tooltip: {
+                    trigger: 'axis',
+                    formatter: (params: any) => `MTBF: ${Math.round(params[0].value[0]).toLocaleString()} hrs`,
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    borderColor: '#334155',
+                    textStyle: { color: '#f8fafc' }
+                  },
+                  xAxis: {
+                    type: 'value',
+                    name: 'MTBF (Hours)',
+                    nameLocation: 'middle',
+                    nameGap: 25,
+                    splitLine: { show: false },
+                    axisLabel: { color: chartColors.axis, formatter: (val: number) => Math.round(val).toLocaleString() }
+                  },
+                  yAxis: { type: 'value', show: false },
+                  series: [{
+                    type: 'line',
+                    showSymbol: false,
+                    smooth: true,
+                    data: generateBellCurve,
+                    lineStyle: { width: 3, color: '#06b6d4' },
+                    areaStyle: { color: chartColors.area },
+                    markArea: {
+                      itemStyle: { color: 'rgba(6, 182, 212, 0.15)' },
+                      data: [
+                        [
+                          { xAxis: result.lower },
+                          { xAxis: result.upper }
+                        ]
+                      ]
+                    },
+                    markLine: {
+                      symbol: ['none', 'none'],
+                      label: { show: true, position: 'middle', formatter: 'Mean', color: '#06b6d4' },
+                      lineStyle: { type: 'dashed', color: '#06b6d4', width: 2 },
+                      data: [{ xAxis: result.mean }]
+                    }
+                  }]
+                }}
+                style={{ height: '100%', width: '100%' }}
+                opts={{ renderer: 'svg' }}
+              />
+            </div>
+
+            <div className="flex justify-between mt-2 relative z-10 px-8">
+              <div className="text-left">
+                <div className="text-[10px] font-bold text-slate-400 uppercase">Lower Limit</div>
+                <div className="text-xl font-bold text-cyan-700 dark:text-cyan-400">{Math.round(result.lower).toLocaleString()}</div>
               </div>
-
-              {/* Marker - Fake Visual for effect since scale is log */}
-              <div className="absolute top-[28px] left-1/2 -translate-x-1/2 w-0.5 h-6 bg-slate-900 dark:bg-white z-20"></div>
-
-              <div className="flex justify-between mt-4 relative">
-                <div className="text-left w-1/3">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Lower Limit</div>
-                  <div className="text-xl font-bold text-cyan-700 dark:text-cyan-400">{Math.round(result.lower).toLocaleString()}</div>
-                </div>
-                <div className="text-right w-1/3">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Upper Limit</div>
-                  <div className="text-xl font-bold text-cyan-700 dark:text-cyan-400">{Math.round(result.upper).toLocaleString()}</div>
-                </div>
+              <div className="text-right">
+                <div className="text-[10px] font-bold text-slate-400 uppercase">Upper Limit</div>
+                <div className="text-xl font-bold text-cyan-700 dark:text-cyan-400">{Math.round(result.upper).toLocaleString()}</div>
               </div>
             </div>
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Menu, X, ShieldCheck, ChevronDown, Sun, Moon, AlertTriangle, ExternalLink, Calculator, Zap, Linkedin, Instagram, Facebook, Twitter, Mail } from 'lucide-react';
+import { Menu, X, ShieldCheck, ChevronDown, Sun, Moon, AlertTriangle, ExternalLink, Calculator, Zap, Linkedin, Instagram, Facebook, Twitter, Mail, Search } from 'lucide-react';
 import { TOOLS, AUTHOR_NAME, ARTICLES } from '../constants';
 import CookieConsent from './CookieConsent';
+import CommandPalette from './CommandPalette';
 import { useTheme } from '../context/ThemeContext';
 import SEO from './SEO';
 import BackToTop from './BackToTop';
@@ -10,6 +11,7 @@ import MobileCTA from './MobileCTA';
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
@@ -20,6 +22,18 @@ const Layout: React.FC = () => {
   React.useEffect(() => {
     setShareUrl(window.location.href);
   }, [location]);
+
+  // Global keyboard shortcut for Search (Ctrl+K or Cmd+K)
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Generate Dynamic Breadcrumb Schema
   const generateBreadcrumbSchema = () => {
@@ -98,8 +112,8 @@ const Layout: React.FC = () => {
                   <button className="flex items-center hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none">
                     Tools <ChevronDown className="ml-1 h-3 w-3" />
                   </button>
-                  <div className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 border border-slate-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
-                    <div className="py-1">
+                  <div className="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 border border-slate-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden flex flex-col max-h-[75vh]">
+                    <div className="py-1 overflow-y-auto custom-scrollbar flex-grow">
                       {TOOLS.map((tool) => (
                         <Link
                           key={tool.id}
@@ -122,6 +136,16 @@ const Layout: React.FC = () => {
                 <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
               </div>
 
+              {/* Search Toggle */}
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors focus:outline-none flex items-center gap-2"
+                aria-label="Open Search"
+              >
+                <Search className="w-5 h-5" />
+                <span className="hidden lg:inline-block text-xs font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Ctrl+K</span>
+              </button>
+
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
@@ -133,7 +157,14 @@ const Layout: React.FC = () => {
             </nav>
 
             {/* Mobile Menu Button */}
-            <div className="-mr-2 flex md:hidden items-center gap-2">
+            <div className="-mr-2 flex md:hidden items-center gap-1">
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors focus:outline-none"
+                aria-label="Open Search"
+              >
+                <Search className="w-5 h-5" />
+              </button>
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors focus:outline-none"
@@ -154,7 +185,7 @@ const Layout: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <nav aria-label="Mobile navigation" className="md:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
+          <nav aria-label="Mobile navigation" className="md:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg max-h-[80vh] overflow-y-auto custom-scrollbar">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link to="/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Home</Link>
 
@@ -208,6 +239,9 @@ const Layout: React.FC = () => {
           <Outlet />
         </div>
       </main>
+
+      {/* Global Search Palette */}
+      <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Cookie Consent Banner */}
       <CookieConsent />

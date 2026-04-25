@@ -6,6 +6,8 @@ import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const TestPlanner: React.FC = () => {
   const [mode, setMode] = useState<'MTBF' | 'Reliability'>('MTBF');
@@ -41,6 +43,25 @@ const TestPlanner: React.FC = () => {
       }
     }
   };
+
+  const { theme } = useTheme();
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
+  const generateTradeoffCurve = React.useMemo(() => {
+    if (mode !== 'MTBF') return [];
+    const mtbf = parseFloat(targetMtbf) || 5000;
+    const data: [number, number][] = [];
+    const confLevels = [50, 60, 70, 80, 85, 90, 92, 95, 97, 99];
+    
+    for (const cl of confLevels) {
+      const testTime = calculateTestTimeForMTBF(mtbf, cl / 100);
+      data.push([cl, Math.ceil(testTime)]);
+    }
+    return data;
+  }, [targetMtbf, mode]);
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-2 gap-8">
@@ -143,6 +164,37 @@ const TestPlanner: React.FC = () => {
           <div className="h-full flex flex-col items-center justify-center text-slate-400 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
             <Clock className="w-16 h-16 mb-4 opacity-20" />
             <p>Calculate your test strategy.</p>
+          </div>
+        )}
+
+        {mode === 'MTBF' && generateTradeoffCurve.length > 0 && (
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 h-64 shadow-sm mt-6">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+              <Microscope className="w-4 h-4 text-cyan-600" /> Confidence vs Test Time Trade-off
+            </h4>
+            <ReactECharts
+              option={{
+                animation: false,
+                grid: { left: '15%', right: '5%', top: '10%', bottom: '20%' },
+                tooltip: { trigger: 'axis', formatter: (p: any) => `Confidence: ${p[0].value[0]}%<br/>Test Hours: ${p[0].value[1].toLocaleString()}`, backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+                xAxis: { type: 'value', name: 'Confidence (%)', nameLocation: 'middle', nameGap: 25, min: 50, max: 100, splitLine: { show: false }, axisLabel: { color: chartColors.axis } },
+                yAxis: { type: 'value', name: 'Total Test Hours', nameLocation: 'middle', nameGap: 40, splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, axisLabel: { color: chartColors.axis, formatter: (v: number) => v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v.toString() } },
+                series: [{
+                  type: 'line',
+                  data: generateTradeoffCurve,
+                  showSymbol: true,
+                  symbolSize: 6,
+                  itemStyle: { color: '#8b5cf6' },
+                  lineStyle: { width: 3 },
+                  areaStyle: { color: 'rgba(139, 92, 246, 0.08)' },
+                  markPoint: resultTime !== null ? {
+                    data: [{ name: 'Selected', value: Math.ceil(resultTime).toLocaleString(), xAxis: parseFloat(confidence), yAxis: Math.ceil(resultTime), itemStyle: { color: '#ef4444' } }]
+                  } : undefined
+                }]
+              }}
+              style={{ height: 'calc(100% - 24px)', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
           </div>
         )}
       </div>

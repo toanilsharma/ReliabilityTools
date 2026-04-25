@@ -7,6 +7,8 @@ import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const SparePartEstimator: React.FC = () => {
   const [mtbf, setMtbf] = useState<string>('5000');
@@ -28,6 +30,29 @@ const SparePartEstimator: React.FC = () => {
       setResult(calculateSpareParts(m, u, q, l, SERVICE_LEVELS[serviceLevelIdx].z));
     }
   };
+
+  const { theme } = useTheme();
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
+  const poissonData = React.useMemo(() => {
+    if (!result) return { spares: [] as number[], probs: [] as number[] };
+    const lambda = result.leadTimeDemand;
+    const spares: number[] = [];
+    const probs: number[] = [];
+    
+    for (let k = 0; k <= Math.max(10, Math.ceil(lambda * 3)); k++) {
+      let prob = Math.exp(-lambda);
+      for (let i = 1; i <= k; i++) {
+        prob *= lambda / i;
+      }
+      spares.push(k);
+      probs.push(parseFloat((prob * 100).toFixed(2)));
+    }
+    return { spares, probs };
+  }, [result]);
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-3 gap-8">
@@ -89,6 +114,7 @@ const SparePartEstimator: React.FC = () => {
 
       <div className="lg:col-span-2 space-y-6">
         {result ? (
+          <>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-md">
               <div className="text-xs font-bold text-slate-400 uppercase mb-1">Recommended Reorder Point (ROP)</div>
@@ -114,6 +140,35 @@ const SparePartEstimator: React.FC = () => {
               <div className="text-xs text-slate-500">Consumption while waiting for resupply.</div>
             </div>
           </div>
+
+          {poissonData.spares.length > 0 && (
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 h-64 shadow-sm sm:col-span-2">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                <Package className="w-4 h-4 text-cyan-600" /> Poisson Demand Distribution
+              </h4>
+              <ReactECharts
+                option={{
+                  animation: false,
+                  grid: { left: '10%', right: '5%', top: '10%', bottom: '20%' },
+                  tooltip: { trigger: 'axis', formatter: (p: any) => `${p[0].value} spares: ${poissonData.probs[p[0].dataIndex]}% probability`, backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+                  xAxis: { type: 'category', data: poissonData.spares.map(String), name: 'Spares Needed', nameLocation: 'middle', nameGap: 25, axisLabel: { color: chartColors.axis } },
+                  yAxis: { type: 'value', name: 'Probability (%)', splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, axisLabel: { color: chartColors.axis } },
+                  series: [{
+                    type: 'bar',
+                    data: poissonData.probs,
+                    itemStyle: {
+                      color: (params: any) => params.dataIndex <= (result?.reorderPoint || 0) ? '#06b6d4' : '#94a3b8',
+                      borderRadius: [4, 4, 0, 0]
+                    },
+                    label: { show: poissonData.spares.length <= 15, position: 'top', color: chartColors.axis, fontSize: 9, formatter: '{c}%' }
+                  }]
+                }}
+                style={{ height: 'calc(100% - 24px)', width: '100%' }}
+                opts={{ renderer: 'svg' }}
+              />
+            </div>
+          )}
+          </>
         ) : (
           <div className="h-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/30 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-12 text-center text-slate-400">
             <Package className="w-16 h-16 mb-4 opacity-20" />

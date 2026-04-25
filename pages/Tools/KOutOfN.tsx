@@ -1,10 +1,12 @@
 
 import React, { useState } from 'react';
 import { calculateKOutOfN } from '../../services/reliabilityMath';
-import { Layers, Cuboid, Zap, CheckCircle2, AlertOctagon, Target, Info, Server } from 'lucide-react';
+import { Layers, Cuboid, Zap, CheckCircle2, AlertOctagon, Target, Info, Server, Activity } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const KOutOfN: React.FC = () => {
   const [n, setN] = useState<string>('3');
@@ -18,6 +20,27 @@ const KOutOfN: React.FC = () => {
     parseInt(k) || 0,
     rel || 0
   );
+
+  const { theme } = useTheme();
+
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+    line: theme === 'dark' ? '#0ea5e9' : '#0284c7',
+  };
+
+  const generateSensitivityCurve = React.useMemo(() => {
+    const data = [];
+    const nVal = parseInt(n) || 0;
+    const kVal = parseInt(k) || 0;
+    if (nVal <= 0 || kVal <= 0 || kVal > nVal) return [];
+
+    for (let r = 0; r <= 100; r += 2) {
+      const sysRel = calculateKOutOfN(nVal, kVal, r / 100);
+      data.push([r, sysRel * 100]);
+    }
+    return data;
+  }, [n, k]);
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-2 gap-8">
@@ -98,6 +121,50 @@ const KOutOfN: React.FC = () => {
             </div>
             <div className="text-[10px] text-slate-400">Risk of system failure</div>
           </div>
+        </div>
+
+        <div className="h-64 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm mt-6">
+          <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-cyan-600" /> Sensitivity Analysis
+          </h4>
+          <ReactECharts
+            option={{
+              animation: false,
+              grid: { left: '12%', right: '5%', top: '10%', bottom: '20%' },
+              tooltip: { trigger: 'axis', formatter: (p: any) => `Component: ${p[0].value[0].toFixed(1)}%<br/>System: ${p[0].value[1].toFixed(2)}%`, backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+              xAxis: { 
+                type: 'value', 
+                name: 'Component Reliability (%)', 
+                nameLocation: 'middle', 
+                nameGap: 25, 
+                splitLine: { show: false }, 
+                axisLabel: { color: chartColors.axis } 
+              },
+              yAxis: { 
+                type: 'value', 
+                name: 'System Rel. (%)',
+                nameLocation: 'middle', 
+                nameGap: 35, 
+                splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, 
+                axisLabel: { color: chartColors.axis } 
+              },
+              series: [{
+                type: 'line',
+                data: generateSensitivityCurve,
+                showSymbol: false,
+                itemStyle: { color: chartColors.line },
+                lineStyle: { width: 3 },
+                areaStyle: { color: 'rgba(14, 165, 233, 0.1)' },
+                markPoint: {
+                  data: [
+                    { name: 'Current', value: `${(result * 100).toFixed(1)}%`, xAxis: parseFloat(componentRel), yAxis: result * 100, itemStyle: { color: '#ef4444' } }
+                  ]
+                }
+              }]
+            }}
+            style={{ height: 'calc(100% - 24px)', width: '100%' }}
+            opts={{ renderer: 'svg' }}
+          />
         </div>
       </div>
     </div>

@@ -7,6 +7,8 @@ import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import TheoryBlock from '../../components/TheoryBlock';
 import WizardWrapper from '../../components/WizardWrapper';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const SilVerification: React.FC = () => {
   const [lambdaDU, setLambdaDU] = useState<string>('1.5e-6');
@@ -50,6 +52,36 @@ const SilVerification: React.FC = () => {
     '2oo2': 'PFD_{avg} = \\lambda_{DU} \\cdot T_I',
     '2oo3': 'PFD_{avg} = (\\lambda_{DU} \\cdot T_I)^2',
   };
+
+  const { theme } = useTheme();
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
+  const generateSawtoothCurve = React.useMemo(() => {
+    if (!isValid) return [];
+    const lambda = parseFloat(lambdaDU);
+    const ti = parseFloat(testInterval);
+    const data: [number, number][] = [];
+    const numIntervals = 3;
+    const stepsPerInterval = 50;
+    
+    for (let interval = 0; interval < numIntervals; interval++) {
+      for (let step = 0; step <= stepsPerInterval; step++) {
+        const tWithinInterval = (step / stepsPerInterval) * ti;
+        const totalTime = interval * ti + tWithinInterval;
+        let pfd = 0;
+        if (arch === '1oo1') pfd = lambda * tWithinInterval;
+        else if (arch === '1oo2') pfd = Math.pow(lambda * tWithinInterval, 2);
+        else if (arch === '2oo2') pfd = 2 * lambda * tWithinInterval;
+        else if (arch === '2oo3') pfd = 3 * Math.pow(lambda * tWithinInterval, 2);
+        pfd = Math.min(1, pfd);
+        data.push([totalTime, pfd]);
+      }
+    }
+    return data;
+  }, [lambdaDU, testInterval, arch, isValid]);
 
   const steps = [
     {
@@ -212,6 +244,29 @@ const SilVerification: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {result && generateSawtoothCurve.length > 0 && (
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 h-64 shadow-sm">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-cyan-600" /> PFD(t) Sawtooth Curve
+            </h4>
+            <ReactECharts
+              option={{
+                animation: false,
+                grid: { left: '15%', right: '5%', top: '10%', bottom: '20%' },
+                tooltip: { trigger: 'axis', formatter: (p: any) => `Time: ${Math.round(p[0].value[0]).toLocaleString()} hrs<br/>PFD: ${p[0].value[1].toExponential(2)}`, backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+                xAxis: { type: 'value', name: 'Time (hours)', nameLocation: 'middle', nameGap: 25, splitLine: { show: false }, axisLabel: { color: chartColors.axis } },
+                yAxis: { type: 'value', name: 'PFD(t)', nameLocation: 'middle', nameGap: 40, splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, axisLabel: { color: chartColors.axis, formatter: (v: number) => v.toExponential(1) } },
+                series: [
+                  { type: 'line', data: generateSawtoothCurve, showSymbol: false, itemStyle: { color: '#ef4444' }, lineStyle: { width: 2 }, areaStyle: { color: 'rgba(239, 68, 68, 0.08)' } },
+                  { type: 'line', data: [[0, result.pfd], [generateSawtoothCurve[generateSawtoothCurve.length - 1]?.[0] || 0, result.pfd]], showSymbol: false, itemStyle: { color: '#06b6d4' }, lineStyle: { width: 2, type: 'dashed' }, name: 'PFDavg' }
+                ]
+              }}
+              style={{ height: 'calc(100% - 24px)', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

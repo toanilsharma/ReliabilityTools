@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { CheckSquare, Shield, AlertTriangle, FileText, ClipboardCheck, ThumbsUp, Scale, ZapOff } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const SystemReliabilityValidator: React.FC = () => {
     const [checklist, setChecklist] = useState([
@@ -21,6 +23,17 @@ const SystemReliabilityValidator: React.FC = () => {
     };
 
     const progress = Math.round((checklist.filter(i => i.checked).length / checklist.length) * 100);
+
+    const { theme } = useTheme();
+
+    const categoryScores = React.useMemo(() => {
+        const categories = [...new Set(checklist.map(i => i.category))];
+        return categories.map(cat => {
+            const items = checklist.filter(i => i.category === cat);
+            const score = Math.round((items.filter(i => i.checked).length / items.length) * 100);
+            return { category: cat, score };
+        });
+    }, [checklist]);
 
     const ToolComponent = (
         <div className="grid lg:grid-cols-3 gap-8">
@@ -71,6 +84,33 @@ const SystemReliabilityValidator: React.FC = () => {
                         ) : (
                             <p>Complete all items to validate the reliability design assurance case.</p>
                         )}
+                    </div>
+
+                    <div className="mt-6 h-56">
+                        <ReactECharts
+                            option={{
+                                animation: false,
+                                radar: {
+                                    indicator: categoryScores.map(c => ({ name: c.category, max: 100 })),
+                                    shape: 'polygon',
+                                    splitArea: { areaStyle: { color: theme === 'dark' ? ['rgba(6, 182, 212, 0.05)', 'rgba(6, 182, 212, 0.02)'] : ['rgba(6, 182, 212, 0.08)', 'rgba(6, 182, 212, 0.02)'] } },
+                                    axisName: { color: theme === 'dark' ? '#94a3b8' : '#64748b', fontSize: 10 },
+                                    splitLine: { lineStyle: { color: theme === 'dark' ? '#334155' : '#e2e8f0' } },
+                                    axisLine: { lineStyle: { color: theme === 'dark' ? '#334155' : '#e2e8f0' } }
+                                },
+                                series: [{
+                                    type: 'radar',
+                                    data: [{
+                                        value: categoryScores.map(c => c.score),
+                                        itemStyle: { color: '#06b6d4' },
+                                        areaStyle: { color: 'rgba(6, 182, 212, 0.2)' },
+                                        lineStyle: { width: 2 }
+                                    }]
+                                }]
+                            }}
+                            style={{ height: '100%', width: '100%' }}
+                            opts={{ renderer: 'svg' }}
+                        />
                     </div>
                 </div>
             </div>

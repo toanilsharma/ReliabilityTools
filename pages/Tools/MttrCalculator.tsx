@@ -5,12 +5,15 @@ import { Wrench, Clock, AlertCircle, Copy, Check, BookOpen, Target, TrendingUp, 
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const MttrCalculator: React.FC = () => {
-  const [downtime, setDowntime] = useState<string>('');
-  const [repairs, setRepairs] = useState<string>('');
+  const [downtime, setDowntime] = useState<string>('120');
+  const [repairs, setRepairs] = useState<string>('15');
   const [result, setResult] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  const { theme } = useTheme();
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,6 +106,39 @@ const MttrCalculator: React.FC = () => {
             MTTR = Total Maintenance Time / Total Number of Repairs
           </code>
         </div>
+
+        {result !== null && (
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 h-72">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+              <BarChart className="w-4 h-4 text-cyan-600" /> MTTR Gauge & Availability Impact
+            </h4>
+            <ReactECharts
+              option={{
+                animation: false,
+                series: [{
+                  type: 'gauge',
+                  startAngle: 180,
+                  endAngle: 0,
+                  min: 0,
+                  max: Math.max(24, result * 2),
+                  splitNumber: 4,
+                  itemStyle: { color: result <= 4 ? '#10b981' : result <= 8 ? '#f59e0b' : '#ef4444' },
+                  progress: { show: true, roundCap: true, width: 14 },
+                  pointer: { show: false },
+                  axisLine: { roundCap: true, lineStyle: { width: 14, color: [[1, theme === 'dark' ? '#334155' : '#e2e8f0']] } },
+                  axisTick: { show: false },
+                  splitLine: { length: 8, lineStyle: { width: 2, color: theme === 'dark' ? '#475569' : '#94a3b8' } },
+                  axisLabel: { distance: 18, color: theme === 'dark' ? '#94a3b8' : '#64748b', fontSize: 10 },
+                  title: { show: true, offsetCenter: [0, '30%'], fontSize: 12, color: theme === 'dark' ? '#94a3b8' : '#64748b' },
+                  detail: { valueAnimation: false, formatter: '{value} hrs', offsetCenter: [0, '-10%'], fontSize: 22, fontWeight: 'bold', color: theme === 'dark' ? '#f1f5f9' : '#0f172a' },
+                  data: [{ value: parseFloat(result.toFixed(2)), name: 'Avg Repair Time' }]
+                }]
+              }}
+              style={{ height: '100%', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

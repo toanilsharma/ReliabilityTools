@@ -6,6 +6,8 @@ import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const EoqCalculator: React.FC = () => {
   const [demand, setDemand] = useState<string>('1000');
@@ -14,6 +16,34 @@ const EoqCalculator: React.FC = () => {
 
   const eoq = calculateEOQ(parseFloat(demand) || 0, parseFloat(orderingCost) || 0, parseFloat(holdingCost) || 0);
   const ordersPerYear = (parseFloat(demand) || 0) / (eoq || 1);
+  const { theme } = useTheme();
+
+  const generateEoqData = React.useMemo(() => {
+    const d = parseFloat(demand) || 0;
+    const o = parseFloat(orderingCost) || 0;
+    const h = parseFloat(holdingCost) || 0;
+    if (d <= 0 || o <= 0 || h <= 0) return [];
+    
+    const optimalQ = Math.round(calculateEOQ(d, o, h));
+    if (optimalQ === 0) return [];
+    
+    const step = Math.max(1, Math.round(optimalQ / 10));
+    const maxQ = optimalQ * 2.5;
+    
+    const data = [];
+    for (let q = step; q <= maxQ; q += step) {
+      const holdC = (q / 2) * h;
+      const orderC = (d / q) * o;
+      const totalC = holdC + orderC;
+      data.push([q, holdC, orderC, totalC]);
+    }
+    return data;
+  }, [demand, orderingCost, holdingCost]);
+
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    text: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-2 gap-8">
@@ -69,6 +99,60 @@ const EoqCalculator: React.FC = () => {
             By ordering <strong>{Math.round(eoq)}</strong> units at a time, you perfectly balance the cost of holding inventory against the cost of placing orders, mathematically minimizing your Total Cost of Ownership.
           </p>
         </div>
+
+        {eoq > 0 && generateEoqData.length > 0 && (
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 h-72">
+            <ReactECharts
+              option={{
+                animation: false,
+                grid: { left: '15%', right: '5%', top: '15%', bottom: '15%' },
+                tooltip: { 
+                  trigger: 'axis',
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                  borderColor: '#334155',
+                  textStyle: { color: '#f8fafc' },
+                  formatter: (params: any) => {
+                    const q = params[0].value[0];
+                    let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1">Quantity: ${Math.round(q)}</div>`;
+                    params.forEach((p: any) => {
+                      res += `<div class="flex justify-between gap-4 mt-1"><span style="color:${p.color}">${p.seriesName}</span> <span class="font-mono">$${p.value[p.seriesIndex + 1].toFixed(2)}</span></div>`;
+                    });
+                    return res;
+                  }
+                },
+                legend: { data: ['Holding Cost', 'Ordering Cost', 'Total Cost'], textStyle: { color: chartColors.text }, bottom: 0 },
+                xAxis: { 
+                  type: 'value', 
+                  name: 'Order Quantity', 
+                  nameLocation: 'middle', 
+                  nameGap: 25, 
+                  splitLine: { show: false }, 
+                  axisLabel: { color: chartColors.text } 
+                },
+                yAxis: { 
+                  type: 'value', 
+                  name: 'Cost ($)', 
+                  splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, 
+                  axisLabel: { color: chartColors.text } 
+                },
+                series: [
+                  { name: 'Holding Cost', type: 'line', data: generateEoqData, encode: { x: 0, y: 1 }, itemStyle: { color: '#0ea5e9' }, showSymbol: false },
+                  { name: 'Ordering Cost', type: 'line', data: generateEoqData, encode: { x: 0, y: 2 }, itemStyle: { color: '#f59e0b' }, showSymbol: false },
+                  { name: 'Total Cost', type: 'line', data: generateEoqData, encode: { x: 0, y: 3 }, itemStyle: { color: '#8b5cf6' }, lineStyle: { width: 3 }, showSymbol: false,
+                    markLine: {
+                      symbol: ['none', 'none'],
+                      lineStyle: { type: 'dashed', color: '#10b981', width: 2 },
+                      label: { formatter: 'EOQ', position: 'insideEndTop', color: '#10b981' },
+                      data: [{ xAxis: eoq }]
+                    }
+                  }
+                ]
+              }}
+              style={{ height: '100%', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

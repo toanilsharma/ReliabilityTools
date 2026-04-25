@@ -3,6 +3,8 @@ import { Network, Plus, Trash2, ArrowRightCircle, Target, GitMerge, Settings } f
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import TheoryBlock from '../../components/TheoryBlock';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 // Simple Gaussian Elimination to solve linear systems A * x = B
 const solveLinearSystem = (A: number[][], B: number[]) => {
@@ -165,6 +167,11 @@ const MarkovChainTool: React.FC = () => {
     return { QMatrix: Q, steadyStates: ss, availability: avail };
   }, [states, rates]);
 
+  const { theme } = useTheme();
+  const chartColors = {
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
 
   const ToolComponent = (
     <div className="grid lg:grid-cols-3 gap-8">
@@ -242,6 +249,29 @@ const MarkovChainTool: React.FC = () => {
                 <span className="text-2xl font-mono text-slate-900 dark:text-white">{(steadyStates[i] * 100).toFixed(2)}%</span>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 h-64">
+            <ReactECharts
+              option={{
+                animation: false,
+                tooltip: { trigger: 'item', formatter: '{b}: {d}%', backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+                series: [{
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  avoidLabelOverlap: true,
+                  itemStyle: { borderRadius: 8, borderColor: theme === 'dark' ? '#1e293b' : '#ffffff', borderWidth: 2 },
+                  label: { color: chartColors.axis, fontSize: 11 },
+                  data: states.map((s, i) => ({
+                    name: s.name,
+                    value: parseFloat((steadyStates[i] * 100).toFixed(2)),
+                    itemStyle: { color: s.name.toLowerCase().includes('fail') ? '#ef4444' : s.name.toLowerCase().includes('degrad') ? '#f59e0b' : '#06b6d4' }
+                  }))
+                }]
+              }}
+              style={{ height: '100%', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
           </div>
         </div>
       </div>

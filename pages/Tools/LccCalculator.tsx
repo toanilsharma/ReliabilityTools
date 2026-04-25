@@ -4,6 +4,8 @@ import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 // Mock function if service is missing or not exposed properly, 
 // though we usually expect services to be there. 
@@ -67,6 +69,20 @@ const LccCalculator: React.FC = () => {
   const diff = analysisA.npv - analysisB.npv;
   const isBBetter = analysisB.npv < analysisA.npv;
   const savingsPercent = (Math.abs(diff) / analysisA.npv) * 100;
+
+  const { theme } = useTheme();
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
+  const chartData = useMemo(() => {
+    return analysisA.cumulativeData.map((a, i) => ({
+      year: a.year,
+      costA: Math.round(a.cost),
+      costB: Math.round(analysisB.cumulativeData[i]?.cost || 0)
+    }));
+  }, [analysisA, analysisB]);
 
   // --- Components for the Tool Area ---
   const InputRow = ({ label, value, onChange, icon }: any) => (
@@ -160,6 +176,53 @@ const LccCalculator: React.FC = () => {
             <div className="text-xs text-slate-400 uppercase font-bold">ROI / Savings</div>
             <div className="text-xl font-bold text-green-500">{savingsPercent.toFixed(1)}%</div>
           </div>
+        </div>
+
+        {/* Chart */}
+        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-lg mt-6 border border-slate-200 dark:border-slate-800 h-80">
+          <h4 className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+            <BarChart2 className="w-4 h-4 text-cyan-500" /> Cumulative Cost Analysis (Break-Even)
+          </h4>
+          <ReactECharts
+            option={{
+              animation: false,
+              grid: { left: '15%', right: '5%', top: '15%', bottom: '15%' },
+              tooltip: { 
+                trigger: 'axis', 
+                backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                borderColor: '#334155', 
+                textStyle: { color: '#f8fafc' },
+                formatter: (params: any) => {
+                  let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1">Year ${params[0].value[0]}</div>`;
+                  params.forEach((p: any) => {
+                    res += `<div class="flex justify-between gap-4 mt-1"><span style="color:${p.color}">${p.seriesName}</span> <span class="font-mono">$${p.value[p.seriesIndex + 1].toLocaleString()}</span></div>`;
+                  });
+                  return res;
+                }
+              },
+              legend: { data: ['Option A (Standard)', 'Option B (Premium)'], bottom: 0, textStyle: { color: chartColors.axis } },
+              xAxis: { 
+                type: 'value', 
+                name: 'Years', 
+                nameLocation: 'middle', 
+                nameGap: 25, 
+                splitLine: { show: false }, 
+                axisLabel: { color: chartColors.axis } 
+              },
+              yAxis: { 
+                type: 'value', 
+                name: 'Cumulative Cost ($)', 
+                splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, 
+                axisLabel: { color: chartColors.axis, formatter: (val: number) => `$${val.toLocaleString()}` } 
+              },
+              series: [
+                { name: 'Option A (Standard)', type: 'line', data: chartData.map(d => [d.year, d.costA, d.costB]), encode: { x: 0, y: 1 }, itemStyle: { color: '#94a3b8' }, lineStyle: { width: 3 } },
+                { name: 'Option B (Premium)', type: 'line', data: chartData.map(d => [d.year, d.costA, d.costB]), encode: { x: 0, y: 2 }, itemStyle: { color: '#06b6d4' }, lineStyle: { width: 3 } }
+              ]
+            }}
+            style={{ height: 'calc(100% - 30px)', width: '100%' }}
+            opts={{ renderer: 'svg' }}
+          />
         </div>
 
         {/* Live Math Rendering */}

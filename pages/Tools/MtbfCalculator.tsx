@@ -43,8 +43,8 @@ interface MtbfState {
 const MtbfCalculator: React.FC = () => {
   const [state, setState, shareUrl] = useShareableState<MtbfState>({
     mode: "MTBF",
-    totalHours: "",
-    failures: "",
+    totalHours: "8760",
+    failures: "4",
     selectedStandardId: "",
     result: null,
   });

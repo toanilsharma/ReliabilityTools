@@ -12,6 +12,8 @@ export interface ToolDefinition {
   description: string;
   path: string;
   category: 'Calculator' | 'Analysis' | 'Planning';
+  iconName?: string;
+  colorTheme?: 'cyan' | 'blue' | 'indigo' | 'purple' | 'fuchsia' | 'rose' | 'red' | 'orange' | 'amber' | 'emerald' | 'teal' | 'slate';
 }
 
 export interface FAQItem {

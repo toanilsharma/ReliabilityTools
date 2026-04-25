@@ -29,7 +29,18 @@ import {
   Rocket,
   Briefcase as BriefcaseIcon,
   BadgeCheck,
-  TrendingUp as TrendingUpIcon
+  TrendingUp as TrendingUpIcon,
+  Layers,
+  ShieldCheck,
+  Package,
+  ArrowRightLeft,
+  Banknote,
+  Gauge,
+  Network,
+  Box,
+  Calendar,
+  ClipboardList,
+  Droplets
 } from 'lucide-react';
 import { TOOLS, ARTICLES } from '../constants';
 import { calculateMTBF } from '../services/reliabilityMath';
@@ -95,6 +106,8 @@ const HOME_FAQS = [
     answer: "Weibull Analysis is a powerful statistical method used to analyze life data. Unlike simple averages, it allows you to predict failure trends (Infant Mortality, Random, or Wear Out) even with small datasets, helping to determine the optimal time for preventive maintenance."
   }
 ];
+
+import { IconMap, getThemeClasses } from '../utils/themeHelper';
 
 const Home: React.FC = () => {
   const [demoHours, setDemoHours] = useState('8760');
@@ -642,36 +655,42 @@ const Home: React.FC = () => {
         <div className="flex items-center justify-between mb-8 mt-12">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {TOOLS.map((tool) => (
-            <Link
-              key={tool.id}
-              to={tool.path}
-              ref={observeElt}
-              className="group block p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col h-full"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-lg transition-colors ${
-                  tool.category === 'Analysis' ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/60' :
-                  tool.category === 'Planning' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 group-hover:bg-amber-200 dark:group-hover:bg-amber-900/60' :
-                  'bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-200 dark:group-hover:bg-cyan-900/60'
-                }`}>
-                  {tool.category === 'Analysis' ? <Activity className="w-5 h-5" /> :
-                   tool.category === 'Planning' ? <Briefcase className="w-5 h-5" /> :
-                   <Calculator className="w-5 h-5" />}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {TOOLS.map((tool) => {
+            // Check if tool.iconName exists in the IconMap
+            let IconComponent = tool.iconName && IconMap[tool.iconName] ? IconMap[tool.iconName] : null;
+            
+            // If no icon found, use the fallback
+            if (!IconComponent) {
+              IconComponent = tool.category === 'Analysis' ? Activity :
+                              tool.category === 'Planning' ? BriefcaseIcon : Calculator;
+            }
+            
+            const theme = getThemeClasses(tool.colorTheme, tool.category);
+            
+            return (
+              <Link
+                key={tool.id}
+                to={tool.path}
+                ref={observeElt}
+                className={`group flex flex-col justify-between p-5 bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50 transition-all duration-300 shadow-sm hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.border}`}
+              >
+                <div className="flex items-center gap-4 mb-3">
+                  <div className={`p-3 rounded-xl shrink-0 transition-colors ${theme.icon}`}>
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className={`text-[15px] font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors ${theme.text}`}>
+                      {tool.name}
+                    </h3>
+                  </div>
                 </div>
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-2.5 py-1 rounded-full uppercase tracking-widest border border-slate-200 dark:border-slate-700">
-                  {tool.category}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                {tool.name}
-              </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                {tool.description}
-              </p>
-            </Link>
-          ))}
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed line-clamp-2">
+                  {tool.description}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

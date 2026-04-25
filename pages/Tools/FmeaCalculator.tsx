@@ -4,6 +4,8 @@ import { Sliders, Table as TableIcon, Undo, Redo, Plus, AlertTriangle, Activity,
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import RelatedTools from '../../components/RelatedTools';
+import ReactECharts from 'echarts-for-react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface FmeaRow {
   id: string;
@@ -33,6 +35,24 @@ const FmeaCalculator: React.FC = () => {
   const [historyStep, setHistoryStep] = useState(0);
 
   const currentRows = historyStack[historyStep] || [];
+  const { theme } = useTheme();
+
+  const chartColors = {
+    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
+    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
+  };
+
+  const paretoData = React.useMemo(() => {
+    const sorted = [...currentRows].map(r => ({
+      name: r.failureMode || 'Unnamed',
+      rpn: r.s * r.o * r.d
+    })).sort((a, b) => b.rpn - a.rpn);
+    
+    return {
+      names: sorted.map(i => i.name.length > 20 ? i.name.substring(0, 20) + '...' : i.name),
+      rpns: sorted.map(i => i.rpn)
+    };
+  }, [currentRows]);
 
   const pushHistory = (newRows: FmeaRow[]) => {
     const newStack = historyStack.slice(0, historyStep + 1);
@@ -126,6 +146,49 @@ const FmeaCalculator: React.FC = () => {
               </tbody>
             </table>
           </div>
+          
+          {currentRows.length > 0 && (
+            <div className="h-64 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-cyan-600" /> RPN Pareto Analysis
+              </h4>
+              <ReactECharts
+                option={{
+                  animation: false,
+                  grid: { left: '5%', right: '5%', top: '10%', bottom: '25%' },
+                  tooltip: { trigger: 'axis', backgroundColor: 'rgba(15, 23, 42, 0.9)', textStyle: { color: '#f8fafc' }, borderColor: '#334155' },
+                  xAxis: { 
+                    type: 'category', 
+                    data: paretoData.names,
+                    axisLabel: { color: chartColors.axis, interval: 0, rotate: 15, fontSize: 10 },
+                    axisLine: { lineStyle: { color: chartColors.grid } }
+                  },
+                  yAxis: { 
+                    type: 'value', 
+                    splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } },
+                    axisLabel: { color: chartColors.axis }
+                  },
+                  series: [{
+                    name: 'RPN',
+                    type: 'bar',
+                    data: paretoData.rpns,
+                    itemStyle: {
+                      color: (params: any) => {
+                        const val = params.value;
+                        if (val >= 100) return '#ef4444'; // red
+                        if (val >= 40) return '#f59e0b';  // orange
+                        return '#10b981'; // green
+                      },
+                      borderRadius: [4, 4, 0, 0]
+                    },
+                    label: { show: true, position: 'top', color: chartColors.axis, fontSize: 10 }
+                  }]
+                }}
+                style={{ height: '100%', width: '100%' }}
+                opts={{ renderer: 'svg' }}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-8 animate-fadeIn">
