@@ -17,6 +17,7 @@
     "echarts-for-react": "^3.0.6",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "katex": "^0.16.37",
     "lucide-react": "^0.554.0",
     "papaparse": "^5.4.1",

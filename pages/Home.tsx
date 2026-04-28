@@ -201,11 +201,11 @@ const Home: React.FC = () => {
           </div>
 
           {/* BIG Show All Tools Button */}
-          <div className="flex justify-center mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
             <Link
               to="/tools"
               id="show-all-tools-btn"
-              className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg text-white overflow-hidden shadow-2xl shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-cyan-500/50"
+              className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg text-white overflow-hidden shadow-2xl shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-cyan-500/50 w-full sm:w-auto"
               style={{
                 background: 'linear-gradient(135deg, #0891b2 0%, #2563eb 50%, #7c3aed 100%)',
               }}
@@ -218,6 +218,14 @@ const Home: React.FC = () => {
                 <ArrowRight className="w-4 h-4" />
                 Free
               </span>
+            </Link>
+
+            <Link
+              to="/skill-test"
+              className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 overflow-hidden shadow-2xl transition-all duration-300 transform hover:-translate-y-2 w-full sm:w-auto border border-slate-700 dark:border-slate-200"
+            >
+              <Award className="w-6 h-6 flex-shrink-0 text-amber-500" />
+              <span>Test Your Skill Level</span>
             </Link>
           </div>
 

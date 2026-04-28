@@ -56,6 +56,11 @@ const CookiePolicy = lazy(() => import('./pages/Legal').then(module => ({ defaul
 
 const EmbedView = lazy(() => import('./components/EmbedView'));
 
+// Skill Test
+const SkillTestLanding = lazy(() => import('./pages/SkillTest/Landing'));
+const SkillTestQuiz = lazy(() => import('./pages/SkillTest/Quiz'));
+const SkillTestResults = lazy(() => import('./pages/SkillTest/Results'));
+
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 import ContextGlossary from './components/ContextGlossary';
 
@@ -116,6 +121,11 @@ const App: React.FC = () => {
               <Route path="legal/privacy" element={<PrivacyPolicy />} />
               <Route path="legal/terms" element={<TermsOfService />} />
               <Route path="legal/cookies" element={<CookiePolicy />} />
+
+              {/* Skill Test */}
+              <Route path="skill-test" element={<SkillTestLanding />} />
+              <Route path="skill-test/quiz" element={<SkillTestQuiz />} />
+              <Route path="skill-test/results" element={<SkillTestResults />} />
             </Route>
 
             {/* Standalone Route for Embeds */}

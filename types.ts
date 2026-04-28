@@ -73,3 +73,15 @@ export interface PMTask {
   lastPerformed: string; // YYYY-MM-DD
   nextDue?: string;
 }
+
+export type Difficulty = 'easy' | 'difficult' | 'very_difficult';
+
+export interface QuizQuestion {
+  id: number;
+  text: string;
+  options: string[];
+  correctAnswer: number;
+  difficulty: Difficulty;
+  explanation: string;
+  discipline?: 'general' | 'mechanical' | 'electrical' | 'instrumentation';
+}
