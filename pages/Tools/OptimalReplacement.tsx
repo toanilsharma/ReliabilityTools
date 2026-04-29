@@ -5,9 +5,15 @@ import { RefreshCcw, AlertTriangle, Settings, Clock } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const OptimalReplacement: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [costPreventive, setCostPreventive] = useState<string>('500');
+
   const [costFailure, setCostFailure] = useState<string>('5000');
   const [beta, setBeta] = useState<string>('2.5');
   const [eta, setEta] = useState<string>('10000');
@@ -62,7 +68,8 @@ const OptimalReplacement: React.FC = () => {
   } : null;
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -135,8 +142,27 @@ const OptimalReplacement: React.FC = () => {
             <p className="max-w-md">Please ensure beta &gt; 1.0.</p>
           </div>
         )}
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Optimal Replacement Age"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={result ? `Opt: ${Math.round(result.optimalTime)}h` : ""}
+            exportData={[
+              { Parameter: "PM Cost (Cp)", Value: "$" + costPreventive },
+              { Parameter: "CM Cost (Cf)", Value: "$" + costFailure },
+              { Parameter: "Beta (Shape)", Value: beta },
+              { Parameter: "Eta (Scale)", Value: eta },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Optimal Age", Value: result ? Math.round(result.optimalTime).toString() : "N/A" },
+              { Parameter: "Min Cost Rate", Value: result ? "$" + result.minCostRate.toFixed(2) + "/hr" : "N/A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

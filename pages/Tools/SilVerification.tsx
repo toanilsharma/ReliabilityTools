@@ -9,9 +9,15 @@ import TheoryBlock from '../../components/TheoryBlock';
 import WizardWrapper from '../../components/WizardWrapper';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const SilVerification: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [lambdaDU, setLambdaDU] = useState<string>('1.5e-6');
+
   const [testInterval, setTestInterval] = useState<string>('8760');
   const [arch, setArch] = useState<'1oo1' | '1oo2' | '2oo2' | '2oo3'>('1oo1');
   const [mode, setMode] = useState<'wizard' | 'expert'>('wizard');
@@ -161,7 +167,8 @@ const SilVerification: React.FC = () => {
   ];
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       <div className="space-y-6">
         <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit border border-slate-200 dark:border-slate-700">
           <button onClick={() => setMode('wizard')} className={`px-4 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${mode === 'wizard' ? 'bg-white dark:bg-slate-700 shadow-sm text-cyan-600' : 'text-slate-500 hover:text-slate-700'}`}>Guided Wizard</button>
@@ -267,8 +274,27 @@ const SilVerification: React.FC = () => {
             />
           </div>
         )}
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="SIL Verification"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={result ? `SIL ${result.silLevel}` : ""}
+            exportData={[
+              { Parameter: "Architecture", Value: arch },
+              { Parameter: "Lambda DU", Value: lambdaDU },
+              { Parameter: "Test Interval (Hrs)", Value: testInterval },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "SIL Level", Value: result ? result.silLevel.toString() : "N/A" },
+              { Parameter: "PFD Avg", Value: result ? result.pfd.toExponential(2) : "N/A" },
+              { Parameter: "Risk Reduction Factor", Value: result ? Math.round(result.rrf).toString() : "N/A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

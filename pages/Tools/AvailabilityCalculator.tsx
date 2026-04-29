@@ -7,6 +7,7 @@ import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils
 import RelatedTools from '../../components/RelatedTools';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
 
 type AvailabilityScenario = {
   label: 'Design A' | 'Design B';
@@ -334,6 +335,29 @@ const AvailabilityCalculator: React.FC = () => {
           </div>
         </AnimatedContainer>
       </AnimatedContainer>
+      
+      <div className="lg:col-span-12">
+        <ShareAndExport 
+          toolName="Availability Calculator"
+          shareUrl={window.location.href}
+          chartRef={chartRef as any}
+          resultSummary={`${(availability * 100).toFixed(4)}% Availability`}
+          pdfData={{
+            inputs: {
+              "MTBF (Hours)": mtbf,
+              "MTTR (Hours)": mttr,
+              "Hourly Revenue Risk": `$${hourlyRevenue}/hr`,
+              "Operation Mode": operationMode
+            },
+            results: {
+              "System Availability": `${(availability * 100).toFixed(4)}%`,
+              "Annual Downtime Hours": `${downtimeHoursPerYear.toFixed(1)} hrs`,
+              "Projected Revenue Risk": `$${yearlyLoss.toLocaleString()}`,
+              "Reliability Risk Level": riskLevel
+            }
+          }}
+        />
+      </div>
     </div>
   );
 

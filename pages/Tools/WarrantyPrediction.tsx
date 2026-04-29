@@ -1,11 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { ShieldAlert } from 'lucide-react';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 import ReactECharts from 'echarts-for-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 
 const WarrantyPrediction: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [beta, setBeta] = useState<number>(1.5);
+
   const [eta, setEta] = useState<number>(24);
   const [salesPerMonth, setSalesPerMonth] = useState<number>(1000);
   const [monthsOfSales, setMonthsOfSales] = useState<number>(12);
@@ -84,7 +90,8 @@ const WarrantyPrediction: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-4">
         <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-4">
           <h3 className="font-bold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800 pb-2">Product Reliability</h3>
@@ -138,8 +145,29 @@ const WarrantyPrediction: React.FC = () => {
             <ReactECharts option={option} opts={{ renderer: 'svg' }} style={{ height: '100%', width: '100%' }} />
           </div>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Warranty Prediction"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`Liability: $${summary.liability.toLocaleString()}`}
+            exportData={[
+              { Parameter: "Beta (Shape)", Value: beta.toString() },
+              { Parameter: "Eta (Scale mo)", Value: eta.toString() },
+              { Parameter: "Sales per Month", Value: salesPerMonth.toString() },
+              { Parameter: "Months of Sales", Value: monthsOfSales.toString() },
+              { Parameter: "Warranty Length", Value: warrantyLength.toString() },
+              { Parameter: "Cost per Return", Value: "$" + costPerReturn.toString() },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Total Failures", Value: Math.round(summary.totalFailures).toString() },
+              { Parameter: "Total Liability", Value: "$" + summary.liability.toLocaleString() }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

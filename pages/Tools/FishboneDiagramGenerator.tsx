@@ -5,6 +5,9 @@ import html2canvas from 'html2canvas';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { Settings, Users, Hammer, Ruler, Waves, Microscope } from 'lucide-react';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 interface Bone {
     category: string;
@@ -12,7 +15,10 @@ interface Bone {
 }
 
 const FishboneDiagramGenerator: React.FC = () => {
+    const toolRef = useRef<HTMLDivElement>(null);
+    const shareUrl = window.location.href;
     const [problem, setProblem] = useState('Motor Vibration High');
+
     const [bones, setBones] = useState<Bone[]>([
         { category: 'Machine', causes: ['Misalignment', 'Unbalance', 'Bearing Defect'] },
         { category: 'Method', causes: ['No Alignment Procedure', 'Wrong Lubrication Schedule'] },
@@ -40,45 +46,39 @@ const FishboneDiagramGenerator: React.FC = () => {
         setBones(newBones);
     };
 
-    const exportImage = async () => {
-        const element = document.getElementById('fishbone-diagram');
-        if (element) {
-            // Temporarily remove shadow and border for clean export
-            const originalStyle = element.className;
-            element.className = "bg-white p-8 min-w-[800px]";
 
-            const canvas = await html2canvas(element);
-            const data = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = data;
-            link.download = 'fishbone-rca.png';
-            link.click();
 
-            // Restore style
-            element.className = originalStyle;
-        }
-    };
+  const ToolComponent = (
+        <div className="space-y-6" ref={toolRef}>
 
-    const ToolComponent = (
-        <div className="space-y-6">
             {/* Controls */}
             <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="flex-grow w-full md:w-auto">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1 block">Problem Statement (Head)</label>
-                    <input
-                        value={problem}
-                        onChange={e => setProblem(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-cyan-500 font-bold text-slate-900 dark:text-white"
+                    <input 
+                        type="text" 
+                        value={problem} 
+                        onChange={(e) => setProblem(e.target.value)}
+                        className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-cyan-500"
                         placeholder="Describe the failure..."
                     />
                 </div>
-                <button
-                    onClick={exportImage}
-                    className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-lg"
-                >
-                    <Download className="w-4 h-4" /> Export PNG
-                </button>
+                <div className="flex gap-2">
+                    <ShareAndExport 
+                        toolName="Fishbone Analysis"
+                        shareUrl={shareUrl}
+                        chartRef={toolRef}
+                        resultSummary={problem}
+                        exportData={[
+                            { Parameter: "Problem Statement", Value: problem },
+                            {},
+                            { Parameter: "--- CAUSES ---", Value: "" },
+                            ...bones.flatMap(b => b.causes.map(c => ({ Parameter: b.category, Value: c })))
+                        ]}
+                    />
+                </div>
             </div>
+
 
             {/* Diagram Area */}
             <div className="overflow-x-auto pb-4">
@@ -153,10 +153,10 @@ const FishboneDiagramGenerator: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                </div>
             </div>
         </div>
-    );
+    </div>
+);
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">

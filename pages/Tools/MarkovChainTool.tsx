@@ -5,6 +5,9 @@ import HelpTooltip from '../../components/HelpTooltip';
 import TheoryBlock from '../../components/TheoryBlock';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 // Simple Gaussian Elimination to solve linear systems A * x = B
 const solveLinearSystem = (A: number[][], B: number[]) => {
@@ -87,7 +90,10 @@ const calculateSteadyState = (Q: number[][]) => {
 };
 
 const MarkovChainTool: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [states, setStates] = useState<{id: string, name: string}[]>([
+
     { id: 'S1', name: 'Working (OK)' },
     { id: 'S2', name: 'Degraded' },
     { id: 'S3', name: 'Failed (Repair)' }
@@ -174,7 +180,8 @@ const MarkovChainTool: React.FC = () => {
 
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4 flex justify-between items-center">
@@ -273,6 +280,21 @@ const MarkovChainTool: React.FC = () => {
               opts={{ renderer: 'svg' }}
             />
           </div>
+        </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Markov Modeler"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`${(availability * 100).toFixed(4)}% Availability`}
+            exportData={[
+              { Parameter: "Number of States", Value: states.length.toString() },
+              { Parameter: "System Availability", Value: (availability * 100).toFixed(4) + "%" },
+              {},
+              { Parameter: "--- STEADY STATE PROBABILITIES ---", Value: "" },
+              ...states.map((s, i) => ({ Parameter: s.name, Value: (steadyStates[i] * 100).toFixed(2) + "%" }))
+            ]}
+          />
         </div>
       </div>
     </div>

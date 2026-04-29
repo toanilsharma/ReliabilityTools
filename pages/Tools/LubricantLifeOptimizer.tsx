@@ -7,10 +7,16 @@ import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const LubricantLifeOptimizer: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   // Inputs
   const [baseLife, setBaseLife] = useState<string>('10000');
+
   
   // Temp inputs
   const [baseTemp, setBaseTemp] = useState<string>('60');
@@ -101,7 +107,8 @@ const LubricantLifeOptimizer: React.FC = () => {
   ];
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       <div className="space-y-6">
         
         {/* Baseline Card */}
@@ -261,7 +268,28 @@ const LubricantLifeOptimizer: React.FC = () => {
             opts={{ renderer: 'svg' }}
           />
         </div>
-
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Lubricant Life Optimization"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`${(rulTarget / (rulCurrent || 1)).toFixed(2)}x Extension`}
+            exportData={[
+              { Parameter: "Base Life", Value: baseLife },
+              { Parameter: "Base Temp", Value: baseTemp },
+              { Parameter: "Actual Temp", Value: actualTemp },
+              { Parameter: "Current ISO", Value: isoCurrent },
+              { Parameter: "Target ISO", Value: isoTarget },
+              { Parameter: "Current Water", Value: waterCurrent },
+              { Parameter: "Target Water", Value: waterTarget },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Current RUL", Value: Math.round(rulCurrent).toString() },
+              { Parameter: "Target RUL", Value: Math.round(rulTarget).toString() },
+              { Parameter: "Life Extension Factor", Value: (rulTarget / (rulCurrent || 1)).toFixed(2) + "x" }
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

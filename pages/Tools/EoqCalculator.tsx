@@ -8,9 +8,15 @@ import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const EoqCalculator: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [demand, setDemand] = useState<string>('1000');
+
   const [orderingCost, setOrderingCost] = useState<string>('50');
   const [holdingCost, setHoldingCost] = useState<string>('2.5');
 
@@ -46,7 +52,8 @@ const EoqCalculator: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 space-y-6">
         <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <Settings className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> Inventory Parameters
@@ -153,8 +160,26 @@ const EoqCalculator: React.FC = () => {
             />
           </div>
         )}
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="EOQ Analysis"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`EOQ: ${Math.round(eoq)} Units`}
+            exportData={[
+              { Parameter: "Annual Demand", Value: demand },
+              { Parameter: "Ordering Cost", Value: "$" + orderingCost },
+              { Parameter: "Holding Cost", Value: "$" + holdingCost },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Optimal Quantity (EOQ)", Value: Math.round(eoq).toString() },
+              { Parameter: "Orders per Year", Value: ordersPerYear.toFixed(2) }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

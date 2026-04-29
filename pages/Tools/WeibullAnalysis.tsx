@@ -588,6 +588,22 @@ const WeibullAnalysis: React.FC = () => {
             shareUrl={shareUrl}
             chartRef={toolWrapperRef}
             resultSummary={`\u03B2=${activeModel.beta.toFixed(2)}, \u03B7=${activeModel.eta.toFixed(0)}`}
+            pdfData={{
+              inputs: {
+                "Total Data Points": activeModel.points.length,
+                "Failures": activeModel.points.filter(p => !p.suspended).length,
+                "Suspensions": activeModel.points.filter(p => p.suspended).length,
+                "Model Type": is3Parameter ? "3-Parameter Weibull" : "2-Parameter Weibull"
+              },
+              results: {
+                "Shape Parameter (\u03B2)": activeModel.beta.toFixed(4),
+                "Scale Parameter (\u03B7)": `${activeModel.eta.toFixed(2)} hours/units`,
+                "Location Parameter (\u03B3)": activeModel.t0?.toFixed(2) || "0.00",
+                "B10 Life": activeModel.b10.toFixed(2),
+                "R-Squared (Fit)": activeModel.rSquared.toFixed(4),
+                "Failure Mode": getBetaInterpretation(activeModel.beta).title
+              }
+            }}
             exportData={[
               { Parameter: "Shape Parameter (\u03B2)", Value: activeModel.beta },
               { Parameter: "Scale Parameter / Characteristic Life (\u03B7)", Value: activeModel.eta },

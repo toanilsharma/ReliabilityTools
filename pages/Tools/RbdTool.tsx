@@ -19,6 +19,9 @@ import { Plus, Trash2, Download, Check, Link2, Map as MapIcon } from 'lucide-rea
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const RbdTool: React.FC = () => {
   const [mode, setMode] = useState<RBDBlockType>(RBDBlockType.SERIES);
@@ -32,6 +35,9 @@ const RbdTool: React.FC = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [manualWiring, setManualWiring] = useState(false);
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
+
 
   const addBlock = () => {
     const newId = Math.random().toString(36).substr(2, 9);
@@ -141,7 +147,8 @@ const RbdTool: React.FC = () => {
     : calculateAnalyticalRef();
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <div className="flex gap-2 p-1 bg-slate-200 dark:bg-slate-800 rounded-lg mb-4">
@@ -256,7 +263,27 @@ const RbdTool: React.FC = () => {
               {useMonteCarlo ? 'Monte Carlo (N=10,000)' : (mode === RBDBlockType.SERIES ? 'Rs = R1 * R2 * ...' : 'Rs = R_ind * (1 - Q_ccf)')}
             </code>
           </div>
+          </div>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="RBD Analysis"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`${(systemReliability * 100).toFixed(4)}%`}
+            exportData={[
+              { Parameter: "RBD Mode", Value: mode },
+              { Parameter: "Simulation Mode", Value: useMonteCarlo ? "Monte Carlo" : "Analytical" },
+              { Parameter: "CCF Beta", Value: ccfBeta.toString() },
+              { Parameter: "Number of Blocks", Value: blocks.length.toString() },
+              {},
+              { Parameter: "--- BLOCKS ---", Value: "" },
+              ...blocks.map(b => ({ Parameter: b.name, Value: b.reliability.toFixed(4) })),
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "System Reliability", Value: (systemReliability * 100).toFixed(4) + "%" }
+            ]}
+          />
       </div>
     </div>
   );

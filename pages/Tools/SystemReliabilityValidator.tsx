@@ -5,9 +5,15 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const SystemReliabilityValidator: React.FC = () => {
+    const toolRef = useRef<HTMLDivElement>(null);
+    const shareUrl = window.location.href;
     const [checklist, setChecklist] = useState([
+
         { id: 1, category: 'Requirements', text: 'Are Reliability & Availability targets quantitatively defined (e.g., 99.9% Up-time)?', checked: false },
         { id: 2, category: 'Requirements', text: 'Is the environmental profile (Temp, Vibration, Humidity) defined for all mission phases?', checked: false },
         { id: 3, category: 'Design', text: 'Have Single Points of Failure (SPOF) been eliminated or mitigated?', checked: false },
@@ -36,7 +42,8 @@ const SystemReliabilityValidator: React.FC = () => {
     }, [checklist]);
 
     const ToolComponent = (
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
             <div className="lg:col-span-2 space-y-6">
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg">
                     <h3 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
@@ -110,6 +117,20 @@ const SystemReliabilityValidator: React.FC = () => {
                             }}
                             style={{ height: '100%', width: '100%' }}
                             opts={{ renderer: 'svg' }}
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <ShareAndExport 
+                            toolName="System Reliability Validation"
+                            shareUrl={shareUrl}
+                            chartRef={toolRef}
+                            resultSummary={`${progress}% Readiness`}
+                            exportData={[
+                                { Parameter: "Overall Readiness", Value: progress + "%" },
+                                {},
+                                { Parameter: "--- CHECKLIST STATUS ---", Value: "" },
+                                ...checklist.map(item => ({ Parameter: item.text, Value: item.checked ? "YES" : "NO" }))
+                            ]}
                         />
                     </div>
                 </div>

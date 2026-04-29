@@ -1,5 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 import { TrendingUp, TrendingDown, Minus, AlertCircle, LineChart, ShieldCheck } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -8,7 +11,10 @@ import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
 const ReliabilityGrowth: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [inputData, setInputData] = useState<string>('12.5\n28.0\n49.5\n75.2\n118.0\n185.0\n270.0');
+
 
   const { points, beta, lambda, fitLine, outliers } = useMemo(() => {
     const times = inputData
@@ -114,7 +120,8 @@ const ReliabilityGrowth: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl">
           <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
@@ -185,6 +192,23 @@ const ReliabilityGrowth: React.FC = () => {
           <div className="h-[400px]">
              <ReactECharts option={chartOption} opts={{ renderer: 'svg' }} style={{ height: '100%', width: '100%' }} />
           </div>
+        </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Reliability Growth"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`β = ${beta.toFixed(3)}`}
+            exportData={[
+              { Parameter: "Number of Events", Value: points.length.toString() },
+              { Parameter: "Growth Rate (Beta)", Value: beta.toFixed(3) },
+              { Parameter: "Scale (Lambda)", Value: lambda.toFixed(4) },
+              { Parameter: "Status", Value: beta < 1 ? "Reliability Growing" : "Reliability Worsening" },
+              {},
+              { Parameter: "--- INPUT DATA ---", Value: "" },
+              ...points.map(p => ({ Parameter: `Failure ${p.n}`, Value: `Time ${p.t}` }))
+            ]}
+          />
         </div>
       </div>
     </div>

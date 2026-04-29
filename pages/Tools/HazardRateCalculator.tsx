@@ -4,9 +4,15 @@ import { Activity, Zap, TrendingDown, TrendingUp, MinusCircle } from 'lucide-rea
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const HazardRateCalculator: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [beta, setBeta] = useState<string>('1.5');
+
   const [eta, setEta] = useState<string>('1000');
   const [timeHorizon, setTimeHorizon] = useState<string>('2000');
 
@@ -59,7 +65,8 @@ const HazardRateCalculator: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
           <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -95,8 +102,24 @@ const HazardRateCalculator: React.FC = () => {
             <ReactECharts option={option} opts={{ renderer: 'svg' }} style={{ height: '100%', width: '100%' }} />
           </div>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Hazard Rate Analysis"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`Beta: ${beta}`}
+            exportData={[
+              { Parameter: "Shape (Beta)", Value: beta },
+              { Parameter: "Scale (Eta)", Value: eta },
+              { Parameter: "Time Horizon", Value: timeHorizon },
+              {},
+              { Parameter: "--- MODEL ---", Value: beta === '1' ? "Constant (Random)" : parseFloat(beta) < 1 ? "Decreasing (Infant)" : "Increasing (Wear-out)" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

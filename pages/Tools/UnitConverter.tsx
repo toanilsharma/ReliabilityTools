@@ -5,6 +5,9 @@ import {
 } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 // Helper for card styling
 interface ConversionCardProps {
@@ -57,8 +60,11 @@ const InputGroup = ({
 );
 
 const UnitConverter: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   // Time State
   const [hours, setHours] = useState<string>('8760');
+
   const [years, setYears] = useState<string>('1');
   const [days, setDays] = useState<string>('365');
 
@@ -144,7 +150,9 @@ const UnitConverter: React.FC = () => {
   const handleGallons = (val: string) => { setGallons(val); const g = parseFloat(val); if (!isNaN(g)) setLiters((g / 0.264172).toFixed(2)); else setLiters(''); };
 
   const ToolComponent = (
-    <div className="grid md:grid-cols-2 gap-6">
+    <div className="space-y-6" ref={toolRef}>
+      <div className="grid md:grid-cols-2 gap-6">
+
 
       {/* Time Conversion */}
       <ConversionCard title="Reliability Time" icon={Clock} color="bg-blue-500">
@@ -340,7 +348,25 @@ const UnitConverter: React.FC = () => {
         </div>
       </ConversionCard>
 
+      </div>
+      <div className="mt-8 flex justify-center no-print">
+        <ShareAndExport 
+          toolName="Engineering Unit Converter"
+          shareUrl={shareUrl}
+          chartRef={toolRef}
+          resultSummary="Utility Conversions"
+          exportData={[
+            { Parameter: "Hours", Value: hours },
+            { Parameter: "Years", Value: years },
+            { Parameter: "Celsius", Value: celsius },
+            { Parameter: "Fahrenheit", Value: fahrenheit },
+            { Parameter: "PSI", Value: psi },
+            { Parameter: "Bar", Value: bar }
+          ]}
+        />
+      </div>
     </div>
+
   );
 
   const Content = (

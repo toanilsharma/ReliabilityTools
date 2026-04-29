@@ -6,6 +6,9 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 // Mock function if service is missing or not exposed properly, 
 // though we usually expect services to be there. 
@@ -37,7 +40,10 @@ const calculateLCCLocal = (params: any) => {
 };
 
 const LccCalculator: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [showAdvanced, setShowAdvanced] = useState(false);
+
   const [params, setParams] = useState({
     currency: 'USD',
     discountRate: 8,
@@ -101,7 +107,8 @@ const LccCalculator: React.FC = () => {
   );
 
   const ToolComponent = (
-    <div className="space-y-6">
+    <div className="space-y-6" ref={toolRef}>
+
       {/* Global Settings */}
       <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-wrap gap-4 items-center justify-between">
         <div className="flex flex-wrap gap-4">
@@ -234,8 +241,34 @@ const LccCalculator: React.FC = () => {
              <BlockMath math={`\\text{NPV} = \\text{Capex} + \\sum_{t=1}^{${params.lifespan}} \\frac{\\text{Recurring Costs}}{(1 + ${params.discountRate/100} - ${params.inflationRate/100})^t} = \\mathbf{\\$${(isBBetter ? analysisB.npv : analysisA.npv).toLocaleString(undefined, { maximumFractionDigits: 0 })}}`} />
            </div>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="LCC Calculator"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={isBBetter ? "Option B is Better" : "Option A is Better"}
+            exportData={[
+              { Parameter: "Lifespan (Years)", Value: params.lifespan.toString() },
+              { Parameter: "Discount Rate (%)", Value: params.discountRate.toString() },
+              { Parameter: "Inflation Rate (%)", Value: params.inflationRate.toString() },
+              {},
+              { Parameter: "--- OPTION A ---", Value: "" },
+              { Parameter: "Purchase Cost", Value: params.costA.toString() },
+              { Parameter: "NPV", Value: analysisA.npv.toFixed(0) },
+              {},
+              { Parameter: "--- OPTION B ---", Value: "" },
+              { Parameter: "Purchase Cost", Value: params.costB.toString() },
+              { Parameter: "NPV", Value: analysisB.npv.toFixed(0) },
+              {},
+              { Parameter: "--- COMPARISON ---", Value: "" },
+              { Parameter: "Savings", Value: Math.abs(diff).toFixed(0) },
+              { Parameter: "Better Option", Value: isBBetter ? "Option B" : "Option A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

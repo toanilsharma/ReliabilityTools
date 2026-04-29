@@ -1,12 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { Target, TrendingDown, DollarSign, Activity } from 'lucide-react';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 import ReactECharts from 'echarts-for-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath, InlineMath } from 'react-katex';
 
 const CostRiskOptimization: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [beta, setBeta] = useState<number>(2.5);
+
   const [eta, setEta] = useState<number>(1000);
   const [cPM, setCPM] = useState<number>(500);
   const [cCM, setCCM] = useState<number>(5000);
@@ -85,7 +91,8 @@ const CostRiskOptimization: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-900 p-6 space-y-6">
         <div>
           <h3 className="font-bold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2 mb-4">Component Reliability</h3>
@@ -140,8 +147,27 @@ const CostRiskOptimization: React.FC = () => {
             </div>
           )}
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Cost-Risk Optimization"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={optimalTime ? `Opt: ${optimalTime.toFixed(1)}` : ""}
+            exportData={[
+              { Parameter: "Beta (Shape)", Value: beta.toString() },
+              { Parameter: "Eta (Scale)", Value: eta.toString() },
+              { Parameter: "PM Cost", Value: "$" + cPM.toString() },
+              { Parameter: "CM Cost", Value: "$" + cCM.toString() },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Optimal PM Interval", Value: optimalTime ? optimalTime.toFixed(2) : "N/A" },
+              { Parameter: "Minimum Expected Cost", Value: minCost ? "$" + minCost.toFixed(2) + "/hr" : "N/A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

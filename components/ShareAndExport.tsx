@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Share2, 
-  Download, 
-  FileText, // For CSV
+  FileText, // For CSV & PDF
   FileImage, // For Image
-  Printer, // For PDF/Print
   Copy, 
   Check,
   Linkedin,
@@ -14,6 +12,7 @@ import {
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import Papa from 'papaparse';
+import { generateProfessionalPDF } from '../utils/PDFService';
 
 interface ShareAndExportProps {
   toolName: string;
@@ -21,6 +20,10 @@ interface ShareAndExportProps {
   exportData?: Record<string, any>[]; // Data for CSV export
   chartRef?: React.RefObject<HTMLElement>; // Ref to the element to capture as image
   resultSummary?: string; // Text summary to share on social
+  pdfData?: {
+    inputs: Record<string, string | number>;
+    results: Record<string, string | number>;
+  };
 }
 
 const ShareAndExport: React.FC<ShareAndExportProps> = ({ 
@@ -28,10 +31,12 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
   shareUrl, 
   exportData, 
   chartRef,
-  resultSummary = ''
+  resultSummary = '',
+  pdfData
 }) => {
   const [copied, setCopied] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Default share text for social platforms
   const shareText = resultSummary 
@@ -59,11 +64,35 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
     }
   };
 
+  const generatePDF = async () => {
+    if (!pdfData) {
+      // Fallback to browser print if no structured data provided
+      window.print();
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+    try {
+      await generateProfessionalPDF({
+        toolName,
+        inputs: pdfData.inputs,
+        results: pdfData.results,
+        chartRef
+      });
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      alert('Failed to generate professional report. Using basic print fallback.');
+      window.print();
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   const generateImage = async () => {
     if (!chartRef?.current) return;
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(chartRef.current, {
+      const canvas = await html2canvas(chartRef.current as HTMLElement, {
         scale: 2, // High resolution
         backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff',
         logging: false,
@@ -99,11 +128,6 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
       console.error('Failed to export CSV:', error);
       alert('Failed to export CSV data.');
     }
-  };
-
-  const handlePrint = () => {
-    // We rely on CSS @media print styles to format the page correctly for printing (which includes Save as PDF)
-    window.print();
   };
 
   // --- Render ---
@@ -159,12 +183,13 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:pl-6">
             
             <button 
-              onClick={handlePrint}
-              className="flex flex-col items-center justify-center p-3 gap-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all group text-slate-700 dark:text-slate-300"
-              title="Print or Save as PDF"
+              onClick={generatePDF}
+              disabled={isGeneratingPDF}
+              className="flex flex-col items-center justify-center p-3 gap-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all group text-slate-700 dark:text-slate-300 disabled:opacity-50"
+              title="Download Professional PDF Report"
             >
-              <Printer className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 transition-colors" />
-              <span className="text-xs font-semibold">PDF / Print</span>
+              <FileText className={`w-5 h-5 ${isGeneratingPDF ? 'animate-pulse text-cyan-500' : 'text-slate-400 group-hover:text-cyan-500'} transition-colors`} />
+              <span className="text-xs font-semibold">{isGeneratingPDF ? 'Generating...' : 'PDF Report'}</span>
             </button>
             
             {exportData && exportData.length > 0 && (

@@ -8,9 +8,15 @@ import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const TestPlanner: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [mode, setMode] = useState<'MTBF' | 'Reliability'>('MTBF');
+
 
   // MTBF Inputs
   const [targetMtbf, setTargetMtbf] = useState<string>('5000');
@@ -64,7 +70,8 @@ const TestPlanner: React.FC = () => {
   }, [targetMtbf, mode]);
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       {/* Input */}
       <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
         <div className="flex gap-2 mb-6">
@@ -197,8 +204,29 @@ const TestPlanner: React.FC = () => {
             />
           </div>
         )}
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Reliability Test Planner"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={mode === 'MTBF' && resultTime ? `${Math.ceil(resultTime)}h Total` : mode === 'Reliability' && resultSamples ? `${resultSamples} Units` : ""}
+            exportData={[
+              { Parameter: "Mode", Value: mode },
+              { Parameter: "Confidence Level", Value: confidence + "%" },
+              ...(mode === 'MTBF' ? [
+                { Parameter: "Target MTBF", Value: targetMtbf },
+                { Parameter: "Test Units", Value: numUnits },
+                { Parameter: "Required Total Time", Value: resultTime ? Math.ceil(resultTime).toString() : "N/A" }
+              ] : [
+                { Parameter: "Target Reliability", Value: targetReliability + "%" },
+                { Parameter: "Required Samples", Value: resultSamples ? resultSamples.toString() : "N/A" }
+              ])
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

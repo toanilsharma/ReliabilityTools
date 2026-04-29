@@ -7,9 +7,15 @@ import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const ConfidenceInterval: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [hours, setHours] = useState('10000');
+
   const [failures, setFailures] = useState('5');
   const [confidence, setConfidence] = useState('90');
 
@@ -43,7 +49,8 @@ const ConfidenceInterval: React.FC = () => {
   }, [result]);
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       {/* Input Panel */}
       <div className="space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -194,8 +201,27 @@ const ConfidenceInterval: React.FC = () => {
             <p className="text-sm max-w-xs mx-auto">Enter Hours and Failures to calculate statistical bounds.</p>
           </div>
         )}
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="MTBF Confidence"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={result ? `${Math.round(result.mean)}h [${Math.round(result.lower)}h - ${Math.round(result.upper)}h]` : ""}
+            exportData={[
+              { Parameter: "Total Operating Hours", Value: hours },
+              { Parameter: "Failures", Value: failures },
+              { Parameter: "Confidence Level", Value: confidence + "%" },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "MTBF Mean", Value: result ? Math.round(result.mean).toString() : "N/A" },
+              { Parameter: "Lower Bound", Value: result ? Math.round(result.lower).toString() : "N/A" },
+              { Parameter: "Upper Bound", Value: result ? Math.round(result.upper).toString() : "N/A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

@@ -7,10 +7,16 @@ import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const GearboxReliability: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   // Base Inputs
   const [calcStress, setCalcStress] = useState<string>('120000'); // Sc or St in psi
+
   const [allowStress, setAllowStress] = useState<string>('150000'); // Sac or Sat in psi
   const [cycles, setCycles] = useState<string>('10000000'); // N cycles
   const [stressType, setStressType] = useState<'contact' | 'bending'>('contact');
@@ -93,7 +99,8 @@ const GearboxReliability: React.FC = () => {
   }, [calcStress, allowStress, cycles, tempFactor, stressType]);
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       <div className="space-y-6">
         <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
           <h3 className="font-black text-slate-900 dark:text-white text-xs uppercase tracking-widest mb-4 pb-2 border-b border-slate-100 dark:border-slate-700">Gear Stress Parameters</h3>
@@ -281,8 +288,28 @@ const GearboxReliability: React.FC = () => {
              ))}
            </div>
         </div>
-      </div>
-    </div>
+         <div className="mt-4">
+           <ShareAndExport 
+             toolName="Gearbox Reliability"
+             shareUrl={shareUrl}
+             chartRef={toolRef}
+             resultSummary={reliabilityLevel ? `Rel: ${reliabilityLevel.percent}` : ""}
+             exportData={[
+               { Parameter: "Analysis Type", Value: stressType },
+               { Parameter: "Calculated Stress", Value: calcStress + " psi" },
+               { Parameter: "Allowable Stress", Value: allowStress + " psi" },
+               { Parameter: "Cycles (N)", Value: cycles },
+               { Parameter: "Life Factor", Value: lifeFactor.toFixed(3) },
+               {},
+               { Parameter: "--- RESULTS ---", Value: "" },
+               { Parameter: "Reliability Factor (KR)", Value: requiredKr ? requiredKr.toFixed(3) : "N/A" },
+               { Parameter: "Reliability %", Value: reliabilityLevel ? reliabilityLevel.percent : "N/A" }
+             ]}
+           />
+         </div>
+       </div>
+     </div>
+
   );
 
   const Content = (

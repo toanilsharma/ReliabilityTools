@@ -6,6 +6,9 @@ import TheoryBlock from '../../components/TheoryBlock';
 import RelatedTools from '../../components/RelatedTools';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 interface FmeaRow {
   id: string;
@@ -36,6 +39,9 @@ const FmeaCalculator: React.FC = () => {
 
   const currentRows = historyStack[historyStep] || [];
   const { theme } = useTheme();
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
+
 
   const chartColors = {
     grid: theme === 'dark' ? '#334155' : '#e2e8f0',
@@ -93,7 +99,8 @@ const FmeaCalculator: React.FC = () => {
       : { label: 'Monitor', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-300 dark:border-emerald-800' };
 
   const ToolComponent = (
-    <div className="space-y-6">
+    <div className="space-y-6" ref={toolRef}>
+
       <div className="flex gap-2 p-1 bg-slate-200 dark:bg-slate-800 rounded-lg w-full max-w-sm mx-auto mb-8">
         <button onClick={() => setActiveTab('worksheet')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-2 ${activeTab === 'worksheet' ? 'bg-white shadow text-slate-800 dark:bg-slate-700 dark:text-white' : 'text-slate-500'}`}><TableIcon className="w-4 h-4" /> Worksheet (Grid)</button>
         <button onClick={() => setActiveTab('calculator')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-2 ${activeTab === 'calculator' ? 'bg-white shadow text-slate-800 dark:bg-slate-700 dark:text-white' : 'text-slate-500'}`}><Sliders className="w-4 h-4" /> Single Risk Calc</button>
@@ -225,6 +232,32 @@ const FmeaCalculator: React.FC = () => {
           </div>
         </div>
       )}
+      <div className="mt-6">
+        <ShareAndExport 
+          toolName="FMEA Analysis"
+          shareUrl={shareUrl}
+          chartRef={toolRef}
+          resultSummary={activeTab === 'calculator' ? `RPN: ${rpn}` : `${currentRows.length} failure modes identified`}
+          exportData={[
+            { Parameter: "Current View", Value: activeTab },
+            ...(activeTab === 'calculator' ? [
+              { Parameter: "Severity (S)", Value: severity.toString() },
+              { Parameter: "Occurrence (O)", Value: occurrence.toString() },
+              { Parameter: "Detection (D)", Value: detection.toString() },
+              { Parameter: "RPN Score", Value: rpn.toString() }
+            ] : [
+              { Parameter: "Number of Failure Modes", Value: currentRows.length.toString() },
+              {},
+              { Parameter: "--- WORKSHEET DATA ---", Value: "" },
+              ...currentRows.flatMap(r => [
+                { Parameter: `Item (${r.id})`, Value: r.item },
+                { Parameter: "Failure Mode", Value: r.failureMode },
+                { Parameter: "RPN", Value: (r.s * r.o * r.d).toString() },
+              ])
+            ])
+          ]}
+        />
+      </div>
     </div>
   );
 

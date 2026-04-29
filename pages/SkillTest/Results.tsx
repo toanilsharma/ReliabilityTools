@@ -215,12 +215,11 @@ const Results: React.FC = () => {
                     <h1 style={{ 
                       fontFamily: 'Georgia, serif', fontSize: '42px', fontWeight: 900, 
                       letterSpacing: '0.12em', color: '#0f172a', textTransform: 'uppercase',
-                      margin: '0 0 8px 0', textAlign: 'center', lineHeight: 1.15
+                      margin: '0 auto 25px auto', textAlign: 'center', lineHeight: 1.15,
+                      display: 'table', paddingBottom: '15px', borderBottom: '6px solid #d97706'
                     }}>
                       Certificate of Achievement
                     </h1>
-                    
-                    <div style={{ height: '0', width: '220px', borderTop: '6px solid #d97706', marginBottom: '20px', display: 'block' }}></div>
                     
                     <p style={{ 
                       fontSize: '14px', letterSpacing: '0.2em', color: '#64748b', 

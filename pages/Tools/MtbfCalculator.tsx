@@ -21,10 +21,10 @@ import HelpTooltip from "../../components/HelpTooltip";
 import { ASSET_BENCHMARKS } from "../../constants";
 import ToolContentLayout from "../../components/ToolContentLayout";
 import RelatedTools from "../../components/RelatedTools";
-import ShareResult from "../../components/ShareResult";
+// Removed unused ShareResult import
 import { useRecentTools } from "../../hooks/useRecentTools";
 import { useLocation } from "react-router-dom";
-import { useReactToPrint } from "react-to-print";
+// Removed unused useReactToPrint import
 import { useShareableState } from "../../hooks/useShareableState";
 import ShareAndExport from "../../components/ShareAndExport";
 import { useRef } from "react";
@@ -353,6 +353,19 @@ const MtbfCalculator: React.FC = () => {
           shareUrl={shareUrl}
           chartRef={toolRef}
           resultSummary={result !== null ? `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours` : undefined}
+          pdfData={result !== null ? {
+            inputs: {
+              "Calculation Mode": mode,
+              "Operational Time (Hrs)": totalHours,
+              "Number of Failures": failures,
+              "Standard Component": selectedStandardId ? reliabilityStandards.find(s => s.id === selectedStandardId)?.name || "Custom" : "Custom"
+            },
+            results: {
+              [`Mean Time (${mode})`]: `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours`,
+              "Failure Rate (\u03BB)": `${(1 / result).toFixed(8)} failures/hour`,
+              "Reliability Profile": mode === 'MTBF' ? 'Repairable System' : 'Disposable Asset'
+            }
+          } : undefined}
           exportData={result !== null ? [
             { Parameter: "Calculation Mode", Value: mode },
             { Parameter: "Total Operational Time (Hours)", Value: totalHours },

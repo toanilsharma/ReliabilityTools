@@ -7,6 +7,9 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const MttrCalculator: React.FC = () => {
   const [downtime, setDowntime] = useState<string>('120');
@@ -14,6 +17,9 @@ const MttrCalculator: React.FC = () => {
   const [result, setResult] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
+
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +42,8 @@ const MttrCalculator: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="grid md:grid-cols-2 gap-8">
+    <div className="grid md:grid-cols-2 gap-8" ref={toolRef}>
+
       <div className="space-y-6">
         <form onSubmit={handleCalculate} className="space-y-4">
           <div>
@@ -139,6 +146,21 @@ const MttrCalculator: React.FC = () => {
             />
           </div>
         )}
+      </div>
+      <div className="md:col-span-2 mt-4">
+        <ShareAndExport 
+          toolName="MTTR Calculator"
+          shareUrl={shareUrl}
+          chartRef={toolRef}
+          resultSummary={result !== null ? `${result.toFixed(2)} hours` : ""}
+          exportData={[
+            { Parameter: "Total Repair Time (Hours)", Value: downtime },
+            { Parameter: "Number of Repairs", Value: repairs },
+            {},
+            { Parameter: "--- RESULTS ---", Value: "" },
+            { Parameter: "MTTR (Hours)", Value: result !== null ? result.toFixed(2) : "N/A" }
+          ]}
+        />
       </div>
     </div>
   );

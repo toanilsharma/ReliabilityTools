@@ -4,6 +4,9 @@ import { CheckCircle2, TrendingUp, AlertTriangle, Printer, BarChart, CheckSquare
 import RelatedTools from '../../components/RelatedTools';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 import { BlockMath } from 'react-katex';
 
 interface Question {
@@ -28,7 +31,10 @@ const QUESTIONS: Question[] = [
 const CATEGORIES = ['Strategy', 'Data', 'Analysis', 'Execution', 'Culture'];
 
 const MaturityAssessment: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [scores, setScores] = useState<Record<number, number>>({});
+
   const [showResult, setShowResult] = useState(false);
 
   const handleScoreChange = (id: number, val: number) => {
@@ -119,7 +125,8 @@ const MaturityAssessment: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-8 animate-fade-in" ref={toolRef}>
+
           <div className="flex justify-between items-center no-print">
             <button onClick={() => setShowResult(false)} className="text-sm text-slate-500 hover:text-cyan-600 font-bold">Back to Assessment</button>
             <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 text-sm font-bold"><Printer className="w-4 h-4" /> Print Report</button>
@@ -165,8 +172,26 @@ const MaturityAssessment: React.FC = () => {
                   )}
                 </ul>
               </div>
+              <div className="mt-4">
+                <ShareAndExport 
+                  toolName="Maturity Assessment"
+                  shareUrl={shareUrl}
+                  chartRef={toolRef}
+                  resultSummary={`${level.label} (${overallScore}%)`}
+                  exportData={[
+                    { Parameter: "Overall Score", Value: overallScore + "%" },
+                    { Parameter: "Maturity Level", Value: level.label },
+                    {},
+                    { Parameter: "--- CATEGORY SCORES ---", Value: "" },
+                    ...chartData.map(d => ({ Parameter: d.category, Value: d.value + "%" })),
+                    {},
+                    { Parameter: "--- STATUS ---", Value: level.desc }
+                  ]}
+                />
+              </div>
             </div>
           </div>
+
         </div>
       )}
     </div>

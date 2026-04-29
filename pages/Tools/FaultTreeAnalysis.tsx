@@ -4,6 +4,9 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 type NodeType = 'AND' | 'OR' | 'EVENT';
 
@@ -18,7 +21,10 @@ interface FTANode {
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const FaultTreeAnalysis: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [tree, setTree] = useState<FTANode>({
+
     id: generateId(),
     type: 'OR',
     name: 'Top Event',
@@ -149,7 +155,8 @@ const FaultTreeAnalysis: React.FC = () => {
   };
 
   const ToolComponent = (
-    <div className="space-y-6">
+    <div className="space-y-6" ref={toolRef}>
+
       {/* Top Bar */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
         <div>
@@ -172,7 +179,22 @@ const FaultTreeAnalysis: React.FC = () => {
           <NodeView node={tree} parentId={null} />
         </div>
       </div>
+      <div className="mt-4">
+        <ShareAndExport 
+          toolName="Fault Tree Analysis"
+          shareUrl={shareUrl}
+          chartRef={toolRef}
+          resultSummary={`${topEventProbability.toExponential(3)}`}
+          exportData={[
+            { Parameter: "Top Event", Value: tree.name },
+            { Parameter: "Calculated Probability", Value: topEventProbability.toExponential(5) },
+            {},
+            { Parameter: "--- TREE STRUCTURE ---", Value: "(Detailed breakdown in PDF report)" }
+          ]}
+        />
+      </div>
     </div>
+
   );
 
   const Content = (

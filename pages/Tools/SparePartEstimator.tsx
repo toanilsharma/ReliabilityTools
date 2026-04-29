@@ -9,6 +9,9 @@ import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const SparePartEstimator: React.FC = () => {
   const [mtbf, setMtbf] = useState<string>('5000');
@@ -18,6 +21,9 @@ const SparePartEstimator: React.FC = () => {
   const [serviceLevelIdx, setServiceLevelIdx] = useState<number>(1); // Default 95%
 
   const [result, setResult] = useState<any>(null);
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
+
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +61,8 @@ const SparePartEstimator: React.FC = () => {
   }, [result]);
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       <div className="lg:col-span-1">
         <form onSubmit={handleCalculate} className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
           <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -192,8 +199,29 @@ const SparePartEstimator: React.FC = () => {
             Based on Poisson distribution approximation for slow-moving spare parts (IEC 62550).
           </p>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="Spare Part Estimator"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={result ? `ROP: ${result.reorderPoint} Units` : ""}
+            exportData={[
+              { Parameter: "MTBF (Hours)", Value: mtbf },
+              { Parameter: "Annual Usage (Hrs)", Value: usage },
+              { Parameter: "Qty Installed", Value: quantity },
+              { Parameter: "Lead Time (Days)", Value: leadTime },
+              { Parameter: "Service Level", Value: SERVICE_LEVELS[serviceLevelIdx].label },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "Reorder Point (ROP)", Value: result ? result.reorderPoint.toString() : "N/A" },
+              { Parameter: "Safety Stock", Value: result ? result.safetyStock.toString() : "N/A" },
+              { Parameter: "Annual Demand", Value: result ? result.annualDemand.toFixed(2) : "N/A" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

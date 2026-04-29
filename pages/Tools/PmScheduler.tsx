@@ -5,6 +5,9 @@ import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingU
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const PmScheduler: React.FC = () => {
   const [tasks, setTasks] = useState<PMTask[]>([
@@ -18,6 +21,9 @@ const PmScheduler: React.FC = () => {
   const [newTaskLastDate, setNewTaskLastDate] = useState('');
   const [recMtbf, setRecMtbf] = useState(5000);
   const [recCriticality, setRecCriticality] = useState(2);
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
+
 
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +89,8 @@ const PmScheduler: React.FC = () => {
 
   // --- Tool Component ---
   const ToolComponent = (
-    <div className="grid lg:grid-cols-3 gap-8">
+    <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
+
       {/* Input Panel */}
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -190,8 +197,24 @@ const PmScheduler: React.FC = () => {
             ))}
           </div>
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="PM Scheduler"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`${schedule.length} tasks forecasted`}
+            exportData={[
+              { Parameter: "Number of Active Definitions", Value: tasks.length.toString() },
+              { Parameter: "Forecast Period", Value: "3 Months" },
+              {},
+              { Parameter: "--- FORECASTED SCHEDULE ---", Value: "" },
+              ...schedule.map(e => ({ Parameter: e.date.toISOString().split('T')[0], Value: e.taskName }))
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (

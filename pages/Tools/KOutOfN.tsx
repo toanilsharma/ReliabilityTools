@@ -7,9 +7,15 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
+import ShareAndExport from '../../components/ShareAndExport';
+import { useRef } from 'react';
+
 
 const KOutOfN: React.FC = () => {
+  const toolRef = useRef<HTMLDivElement>(null);
+  const shareUrl = window.location.href;
   const [n, setN] = useState<string>('3');
+
   const [k, setK] = useState<string>('2');
   const [componentRel, setComponentRel] = useState<string>('95');
   const [time, setTime] = useState<string>('8760');
@@ -43,7 +49,8 @@ const KOutOfN: React.FC = () => {
   }, [n, k]);
 
   const ToolComponent = (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
+
       {/* Input Panel */}
       <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 space-y-6">
         <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -166,8 +173,26 @@ const KOutOfN: React.FC = () => {
             opts={{ renderer: 'svg' }}
           />
         </div>
+        <div className="mt-4">
+          <ShareAndExport 
+            toolName="K-Out-Of-N Analysis"
+            shareUrl={shareUrl}
+            chartRef={toolRef}
+            resultSummary={`${(result * 100).toFixed(4)}%`}
+            exportData={[
+              { Parameter: "Total Units (N)", Value: n },
+              { Parameter: "Required Units (K)", Value: k },
+              { Parameter: "Component Reliability", Value: componentRel + "%" },
+              {},
+              { Parameter: "--- RESULTS ---", Value: "" },
+              { Parameter: "System Reliability", Value: (result * 100).toFixed(4) + "%" },
+              { Parameter: "Failure Probability", Value: ((1 - result) * 100).toFixed(4) + "%" }
+            ]}
+          />
+        </div>
       </div>
     </div>
+
   );
 
   const Content = (
