@@ -120,7 +120,7 @@ const SystemReliabilityValidator: React.FC = () => {
                         />
                     </div>
                     <div className="mt-4">
-                        <ShareAndExport 
+                        <ShareAndExport
                             toolName="System Reliability Validation"
                             shareUrl={shareUrl}
                             chartRef={toolRef}
@@ -146,20 +146,20 @@ const SystemReliabilityValidator: React.FC = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-                <TheoryBlock 
+                <TheoryBlock
                     title="Component Derating"
                     icon={<Scale className="w-5 h-5" />}
                     delay={0.1}
                 >
                     <p>
-                        <strong>Derating</strong> is the practice of operating a component at significantly less than its rated maximum limit (e.g., using a 50V capacitor in a 12V circuit). 
+                        <strong>Derating</strong> is the practice of operating a component at significantly less than its rated maximum limit (e.g., using a 50V capacitor in a 12V circuit).
                     </p>
                     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                         Per the Arrhenius Equation, reducing thermal and electrical stress exponentially increases the life expectancy of electronic components.
                     </p>
                 </TheoryBlock>
 
-                <TheoryBlock 
+                <TheoryBlock
                     title="Single Point of Failure (SPOF)"
                     icon={<ZapOff className="w-5 h-5" />}
                     delay={0.2}

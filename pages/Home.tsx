@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { TOOLS, ARTICLES } from '../constants';
 import { calculateMTBF } from '../services/reliabilityMath';
+import { IconMap, getThemeClasses } from '../utils/themeHelper';
 import SEO from '../components/SEO';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { useCounterAnimation } from '../hooks/useCounterAnimation';
@@ -107,8 +108,6 @@ const HOME_FAQS = [
   }
 ];
 
-import { IconMap, getThemeClasses } from '../utils/themeHelper';
-
 const Home: React.FC = () => {
   const [demoHours, setDemoHours] = useState('8760');
   const [demoFailures, setDemoFailures] = useState('4');
@@ -146,7 +145,7 @@ const Home: React.FC = () => {
     <div className="space-y-24 pb-12">
       <SEO
         title="Free MTBF Calculator & Reliability Engineering Tools | India"
-        description="20 free reliability engineering tools: MTBF calculator, Weibull analysis, FMEA worksheet, OEE calculator. Used by maintenance engineers, plant managers & engineering students across India. No signup. ISO/IEC formulas."
+        description="28 free reliability engineering tools: MTBF calculator, Weibull analysis, FMEA worksheet, OEE calculator. Used by maintenance engineers, plant managers & engineering students across India. No signup. ISO/IEC formulas."
         keywords="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator, OEE calculator, availability calculator, predictive maintenance, engineering interview preparation, reliability exam preparation"
         canonicalUrl="https://reliabilitytools.co.in/"
         schema={faqSchema}
@@ -684,7 +683,7 @@ const Home: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 mt-12">
           <div>
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">20 professional-grade tools. Free. No signup required.</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1">28 professional-grade tools. Free. No signup required.</p>
           </div>
           <Link
             to="/tools"

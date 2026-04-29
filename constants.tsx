@@ -195,6 +195,78 @@ export const TOOLS: ToolDefinition[] = [
     category: 'Analysis',
     iconName: 'Droplets',
     colorTheme: 'cyan'
+  },
+  {
+    id: 'hazard-rate',
+    name: 'Hazard Rate Calculator',
+    description: 'Calculate instantaneous failure rates and reliability functions for different distributions.',
+    path: '/tools/hazard-rate',
+    category: 'Calculator',
+    iconName: 'Zap',
+    colorTheme: 'orange'
+  },
+  {
+    id: 'validator',
+    name: 'System Reliability Validator',
+    description: 'Audit your system design against core reliability engineering principles and standards.',
+    path: '/tools/validator',
+    category: 'Analysis',
+    iconName: 'ShieldCheck',
+    colorTheme: 'emerald'
+  },
+  {
+    id: 'fishbone',
+    name: 'Fishbone Diagram (RCA)',
+    description: 'Interactive Ishikawa diagram to identify root causes across People, Process, and Machine categories.',
+    path: '/tools/fishbone',
+    category: 'Analysis',
+    iconName: 'Network',
+    colorTheme: 'indigo'
+  },
+  {
+    id: 'fta',
+    name: 'Fault Tree Analysis',
+    description: 'Model system failures using Boolean logic (AND/OR gates) to calculate top-event probability.',
+    path: '/tools/fta',
+    category: 'Analysis',
+    iconName: 'Layers',
+    colorTheme: 'blue'
+  },
+  {
+    id: 'markov',
+    name: 'Markov Chain Analysis',
+    description: 'Predict system state transitions and steady-state availability for complex repairable systems.',
+    path: '/tools/markov',
+    category: 'Analysis',
+    iconName: 'ArrowRightLeft',
+    colorTheme: 'purple'
+  },
+  {
+    id: 'growth',
+    name: 'Reliability Growth Modeling',
+    description: 'Analyze reliability improvements over time using Crow-AMSAA (NHPP) models.',
+    path: '/tools/growth',
+    category: 'Analysis',
+    iconName: 'TrendingUp',
+    colorTheme: 'cyan'
+  },
+  {
+    id: 'warranty',
+    name: 'Warranty Cost Predictor',
+    description: 'Forecast future warranty claims and financial exposure based on early life failure data.',
+    path: '/tools/warranty',
+    category: 'Planning',
+    iconName: 'Shield',
+    colorTheme: 'rose'
+  },
+  {
+    id: 'cost-risk',
+    name: 'Cost-Risk Optimization',
+    description: 'Balance the cost of maintenance against the risk of failure to find the economic sweet spot.',
+    path: '/tools/cost-risk',
+    category: 'Planning',
+    iconName: 'Banknote',
+    colorTheme: 'amber'
   }
 ];
 

@@ -1,7 +1,7 @@
 {
   "name": "Reliability Tools India — Free Engineering Calculators",
   "short_name": "ReliabilityTools",
-  "description": "25+ free reliability engineering calculators: MTBF, Weibull, FMEA, OEE. Crack interviews, ace exams, optimize plant KPIs.",
+  "description": "28 free reliability engineering calculators: MTBF, Weibull, FMEA, OEE. Crack interviews, ace exams, optimize plant KPIs.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
