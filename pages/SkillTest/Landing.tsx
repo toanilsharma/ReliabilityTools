@@ -36,32 +36,35 @@ const Landing: React.FC = () => {
       <div className="max-w-4xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800 relative transition-all duration-500">
         
         {/* Banner */}
-        <div className="bg-gradient-to-r from-cyan-600 to-blue-700 p-4 md:p-6 text-center relative overflow-hidden">
+        <div className="bg-gradient-to-r from-cyan-600 to-blue-700 p-3 md:p-6 text-center relative overflow-hidden">
            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CgkJPGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmYiLz4KCTwvc3ZnPg==')]"></div>
            <div className="relative z-10">
-              <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-md rounded-xl mb-3 shadow-lg border border-white/30 transform -rotate-6">
-                <Award className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-10 h-10 md:w-16 md:h-16 bg-white/20 backdrop-blur-md rounded-xl mb-2 md:mb-3 shadow-lg border border-white/30 transform -rotate-6">
+                <Award className="w-5 h-5 md:w-8 md:h-8 text-white" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-2">
+              <h1 className="text-xl md:text-3xl font-extrabold text-white tracking-tight mb-1 md:mb-2">
                 Global Reliability Skill Assessment
               </h1>
-              <p className="text-sm md:text-base text-cyan-100 mb-0 max-w-xl mx-auto font-medium">
+              <p className="text-xs md:text-base text-cyan-100 mb-0 max-w-xl mx-auto font-medium">
                 Are you a true reliability expert? Take our 20-question randomized challenge and prove it to the world.
               </p>
            </div>
         </div>
 
-        <div className="p-4 md:p-6 lg:p-8">
+        <div className="p-3 md:p-6 lg:p-8">
           
           {step === 1 ? (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 rounded-xl p-4 mb-6 text-left relative overflow-hidden group">
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 rounded-xl p-3 md:p-4 mb-4 md:mb-6 text-left relative overflow-hidden group">
                  <div className="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
-                 <h3 className="text-base font-bold text-amber-800 dark:text-amber-400 flex items-center gap-2 mb-1.5">
+                 <h3 className="text-sm md:text-base font-bold text-amber-800 dark:text-amber-400 flex items-center gap-2 mb-1 md:mb-1.5">
                    <Sparkles className="w-4 h-4" /> Why take this assessment?
                  </h3>
-                 <p className="text-slate-700 dark:text-slate-300 text-xs md:text-sm leading-relaxed mb-3">
+                 <p className="hidden md:block text-slate-700 dark:text-slate-300 text-xs md:text-sm leading-relaxed mb-3">
                    Stand out to recruiters and peers! Upon completion, you will instantly receive a highly professional, <strong>high-resolution PDF Certificate of Achievement</strong>. Showcase your performance rank directly on your LinkedIn profile.
+                 </p>
+                 <p className="md:hidden text-slate-700 dark:text-slate-300 text-xs leading-snug mb-2">
+                   Get a <strong>PDF Certificate</strong> and share on LinkedIn!
                  </p>
                  <div className="flex flex-wrap gap-2">
                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-[10px] md:text-xs font-bold rounded-full">
@@ -73,7 +76,7 @@ const Landing: React.FC = () => {
                  </div>
               </div>
 
-              <form onSubmit={handleNameSubmit} className="space-y-4 max-w-md mx-auto">
+              <form onSubmit={handleNameSubmit} className="space-y-3 md:space-y-4 max-w-md mx-auto">
                 <div className="text-left">
                   <label htmlFor="name" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                     What name should appear on your certificate?
@@ -121,44 +124,44 @@ const Landing: React.FC = () => {
                 Exam Rules & Guidelines
               </h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 text-left">
-                <div className="flex gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-1.5 rounded-lg shrink-0 h-min">
-                    <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6 text-left">
+                <div className="flex flex-col md:flex-row gap-1.5 md:gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 md:p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-1 md:p-1.5 rounded-lg shrink-0 h-min w-min">
+                    <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">30-Second Limit</h4>
-                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-0.5 leading-tight">30 seconds per question. Unanswered questions are marked incorrect.</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-xs md:text-sm">30-Second Limit</h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-[10px] md:text-xs mt-0.5 leading-tight hidden md:block">30 seconds per question. Unanswered = incorrect.</p>
                   </div>
                 </div>
 
-                <div className="flex gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-lg shrink-0 h-min">
-                    <ShieldAlert className="w-5 h-5 text-red-600 dark:text-red-400" />
+                <div className="flex flex-col md:flex-row gap-1.5 md:gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 md:p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <div className="bg-red-100 dark:bg-red-900/30 p-1 md:p-1.5 rounded-lg shrink-0 h-min w-min">
+                    <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">Secure Environment</h4>
-                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-0.5 leading-tight">Right-clicking, text selection, and keyboard shortcuts are disabled.</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-xs md:text-sm">Secure Environment</h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-[10px] md:text-xs mt-0.5 leading-tight hidden md:block">Copy, right-click & shortcuts disabled.</p>
                   </div>
                 </div>
 
-                <div className="flex gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <div className="bg-amber-100 dark:bg-amber-900/30 p-1.5 rounded-lg shrink-0 h-min">
-                    <Ban className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <div className="flex flex-col md:flex-row gap-1.5 md:gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 md:p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <div className="bg-amber-100 dark:bg-amber-900/30 p-1 md:p-1.5 rounded-lg shrink-0 h-min w-min">
+                    <Ban className="w-4 h-4 md:w-5 md:h-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">No Backtracking</h4>
-                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-0.5 leading-tight">Once you select an answer or time expires, you cannot return to previous questions.</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-xs md:text-sm">No Backtracking</h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-[10px] md:text-xs mt-0.5 leading-tight hidden md:block">Cannot return to previous questions.</p>
                   </div>
                 </div>
 
-                <div className="flex gap-3 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1.5 rounded-lg shrink-0 h-min">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="flex flex-col md:flex-row gap-1.5 md:gap-3 bg-slate-50 dark:bg-slate-800/50 p-2 md:p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1 md:p-1.5 rounded-lg shrink-0 h-min w-min">
+                    <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">Certification</h4>
-                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-0.5 leading-tight">20 randomized questions. A PDF certificate will be generated upon completion.</p>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-xs md:text-sm">Certification</h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-[10px] md:text-xs mt-0.5 leading-tight hidden md:block">20 questions. PDF certificate on completion.</p>
                   </div>
                 </div>
               </div>

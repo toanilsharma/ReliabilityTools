@@ -153,7 +153,7 @@ const Quiz: React.FC = () => {
     <div className="min-h-[calc(100vh-100px)] bg-slate-50 dark:bg-slate-950 py-1 px-2 md:px-4 flex flex-col select-none">
       <SEO title="Reliability Skill Test In Progress" description="Secure reliability engineering assessment." />
       
-      <div className="max-w-4xl w-full mx-auto flex-grow flex flex-col pt-2">
+      <div className="max-w-4xl w-full mx-auto flex flex-col pt-2">
         
         {/* Header / Progress */}
         <div className="mb-3">
@@ -192,12 +192,12 @@ const Quiz: React.FC = () => {
         </div>
 
         {/* Question Card */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-3 md:p-5 flex-grow flex flex-col mb-4">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-3 md:p-5 flex flex-col mb-4">
           <h3 className="text-base md:text-lg font-bold text-slate-900 dark:text-white mb-3 leading-snug">
             {currentQ.text}
           </h3>
 
-          <div className="space-y-2 flex-grow">
+          <div className="space-y-2">
             {currentQ.options.map((option, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrect = idx === currentQ.correctAnswer;

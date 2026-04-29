@@ -168,81 +168,124 @@ const Results: React.FC = () => {
             
           </div>
 
-        {/* Invisible container for html2canvas to render full size certificate accurately */}
+         {/* Invisible container for html2canvas to render full size certificate accurately */}
         <div className="absolute left-[-9999px] top-[-9999px]">
           <div 
             ref={certificateRef} 
-            className="w-[1123px] h-[794px] bg-white relative flex flex-col" 
-            style={{ fontFamily: "'Inter', sans-serif" }}
+            className="bg-white relative" 
+            style={{ fontFamily: "'Inter', sans-serif", width: '1123px', height: '794px' }}
           >
-            {/* Highly Professional Borders */}
-            <div className="absolute inset-0 border-[30px] border-slate-100 flex items-center justify-center p-3 bg-slate-50">
-               <div className="w-full h-full border-[8px] border-double border-slate-300 relative bg-white p-12 overflow-hidden flex flex-col shadow-inner">
+            {/* Outer border frame */}
+            <div style={{ position: 'absolute', inset: 0, border: '28px solid #f1f5f9', background: '#f8fafc' }}>
+              {/* Inner double border */}
+              <div style={{ 
+                width: '100%', height: '100%', 
+                border: '6px double #cbd5e1', 
+                background: '#ffffff',
+                display: 'flex', flexDirection: 'column',
+                position: 'relative',
+                boxSizing: 'border-box'
+              }}>
                  
-                 {/* Elegant Corner Flourishes */}
-                 <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-amber-600"></div>
-                 <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-amber-600"></div>
-                 <div className="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-amber-600"></div>
-                 <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-amber-600"></div>
+                 {/* Corner Flourishes */}
+                 <div style={{ position: 'absolute', top: '12px', left: '12px', width: '40px', height: '40px', borderTop: '2px solid #d97706', borderLeft: '2px solid #d97706' }}></div>
+                 <div style={{ position: 'absolute', top: '12px', right: '12px', width: '40px', height: '40px', borderTop: '2px solid #d97706', borderRight: '2px solid #d97706' }}></div>
+                 <div style={{ position: 'absolute', bottom: '12px', left: '12px', width: '40px', height: '40px', borderBottom: '2px solid #d97706', borderLeft: '2px solid #d97706' }}></div>
+                 <div style={{ position: 'absolute', bottom: '12px', right: '12px', width: '40px', height: '40px', borderBottom: '2px solid #d97706', borderRight: '2px solid #d97706' }}></div>
 
-                 {/* Faint Watermark Logo */}
-                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-                    <ShieldCheck className="w-[500px] h-[500px] text-slate-900" />
+                 {/* Faint Watermark */}
+                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.07, pointerEvents: 'none' }}>
+                    <ShieldCheck style={{ width: '400px', height: '400px', color: '#0f172a' }} />
                  </div>
 
-                 {/* Certificate Content */}
-                 <div className="relative z-10 flex flex-col items-center flex-grow">
-                    <div className="flex items-center justify-center gap-4 mb-6">
-                       <Award className="w-12 h-12 text-amber-600" />
-                       <div className="h-0.5 w-32 bg-amber-600/30"></div>
-                       <Award className="w-12 h-12 text-amber-600" />
+                 {/* Certificate Content - uses padding and flexbox, NO absolute positioning */}
+                 <div style={{ 
+                   position: 'relative', zIndex: 10, 
+                   display: 'flex', flexDirection: 'column', alignItems: 'center',
+                   padding: '36px 48px 28px 48px',
+                   flex: 1
+                 }}>
+                    {/* Award icons row */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
+                       <Award style={{ width: '40px', height: '40px', color: '#d97706' }} />
+                       <div style={{ height: '2px', width: '100px', background: 'rgba(217,119,6,0.3)' }}></div>
+                       <Award style={{ width: '40px', height: '40px', color: '#d97706' }} />
                     </div>
 
-                    <h1 className="text-[56px] font-black tracking-[0.15em] text-slate-900 uppercase mb-3 text-center" style={{ fontFamily: 'Georgia, serif' }}>
+                    <h1 style={{ 
+                      fontFamily: 'Georgia, serif', fontSize: '42px', fontWeight: 900, 
+                      letterSpacing: '0.12em', color: '#0f172a', textTransform: 'uppercase',
+                      margin: '0 0 8px 0', textAlign: 'center', lineHeight: 1.15
+                    }}>
                       Certificate of Achievement
                     </h1>
                     
-                    <div className="h-1.5 w-64 bg-amber-600 mb-10"></div>
+                    <div style={{ height: '0', width: '220px', borderTop: '6px solid #d97706', marginBottom: '20px', display: 'block' }}></div>
                     
-                    <p className="text-xl tracking-[0.25em] text-slate-500 uppercase font-bold mb-8">
+                    <p style={{ 
+                      fontSize: '14px', letterSpacing: '0.2em', color: '#64748b', 
+                      textTransform: 'uppercase', fontWeight: 700, margin: '0 0 16px 0'
+                    }}>
                       This is proudly presented to
                     </p>
                     
-                    <h2 className="text-[72px] font-bold text-slate-900 mb-8 italic text-center w-full pb-4 border-b border-slate-200" style={{ fontFamily: 'Georgia, serif' }}>
+                    <h2 style={{ 
+                      fontFamily: 'Georgia, serif', fontSize: '52px', fontWeight: 700, 
+                      color: '#0f172a', fontStyle: 'italic', textAlign: 'center', 
+                      width: '100%', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px',
+                      margin: '0 0 16px 0', lineHeight: 1.2
+                    }}>
                       {name}
                     </h2>
                     
-                    <p className="text-2xl text-slate-700 text-center max-w-4xl leading-relaxed mb-6 font-medium">
+                    <p style={{ 
+                      fontSize: '16px', color: '#334155', textAlign: 'center', 
+                      maxWidth: '700px', lineHeight: 1.6, fontWeight: 500,
+                      margin: '0 0 14px 0'
+                    }}>
                       For successfully demonstrating comprehensive and advanced engineering knowledge in the Global Reliability Engineering Skill Assessment, and officially achieving the rank of:
                     </p>
                     
-                    <p className="text-4xl text-amber-700 font-bold mb-auto" style={{ fontFamily: 'Georgia, serif' }}>
+                    <p style={{ 
+                      fontFamily: 'Georgia, serif', fontSize: '28px', color: '#b45309', 
+                      fontWeight: 700, margin: '0'
+                    }}>
                       {performanceComment}
                     </p>
                     
-                    {/* Signatures & Footer */}
-                    <div className="flex w-full justify-between items-end mt-12 px-8">
-                      <div className="text-center">
-                        <div className="border-b-2 border-slate-800 w-64 mb-3 text-3xl font-serif text-slate-800 pb-1">{score} / {total}</div>
-                        <p className="text-sm uppercase tracking-widest font-black text-slate-500">Official Score</p>
+                    {/* Spacer to push footer to bottom */}
+                    <div style={{ flex: 1, minHeight: '20px' }}></div>
+                    
+                    {/* Footer - Score / Seal / Date */}
+                    <div style={{ 
+                      display: 'flex', width: '100%', justifyContent: 'space-between', 
+                      alignItems: 'flex-end', padding: '0 24px'
+                    }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ 
+                          borderBottom: '2px solid #1e293b', width: '180px', marginBottom: '6px', 
+                          fontSize: '22px', fontFamily: 'Georgia, serif', color: '#1e293b', paddingBottom: '4px'
+                        }}>{score} / {total}</div>
+                        <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 900, color: '#64748b', margin: 0 }}>Official Score</p>
                       </div>
                       
-                      <div className="flex flex-col items-center mb-[-20px]">
-                        <div className="relative flex items-center justify-center w-32 h-32 bg-amber-50 rounded-full border-4 border-amber-600 shadow-lg">
-                           <ShieldCheck className="w-16 h-16 text-amber-700" />
-                           <svg viewBox="0 0 100 100" className="absolute w-full h-full animate-[spin_30s_linear_infinite]">
-                             <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
-                             <text className="text-[10px] font-bold tracking-widest fill-amber-800 uppercase">
-                               <textPath href="#circlePath" startOffset="50%" textAnchor="middle"> • VERIFIED EXPERTISE • VERIFIED EXPERTISE </textPath>
-                             </text>
-                           </svg>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div style={{ 
+                          position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          width: '90px', height: '90px', background: '#fffbeb', borderRadius: '50%',
+                          border: '3px solid #d97706', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                        }}>
+                           <ShieldCheck style={{ width: '44px', height: '44px', color: '#b45309' }} />
                         </div>
-                        <div className="mt-6 font-black text-slate-800 tracking-[0.3em] text-sm">RELIABILITYTOOLS.CO.IN</div>
+                        <div style={{ marginTop: '8px', fontWeight: 900, color: '#1e293b', letterSpacing: '0.2em', fontSize: '9px' }}>RELIABILITYTOOLS.CO.IN</div>
                       </div>
                       
-                      <div className="text-center">
-                        <div className="border-b-2 border-slate-800 w-64 mb-3 text-2xl font-serif text-slate-800 pb-1">{currentDate}</div>
-                        <p className="text-sm uppercase tracking-widest font-black text-slate-500">Date of Award</p>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ 
+                          borderBottom: '2px solid #1e293b', width: '180px', marginBottom: '6px', 
+                          fontSize: '16px', fontFamily: 'Georgia, serif', color: '#1e293b', paddingBottom: '4px'
+                        }}>{currentDate}</div>
+                        <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 900, color: '#64748b', margin: 0 }}>Date of Award</p>
                       </div>
                     </div>
 
@@ -256,42 +299,56 @@ const Results: React.FC = () => {
         <div className="flex flex-col w-full">
           <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 text-center lg:text-left">Certificate Preview</h3>
           <div className="bg-white rounded-2xl p-2 shadow-2xl border border-slate-200 dark:border-slate-800 pointer-events-none select-none w-full transform hover:scale-[1.01] transition-transform duration-500 h-max">
-            <div className="aspect-[1.414/1] bg-slate-50 relative border-[8px] md:border-[16px] border-slate-100 overflow-hidden flex items-center justify-center p-2">
-               <div className="w-full h-full border-[3px] md:border-4 border-double border-slate-300 relative bg-white p-3 md:p-6 flex flex-col items-center">
-                 <div className="absolute top-2 left-2 w-4 h-4 md:w-6 md:h-6 border-t border-l border-amber-600"></div>
-                 <div className="absolute top-2 right-2 w-4 h-4 md:w-6 md:h-6 border-t border-r border-amber-600"></div>
-                 <div className="absolute bottom-2 left-2 w-4 h-4 md:w-6 md:h-6 border-b border-l border-amber-600"></div>
-                 <div className="absolute bottom-2 right-2 w-4 h-4 md:w-6 md:h-6 border-b border-r border-amber-600"></div>
+            <div className="aspect-[1.414/1] bg-slate-50 relative border-[6px] md:border-[12px] border-slate-100 overflow-hidden p-0.5">
+               <div className="w-full h-full border-[2px] md:border-[3px] border-double border-slate-300 relative bg-white flex flex-col items-center" style={{ padding: 'clamp(6px, 1.5vw, 16px) clamp(8px, 2vw, 20px)' }}>
+                 {/* Corner Flourishes */}
+                 <div className="absolute top-1.5 left-1.5 w-3 h-3 md:w-5 md:h-5 border-t border-l border-amber-600"></div>
+                 <div className="absolute top-1.5 right-1.5 w-3 h-3 md:w-5 md:h-5 border-t border-r border-amber-600"></div>
+                 <div className="absolute bottom-1.5 left-1.5 w-3 h-3 md:w-5 md:h-5 border-b border-l border-amber-600"></div>
+                 <div className="absolute bottom-1.5 right-1.5 w-3 h-3 md:w-5 md:h-5 border-b border-r border-amber-600"></div>
                  
-                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                    <ShieldCheck className="w-[150px] md:w-[250px] h-[150px] md:h-[250px] text-slate-900" />
+                 {/* Watermark */}
+                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.07]">
+                    <ShieldCheck className="w-[100px] md:w-[180px] h-[100px] md:h-[180px] text-slate-900" />
                  </div>
 
-                 <Award className="w-5 md:w-8 h-5 md:h-8 text-amber-600 mb-1.5 md:mb-3 z-10" />
+                 {/* Award Icon */}
+                 <Award className="w-3 md:w-5 h-3 md:h-5 text-amber-600 z-10 shrink-0" style={{ marginBottom: 'clamp(2px, 0.4vw, 6px)' }} />
                  
-                 <h4 className="text-sm md:text-2xl font-black text-slate-800 uppercase tracking-widest z-10 text-center leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Certificate of Achievement</h4>
-                 <div className="h-0.5 w-12 md:w-24 bg-amber-600 my-1.5 md:my-3 z-10"></div>
-                 <p className="text-[6px] md:text-[10px] text-slate-500 uppercase tracking-widest font-bold z-10 mb-1.5 md:mb-3">This is proudly presented to</p>
+                 {/* Title */}
+                 <h4 className="font-black text-slate-800 uppercase tracking-widest z-10 text-center leading-none shrink-0" style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(7px, 1.5vw, 18px)', marginBottom: 'clamp(2px, 0.3vw, 4px)' }}>Certificate of Achievement</h4>
+                 <div className="bg-amber-600 z-10 shrink-0" style={{ height: 'clamp(1px, 0.2vw, 2px)', width: 'clamp(24px, 6vw, 72px)', marginBottom: 'clamp(3px, 0.5vw, 8px)' }}></div>
                  
-                 <p className="text-xl md:text-4xl font-bold text-slate-900 border-b border-slate-200 pb-1.5 w-full text-center z-10 italic mb-2 md:mb-4 leading-none" style={{ fontFamily: 'Georgia, serif' }}>{name}</p>
+                 {/* Presented To */}
+                 <p className="text-slate-500 uppercase tracking-widest font-bold z-10 shrink-0" style={{ fontSize: 'clamp(3px, 0.6vw, 8px)', marginBottom: 'clamp(2px, 0.5vw, 8px)' }}>This is proudly presented to</p>
                  
-                 <p className="text-[8px] md:text-xs text-slate-700 text-center max-w-[85%] z-10 mb-2 md:mb-4 leading-tight">
+                 {/* Name */}
+                 <p className="font-bold text-slate-900 border-b border-slate-200 w-4/5 text-center z-10 italic shrink-0" style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(10px, 2.5vw, 30px)', paddingBottom: 'clamp(1px, 0.3vw, 4px)', marginBottom: 'clamp(3px, 0.6vw, 10px)', lineHeight: 1.2 }}>{name}</p>
+                 
+                 {/* Description */}
+                 <p className="text-slate-700 text-center z-10 shrink-0" style={{ fontSize: 'clamp(4px, 0.7vw, 9px)', maxWidth: '80%', lineHeight: 1.35, marginBottom: 'clamp(2px, 0.5vw, 8px)' }}>
                    For successfully demonstrating comprehensive engineering knowledge in the Global Reliability Skill Assessment.
                  </p>
-                 <p className="text-xs md:text-xl text-amber-700 font-bold z-10" style={{ fontFamily: 'Georgia, serif' }}>{performanceComment}</p>
                  
-                 <div className="flex justify-between w-full px-2 md:px-8 mt-auto absolute bottom-3 md:bottom-6 z-10">
+                 {/* Performance Rank */}
+                 <p className="text-amber-700 font-bold z-10 shrink-0" style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(6px, 1.2vw, 15px)' }}>{performanceComment}</p>
+                 
+                 {/* Spacer */}
+                 <div className="flex-1 min-h-[4px]"></div>
+                 
+                 {/* Footer - fully in flow, NOT absolute */}
+                 <div className="flex justify-between w-full z-10 shrink-0 items-end" style={{ padding: '0 clamp(4px, 1vw, 16px)' }}>
                    <div className="text-center">
-                      <div className="text-xs md:text-lg font-serif text-slate-800 border-b border-slate-800 w-12 md:w-20 pb-0.5 mb-0.5">{score} / {total}</div>
-                      <div className="text-[5px] md:text-[7px] font-black uppercase text-slate-500 tracking-widest">Score</div>
+                      <div className="font-serif text-slate-800 border-b border-slate-800" style={{ fontSize: 'clamp(5px, 1vw, 12px)', width: 'clamp(28px, 6vw, 64px)', paddingBottom: '1px', marginBottom: '1px' }}>{score} / {total}</div>
+                      <div className="font-black uppercase text-slate-500 tracking-widest" style={{ fontSize: 'clamp(3px, 0.4vw, 6px)' }}>Score</div>
                    </div>
                    <div className="text-center flex flex-col items-center justify-end">
-                      <ShieldCheck className="w-6 md:w-10 h-6 md:h-10 text-amber-600 mb-0.5" />
-                      <div className="text-[5px] md:text-[7px] font-black text-slate-800 tracking-widest">RELIABILITYTOOLS.CO.IN</div>
+                      <ShieldCheck className="text-amber-600" style={{ width: 'clamp(12px, 2.2vw, 28px)', height: 'clamp(12px, 2.2vw, 28px)', marginBottom: '1px' }} />
+                      <div className="font-black text-slate-800 tracking-widest" style={{ fontSize: 'clamp(3px, 0.4vw, 6px)' }}>RELIABILITYTOOLS.CO.IN</div>
                    </div>
                    <div className="text-center">
-                      <div className="text-[8px] md:text-sm font-serif text-slate-800 border-b border-slate-800 w-12 md:w-20 pb-0.5 mb-0.5">{currentDate}</div>
-                      <div className="text-[5px] md:text-[7px] font-black uppercase text-slate-500 tracking-widest">Date</div>
+                      <div className="font-serif text-slate-800 border-b border-slate-800" style={{ fontSize: 'clamp(4px, 0.7vw, 9px)', width: 'clamp(28px, 6vw, 64px)', paddingBottom: '1px', marginBottom: '1px' }}>{currentDate}</div>
+                      <div className="font-black uppercase text-slate-500 tracking-widest" style={{ fontSize: 'clamp(3px, 0.4vw, 6px)' }}>Date</div>
                    </div>
                  </div>
                </div>
