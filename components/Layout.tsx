@@ -7,7 +7,7 @@ import CommandPalette from './CommandPalette';
 import { useTheme } from '../context/ThemeContext';
 import SEO from './SEO';
 import BackToTop from './BackToTop';
-import MobileCTA from './MobileCTA';
+
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -210,7 +210,7 @@ const Layout: React.FC = () => {
       {/* Main Content */}
       <main id="main-content" role="main" className="flex-grow transition-colors duration-300">
         {location.pathname !== '/' && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6">
             <nav aria-label="breadcrumb">
               <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex flex-wrap items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
                 {generateBreadcrumbSchema().itemListElement.map((item: any, idx: number, arr: any[]) => (
@@ -235,7 +235,7 @@ const Layout: React.FC = () => {
             </nav>
           </div>
         )}
-        <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname !== '/' ? 'py-6' : 'py-12'}`}>
+        <div className={`max-w-7xl mx-auto px-3 md:px-6 lg:px-8 ${location.pathname !== '/' ? 'py-4 md:py-6' : 'py-8 md:py-12'}`}>
           <Outlet />
         </div>
       </main>
@@ -274,7 +274,7 @@ const Layout: React.FC = () => {
                   <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Facebook">
                     <Facebook className="h-5 w-5" />
                   </a>
-                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20these%2025%2B%20free%20industrial%20reliability%20engineering%20tools!%20%23ReliabilityEngineering`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
+                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20these%2028%20free%20industrial%20reliability%20engineering%20tools!%20%23ReliabilityEngineering`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
                     <Twitter className="h-5 w-5" />
                   </a>
                   <a href={`mailto:?subject=Free%20Reliability%20Engineering%20Tools&body=I%20found%20this%20awesome%20suite%20of%20free%20reliability%20engineering%20calculators%20(MTBF,%20Weibull,%20OEE).%20Check%20it%20out:%20${encodeURIComponent(shareUrl)}`} className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share via Email">
@@ -362,7 +362,7 @@ const Layout: React.FC = () => {
         </div>
       </footer>
       <BackToTop />
-      <MobileCTA />
+
     </div>
   );
 };

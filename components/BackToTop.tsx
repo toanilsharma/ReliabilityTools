@@ -33,9 +33,9 @@ const BackToTop: React.FC = () => {
     <button
       onClick={scrollToTop}
       aria-label="Back to Top"
-      className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-500 border border-cyan-400/30 backdrop-blur-sm transition-all shadow-lg hover:shadow-cyan-500/20 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+      className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50 p-2 md:p-3 rounded-full bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-500 border border-cyan-400/30 backdrop-blur-sm transition-all shadow-lg hover:shadow-cyan-500/20 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cyan-400"
     >
-      <ChevronUp className="w-6 h-6" />
+      <ChevronUp className="w-5 h-5 md:w-6 md:h-6" />
     </button>
   );
 };

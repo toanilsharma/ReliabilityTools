@@ -18,14 +18,21 @@ import {
   BookOpen,
   Anchor,
   TrendingUp,
+  Shield,
   AlertTriangle,
   Rocket,
-  Activity,
   ChevronRight,
   Hash,
   Cpu,
   ArrowRight,
-  Library
+  Library,
+  Zap,
+  Activity,
+  Eye,
+  Settings,
+  Search,
+  Wrench,
+  Package
 } from 'lucide-react';
 import SEO from '../components/SEO';
 
@@ -55,6 +62,16 @@ const KnowledgeHub: React.FC = () => {
     { t: 0, r: 8 }, { t: 5, r: 4 }, { t: 10, r: 2.5 }, { t: 15, r: 1.5 },
     { t: 20, r: 1 }, { t: 30, r: 1 }, { t: 40, r: 1 }, { t: 50, r: 1 },
     { t: 60, r: 1 }, { t: 70, r: 1.2 }, { t: 80, r: 2 }, { t: 90, r: 4 }, { t: 100, r: 9 }
+  ];
+
+  const pdmData = [
+    { hour: 0, vibration: 0.2, health: 100, rul: 500 },
+    { hour: 100, vibration: 0.25, health: 95, rul: 400 },
+    { hour: 200, vibration: 0.35, health: 88, rul: 300 },
+    { hour: 300, vibration: 0.6, health: 75, rul: 200 },
+    { hour: 350, vibration: 1.2, health: 55, rul: 100 },
+    { hour: 380, vibration: 2.8, health: 30, rul: 40 },
+    { hour: 400, vibration: 5.5, health: 10, rul: 5 }
   ];
 
   return (
@@ -353,31 +370,338 @@ const KnowledgeHub: React.FC = () => {
             {/* SECTION D: MODERN HISTORY */}
             <section id="modern" className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">
-                  <Cpu className="w-6 h-6" />
+                <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl text-white shadow-lg shadow-cyan-500/20">
+                  <Cpu className="w-7 h-7" />
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 dark:text-white">2020s: The Era of Predictive Maintenance (PdM)</h2>
+                <div>
+                  <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">2020s: The Era of AI & Prescriptive Maintenance</h2>
+                  <p className="text-sm text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-wider">Beyond Predictive</p>
+                </div>
               </div>
 
-              <article className="prose prose-lg dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 font-serif leading-8">
-                <p className="mb-6 text-xl text-slate-600 dark:text-slate-400 font-sans font-light">
-                  Today, we don't just calculate failure rates; we predict them.
-                </p>
-                <p>
-                  With the rise of <strong>IIoT (Industrial Internet of Things)</strong>, reliability has moved from 'Preventive' (Time-based) to 'Predictive' (Condition-based).
-                  Instead of replacing a bearing every 5,000 hours regardless of its condition, smart sensors now stream real-time vibration and thermal data to the cloud.
-                </p>
-                <div className="grid md:grid-cols-2 gap-6 my-8 not-prose">
-                  <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h4 className="font-bold text-slate-900 dark:text-white mb-2">Machine Learning</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Algorithms now analyze vibration signatures to detect the P-point weeks before a human inspector could, identifying complex patterns like bearing cage faults or early gear wear.</p>
+              <div className="space-y-12">
+                <article className="prose prose-lg dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 font-serif leading-8">
+                  <p className="mb-6 text-xl text-slate-600 dark:text-slate-400 font-sans font-light italic">
+                    "We no longer wait for machines to whisper their secrets; we use AI to listen to their heartbeat in real-time."
+                  </p>
+                  <p className="mb-8">
+                    In the 2020s, the paradigm shifted from <strong>Predictive</strong> (knowing when it will fail) to <strong>Prescriptive</strong> (knowing how to change operations to prevent failure).
+                    The modern reliability engineer uses a "Digital Nervous System" where gigabytes of sensor data are processed at the <strong>Edge</strong>, and <strong>Physics-Informed Neural Networks (PINNs)</strong> combine mechanical laws with deep learning to forecast failures with 99% accuracy.
+                  </p>
+
+                  {/* AI Prediction Visualization */}
+                  <div className="not-prose bg-slate-900 rounded-[32px] p-8 border border-slate-800 shadow-2xl relative overflow-hidden mb-12">
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                      <TrendingUp className="w-32 h-32 text-cyan-400" />
+                    </div>
+
+                    <div className="relative z-10">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <div>
+                          <h4 className="text-xl font-bold text-white mb-1">AI Health Index vs. RUL Prediction</h4>
+                          <p className="text-sm text-slate-400">Deep Learning LSTM Model Forecast</p>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-cyan-400"></div>
+                            <span className="text-xs text-slate-300 font-medium">Machine Health %</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                            <span className="text-xs text-slate-300 font-medium">Vibration (G-RMS)</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="h-72 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={pdmData}>
+                            <defs>
+                              <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colorVib" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2}/>
+                                <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                            <XAxis dataKey="hour" stroke="#94a3b8" fontSize={12} label={{ value: 'Operational Hours', position: 'insideBottom', offset: -5, fill: '#64748b', fontSize: 10 }} />
+                            <YAxis stroke="#94a3b8" fontSize={12} />
+                            <Tooltip 
+                              contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px' }}
+                              itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                            />
+                            <Area type="monotone" dataKey="health" stroke="#22d3ee" strokeWidth={3} fillOpacity={1} fill="url(#colorHealth)" />
+                            <Area type="monotone" dataKey="vibration" stroke="#f43f5e" strokeWidth={2} fillOpacity={1} fill="url(#colorVib)" />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+
+                      <div className="mt-8 p-4 bg-cyan-900/20 rounded-xl border border-cyan-500/30">
+                        <div className="flex items-start gap-3">
+                          <AlertTriangle className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
+                          <p className="text-sm text-cyan-100 leading-relaxed">
+                            <span className="font-bold text-white"></span> Modern AI can detect "Micro-Stops" and <strong>Sub-Threshold Degradation</strong> that are invisible to traditional vibration thresholds. This allows for <strong>Zero-Downtime</strong> scheduling.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div className="grid md:grid-cols-2 gap-8 not-prose">
+                    <div className="group bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+                        <TrendingUp className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-bold text-xl text-slate-900 dark:text-white mb-3">Prescriptive Analytics</h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Instead of just flagging a fault, AI now suggests: <span className="italic text-cyan-600 dark:text-cyan-400 font-medium">"Reduce motor speed by 8% to extend bearing life until the next scheduled shutdown on Tuesday."</span>
+                      </p>
+                    </div>
+
+                    <div className="group bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                      <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                        <Hash className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-bold text-xl text-slate-900 dark:text-white mb-3">Digital Twins (Unreal Engine)</h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Real-time 3D models (using NVIDIA Omniverse or Unity) allow engineers to walk through a "Virtual Plant" where every pump's status is reflected in its color and vibration sound.
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h4 className="font-bold text-slate-900 dark:text-white mb-2">Digital Twins</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Virtual replicas of physical assets allow engineers to simulate "What-if" scenarios (e.g., "What happens if we increase load by 10%?") without risking the actual equipment.</p>
+
+                  {/* Comprehensive Departmental PdM Directory */}
+                  <div className="mt-20 space-y-10">
+                    <div className="text-center space-y-4 mb-12">
+                      <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white">Industrial PdM Techniques Directory</h3>
+                      <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">A comprehensive breakdown of modern condition monitoring methods categorized by engineering discipline.</p>
+                    </div>
+
+                    <div className="space-y-16">
+                      {/* MECHANICAL DEPARTMENT */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 pb-2 border-b-2 border-blue-500/20">
+                          <Settings className="w-6 h-6 text-blue-600" />
+                          <h4 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Mechanical Department</h4>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-blue-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                              <Activity className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Vibration Analysis (FFT)</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">The "primary sense" for rotating machines. Pinpoints unbalance and bearing defects.</p>
+                          </div>
+                          <div className="group p-6 bg-blue-50/30 dark:bg-blue-900/10 rounded-3xl border-2 border-transparent hover:border-blue-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                              <Zap className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500/30 decoration-2 underline-offset-4">Tribology (Oil Analysis)</h5>
+                            <p className="text-xs text-slate-600 dark:text-slate-300 italic">Monitoring wear debris and moisture. Essential for gearboxes.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-blue-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                              <Zap className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Shock Pulse Method (SPM)</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">A specialized technique focusing purely on rolling element impact signals.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-blue-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                              <Search className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Laser Alignment</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Verifying shaft collinearity to sub-micron levels to prevent bearing failure.</p>
+                          </div>
+                          <div className="group p-6 bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl border-2 border-blue-700 text-white shadow-lg">
+                            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                              <Eye className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold mb-2">Video Borescoping</h5>
+                            <p className="text-xs text-blue-100">Remote Visual Inspection (RVI) for internal turbine health.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ELECTRICAL DEPARTMENT */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 pb-2 border-b-2 border-amber-500/20">
+                          <Zap className="w-6 h-6 text-amber-500" />
+                          <h4 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Electrical Department</h4>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-amber-500/50 transition-all duration-300 shadow-sm">
+                            <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center text-amber-600 mb-4">
+                              <Eye className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Infrared Thermography</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Detecting thermal anomalies in busbars and transformers.</p>
+                          </div>
+                          <div className="group p-6 bg-amber-900/5 dark:bg-amber-900/20 border-2 border-amber-500/20 rounded-3xl hover:border-amber-500/50 transition-all">
+                            <div className="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-amber-500/30">
+                              <Activity className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">MCSA Signature Analysis</h5>
+                            <p className="text-xs text-slate-600 dark:text-slate-300">Analyzing current to detect broken rotor bars and stator faults.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-amber-500/50 transition-all">
+                            <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center text-amber-600 mb-4">
+                              <Activity className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Dissolved Gas Analysis (DGA)</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Measuring combustible gases in insulating oil for transformers.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-amber-500/50 transition-all">
+                            <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center text-amber-600 mb-4">
+                              <AlertTriangle className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Partial Discharge (PD)</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Detecting localized insulation breakdown in HV switchgear.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-amber-500/50 transition-all">
+                            <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center text-amber-600 mb-4">
+                              <Activity className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Power Quality Audit</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Monitoring Harmonics and Transients that damage electronics.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* INSTRUMENTATION & CONTROL */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 pb-2 border-b-2 border-emerald-500/20">
+                          <Activity className="w-6 h-6 text-emerald-500" />
+                          <h4 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Instrumentation & Control</h4>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+                          <div className="group p-6 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-3xl border-2 border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300">
+                            <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-emerald-600 mb-4 shadow-sm">
+                              <Activity className="w-6 h-6" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Valve Signature Analysis</h5>
+                            <p className="text-xs text-slate-600 dark:text-slate-300">Predicting packing leaks and actuator fatigue in control valves.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-emerald-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center text-emerald-600 mb-4">
+                              <Settings className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Smart Diagnostics</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Leveraging HART data to monitor travel alerts and error codes.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-emerald-500/50 transition-all duration-300">
+                            <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center text-emerald-600 mb-4">
+                              <Zap className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Loop Response Testing</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Identifying sluggish control loops leading to process instability.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* STATIC & STRUCTURAL */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 pb-2 border-b-2 border-purple-500/20">
+                          <Package className="w-6 h-6 text-purple-600" />
+                          <h4 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Static & Structural</h4>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-purple-500/50 transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+                              <Activity className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Acoustic Emission (AE)</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Passive monitoring for active crack growth and leaks.</p>
+                          </div>
+                          <div className="group p-6 bg-slate-900 dark:bg-slate-800 rounded-3xl border-2 border-slate-800 hover:border-purple-500 text-white transition-all duration-300 shadow-2xl">
+                            <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
+                              <Search className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold mb-2">UT Thickness Gauging</h5>
+                            <p className="text-xs text-slate-400">Tracking wall thinning and corrosion rates in high-pressure lines.</p>
+                          </div>
+                          <div className="group p-6 bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 hover:border-purple-500/50 transition-all duration-300 shadow-sm">
+                            <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+                              <Wrench className="w-5 h-5" />
+                            </div>
+                            <h5 className="font-bold text-slate-900 dark:text-white mb-2">Eddy Current Testing</h5>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">High-speed inspection to find pits and cracks before rupture.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 dark:bg-slate-900/50 p-8 rounded-[32px] border border-slate-200 dark:border-slate-800">
+                      <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Strategic Benefits of PdM 4.0</h4>
+                      <div className="grid sm:grid-cols-2 gap-8">
+                        <div className="flex gap-4">
+                          <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center shrink-0">
+                            <TrendingUp className="w-5 h-5 text-green-600" />
+                          </div>
+                          <div>
+                            <span className="block font-bold text-slate-900 dark:text-white">Energy Optimization</span>
+                            <p className="text-sm text-slate-500">Detecting a 1mm air leak with Ultrasound can save up to $500/year in electricity. Multiply by 1000 leaks for massive plant savings.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center shrink-0">
+                            <Shield className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <span className="block font-bold text-slate-900 dark:text-white">Safety & Environment</span>
+                            <p className="text-sm text-slate-500">Predicting high-pressure valve failures prevents hazardous leaks and ensures compliance with environmental standards.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center shrink-0">
+                            <Rocket className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <div>
+                            <span className="block font-bold text-slate-900 dark:text-white">Wrench Time Efficiency</span>
+                            <p className="text-sm text-slate-500">Mechanics spend 80% less time on 'Search & Rescue' and 100% of their time on planned, high-value repairs.</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center shrink-0">
+                            <Activity className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <span className="block font-bold text-slate-900 dark:text-white">Asset Longevity</span>
+                            <p className="text-sm text-slate-500">Eliminating 'Root Cause' issues like misalignment can double the life of expensive bearings and seals.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
+
+                  <div className="mt-12 p-8 bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl border border-slate-700 text-white shadow-2xl">
+                    <h4 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <Rocket className="w-5 h-5 text-cyan-400" />
+                      Modern Tech Stack for Reliability
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <span className="block font-bold text-cyan-400 mb-1">Scikit-Learn</span>
+                        ML Algorithms
+                      </div>
+                      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <span className="block font-bold text-cyan-400 mb-1">PyTorch / LSTM</span>
+                        Time-Series RUL
+                      </div>
+                      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <span className="block font-bold text-cyan-400 mb-1">InfluxDB</span>
+                        High-Speed IIoT
+                      </div>
+                      <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <span className="block font-bold text-cyan-400 mb-1">Grafana</span>
+                        Live Observability
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
             </section>
 
             {/* REFERENCES FOOTER */}

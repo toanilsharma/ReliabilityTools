@@ -174,7 +174,7 @@ const Home: React.FC = () => {
           </h1>
 
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-            <span className="font-semibold text-slate-900 dark:text-white">20 professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
+            <span className="font-semibold text-slate-900 dark:text-white">28 professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
             Master MTBF, Weibull, FMEA, OEE & more - directly in your browser.
           </p>
 
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
           {/* Trust Indicators */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-slate-500 dark:text-slate-400 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8" ref={observeElt}>
             <div className="flex flex-col items-center">
-              <div className="font-bold text-2xl text-slate-900 dark:text-white">20</div>
+              <div className="font-bold text-2xl text-slate-900 dark:text-white">28</div>
               <div className="text-sm">Engineering Tools</div>
             </div>
             <div className="flex flex-col items-center">

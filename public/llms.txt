@@ -1,7 +1,7 @@
 # ReliabilityTools - Engineering Directory
 > Free industrial reliability engineering calculators for maintenance engineers
 
-ReliabilityTools provides 20 free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and advanced industrial reliability engineering.
+ReliabilityTools provides 28 free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and advanced industrial reliability engineering.
 
 ## Tool Categories & Description
 
@@ -42,7 +42,7 @@ ReliabilityTools provides 20 free browser-based calculators for MTBF, MTTR, Weib
 ## Resources & Education
 - **Learning Center**: Deep-dive guides on RCM (Reliability Centered Maintenance), FMEA, and Statistical Analysis.
 - **Knowledge Hub**: Case studies on textile, chemical, and automotive plant reliability improvements.
-- **Glossary**: 250+ reliability engineering terms defined (ALARP, Beta, RBD, etc.).
+- **Glossary**: 50+ reliability engineering terms defined (ALARP, Beta, RBD, etc.).
 - **Methodology**: Technical references for all formulas based on ISO/IEC standards.
 
 ## Usage Note
