@@ -144,8 +144,8 @@ const Home: React.FC = () => {
   return (
     <div className="space-y-24 pb-12">
       <SEO
-        title="Free MTBF Calculator & Reliability Engineering Tools | India"
-        description="28 free reliability engineering tools: MTBF calculator, Weibull analysis, FMEA worksheet, OEE calculator. Used by maintenance engineers, plant managers & engineering students across India. No signup. ISO/IEC formulas."
+        title="Free MTBF Calculator & Weibull Analysis"
+        description="28 free reliability engineering tools online: MTBF calculator, Weibull analysis, FMEA, and OEE. Industry-standard formulas. No login or installation required."
         keywords="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator, OEE calculator, availability calculator, predictive maintenance, engineering interview preparation, reliability exam preparation"
         canonicalUrl="https://reliabilitytools.co.in/"
         schema={faqSchema}

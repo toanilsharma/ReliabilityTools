@@ -14,7 +14,11 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, i
   useEffect(() => {
     // 1. Update Title
     if (title) {
-      document.title = `${title} | Reliability Tools`;
+      if (title.includes('Reliability Tools')) {
+        document.title = title;
+      } else {
+        document.title = `${title} | Reliability Tools`;
+      }
     }
 
     // 2. Helper to update/create meta tags
