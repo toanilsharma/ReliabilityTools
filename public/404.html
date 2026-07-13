@@ -1,41 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Reliability Tools</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Page Not Found | Reliability Tools</title>
+    <meta name="description" content="The page you were looking for could not be found. Return to Reliability Tools for free MTBF calculators, Weibull analysis, FMEA tools and more." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://reliabilitytools.co.in/" />
+
+    <!-- SPA Redirect Script — keeps React Router working on static hosts -->
+    <!-- MIT License | https://github.com/rafgraph/spa-github-pages -->
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      // This script checks to see if a redirect is present in the query string,
-      // converts it back into the correct url and adds it to the
-      // browser's history using window.history.replaceState(...),
-      // which won't cause the browser to refresh the page or register a
-      // stop-button event.
       var l = window.location;
-      if (l.search[1] === '/' ) {
-        var decoded = l.search.slice(1).split('&').map(function(s) { 
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function(s) {
           return s.replace(/~and~/g, '&')
         }).join('?');
         window.history.replaceState(null, null,
-            l.pathname.slice(0, -1) + decoded + l.hash
+          l.pathname.slice(0, -1) + decoded + l.hash
         );
+      } else {
+        // Hard 404 — redirect cleanly to homepage after 5s
+        setTimeout(function() {
+          if (window.location.pathname !== '/') {
+            var pathSegmentsToKeep = 0;
+            l.replace(
+              l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+              l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+              l.pathname.split('/').slice(1 + pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+              (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+              l.hash
+            );
+          }
+        }, 100);
       }
     </script>
-    <script type="text/javascript">
-      // This part of the script is for the 404.html page
-      // It takes the current location and redirects to index.html with the path as a query string
-      var pathSegmentsToKeep = 0;
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.split('/').slice(1 + pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
-    </script>
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      @media (prefers-color-scheme: dark) {
+        body { background: #0f172a; color: #e2e8f0; }
+        .card { background: #1e293b; border-color: #334155; }
+        .badge { background: #164e63; color: #67e8f9; }
+        .link-btn { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+        .link-btn:hover { background: #2563eb; color: #fff; }
+        .divider { border-color: #334155; }
+        .muted { color: #94a3b8; }
+      }
+      .container { max-width: 560px; width: 100%; text-align: center; }
+      .brand {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+        margin-bottom: 2.5rem; text-decoration: none; color: inherit;
+      }
+      .brand-icon {
+        width: 32px; height: 32px; background: #0891b2;
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      }
+      .brand-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
+      .brand span { color: #0891b2; }
+      .card {
+        background: #fff; border: 1px solid #e2e8f0;
+        border-radius: 20px; padding: 2.5rem 2rem; margin-bottom: 2rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      }
+      .badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #ecfeff; color: #0891b2; font-size: 0.7rem;
+        font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+        padding: 4px 12px; border-radius: 999px; margin-bottom: 1.25rem;
+      }
+      h1 { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+      .sub { font-size: 0.95rem; line-height: 1.6; opacity: 0.7; margin-bottom: 1.75rem; }
+      .home-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: #0891b2; color: #fff; font-weight: 700; font-size: 0.9rem;
+        padding: 12px 24px; border-radius: 10px; text-decoration: none;
+        border: none; cursor: pointer; transition: background 0.2s;
+      }
+      .home-btn:hover { background: #0e7490; }
+      .divider { border: none; border-top: 1px solid #e2e8f0; margin: 1.75rem 0; }
+      .links-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.1em; opacity: 0.5; margin-bottom: 1rem; }
+      .links-grid {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+      }
+      .link-btn {
+        background: #f8fafc; color: #0f172a; font-size: 0.8rem; font-weight: 600;
+        padding: 10px 14px; border-radius: 10px; text-decoration: none;
+        border: 1px solid #e2e8f0; transition: all 0.2s; text-align: left;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .link-btn:hover { background: #0891b2; color: #fff; border-color: #0891b2; }
+      .link-btn .icon { font-size: 1rem; }
+      .muted { font-size: 0.75rem; opacity: 0.45; margin-top: 1.5rem; }
+    </style>
   </head>
   <body>
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="brand" href="/">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+          </svg>
+        </div>
+        Reliability<span>Tools</span>
+      </a>
+
+      <!-- Main Card -->
+      <div class="card">
+        <div class="badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          404 — Page Not Found
+        </div>
+        <h1>Oops! Lost in the data?</h1>
+        <p class="sub">
+          The page you're looking for doesn't exist or may have been moved.
+          Head back to our tools — we have 28 free reliability engineering calculators waiting for you.
+        </p>
+        <a class="home-btn" href="/">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          Go to Homepage
+        </a>
+
+        <hr class="divider" />
+
+        <p class="links-title">Or jump directly to a tool</p>
+        <div class="links-grid">
+          <a class="link-btn" href="/mtbf-calculator"><span class="icon">⚙️</span> MTBF Calculator</a>
+          <a class="link-btn" href="/weibull-analysis"><span class="icon">📈</span> Weibull Analysis</a>
+          <a class="link-btn" href="/fmea-tool"><span class="icon">🔍</span> FMEA Calculator</a>
+          <a class="link-btn" href="/oee-calculator"><span class="icon">🏭</span> OEE Calculator</a>
+          <a class="link-btn" href="/tools"><span class="icon">🛠️</span> All 28 Tools</a>
+          <a class="link-btn" href="/contact"><span class="icon">✉️</span> Contact Us</a>
+        </div>
+      </div>
+
+      <p class="muted">reliabilitytools.co.in &mdash; Free Industrial Reliability Engineering Tools</p>
+    </div>
   </body>
 </html>

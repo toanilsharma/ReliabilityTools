@@ -1,6 +1,8 @@
 
 import React, { useEffect } from 'react';
 
+const BASE_URL = 'https://reliabilitytools.co.in';
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -55,16 +57,20 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, i
     }
 
     // 5. Update Canonical URL
-    if (canonicalUrl) {
-      let link = document.querySelector('link[rel="canonical"]');
-      if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', 'canonical');
-        document.head.appendChild(link);
-      }
-      link.setAttribute('href', canonicalUrl);
-      updateOgTag('og:url', canonicalUrl);
+    // Auto-derive from current pathname if not explicitly provided.
+    // Strips any SPA redirect query strings (e.g. ?/path) from the URL.
+    const resolvedCanonical = canonicalUrl
+      ? canonicalUrl
+      : `${BASE_URL}${window.location.pathname.replace(/\/$/, '') || '/'}`;
+
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement('link') as HTMLLinkElement;
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
     }
+    link.setAttribute('href', resolvedCanonical);
+    updateOgTag('og:url', resolvedCanonical);
 
     // 6. Update OG Title
     if (title) {

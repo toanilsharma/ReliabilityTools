@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Prevent dark-mode CLS flash (Core Web Vitals: CLS fix) -->
+  <meta name="color-scheme" content="light dark" />
   <script type="text/javascript">
     // Single Page Apps for GitHub Pages
     // https://github.com/rafgraph/spa-github-pages
@@ -41,11 +43,16 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
   <link rel="manifest" href="/favicons/site.webmanifest" />
 
+  <!-- Font resource hints: preconnect + dns-prefetch for fastest possible font resolution -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Preload Inter font woff2 for LCP improvement (Core Web Vitals: LCP fix) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" fetchpriority="high" />
 
   <!-- Google Analytics (GA4) Placeholder -->
   <!-- Google Analytics (GA4) -->

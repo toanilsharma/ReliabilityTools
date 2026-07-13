@@ -1,4 +1,36 @@
+# ============================================================
+# robots.txt — reliabilitytools.co.in
+# Updated: 2026-07-13
+# ============================================================
+
+# --- Google Bots ---
+User-agent: Googlebot
+Allow: /
+Disallow: /embed/
+
+User-agent: Google-Extended
+Allow: /
+
+# --- Bing / Microsoft ---
+User-agent: Bingbot
+Allow: /
+Disallow: /embed/
+
+# --- Apple ---
+User-agent: Applebot
+Allow: /
+
+# --- AI / LLM Crawlers ---
 User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: PerplexityBot
@@ -10,10 +42,11 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-User-agent: Google-Extended
-Allow: /
-
+# --- All Other Bots ---
 User-agent: *
 Allow: /
+Disallow: /embed/
+Crawl-delay: 2
 
+# ============================================================
 Sitemap: https://reliabilitytools.co.in/sitemap.xml
