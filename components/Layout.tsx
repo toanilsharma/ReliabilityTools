@@ -132,6 +132,7 @@ const Layout: React.FC = () => {
 
                 <Link to="/knowledge-hub" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Knowledge Hub</Link>
                 <Link to="/downloads" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Templates</Link>
+                <Link to="/interactive-hub" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulators & Games</Link>
                 <Link to="/learning" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</Link>
                 <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
               </div>
@@ -198,6 +199,7 @@ const Layout: React.FC = () => {
 
               <Link to="/knowledge-hub" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Knowledge Hub</Link>
               <Link to="/downloads" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Templates</Link>
+              <Link to="/interactive-hub" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Simulators & Games</Link>
               <Link to="/learning" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Articles</Link>
               <Link to="/reliability-engineering-glossary" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Glossary</Link>
               <Link to="/about" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">About</Link>
@@ -209,7 +211,7 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <main id="main-content" role="main" className="flex-grow transition-colors duration-300">
-        {location.pathname !== '/' && (
+        {location.pathname !== '/' && location.pathname !== '/interactive-hub' && (
           <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6">
             <nav aria-label="breadcrumb">
               <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex flex-wrap items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
@@ -288,6 +290,7 @@ const Layout: React.FC = () => {
               <ul className="space-y-3 text-sm text-slate-400">
                 <li><Link to="/tools" className="hover:text-cyan-400 transition-colors">All Tools</Link></li>
                 <li><Link to="/downloads" className="hover:text-cyan-400 transition-colors">Templates & Downloads</Link></li>
+                <li><Link to="/interactive-hub" className="hover:text-cyan-400 transition-colors">Simulators & Games</Link></li>
                 <li><Link to="/knowledge-hub" className="hover:text-cyan-400 transition-colors">Knowledge Hub</Link></li>
                 <li><Link to="/reliability-engineering-glossary" className="hover:text-cyan-400 transition-colors">Glossary</Link></li>
                 <li><Link to="/contact" className="hover:text-cyan-400 transition-colors">Contact Us</Link></li>

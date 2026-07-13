@@ -46,6 +46,7 @@ const LubricantLifeOptimizer = lazy(() => import('./pages/Tools/LubricantLifeOpt
 // Content & Legal
 const LearningCenter = lazy(() => import('./pages/LearningCenter'));
 const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub')); // New Import
+const InteractiveHub = lazy(() => import('./pages/InteractiveHub'));
 const ArticleView = lazy(() => import('./pages/ArticleView'));
 const Faq = lazy(() => import('./pages/Faq'));
 const Glossary = lazy(() => import('./pages/Glossary'));
@@ -112,6 +113,7 @@ const App: React.FC = () => {
               {/* Content */}
               <Route path="learning" element={<LearningCenter />} />
               <Route path="knowledge-hub" element={<KnowledgeHub />} /> {/* New Route */}
+              <Route path="interactive-hub" element={<InteractiveHub />} />
               <Route path="learning/:articleId" element={<ArticleView />} />
               <Route path="faq" element={<Faq />} />
               <Route path="reliability-engineering-glossary" element={<Glossary />} />

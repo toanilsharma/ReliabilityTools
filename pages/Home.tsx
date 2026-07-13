@@ -2,6 +2,7 @@
 import React, { useState, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  Gamepad2,
   ArrowRight,
   BarChart2,
   Clock,
@@ -182,13 +183,20 @@ const Home: React.FC = () => {
             Whether you're optimizing plant KPIs, teaching engineering concepts, or cracking competitive exams - avoid expensive certification fees and enterprise software with our 100% free toolset.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 mb-6">
             <Link
               to="/mtbf-calculator"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Rocket className="w-5 h-5" />
               Start Free - MTBF Calculator
+            </Link>
+            <Link
+              to="/interactive-hub"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
+            >
+              <Gamepad2 className="w-5 h-5 text-amber-500" />
+              Simulators & Games
             </Link>
             <Link
               to="/learning"
