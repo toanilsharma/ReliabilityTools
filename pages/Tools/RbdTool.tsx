@@ -21,6 +21,7 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
+import { RbdSeriesParallelDiagram } from '../../components/TheoryVisuals';
 
 
 const RbdTool: React.FC = () => {
@@ -293,6 +294,10 @@ const RbdTool: React.FC = () => {
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Interactive RBD Builder</h2>
         <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Build complex system architectures by dragging graphical nodes onto the canvas and wiring custom connector lines to calculate aggregated system availability and reliability.</p>
+      </div>
+
+      <div className="my-8">
+        <RbdSeriesParallelDiagram />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

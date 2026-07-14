@@ -5,10 +5,12 @@ import { Layers, Cuboid, Zap, CheckCircle2, AlertOctagon, Target, Info, Server, 
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import { InlineMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
+import { RbdSeriesParallelDiagram } from '../../components/TheoryVisuals';
 
 
 const KOutOfN: React.FC = () => {
@@ -199,7 +201,7 @@ const KOutOfN: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">K-out-of-N Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">K-out-of-N is a flexible redundancy calculation used when a system has <code>N</code> identical components, but only <code>K</code> are required for the system to function successfully.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">K-out-of-N is a flexible redundancy calculation used when a system has <InlineMath math="N" /> identical components, but only <InlineMath math="K" /> are required for the system to function successfully.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -210,7 +212,7 @@ const KOutOfN: React.FC = () => {
           delay={0.1}
         >
           <p>
-            The mathematical foundation of partial redundancy. It calculates the cumulative probability that at least <code>K</code> out of <code>N</code> independent units survive a specified mission time, where every unit has reliability <code>R</code>.
+            The mathematical foundation of partial redundancy. It calculates the cumulative probability that at least <InlineMath math="K" /> out of <InlineMath math="N" /> independent units survive a specified mission time, where every unit has reliability <InlineMath math="R" />.
           </p>
         </TheoryBlock>
 
@@ -225,6 +227,10 @@ const KOutOfN: React.FC = () => {
             <li><strong className="text-purple-700 dark:text-purple-400">2-out-of-3 (2oo3):</strong> Triple Modular Redundancy (TMR). Uses voting logic to balance extreme reliability with safety against false trips.</li>
           </ul>
         </TheoryBlock>
+      </div>
+
+      <div className="my-8">
+        <RbdSeriesParallelDiagram />
       </div>
 
       <div className="mt-8">

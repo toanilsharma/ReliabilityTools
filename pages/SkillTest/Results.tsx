@@ -212,14 +212,14 @@ const Results: React.FC = () => {
                        <Award style={{ width: '40px', height: '40px', color: '#d97706' }} />
                     </div>
 
-                    <h1 style={{ 
+                    <h2 style={{ 
                       fontFamily: 'Georgia, serif', fontSize: '42px', fontWeight: 900, 
                       letterSpacing: '0.12em', color: '#0f172a', textTransform: 'uppercase',
                       margin: '0 auto 25px auto', textAlign: 'center', lineHeight: 1.15,
                       display: 'table', paddingBottom: '15px', borderBottom: '6px solid #d97706'
                     }}>
                       Certificate of Achievement
-                    </h1>
+                    </h2>
                     
                     <p style={{ 
                       fontSize: '14px', letterSpacing: '0.2em', color: '#64748b', 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { calculateMTBF } from "../../services/reliabilityMath";
 import 'katex/dist/katex.min.css';
-import { BlockMath } from 'react-katex';
+import { BlockMath, InlineMath } from 'react-katex';
 import { reliabilityStandards, getGroupedStandards } from "../../data/standards";
 import {
   Clock,
@@ -23,7 +23,7 @@ import ToolContentLayout from "../../components/ToolContentLayout";
 import RelatedTools from "../../components/RelatedTools";
 // Removed unused ShareResult import
 import { useRecentTools } from "../../hooks/useRecentTools";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 // Removed unused useReactToPrint import
 import { useShareableState } from "../../hooks/useShareableState";
 import ShareAndExport from "../../components/ShareAndExport";
@@ -31,6 +31,7 @@ import { useRef } from "react";
 import AnimatedContainer from "../../components/AnimatedContainer";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import TheoryBlock from "../../components/TheoryBlock";
+import { BathtubCurveDiagram, AvailabilityTimeline } from "../../components/TheoryVisuals";
 
 interface MtbfState {
   mode: "MTBF" | "MTTF";
@@ -381,78 +382,150 @@ const MtbfCalculator: React.FC = () => {
   // --- Content Strategies ---
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Mastering MTBF Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Understanding the mathematics behind failures is the foundation of reliability engineering. Here is how these metrics derive system health.</p>
-      </div>
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          Ultimate Reliability Metrics Guide: MTBF vs. MTTF
+        </h2>
+        <p>
+          In the field of modern asset management and plant maintenance, understanding failure patterns is critical to achieving high reliability. This comprehensive guide, integrated into our <strong>reliability engineering calculator</strong> platform, explores the core concepts of Mean Time Between Failures (MTBF) and Mean Time To Failure (MTTF). By utilizing this <strong>MTBF calculator free</strong> online tool, reliability engineers and maintenance supervisors can extract actionable insights from raw operational data, transitioning from reactive firefighting to predictive maintenance excellence.
+        </p>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <TheoryBlock 
-          title="Understanding MTBF vs. MTTF"
-          icon={<BookOpen className="w-5 h-5" />}
-          delay={0.1}
-        >
-          <p>
-            <strong>Mean Time Between Failures (MTBF)</strong> and <strong>Mean Time To Failure (MTTF)</strong> are the two most critical Key Performance Indicators (KPIs) in reliability engineering. They provide a data-driven baseline for predicting system availability.
-          </p>
-          <ul className="space-y-3 mt-4">
-            <li className="flex gap-3 p-3 bg-cyan-50 dark:bg-cyan-900/10 rounded-lg border border-cyan-100 dark:border-cyan-800/30">
-              <span className="font-bold text-cyan-800 dark:text-cyan-300 shrink-0">MTBF</span>
-              <span className="text-cyan-800/80 dark:text-cyan-200/70">Used for repairable assets (pumps, motors). Measures time between one breakdown and the next.</span>
-            </li>
-            <li className="flex gap-3 p-3 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-100 dark:border-purple-800/30">
-              <span className="font-bold text-purple-800 dark:text-purple-300 shrink-0">MTTF</span>
-              <span className="text-purple-800/80 dark:text-purple-200/70">Used for non-repairable, disposable items (fuses, bearings). Measures lifespan before replacement.</span>
-            </li>
-          </ul>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          What is MTBF? (Designed for Repairable Systems)
+        </h3>
+        <p>
+          Mean Time Between Failures (MTBF) is a foundational metric representing the average operational time elapsed between consecutive failures of a repairable system or asset. A system is defined as "repairable" if it can be restored to full operational capacity through maintenance actions (such as part replacement, calibration, or software patching) without replacing the entire asset. Typical examples of repairable assets include industrial pumps, gearboxes, compressor trains, manufacturing assembly robots, and software operating systems.
+        </p>
+        <p>
+          Calculating MTBF helps plant engineers assess the overall health and reliability profile of their physical assets. A declining MTBF indicates a deteriorating system that may require immediate design review, root cause analysis, or a revised preventive maintenance strategy. It is essential to recognize that MTBF applies to the "Useful Life" phase of an asset's lifecycle, where the failure rate remains relatively constant. For non-constant failure rates, such as during run-in wear or rapid aging, modeling must be performed using a dedicated <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link> to accurately determine the wear-out shape parameters.
+        </p>
 
-        <TheoryBlock 
-          title="The Mathematical Formula"
-          icon={<Calculator className="w-5 h-5" />}
-          formula="MTBF = \frac{\Sigma \text{ (Operational Time)}}{\Sigma \text{ (Number of Failures)}}"
-          delay={0.2}
-        >
-          <p>The calculation is straightforward but often misunderstood. It is specifically the ratio of total operating time to the number of failures.</p>
-          <div className="bg-slate-100 dark:bg-slate-900 rounded-lg p-4 mt-2 font-mono text-xs">
-            <strong>Example:</strong><br/>
-            • 10 pumps<br/>
-            • Running 24 hrs/day for 10 days<br/>
-            • Total Time = 2,400 hours<br/>
-            • 4 breakdowns experienced<br/>
-            • MTBF = 2,400 / 4 = 600 Hours
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          What is MTTF? (Designed for Non-Repairable Components)
+        </h3>
+        <p>
+          In contrast, Mean Time To Failure (MTTF) is a statistical metric representing the expected operational lifespan of a non-repairable component before it fails and is discarded. Because these items cannot be cost-effectively repaired, the first failure terminates their service life. Examples of non-repairable parts include microprocessors, LED light bulbs, rolling-element bearings, electrical fuses, and structural bolts.
+        </p>
+        <p>
+          MTTF represents the true average lifetime of an asset class. In practice, MTTF is calculated by testing a large batch of identical components until they all fail, summing their cumulative operating lifetimes, and dividing by the total number of tested items. When engineering systems for critical applications, selecting components with verified high MTTF scores is paramount to preventing premature catastrophic system failure.
+        </p>
+
+        <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          The Mathematics of Reliability: MTBF Formula & Uptime Calculations
+        </h2>
+        <p>
+          The basic formula for computing Mean Time Between Failures is the ratio of total operational time to the total number of failure events observed within that time frame:
+        </p>
+        <div className="my-6">
+          <BlockMath math="\text{MTBF} = \frac{\text{Total Operational Time (Hours)}}{\text{Number of Failures (F)}}" />
+        </div>
+        <p>
+          While the equation appears simple, applying it to real-world industrial systems requires careful data collection. Here is a detailed breakdown of the variables:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Total Operational Time:</strong> This is the net active operating duration of the system. It is critical to subtract scheduled downtime (such as planned preventive maintenance, safety shutdowns, or holidays) and administrative delays from the calendar time. Only the time when the equipment was energized and capable of producing output should be counted.
+          </li>
+          <li>
+            <strong>Number of Failures (F):</strong> This represents the count of unscheduled breakdown events that interrupted operations. If a failure occurs and is resolved instantly through a redundant backup system without affecting output, it must still be logged to maintain an accurate failure rate database.
+          </li>
+        </ul>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Multi-Asset Fleet Calculation Example
+        </h3>
+        <p>
+          Consider a factory operating a fleet of 10 identical centrifugal pumps. The fleet is monitored over a one-year evaluation period (8,760 hours). 
+        </p>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>
+            Initially, the gross calendar hours for the fleet would be: <InlineMath math="10 \text{ pumps} \times 8{,}760 \text{ hours/pump} = 87{,}600 \text{ pump-hours}" />.
+          </li>
+          <li>
+            However, during the year, each pump was shut down for 160 hours of planned preventive maintenance: <InlineMath math="10 \times 160 = 1{,}600 \text{ planned downtime hours}" />.
+          </li>
+          <li>
+            Furthermore, the plant logged a total of 8 unscheduled pump breakdowns during this time frame, resulting in 200 hours of cumulative repair time.
+          </li>
+          <li>
+            The net operational time for the pump fleet is: <InlineMath math="87{,}600 - 1{,}600 - 200 = 85{,}800 \text{ active running hours}" />.
+          </li>
+          <li>
+            Applying our <strong>free MTBF calculator online</strong> math: <InlineMath math="\text{MTBF} = \frac{85{,}800 \text{ hours}}{8 \text{ failures}} = 10{,}725 \text{ hours}" />.
+          </li>
+        </ol>
+        <p>
+          This indicates that, on average, any given pump in the fleet is expected to run for 10,725 operational hours before experiencing a failure.
+        </p>
+
+        <h2 id="applications" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          The Bathtub Curve and Failure Rate Profiles
+        </h2>
+        <p>
+          To apply MTBF effectively, engineers must reference the <strong>Bathtub Curve</strong>, which describes the hazard rate (failure frequency) of a product over time. The curve is divided into three distinct phases:
+        </p>
+        
+        <div className="my-8">
+          <BathtubCurveDiagram />
+        </div>
+        <div className="grid md:grid-cols-3 gap-6 my-8">
+          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">1. Infant Mortality</h4>
+            <p className="text-sm">
+              Characterized by a rapidly decreasing failure rate. Failures are caused by manufacturing defects, poor installation, or material weaknesses. To analyze infant mortality and fit life data parameters, engineers rely on a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull analysis tool</Link> with Beta (β) &lt; 1.
+            </p>
           </div>
-        </TheoryBlock>
+          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">2. Useful Life</h4>
+            <p className="text-sm">
+              The failure rate remains low and statistically constant (constant hazard rate, β = 1). Failures occur randomly due to environmental stresses or operator error. <strong>MTBF is only valid during this phase.</strong>
+            </p>
+          </div>
+          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">3. Wear-Out Phase</h4>
+            <p className="text-sm">
+              Characterized by a rapidly increasing failure rate (β &gt; 1) as components reach their mechanical limits due to friction, fatigue, or corrosion. Engineers must track this to compute the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link>.
+            </p>
+          </div>
+        </div>
 
-        <TheoryBlock 
-          title="Targeting System Availability"
-          icon={<Activity className="w-5 h-5" />}
-          formula="\text{Availability} = \frac{MTBF}{MTBF + MTTR}"
-          delay={0.3}
-        >
-          <p>
-            MTBF is the core component of the Inherent Availability formula, working directly alongside Mean Time To Repair (MTTR).
-          </p>
-          <p>
-            To increase availability, you must either increase reliability (MTBF) or decrease downtime (MTTR). World-class organizations focus intently on both to achieve 99.9% uptime.
-          </p>
-        </TheoryBlock>
+        <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Integrating MTBF, MTTR, and System Availability
+        </h2>
+        <p>
+          MTBF cannot be viewed in isolation. True plant uptime is governed by the relationship between how frequently a system breaks down (MTBF) and how fast it can be repaired (Mean Time to Repair, or MTTR). Together, these metrics define the system's <strong>Inherent Availability (Ai)</strong>:
+        </p>
+        <div className="my-6">
+          <BlockMath math="A_i = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}" />
+        </div>
+        
+        <div className="my-8">
+          <AvailabilityTimeline />
+        </div>
+        <p>
+          To calculate the exact financial cost of downtime and simulate various reliability scenarios, engineers can navigate to our specialized <Link to="/tools/availability" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Availability Calculator</Link> and <Link to="/tools/mttr" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link>.
+        </p>
+        <p>
+          By extending MTBF (e.g., through precision alignment or component upgrades) or drastically reducing MTTR (e.g., through standardized repair kits and stocking critical spares in local inventory via the <Link to="/tools/spares" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Spare Part Estimator</Link>), organizations can drive their availability toward the coveted "five-nines" (99.999% uptime) benchmark.
+        </p>
 
-        <TheoryBlock 
-          title="The Bathtub Curve Concept"
-          icon={<TrendingUp className="w-5 h-5" />}
-          formula="\lambda = \frac{1}{MTBF}"
-          delay={0.4}
-        >
-          <p>
-            It is vital to assume that MTBF applies only to the "Useful Life" phase of the Bathtub Curve, where the failure rate (&lambda;) is statistically constant.
-          </p>
-          <ul className="list-disc pl-5 mt-2 space-y-1 ml-1 marker:text-cyan-500">
-            <li><strong>Infant Mortality:</strong> High failure rate at startup.</li>
-            <li><strong>Useful Life:</strong> Constant, low failure rate (random wear).</li>
-            <li><strong>Wear Out:</strong> Rapidly increasing failure rate (aging).</li>
-          </ul>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Standards in Reliability Engineering
+        </h3>
+        <p>
+          When estimating initial failure rates before historical data is accumulated, reliability engineers utilize standardized component libraries. Primary predictive modeling methodologies include:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>MIL-HDBK-217F:</strong> The military standard for electronic reliability prediction, utilizing empirical formulas to calculate base failure rates adjusted for environment and temperature.
+          </li>
+          <li>
+            <strong>Telcordia SR-332:</strong> Widely used in the telecommunications sector, combining empirical model predictions with lab test data and field tracking.
+          </li>
+          <li>
+            <strong>NSWC (Naval Surface Warfare Center):</strong> Focuses on mechanical component predictions (valves, gearboxes, springs), taking into account fluid cleanliness, stress ratios, and material properties.
+          </li>
+        </ul>
       </div>
     </div>
   );

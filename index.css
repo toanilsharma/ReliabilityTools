@@ -47,6 +47,196 @@ body {
   color: #e2e8f0;
 }
 
+
+/* =========================================
+   THEORY SECTIONS CUSTOM STYLES
+   ========================================= */
+
+.prose {
+  max-width: 100% !important;
+}
+
+.prose h2 {
+  position: relative;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+}
+.dark .prose h2 {
+  color: #f8fafc;
+}
+
+.prose h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3.5rem;
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #0891b2, #3b82f6);
+}
+
+.prose h3 {
+  position: relative;
+  padding-left: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.dark .prose h3 {
+  color: #f1f5f9;
+}
+
+.prose h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 4px;
+  border-radius: 9999px;
+  background: #06b6d4; /* cyan-500 */
+}
+
+/* Styled Lists */
+.prose ul > li {
+  position: relative;
+  padding-left: 1.75rem;
+  list-style-type: none;
+  margin-bottom: 0.5rem;
+}
+
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0.625rem;
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background-color: #06b6d4;
+  box-shadow: 0 0 8px #06b6d4;
+}
+
+.prose ol {
+  counter-reset: custom-counter;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.prose ol > li {
+  position: relative;
+  padding-left: 2.25rem;
+  margin-bottom: 0.75rem;
+  counter-increment: custom-counter;
+}
+
+.prose ol > li::before {
+  content: counter(custom-counter);
+  position: absolute;
+  left: 0;
+  top: 0.125rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(6, 182, 212, 0.25);
+}
+
+/* Callout Box default styling */
+.prose blockquote {
+  border-left: 4px solid #06b6d4;
+  background: rgba(6, 182, 212, 0.03);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 0.75rem 0.75rem 0;
+  margin: 1.5rem 0;
+  font-style: normal;
+  color: #475569;
+}
+.dark .prose blockquote {
+  background: rgba(6, 182, 212, 0.05);
+  color: #cbd5e1;
+}
+
+/* Highlight tags */
+.prose code {
+  color: #0891b2;
+  background-color: rgba(8, 145, 178, 0.08);
+  font-weight: 600;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.875em;
+}
+.dark .prose code {
+  color: #22d3ee;
+  background-color: rgba(34, 211, 238, 0.08);
+}
+
+/* Tables style */
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.dark .prose table {
+  border-color: #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.prose th {
+  background-color: #f8fafc;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
+  color: #475569;
+}
+.dark .prose th {
+  background-color: #1e293b;
+  border-bottom-color: #334155;
+  color: #cbd5e1;
+}
+
+.prose td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+.dark .prose td {
+  border-bottom-color: #334155;
+  color: #94a3b8;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tr:hover td {
+  background-color: rgba(241, 245, 249, 0.5);
+}
+.dark .prose tr:hover td {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
 /* =========================================
    PRINT STYLESHEET (PDF Optimization)
    ========================================= */

@@ -33,6 +33,7 @@ const Glossary: React.FC = () => {
         />
       </div>
 
+      <h2 className="sr-only">Terminology List</h2>
       <div className="grid gap-4">
         {filteredTerms.length > 0 ? (
           filteredTerms.map((item, index) => (

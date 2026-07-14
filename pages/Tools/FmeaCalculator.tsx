@@ -10,6 +10,9 @@ import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
 
 
+import { Link } from 'react-router-dom';
+import { BlockMath } from 'react-katex';
+
 interface FmeaRow {
   id: string;
   item: string;
@@ -263,55 +266,110 @@ const FmeaCalculator: React.FC = () => {
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">FMEA Methodology</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Failure Modes and Effects Analysis (FMEA) is a systematic, bottom-up approach for identifying all possible failures in a design, manufacturing process, or service.</p>
-      </div>
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          Ultimate Risk Assessment Guide: FMEA and RPN Methodology
+        </h2>
+        <p>
+          In design engineering and industrial operations, predicting how a system might fail is key to avoiding catastrophic downtimes, safety hazards, and financial losses. This interactive <strong>FMEA calculator</strong> and <strong>RPN calculator online</strong> provides a structured workspace for engineers to perform Failure Modes and Effects Analysis (FMEA). By cataloging potential component failures, assigning risk indexes (Severity, Occurrence, and Detection), and computing the <strong>Risk Priority Number (RPN)</strong>, organizations can identify critical vulnerabilities and implement preventive action plans before they reach the plant floor. This tool represents a vital framework in our <strong>reliability engineering calculator</strong> repository.
+        </p>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <TheoryBlock 
-          title="Severity (S)"
-          icon={<AlertTriangle className="w-5 h-5" />}
-          delay={0.1}
-        >
-          <p>
-            An assessment of how serious the <strong>Effect</strong> of the potential failure mode is to the customer or system functionality. A score of 10 represents a perilous hazard without warning.
-          </p>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          What is Failure Modes and Effects Analysis (FMEA)?
+        </h3>
+        <p>
+          FMEA is a systematic, bottom-up analytical technique used to identify potential failure modes in a system, product, or process, evaluate their associated risks, and identify corrective actions to mitigate those risks. Originally developed in the 1940s by the US military (under MIL-P-1629) and later popularized in aerospace, automotive (via AIAG/VDA standards), and nuclear industries, FMEA has become a cornerstone of Quality Management Systems (QMS) and Design for Reliability (DfR).
+        </p>
+        <p>
+          There are two primary types of FMEA:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Design FMEA (DFMEA):</strong> Focuses on product design vulnerabilities at the subsystem or component level to prevent safety hazards, reduce warranty costs, and improve product life before manufacturing begins.
+          </li>
+          <li>
+            <strong>Process FMEA (PFMEA):</strong> Analyzes manufacturing, assembly, or service processes, focusing on equipment malfunctions, operator errors, and environmental factors that could lead to product defects.
+          </li>
+        </ul>
+        <p>
+          To systematically validate your design changes against standard checklists, you can run our <Link to="/tools/validator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Reliability Validator</Link> to ensure full engineering standard compliance.
+        </p>
 
-        <TheoryBlock 
-          title="Occurrence (O)"
-          icon={<Activity className="w-5 h-5" />}
-          delay={0.2}
-        >
-          <p>
-            The estimated likelihood that the specific <strong>Cause</strong> of the failure mode will happen. A score of 10 means the failure is absolutely inevitable.
-          </p>
-        </TheoryBlock>
+        <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          The Three Pillars of Risk: Severity, Occurrence, and Detection
+        </h2>
+        <p>
+          In a standard FMEA worksheet, every identified failure mode is scored on a scale from 1 to 10 across three distinct parameters:
+        </p>
 
-        <TheoryBlock 
-          title="Detection (D)"
-          icon={<Search className="w-5 h-5" />}
-          delay={0.3}
-        >
-          <p>
-            An assessment of the probability that the <strong>Current Controls</strong> will detect the cause or failure mode before it reaches the customer. A score of 10 means the defect will blindly pass through (no detection capability).
-          </p>
-        </TheoryBlock>
-      </div>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1. Severity (S) - Impact of the Failure
+        </h3>
+        <p>
+          Severity measures the seriousness of the effect of a failure mode. A score of 1 represents no noticeable effect, while a score of 10 represents a catastrophic event—such as a major safety violation, environmental disaster, or total system loss—occurring without warning. Because Severity is inherent to the failure's effect, it cannot be reduced unless the system is redesigned (e.g., adding an automatic safety relief valve to lower a high-pressure explosion risk).
+        </p>
 
-      <div className="mt-8">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Risk Priority Number (RPN)</h3>
-        <TheoryBlock 
-          title="The RPN Evaluation"
-          icon={<Sliders className="w-5 h-5 border-transparent" />}
-          formula="\text{RPN} = S \times O \times D"
-          delay={0.4}
-        >
-          <p>
-            The classical quantitative metric for risk prioritization. While an RPN of <code>1000</code> is the theoretical maximum, modern reliability standards (IEC 60812, AIAG-VDA) stipulate that any high Severity (e.g., S=9 or 10) necessitates immediate mitigation, <strong>regardless of the resulting overall RPN score.</strong>
-          </p>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          2. Occurrence (O) - Likelihood of the Cause
+        </h3>
+        <p>
+          Occurrence represents the likelihood that a specific cause will happen and trigger the failure mode during the asset's design life. A score of 1 represents a remote probability of occurrence (e.g., once in 10 years), while a score of 10 indicates that the failure is virtually inevitable (occurring daily). Occurrence scores are often derived from historic MTBF metrics. If you have historical breakdown records, you can calculate the exact mean runtimes using our <Link to="/mtbf-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link> to assign realistic Occurrence scores.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          3. Detection (D) - Ability to Catch the Defect
+        </h3>
+        <p>
+          Detection is an assessment of the ability of current controls to detect a cause or failure mode *before* the defect escapes to the customer or leads to system failure. Crucially, <strong>Detection is scored in reverse</strong>:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            A score of <strong>1</strong> represents almost certain detection (e.g., automatic sensor loops shut down the machine instantly when an anomaly is detected).
+          </li>
+          <li>
+            A score of <strong>10</strong> represents absolute certainty that the failure will pass undetected (flying blind with no monitoring or inspection routines in place).
+          </li>
+        </ul>
+
+        <h2 id="applications" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Calculating the Risk Priority Number (RPN)
+        </h2>
+        <p>
+          The Risk Priority Number (RPN) is the mathematical product of the three scores, yielding a value between 1 and 1000:
+        </p>
+        <div className="my-6">
+          <BlockMath math="\text{RPN} = \text{Severity (S)} \times \text{Occurrence (O)} \times \text{Detection (D)}" />
+        </div>
+        <p>
+          Historically, organizations prioritized corrective actions by setting a hard RPN threshold (e.g., "any failure mode with an RPN &gt; 150 requires immediate mitigation"). However, modern standards (like the AIAG-VDA FMEA Handbook) caution against relying solely on threshold limits. 
+        </p>
+        <p>
+          For example, a failure mode with a Severity of 10 (Critical Safety Risk), Occurrence of 2, and Detection of 4 yields an RPN of 80. Conversely, a Severity of 3 (Minor Operational Issue), Occurrence of 8, and Detection of 8 yields an RPN of 192. Relying strictly on the RPN score would lead engineers to address the minor issue first, leaving the critical safety hazard unmitigated. Therefore, modern guidelines prioritize failures based on the <strong>Severity score itself</strong>, establishing that any Severity score of 9 or 10 demands corrective action, regardless of the overall RPN.
+        </p>
+
+        <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Advanced Risk Analysis: FTA and Root Cause Tools
+        </h2>
+        <p>
+          FMEA is a bottom-up, inductive analysis (asking "what happens if this part fails?"). To perform a comprehensive risk assessment, it should be paired with top-down, deductive methodologies:
+        </p>
+        <div className="grid md:grid-cols-2 gap-6 my-8">
+          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-rose-600 dark:text-rose-400 mb-2">Fault Tree Analysis (FTA)</h4>
+            <p className="text-sm">
+              Use a top-down deductive model to identify the combination of component failures, software bugs, and human errors that could lead to a defined "Top Event" hazard. Analyze logical relationships using our interactive <Link to="/tools/fta" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fault Tree Analysis Tool</Link>.
+            </p>
+          </div>
+          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-rose-600 dark:text-rose-400 mb-2">Fishbone Diagram Generator</h4>
+            <p className="text-sm">
+              Brainstorm and map all potential causes contributing to a failure mode across the "6 Ms" (Man, Machine, Material, Method, Measurement, Mother Nature). Visualize root causality in our <Link to="/tools/fishbone" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fishbone Diagram Tool</Link>.
+            </p>
+          </div>
+        </div>
+        <p>
+          By combining FMEA worksheets with Fault Trees and Fishbone diagrams, engineering teams can build robust, redundant systems, continuously lowering occurrence probabilities and raising detection capabilities across the entire lifecycle of their assets.
+        </p>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import TheoryBlock from '../../components/TheoryBlock';
 import { BlockMath } from 'react-katex';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
+import { FaultTreeVisual } from '../../components/TheoryVisuals';
 
 
 type NodeType = 'AND' | 'OR' | 'EVENT';
@@ -202,6 +203,10 @@ const FaultTreeAnalysis: React.FC = () => {
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Fault Tree Analysis (FTA)</h2>
         <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">FTA is a top-down, deductive failure analysis where an undesired system state is investigated using Boolean logic to combine a series of lower-level component events.</p>
+      </div>
+
+      <div className="my-8 flex justify-center">
+        <FaultTreeVisual />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

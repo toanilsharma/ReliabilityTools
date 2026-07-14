@@ -30,6 +30,7 @@ const Faq: React.FC = () => {
         </p>
       </div>
 
+      <h2 className="sr-only">All FAQ Items</h2>
       <div className="space-y-6">
         {FAQS.map((faq, idx) => (
           <div key={idx} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">

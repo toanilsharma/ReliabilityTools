@@ -4,7 +4,7 @@ import { WeibullResult } from '../../types';
 import { Activity, Upload, AlertTriangle, CheckCircle2, Download, RotateCcw, Save, Loader2, BookOpen, TrendingUp, BarChart2 } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import 'katex/dist/katex.min.css';
-import { BlockMath } from 'react-katex';
+import { BlockMath, InlineMath } from 'react-katex';
 import { useTheme } from '../../context/ThemeContext';
 import Papa from 'papaparse';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -14,7 +14,8 @@ import ShareAndExport from '../../components/ShareAndExport';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
 import { useRecentTools } from '../../hooks/useRecentTools';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import { BathtubCurveDiagram } from '../../components/TheoryVisuals';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
 
 type ChartTab = 'prob' | 'rel' | 'pdf' | 'hazard' | 'contour';
@@ -626,61 +627,133 @@ const WeibullAnalysis: React.FC = () => {
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Weibull Analysis Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Weibull Analysis is the premier method for examining life data. Its primary strength lies in its profound flexibility to model various life behaviors simply by adjusting its parameters.</p>
-      </div>
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          Ultimate Life Data Analysis: The Weibull Distribution
+        </h2>
+        <p>
+          In the discipline of reliability engineering, life data analysis (commonly known as Weibull analysis) is the premier methodology for predicting component failure rates and optimizing maintenance intervals. This <strong>Weibull analysis tool</strong> provides a mathematically rigorous, interactive environment for engineering professionals to fit time-to-failure data, analyze failure modes, and visualize failure trends. By utilizing our <strong>free Weibull calculator</strong>, you can easily convert raw equipment lifetimes into actionable engineering data, establishing a foundation for predictive maintenance programs and strategic asset management.
+        </p>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <TheoryBlock 
-          title="The Shape Parameter (Beta β)"
-          icon={<TrendingUp className="w-5 h-5" />}
-          delay={0.1}
-        >
-          <p>
-            The Shape Parameter (<span className="font-serif italic font-bold">β</span>) is the slope of the line on a Weibull probability plot. It fundamentally defines the failure mode of the asset:
-          </p>
-          <ul className="list-disc pl-5 mt-3 space-y-2 text-sm dark:text-slate-300">
-            <li><strong>β &lt; 1 (Infant Mortality):</strong> The failure rate decreases over time. Often caused by manufacturing defects or installation errors.</li>
-            <li><strong>β = 1 (Random Failures):</strong> A constant failure rate. The Weibull distribution becomes identical to the Exponential distribution.</li>
-            <li><strong>β &gt; 1 (Wear-Out):</strong> The failure rate increases over time due to aging, friction, or fatigue.</li>
-          </ul>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Why Use the Weibull Distribution?
+        </h3>
+        <p>
+          The primary strength of the Weibull distribution lies in its extreme flexibility. Unlike simple distributions (like the Exponential distribution, which assumes a constant failure rate, or the Normal distribution, which assumes a symmetric wear pattern), the Weibull distribution can model multiple failure profiles by adjusting its core parameters. Whether an asset experiences infant mortality, random breakdowns, or progressive mechanical wear, the Weibull distribution fits the data accurately. 
+        </p>
+        <p>
+          Historically, this distribution was introduced by Waloddi Weibull in 1937 and popularized in 1951. Today, it is recognized globally by organizations such as IEEE, IEC, and NASA as the industry-standard model for mechanical and electrical component life prediction, working alongside tools such as the <strong>reliability engineering calculator</strong> directory.
+        </p>
 
-        <TheoryBlock 
-          title="The Scale Parameter (Eta η)"
-          icon={<BarChart2 className="w-5 h-5" />}
-          delay={0.2}
-        >
-          <p>
-            The Scale Parameter (<span className="font-serif italic font-bold">η</span>), also known as characteristic life, determines the spread of the distribution data. 
-          </p>
-          <p className="mt-2">
-            By definition, it is the time at which <strong>63.2%</strong> of the units will have failed. If <span className="font-serif italic font-bold">η</span> increases while <span className="font-serif italic font-bold">β</span> remains constant, the distribution stretches out to the right (representing a longer effective life) while its absolute peak height drops.
-          </p>
-        </TheoryBlock>
+        <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Decoding the Weibull Parameters: Beta, Eta, and Gamma
+        </h2>
+        <p>
+          The standard Weibull probability density function is governed by three primary mathematical parameters:
+        </p>
 
-        <TheoryBlock 
-          title="Probability Density Function (PDF)"
-          icon={<BookOpen className="w-5 h-5" />}
-          formula="f(T) = \frac{\beta}{\eta} \left( \frac{T}{\eta} \right)^{\beta-1} e^{-\left(\frac{T}{\eta}\right)^\beta}"
-          delay={0.3}
-        >
-          <p>
-            The PDF defines the probability that a unit will fail within an infinitesimally small interval of time. It illustrates the relative frequency of failures across the asset's lifespan.
-          </p>
-        </TheoryBlock>
+        <div className="my-8">
+          <BathtubCurveDiagram />
+        </div>
 
-        <TheoryBlock 
-          title="Cumulative Distribution Function (CDF)"
-          icon={<Activity className="w-5 h-5" />}
-          formula="F(T) = 1 - e^{-\left(\frac{T}{\eta}\right)^\beta}"
-          delay={0.4}
-        >
-          <p>
-            The CDF (Unreliability) gives the total fraction of units that will have failed by time T. Consequently, Reliability is simply <code>R(T) = 1 - F(T)</code>.
-          </p>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1. The Shape Parameter (Beta β)
+        </h3>
+        <p>
+          The shape parameter, denoted as Beta (<span className="font-serif italic font-bold">β</span>), is the slope of the fitted line on a Weibull probability plot. It is the most critical output because it directly dictates the system's <strong>failure mode</strong>:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>β &lt; 1 (Decreasing Failure Rate - Infant Mortality):</strong> Components are highly likely to fail early in their life cycle. These "burn-in" failures are usually caused by manufacturing defects, poor installation, or transport damage. 
+          </li>
+          <li>
+            <strong>β = 1 (Constant Failure Rate - Random Failures):</strong> The failure rate is independent of time. This indicates random events (such as power surges, foreign object damage, or operator errors). Under this condition, the Weibull distribution simplifies to the Exponential distribution, which is the baseline model used in our standard <Link to="/mtbf-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link> (or <strong>MTBF calculator free</strong> online tool).
+          </li>
+          <li>
+            <strong>β &gt; 1 (Increasing Failure Rate - Wear-Out Phase):</strong> The failure rate increases as time goes on. This is characteristic of assets subjected to physical degradation, fatigue, corrosion, or friction. Typical wear-out wear parameters fall between β = 1.5 and 4.0 (e.g., bearings, valves, motor brushes). In this phase, reactive maintenance becomes expensive, and engineers must calculate the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link> to swap parts before they fail.
+          </li>
+        </ul>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          2. The Scale Parameter (Eta η - Characteristic Life)
+        </h3>
+        <p>
+          The scale parameter, denoted as Eta (<span className="font-serif italic font-bold">η</span>), is also known as the <strong>characteristic life</strong>. By definition, Eta represents the exact operational time at which <strong>63.2%</strong> of the population will have failed, regardless of the Beta value. It determines the horizontal stretch of the failure probability distribution.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          3. The Location Parameter (Gamma γ - Threshold Parameter)
+        </h3>
+        <p>
+          The location parameter, denoted as Gamma (<span className="font-serif italic font-bold">γ</span>), represents a minimum guaranteed failure-free operating period. If Gamma is positive, it means zero failures can occur before time <span className="font-serif italic font-bold">γ</span>. By default, standard 2-Parameter Weibull assumes <span className="font-serif italic font-bold">γ</span> = 0. However, in our interactive tool, you can check the "3-Parameter Weibull" checkbox to let the algorithm estimate a non-zero shift in the time axis.
+        </p>
+
+        <h2 id="applications" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Weibull Probability Plotting and Parameter Estimation
+        </h2>
+        <p>
+          How do we derive these parameters from life data? The classical method is <strong>Weibull Probability Plotting</strong>, which linearizes the cumulative distribution function (CDF) so that parameters can be fitted using linear regression:
+        </p>
+        <div className="my-6">
+          <BlockMath math="\ln\left(-\ln\left(1 - F(t)\right)\right) = \beta \ln(t) - \beta \ln(\eta)" />
+        </div>
+        <p>
+          This takes the linear format of <InlineMath math="Y = mX + C" />, where:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <InlineMath math="Y = \ln(-\ln(1 - F(t)))" /> is plotted on the vertical y-axis.
+          </li>
+          <li>
+            <InlineMath math="X = \ln(t)" /> is plotted on the horizontal x-axis.
+          </li>
+          <li>
+            The slope of the regression line directly equals Beta (<span className="font-serif italic font-bold">β</span>), and the y-intercept is used to calculate Eta (<span className="font-serif italic font-bold">η</span>).
+          </li>
+        </ul>
+        <p>
+          To compile the vertical coordinates, failure data points are sorted in ascending order and assigned a cumulative probability of failure (<InlineMath math="F(t)" />) using the Bernard's Median Rank formula:
+        </p>
+        <div className="my-6">
+          <BlockMath math="F(t_i) \approx \frac{i - 0.3}{N + 0.4}" />
+        </div>
+        <p>
+          Where <InlineMath math="i" /> is the sorted rank of the failure, and <InlineMath math="N" /> is the total number of data points. For small sample sizes, computing the confidence interval of these rankings is critical to understanding uncertainty. You can calculate statistical ranges using our <Link to="/tools/confidence-interval" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Confidence Interval Calculator</Link>.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Handling Suspended Data (Right-Censored Data)
+        </h3>
+        <p>
+          In real-world settings, not all components run to failure. Some units are decommissioned or removed from service due to preventive maintenance, while others are still running when the data is collected. These non-failed units are called <strong>Suspensions</strong> (or right-censored data points). 
+        </p>
+        <p>
+          Ignoring suspensions completely introduces a major bias, making the system appear less reliable than it is. Our Weibull calculator utilizes the standard <strong>Johnson Method</strong> to adjust the failure rankings of subsequent failures, ensuring that suspensions are mathematically integrated into the final line-fitting equation. Simply append a plus sign (<code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">+</code>) or an <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">s</code> (e.g. <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">450+</code>) to denote suspensions in the calculator input box.
+        </p>
+
+        <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Reliability-Centered Maintenance Strategies Powered by Weibull Plots
+        </h2>
+        <p>
+          Weibull parameters are not just numbers; they dictate what maintenance strategy to deploy:
+        </p>
+        <div className="grid md:grid-cols-2 gap-6 my-8">
+          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">Age-Based Maintenance (β &gt; 1.5)</h4>
+            <p className="text-sm">
+              If Beta is high, components degrade predictably. Preventive replacements make sense. Calculate the optimal swap interval using our <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link> and schedule them in the <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.
+            </p>
+          </div>
+          <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+            <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">Condition-Based Monitoring (β ≈ 1.0)</h4>
+            <p className="text-sm">
+              For random failures, calendar replacements are useless. Instead, implement vibration analysis, oil analysis, or thermal imaging to catch failures. Compare costs over the lifecycle via our <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
+            </p>
+          </div>
+        </div>
+        <p>
+          By aligning maintenance tasks with Weibull analysis results, organizations can minimize unexpected breakdowns, reduce unnecessary PM activities, and maximize the operational availability of critical production assets.
+        </p>
       </div>
     </div>
   );

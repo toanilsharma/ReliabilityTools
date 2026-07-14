@@ -8,6 +8,11 @@ import RelatedTools from '../../components/RelatedTools';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
 import ShareAndExport from '../../components/ShareAndExport';
+import { AvailabilityTimeline } from '../../components/TheoryVisuals';
+import 'katex/dist/katex.min.css';
+import { BlockMath, InlineMath } from 'react-katex';
+
+import { Link } from 'react-router-dom';
 
 type AvailabilityScenario = {
   label: 'Design A' | 'Design B';
@@ -363,70 +368,111 @@ const AvailabilityCalculator: React.FC = () => {
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Availability Engineering Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Availability is the ultimate measure of system readiness. Here is how operational uptime is mathematically determined.</p>
-      </div>
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          System Availability: Uptime and Plant Readiness Metrics
+        </h2>
+        <p>
+          In industrial manufacturing, power generation, and critical web infrastructures, system uptime is the ultimate benchmark of operational success. This interactive <strong>system availability calculator</strong> is a premium tool designed to help reliability engineers, maintenance managers, and operations heads analyze and project system readiness. By inputting Mean Time Between Failures (MTBF) and Mean Time To Repair (MTTR), you can quickly evaluate your current inherent availability profile. In doing so, this tool bridges the gap between hardware engineering and corporate financial performance, acting as a crucial component of our <strong>reliability engineering calculator</strong> suite.
+        </p>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <TheoryBlock 
-          title="Inherent Availability (A_i)"
-          icon={<Cpu className="w-5 h-5" />}
-          formula="A_i = \frac{MTBF}{MTBF + MTTR}"
-          delay={0.1}
-        >
-          <p>
-            The steady-state probability that a system will operate satisfactorily, considering <em>only</em> active corrective maintenance (repair time).
-          </p>
-          <p>
-            It explicitly excludes preventive maintenance, logistical delays (waiting for parts), and administrative delays. This represents the <strong>maximum possible availability</strong> dictated solely by the engineering design.
-          </p>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Defining Availability in Engineering Terms
+        </h3>
+        <p>
+          Availability is defined as the probability that a system or piece of equipment will be in a functioning state at a given point in time when operated under specified conditions. Unlike reliability, which measures the probability that a system will operate *without interruption* over a specified interval, availability takes into account both how often a system breaks down and how fast it can be returned to service.
+        </p>
+        <p>
+          To understand failure frequencies over time before calculating availability, engineers can leverage our <strong>MTBF calculator free</strong> online tool or perform a complete data-fit using our interactive <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link> to check whether equipment is experiencing infant mortality, random breakdowns, or end-of-life wear-out patterns.
+        </p>
 
-        <TheoryBlock 
-          title="Operational Availability (A_o)"
-          icon={<Clock className="w-5 h-5" />}
-          formula="A_o = \frac{MTBM}{MTBM + MDT}"
-          delay={0.2}
-        >
-          <p>
-            While engineers design for Inherent Availability, plant managers live in the reality of Operational Availability.
-          </p>
-          <ul className="list-disc pl-5 mt-2 space-y-1 text-sm dark:text-slate-300">
-            <li>Includes pure administrative downtime (waiting for permits).</li>
-            <li>Includes logistics downtime (waiting for parts to ship).</li>
-            <li>Includes planned preventive maintenance time.</li>
-            <li>Always lower than Inherent Availability.</li>
-          </ul>
-        </TheoryBlock>
-      </div>
+        <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          The Three Dimensions of Uptime: Types of Availability
+        </h2>
+        <p>
+          In reliability literature, availability is classified into three distinct categories based on which downtime elements are included in the mathematical model:
+        </p>
 
-      <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-8">
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Levers to Improve System Availability</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <TheoryBlock 
-            title="Extend Reliability (MTBF)"
-            icon={<TrendingUp className="w-5 h-5" />}
-            delay={0.3}
-          >
-            <p>
-              Implement Condition-Based Monitoring (CbM), redesign the system for greater strength, use higher quality components, or introduce physical redundancy (e.g., parallel pumps).
-            </p>
-          </TheoryBlock>
-          
-          <TheoryBlock 
-            title="Reduce Maintainability (MTTR)"
-            icon={<Wrench className="w-5 h-5" />}
-            delay={0.4}
-          >
-            <p>
-              Implement "plug-and-play" modular designs, keep critical spares in local inventory, train maintenance technicians thoroughly, and use rapid diagnostic software.
-            </p>
-            <div className="mt-4 p-3 bg-cyan-50 dark:bg-cyan-900/10 border border-cyan-100 dark:border-cyan-800/50 rounded-lg text-xs font-medium text-cyan-800 dark:text-cyan-300">
-              <strong>Pro Tip:</strong> Mathematically, it is much cheaper and faster to reduce a 10-hour MTTR to 5 hours than it is to double a 1,000-hour MTBF to 2,000 hours. Always attack MTTR first.
-            </div>
-          </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          1. Inherent Availability (<InlineMath math="A_i" />)
+        </h3>
+        <p>
+          Inherent Availability represents the steady-state probability that an asset is operational, accounting *only* for active corrective maintenance (actual repair time). It represents the maximum design-level availability of the equipment under ideal conditions:
+        </p>
+        <div className="my-6">
+          <BlockMath math="A_i = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}" />
         </div>
+        
+        <div className="my-8">
+          <AvailabilityTimeline />
+        </div>
+        <p>
+          This calculation assumes that spare parts are immediately available, technicians are standing by, and no administrative delays exist. It is the core metric modeled by our calculator. For deep-dive repair time calculations, you can use our dedicated <Link to="/tools/mttr" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link> to analyze active repair actions.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          2. Achieved Availability (<InlineMath math="A_a" />)
+        </h3>
+        <p>
+          Achieved Availability expands on inherent availability by including planned preventive maintenance (PM) activities. It is defined as:
+        </p>
+        <div className="my-6">
+          <BlockMath math="A_a = \frac{\text{MTBM}}{\text{MTBM} + \text{MAMT}}" />
+        </div>
+        <p>
+          Where <InlineMath math="\text{MTBM}" /> is the Mean Time Between Maintenance events (both corrective and preventive), and <InlineMath math="\text{MAMT}" /> is the Mean Active Maintenance Time. Achieved availability isolates the efficiency of the maintenance schedule itself, excluding external logistics.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          3. Operational Availability (<InlineMath math="A_o" />)
+        </h3>
+        <p>
+          Operational Availability is the realistic metric experienced in day-to-day operations. It includes all forms of downtime: corrective repairs, planned preventive service, logistics delays (e.g., waiting for parts to be shipped), and administrative wait times (e.g., waiting for safety permit sign-offs). It is calculated as:
+        </p>
+        <div className="my-6">
+          <BlockMath math="A_o = \frac{\text{Operating Time} + \text{Standby Time}}{\text{Total Calendar Time}}" />
+        </div>
+        <p>
+          In many facilities, operational availability is significantly lower than inherent availability due to logistics bottlenecks. Keeping critical spares in stock or designing redundant systems is key to narrowing this gap.
+        </p>
+
+        <h2 id="applications" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          The Economic Cost of Unreliability
+        </h2>
+        <p>
+          A fraction of a percentage point in availability can translate to millions of dollars in revenue. For instance, in a continuous-process chemical plant, an availability of 95% means the plant is down for 438 hours per year. If the hourly revenue risk is $10,000, this equates to a loss of $4.38 million. Improving availability to 98% reduces downtime by 263 hours, reclaiming $2.63 million in lost revenue.
+        </p>
+        <p>
+          To justify the cost of purchasing higher-quality components or installing redundant backup systems, engineers should model the Total Cost of Ownership (TCO) using our <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
+        </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
+          Availability and Overall Equipment Effectiveness (OEE)
+        </h3>
+        <p>
+          Availability is also the first and most critical pillar of Overall Equipment Effectiveness (OEE). OEE combines Availability, Performance (operating speed vs. design capacity), and Quality (good units produced vs. total units) into a single metric representing plant efficiency. If you are calculating total manufacturing throughput, you can input your availability directly into our <Link to="/oee-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">OEE Calculator</Link> to derive your total process efficiency.
+        </p>
+
+        <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Strategies for Maximizing System Availability
+        </h2>
+        <p>
+          Reliability engineers utilize three primary levers to increase system availability:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Extend Uptime (Maximize MTBF):</strong> Use high-quality components, implement predictive monitoring to intervene before failure occurs, and design system redundancies. If you are designing parallel or standby configuration systems, you can calculate joint probabilities using our <Link to="/tools/k-out-of-n" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">K-out-of-N Redundancy Calculator</Link>.
+          </li>
+          <li>
+            <strong>Minimize Repair Time (Minimize MTTR):</strong> Ensure replacement parts are stocked locally, standard operating procedures are drafted, and modular "plug-and-play" components are installed to speed up swap-out times.
+          </li>
+          <li>
+            <strong>Eliminate Logistics Bottlenecks:</strong> Streamline administrative tasks, permit approvals, and vendor contracts.
+          </li>
+        </ul>
+        <p>
+          In almost all industrial settings, mathematically, <strong>reducing MTTR yields far higher and faster availability gains</strong> than attempting to engineer large MTBF improvements. For example, doubling a 1,000-hour MTBF to 2,000 hours (for a 10-hour repair) improves availability from 99.01% to 99.50%. However, cutting a 10-hour MTTR in half (5 hours, at 1,000-hour MTBF) yields the exact same 99.50% availability—often at a fraction of the cost of redesigning the equipment for double reliability.
+        </p>
       </div>
     </div>
   );

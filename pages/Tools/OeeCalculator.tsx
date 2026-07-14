@@ -13,6 +13,7 @@ import { useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
+import { OeeWaterfallDiagram } from '../../components/TheoryVisuals';
 
 interface OeeState {
   shiftLength: string;
@@ -324,6 +325,10 @@ const OeeCalculator: React.FC = () => {
             </ul>
           </div>
         </TheoryBlock>
+      </div>
+
+      <div className="my-8">
+        <OeeWaterfallDiagram />
       </div>
     </div>
   );

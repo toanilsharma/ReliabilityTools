@@ -5,11 +5,12 @@ import { Package, ShoppingCart, TrendingUp, Archive, Settings, Info } from 'luci
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
-import { BlockMath } from 'react-katex';
+import { BlockMath, InlineMath } from 'react-katex';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
+import { EoqInventorySawtooth } from '../../components/TheoryVisuals';
 
 
 const EoqCalculator: React.FC = () => {
@@ -208,9 +209,13 @@ const EoqCalculator: React.FC = () => {
           delay={0.2}
         >
           <p>
-            Where <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">D</span> = Annual Demand, <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">O</span> = Ordering Cost, and <span className="font-mono bg-slate-100 dark:bg-slate-900 px-1 rounded">H</span> = Holding Cost. This differential calculation definitively proves the lowest point on the Total Cost curve.
+            Where <InlineMath math="D" /> = Annual Demand, <InlineMath math="O" /> = Ordering Cost, and <InlineMath math="H" /> = Holding Cost. This differential calculation definitively proves the lowest point on the Total Cost curve.
           </p>
         </TheoryBlock>
+      </div>
+
+      <div className="my-8">
+        <EoqInventorySawtooth />
       </div>
     </div>
   );

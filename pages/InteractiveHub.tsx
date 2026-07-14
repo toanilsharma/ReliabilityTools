@@ -127,6 +127,7 @@ const InteractiveHub: React.FC = () => {
       </div>
 
       {/* Main Items Listing */}
+      <h2 className="sr-only">Interactive Simulators and Safety Games</h2>
       <div className="space-y-8">
         {filteredItems.map((item) => {
           // Color-coded button classes based on type (Amber/Yellow for safety game, Cyan for simulator)

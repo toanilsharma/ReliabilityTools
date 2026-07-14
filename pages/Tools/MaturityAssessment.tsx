@@ -6,8 +6,8 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
-
 import { BlockMath } from 'react-katex';
+import { MaturityStepLadder } from '../../components/TheoryVisuals';
 
 interface Question {
   id: number;
@@ -230,6 +230,10 @@ const MaturityAssessment: React.FC = () => {
             <BlockMath math={"M_{index} = \\frac{\\sum_{i=1}^{n} S_i}{\\sum_{i=1}^{n} Max(S_i)}"} />
           </div>
         </TheoryBlock>
+      </div>
+
+      <div className="my-8">
+        <MaturityStepLadder />
       </div>
     </div>
   );
