@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Network, Plus, Trash2, ArrowRightCircle, Target, GitMerge, Settings } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -304,7 +305,7 @@ const MarkovChainTool: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Markov Chain Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">A Continuous-Time Markov Chain (CTMC) is a stochastic model used to analyze the dynamic reliability and availability of highly complex, repairable systems over time.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">A Continuous-Time Markov Chain (CTMC) is a stochastic model. For simpler, non-repairable system structures, evaluate options using a <Link to="/tools/rbd" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD)</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -332,13 +333,26 @@ const MarkovChainTool: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "When should I use a Markov model instead of an RBD?",
+        "answer": "Use Markov models when system states are dependent, or when there are complex transition loops, standby redundancies with repair dependencies, or degradation phases that standard Reliability Block Diagrams (RBD) cannot model."
+    },
+    {
+        "question": "What is the steady-state probability?",
+        "answer": "It represents the long-term fraction of time the system spends in each defined state (such as fully operational, degraded, or failed) as time approaches infinity."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Markov Chain Modeler"
       description="Model highly complex repairable system states and calculate steady-state availability using continuous-time rate matrices."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="Markov chain modeler, state transition diagram, reliability Markov model, steady state probability, Markov availability, transition matrix calculator, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/markov"
       schema={{ "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Markov Modeler", "applicationCategory": "BusinessApplication" }}
     />
   );

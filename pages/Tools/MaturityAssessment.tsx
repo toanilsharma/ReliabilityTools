@@ -238,6 +238,17 @@ const MaturityAssessment: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is the goal of a reliability maturity assessment?",
+        "answer": "It benchmarks an organization's current maintenance and reliability processes against industry best practices to outline a progressive step-ladder roadmap for improvement."
+    },
+    {
+        "question": "What are the key categories evaluated?",
+        "answer": "Assessments typically look at Strategy, Data Quality & Governance, Advanced Analysis, Execution Capability, and Cultural Alignment."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Reliability Maturity Assessment"
@@ -249,7 +260,7 @@ const MaturityAssessment: React.FC = () => {
           <RelatedTools currentToolId="assessment" />
         </>
       }
-      faqs={[]}
+      faqs={faqs}
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Maturity Assessment', applicationCategory: 'BusinessApplication' }}
     />
   );

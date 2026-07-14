@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PMTask } from '../../types';
 import { Calendar, Plus, Trash2, Download, FileText, BookOpen, Target, TrendingUp, Sliders, CheckSquare, Clock, AlertTriangle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -221,7 +222,7 @@ const PmScheduler: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Preventive Maintenance Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Preventive Maintenance (PM) is a proactive calendar or usage-based strategy engineered to service assets just before their probability of failure spikes.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Preventive Maintenance (PM) is a proactive strategy. Optimize PM intervals based on component wear characteristics using the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -273,6 +274,8 @@ const PmScheduler: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="preventive maintenance scheduler, PM calendar planner, PM interval calculator, maintenance scheduling tool, PM task optimization, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/pm"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

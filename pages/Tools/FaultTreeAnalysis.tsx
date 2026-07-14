@@ -235,13 +235,24 @@ const FaultTreeAnalysis: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is a Top Event in Fault Tree Analysis?",
+        "answer": "A Top Event is the primary hazard or undesired failure state under analysis (e.g., 'Brake System Failure'). The tree maps downward to trace all underlying causes."
+    },
+    {
+        "question": "What is the difference between an AND gate and an OR gate?",
+        "answer": "An AND gate requires all inputs to fail for the output to occur. An OR gate triggers the output if any single input fails."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Visual Fault Tree Analysis (FTA)"
       description="Calculate the combined probability of complex top events using interactive Boolean logic gates (AND/OR)."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
       schema={{ "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "FTA Calculator", "applicationCategory": "BusinessApplication" }}
     />
   );

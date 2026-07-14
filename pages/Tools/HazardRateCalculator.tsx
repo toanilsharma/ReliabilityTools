@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import { Activity, Zap, TrendingDown, TrendingUp, MinusCircle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -166,13 +167,26 @@ const HazardRateCalculator: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is a hazard rate?",
+        "answer": "Also known as the conditional failure rate, it is the instantaneous rate of failure at time <em>t</em>. This is related to the hazard profiles in the standard <a href=\"#/mtbf-calculator\" class=\"text-cyan-600 dark:text-cyan-400 font-bold hover:underline\">Bathtub Curve model</a>, given that the component has survived up to time <em>t</em>."
+    },
+    {
+        "question": "How is it different from the failure rate?",
+        "answer": "While the average failure rate measures failures over a calendar window, the hazard rate changes dynamically with component age (e.g., rising as wear-out occurs)."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Hazard Rate Calculator"
       description="Visualize instantaneous failure rate h(t) using Weibull parameters with high-performance ECharts rendering."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="hazard rate calculator, failure rate lambda, conditional failure probability, constant hazard rate, hazard rate formula, reliability rate, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/hazard-rate"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Hazard Rate Calculator', applicationCategory: 'UtilitiesApplication' }}
     />
   );

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateTestTimeForMTBF, calculateSuccessRunSampleSize } from '../../services/reliabilityMath';
 import { Microscope, Clock, Users, BookOpen, Target, TrendingUp, Printer } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -233,7 +234,7 @@ const TestPlanner: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Success Run Theorem</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Physical reliability testing burns immense capital and time. The Success Run (Zero-Failure) qualification allows you to statistically bypass infinitely long test phases by front-loading highly parallel testing with zero failure tolerance.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Physical reliability testing burns immense capital and time. For testing uncertainty boundaries after running tests, use our <Link to="/tools/confidence-interval" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Confidence Interval Calculator</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -278,6 +279,8 @@ const TestPlanner: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="reliability test planner, ALT test planner, accelerated life testing, sample size calculator reliability, test duration calculator, success run testing, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/test-planner"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle, AlertCircle, ArrowRight, Clock, Shield, AlertTriangle, Settings, Info, BarChart2, RotateCcw } from 'lucide-react';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
@@ -275,7 +276,7 @@ const LccCalculator: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Total Cost of Ownership (TCO) Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Life Cycle Costing (LCC) is a rigorous economic analysis used to select the most cost-effective alternative over an asset's entire life span.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Life Cycle Costing (LCC) is a rigorous economic analysis. To balance these lifetime costs against specific system design configurations, evaluate options using a <Link to="/tools/rbd" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD)</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -341,6 +342,8 @@ const LccCalculator: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="life cycle cost calculator, LCC analysis tool, NPV capex opex, asset total cost of ownership, net present value maintenance, LCC formula, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/lcc"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

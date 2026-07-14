@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Droplets, Thermometer, Filter, ShieldCheck, Activity } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
@@ -298,7 +299,7 @@ const LubricantLifeOptimizer: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Lubricant Life Optimization</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Predict remaining useful life (RUL) of industrial oils and assess the financial ROI of implementing better filtration, dehydration, and cooling systems.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Predict remaining useful life (RUL) of industrial oils. For total lifetime cost calculations including lubrication cycles, utilize the <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -332,6 +333,8 @@ const LubricantLifeOptimizer: React.FC = () => {
           answer: "It represents the number of particles >4μm, >6μm, and >14μm per mL of oil on a logarithmic scale. A drop of 1 in the ISO code represents halving the amount of particulate contamination in the system."
         }
       ]}
+      keywords="lubricant life optimizer, grease oil life calculator, Arrhenius rate 10 degree, oil contamination factor, ISO 4406 lubricant, bearing grease life, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/lubricant-life"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

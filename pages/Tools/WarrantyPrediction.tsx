@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { ShieldAlert } from 'lucide-react';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
@@ -183,12 +184,23 @@ const WarrantyPrediction: React.FC = () => {
           delay={0.1}
         >
           <p>
-            Unlike naive forecasting, this model superimposes the Cumulative Distribution Function (CDF) of the Weibull curve across staggering months of sales. It isolates exactly how many units from Month 1's sales will fail in Month 6, and aggregates the total liability.
+            Unlike naive forecasting, this model superimposes the Cumulative Distribution Function (CDF) of the Weibull curve across staggering months of sales. To estimate these shape parameters first, use our <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link> to fit historical data.
           </p>
         </TheoryBlock>
       </div>
     </div>
   );
+
+  const faqs = [
+    {
+        "question": "What is the purpose of warranty prediction modeling?",
+        "answer": "It forecasts future product failures and return rates over the warranty period based on product reliability parameters, helping companies set financial reserves and warranty terms."
+    },
+    {
+        "question": "Which distribution is best for warranty forecasting?",
+        "answer": "The Weibull distribution is widely preferred as it accommodates infant mortality, constant random failures, and wear-out failure characteristics."
+    }
+];
 
   return (
     <ToolContentLayout
@@ -196,7 +208,9 @@ const WarrantyPrediction: React.FC = () => {
       description="Estimate future warranty liabilities and return volumes with industrial-scale chart rendering."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="warranty prediction model, warranty cost estimator, Weibull warranty calculator, product return forecasting, claims projection calculator, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/warranty"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Warranty Forecaster', applicationCategory: 'BusinessApplication' }}
     />
   );

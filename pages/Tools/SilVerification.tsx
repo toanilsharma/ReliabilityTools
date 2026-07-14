@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateSIL } from '../../services/reliabilityMath';
 import { ShieldAlert, Activity, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -301,7 +302,7 @@ const SilVerification: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">SIL Verification Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Verify Safety Integrity Levels by mapping system architectures to Probability of Failure on Demand (PFD) averages in low-demand usage.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Verify Safety Integrity Levels by mapping system architectures to PFD averages. For standard multi-channel voting systems, verify redundancy margins via the <Link to="/tools/k-out-of-n" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">K-out-of-N Calculator</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -346,6 +347,8 @@ const SilVerification: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="SIL verification calculator, safety integrity level, PFDavg calculator, IEC 61508, safety instrumented system, SIL 1 SIL 2 SIL 3 SIL 4, voting logic PFD, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/sil"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

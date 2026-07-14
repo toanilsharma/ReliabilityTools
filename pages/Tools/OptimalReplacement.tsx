@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateOptimalReplacementAge } from '../../services/reliabilityMath';
 import ReactECharts from 'echarts-for-react';
 import { RefreshCcw, AlertTriangle, Settings, Clock } from 'lucide-react';
@@ -179,7 +180,7 @@ const OptimalReplacement: React.FC = () => {
           delay={0.1}
         >
           <p>
-            The optimization engine finds the minimum point of the cost rate function where the mathematical derivative equals zero. This requires the Weibull shape and scale parameters to predict wear-out.
+            The optimization engine finds the minimum point of the cost rate function where the mathematical derivative equals zero. This requires the Weibull shape and scale parameters to predict wear-out, which you can calculate using our <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link>.
           </p>
         </TheoryBlock>
 
@@ -197,13 +198,26 @@ const OptimalReplacement: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is the difference between individual and group replacement policies?",
+        "answer": "An individual policy replaces components only when they fail or reach a specific age. A group policy replaces all components in a block at a fixed interval, regardless of individual failure times, which is more cost-effective when group changeouts reduce labor overhead."
+    },
+    {
+        "question": "How does Weibull Beta influence replacement age?",
+        "answer": "If Beta <= 1, the failure rate is constant or decreasing (infant mortality/random), meaning preventive replacement is not economically viable. Preventive replacement is only beneficial when Beta > 1 (wear-out phase)."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Optimal Replacement Age Calculator"
       description="Determine the preventive maintenance interval that minimizes total operating cost."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="optimal replacement age, group replacement policy, block replacement, Weibull replacement age, wear out replacement, maintenance replacement interval, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/optimal-replacement"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Optimal Replacement Age Calculator', applicationCategory: 'BusinessApplication' }}
     />
   );

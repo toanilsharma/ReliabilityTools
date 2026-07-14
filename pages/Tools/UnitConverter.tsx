@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ArrowRightLeft, Thermometer, Clock, Gauge, Zap, Activity, Droplets, RotateCw, Ruler, Waves, Weight, Beaker, Hammer
 } from 'lucide-react';
@@ -373,7 +374,7 @@ const UnitConverter: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Engineering Standardization</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Ensure uniformity across global reliability engineering databases by converting disparate OEM operating metrics into single standard units prior to Weibull analysis or PM scheduling.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Ensure uniformity across global reliability engineering databases. Convert disparate OEM operating metrics into standard units prior to performing a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis</Link> or scheduling routines in the <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.</p>
       </div>
       <div className="grid md:grid-cols-2 gap-6">
          <TheoryBlock 
@@ -389,13 +390,26 @@ const UnitConverter: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is a FIT (Failure in Time)?",
+        "answer": "A FIT is a unit of failure rate equivalent to 1 failure per 10^9 (one billion) operational hours. It is widely used in semiconductor and electronics reliability analysis."
+    },
+    {
+        "question": "How do I convert FITs to Failures Per Million Hours (FPMH)?",
+        "answer": "Since FPMH represents failures per 10^6 hours, 1 FPMH = 1,000 FITs. Simply divide the FIT value by 1,000 to get FPMH."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Engineering Unit Converter"
       description="Essential conversions for reliability engineering. Quickly convert between Time, Vibration, Pressure, Temperature, Flow, and Power units."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="engineering unit converter, failure rate converter, FITs to FPMH, MTBF to failure rate, reliability unit conversions, engineering converter, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/converter"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
@@ -218,7 +219,7 @@ const ReliabilityGrowth: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Crow-AMSAA Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Crow-AMSAA model tracks the effectiveness of TAAF (Test-Analyze-And-Fix) programs by plotting cumulative failures against cumulative test time.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Crow-AMSAA model tracks the effectiveness of TAAF (Test-Analyze-And-Fix) programs. For static system reliability block diagram analysis, use our <Link to="/tools/rbd" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD) Tool</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -259,13 +260,26 @@ const ReliabilityGrowth: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is the Crow-AMSAA model?",
+        "answer": "Also known as the Duane model extension, it tracks changes in failure intensity over time during product development or operation to verify if reliability-improving design changes are succeeding."
+    },
+    {
+        "question": "What does the growth parameter Beta signify?",
+        "answer": "A growth Beta of less than 1.0 indicates positive reliability growth (failures are occurring less frequently over cumulative test time). Beta > 1.0 indicates reliability degradation."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Reliability Growth Tracker"
       description="Monitor TAAF (Test-Analyze-And-Fix) programs with industrial-grade Crow-AMSAA trend analysis and anomaly detection."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="reliability growth tracking, Duane model, Crow-AMSAA calculator, reliability growth curve, Duane parameter estimation, failure rate progression, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/growth"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Reliability Growth Model', applicationCategory: 'BusinessApplication' }}
     />
   );

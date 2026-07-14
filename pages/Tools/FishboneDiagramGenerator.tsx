@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { GitBranch, Plus, X, Download, HelpCircle, ZoomIn } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import ToolContentLayout from '../../components/ToolContentLayout';
@@ -162,7 +163,7 @@ const FishboneDiagramGenerator: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Visualizing Root Causality</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Ishikawa (Fishbone) diagram is the premier tool for brainstorming failure modes. It forces a 360-degree view of an event, preventing the "tunnel vision" that often plagues initial RCA sessions.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Ishikawa (Fishbone) diagram is the premier tool for brainstorming failure modes. These identified causes can be scored and mitigated in a complete <Link to="/fmea-tool" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Failure Modes and Effects Analysis (FMEA)</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -212,7 +213,9 @@ const FishboneDiagramGenerator: React.FC = () => {
             toolComponent={ToolComponent}
             content={Content}
             faqs={faqs}
-            schema={{
+            keywords="fishbone diagram generator, ishikawa diagram, cause and effect diagram, root cause analysis, 6Ms diagram tool, free RCA tool online, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/fishbone"
+      schema={{
                 "@context": "https://schema.org",
                 "@type": "SoftwareApplication",
                 "name": "Fishbone Diagram Generator",

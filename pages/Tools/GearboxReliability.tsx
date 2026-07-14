@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Settings, Activity, AlertTriangle, CheckCircle2, Info } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
@@ -316,7 +317,7 @@ const GearboxReliability: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">ANSI/AGMA Gear Reliability</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Evaluate the statistical probability of gear failure based on contact stress (pitting) and bending strength using the fundamental AGMA 2001-D04 standards.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Evaluate the statistical probability of gear failure based on contact stress (pitting) and bending strength. To schedule preventive maintenance checkouts based on these limits, use our <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -350,6 +351,8 @@ const GearboxReliability: React.FC = () => {
           answer: "AGMA material fatigue testing data establishes the baseline allowable stress curves at a 1% failure rate (99% reliability). For critical equipment, engineers increase the KR factor to 1.25 or 1.50 to reduce this failure probability."
         }
       ]}
+      keywords="gearbox reliability, AGMA safety factor, gear contact stress, gear bending stress, gearbox design life, AGMA 2001-D04, gear reliability factor, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/gearbox"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

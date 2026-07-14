@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Target, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
@@ -174,7 +175,7 @@ const CostRiskOptimization: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">The U-Shaped Cost Curve</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Age-based replacement logic creates a fundamental financial trade-off. This model identifies the exact interval that balances planned costs against the risk of catastrophic unplanned downtime.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Age-based replacement logic creates a fundamental financial trade-off. This model identifies the exact interval that balances planned costs against the risk of catastrophic unplanned downtime. For estimating wear-out parameters before optimizing costs, run a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -206,17 +207,29 @@ const CostRiskOptimization: React.FC = () => {
     </div>
   );
 
+  const faqs = [
+    {
+        "question": "What is the Cost-Risk Optimization Curve?",
+        "answer": "It is a mathematical curve that represents the total expected maintenance cost per unit time by balancing low-cost planned preventive maintenance (PM) against high-cost unplanned corrective maintenance (CM)."
+    },
+    {
+        "question": "Why does the curve have a U-shape?",
+        "answer": "If the PM interval is too short, planned costs are very high. If the PM interval is too long, the probability of failure increases, making corrective costs high. The sweet spot is the minimum point of the U-shape."
+    }
+];
+
   return (
     <ToolContentLayout
       title="Cost-Risk Optimization Curve"
       description="Find the financial sweet spot for preventative maintenance intervals using age replacement modeling."
       toolComponent={ToolComponent}
       content={Content}
-      faqs={[]}
+      faqs={faqs}
+      keywords="cost risk optimization, maintenance cost optimization, optimal PM interval, PM cost vs CM cost, cost risk balance, maintenance cost calculator, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/cost-risk"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Cost Risk Optimizer', applicationCategory: 'BusinessApplication' }}
     />
   );
 };
 
 export default CostRiskOptimization;
-

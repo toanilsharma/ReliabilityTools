@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateMTTR } from '../../services/reliabilityMath';
 import { Wrench, Clock, AlertCircle, Copy, Check, BookOpen, Target, TrendingUp, BarChart, Search, CheckCircle } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -169,7 +170,7 @@ const MttrCalculator: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">MTTR Engineering Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Mean Time To Repair (MTTR) is the master metric for maintenance efficiency. Where MTBF measures reliability, MTTR dictates maintainability.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Mean Time To Repair (MTTR) is the master metric for maintenance efficiency. Combined with mean runtimes from our <Link to="/mtbf-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link>, engineers can compute total availability.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -249,6 +250,8 @@ const MttrCalculator: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="MTTR calculator, mean time to repair, repair time calculator, maintenance repair timeline, MTTR formula, active maintenance time, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/mttr"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateSpareParts } from '../../services/reliabilityMath';
 import { SERVICE_LEVELS } from '../../constants';
 import { Package, ShoppingCart, Info, BookOpen, Target, TrendingUp, AlertTriangle } from 'lucide-react';
@@ -228,7 +229,7 @@ const SparePartEstimator: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Statistical Inventory Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Carrying arbitrary inventory costs approximately 20-25% of the capital value per year. Conversely, a stock-out of a critical spare costs orders of magnitude more in raw downtime.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Carrying arbitrary inventory costs approximately 20-25% of the capital value per year. Optimal stocking levels directly influence logistics delays, which are factored into operational availability calculations in our <Link to="/tools/availability" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Availability Calculator</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -285,6 +286,8 @@ const SparePartEstimator: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="spare part estimator, spare parts forecasting, Poisson spares calculator, inventory service level, critical spares calculator, maintenance inventory, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/spares"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

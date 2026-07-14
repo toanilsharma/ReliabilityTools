@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Target, BarChart2, AlertTriangle, Calculator } from 'lucide-react';
 import { calculateMTBFConfidence } from '../../services/reliabilityMath';
 import HelpTooltip from '../../components/HelpTooltip';
@@ -268,7 +269,7 @@ const ConfidenceInterval: React.FC = () => {
     },
     {
       question: "Can I use this for zero failures?",
-      answer: "Technically yes (using a Lower Confidence Limit calculation), but this tool is optimized for >= 1 failure. For zero failure planning, use the 'Test Planner' tool."
+      answer: "Technically yes (using a Lower Confidence Limit calculation), but this tool is optimized for &gt;= 1 failure. For zero failure planning, use the <a href=\"#/tools/test-planner\" class=\"text-cyan-600 dark:text-cyan-400 font-bold hover:underline\">Reliability Test Planner</a>."
     }
   ];
 
@@ -279,6 +280,8 @@ const ConfidenceInterval: React.FC = () => {
       toolComponent={ToolComponent}
       content={Content}
       faqs={faqs}
+      keywords="MTBF confidence interval, confidence bounds, chi-square reliability, MTBF interval calculator, reliability confidence bounds, error margins MTBF, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/confidence-interval"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

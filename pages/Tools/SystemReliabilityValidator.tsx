@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CheckSquare, Shield, AlertTriangle, FileText, ClipboardCheck, ThumbsUp, Scale, ZapOff } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
@@ -142,7 +143,7 @@ const SystemReliabilityValidator: React.FC = () => {
         <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
             <div className="text-center mb-10">
                 <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Design for Reliability (DfR)</h2>
-                <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">System Reliability Validation is not just testing; it's a proactive engineering process of ensuring that reliability is engineered into the product from Day 1.</p>
+                <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">System Reliability Validation is a proactive design process. Any design deficiencies or failure modes uncovered here should be logged in a <Link to="/fmea-tool" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Failure Modes and Effects Analysis (FMEA)</Link> worksheet.</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -193,7 +194,9 @@ const SystemReliabilityValidator: React.FC = () => {
             toolComponent={ToolComponent}
             content={Content}
             faqs={faqs}
-            schema={{
+            keywords="system reliability validator, engineering compliance checklist, reliability audit tool, validation check tool, design compliance verification, reliability engineering calculator"
+      canonicalUrl="https://reliabilitytools.co.in/#/tools/validator"
+      schema={{
                 "@context": "https://schema.org",
                 "@type": "SoftwareApplication",
                 "name": "System Reliability Validator",
