@@ -356,7 +356,7 @@ const SilVerification: React.FC = () => {
           Understanding <span className="text-cyan-600 dark:text-cyan-400">Safety Integrity Level (SIL)</span> Verification
         </h2>
         <p>
-          In high-risk process industries like chemical reactors, refineries, and nuclear plants, maintaining functional safety systems is paramount to preventing catastrophic accidents. The <span className="font-extrabold text-cyan-600 dark:text-cyan-400">SIL Verification Calculator</span> evaluates the performance of Safety Instrumented Functions (SIFs) by calculating their <strong>Average Probability of Failure on Demand (PFDavg)</strong> and **Risk Reduction Factor (RRF)**. By determining safety performance under low-demand operation, this tool translates hardware architectures and failure rates directly into quantified safety compliance indexes.
+          In high-risk process industries like chemical reactors, refineries, and nuclear plants, maintaining functional safety systems is paramount to preventing catastrophic accidents. The <span className="font-extrabold text-cyan-600 dark:text-cyan-400">SIL Verification Calculator</span> evaluates the performance of Safety Instrumented Functions (SIFs) by calculating their <strong>Average Probability of Failure on Demand (PFDavg)</strong> and <strong>Risk Reduction Factor (RRF)</strong>. By determining safety performance under low-demand operation, this tool translates hardware architectures and failure rates directly into quantified safety compliance indexes.
         </p>
       </div>
 
@@ -423,14 +423,14 @@ const SilVerification: React.FC = () => {
             <BlockMath math="RRF = \frac{1}{PFD_{avg}} = \frac{1}{1.105 \times 10^{-4}} \approx 9{,}050" />
             Consulting the IEC standard low-demand demand table:
             <br />
-            &nbsp;&nbsp;• A PFDavg between <InlineMath math="10^{-4}" /> and <InlineMath math="10^{-3}" /> corresponds to **SIL 3**.
+            &nbsp;&nbsp;• A PFDavg between <InlineMath math="10^{-4}" /> and <InlineMath math="10^{-3}" /> corresponds to <strong>SIL 3</strong>.
           </p>
         </div>
 
         <div className="p-4 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-xl">
           <span className="font-bold text-slate-800 dark:text-slate-100">💡 Engineering Takeaway:</span>
           <p className="mt-1 text-slate-650 dark:text-slate-400">
-            "By choosing a 2oo3 transmitter configuration with a 1-year test cycle, this Safety Instrumented Function achieves a certified **SIL 3** rating, reducing column overpressure hazards by a factor of **9,050**."
+            "By choosing a 2oo3 transmitter configuration with a 1-year test cycle, this Safety Instrumented Function achieves a certified <strong>SIL 3</strong> rating, reducing column overpressure hazards by a factor of <strong>9,050</strong>."
           </p>
         </div>
       </div>

@@ -279,7 +279,7 @@ const ConfidenceInterval: React.FC = () => {
           delay={0.1}
         >
           <p className="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-            Use this when the reliability test is stopped at a **predetermined time** <InlineMath math="T" />, regardless of how many failures have occurred.
+            Use this when the reliability test is stopped at a <strong>predetermined time</strong> <InlineMath math="T" />, regardless of how many failures have occurred.
           </p>
           <div className="space-y-4">
             <div className="bg-white dark:bg-slate-950 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
@@ -299,7 +299,7 @@ const ConfidenceInterval: React.FC = () => {
           delay={0.2}
         >
           <p className="text-xs text-slate-650 dark:text-slate-400 mb-4 leading-relaxed">
-            Use this when the test runs until a **predetermined number of failures** <InlineMath math="r" /> is reached, and then the test is stopped.
+            Use this when the test runs until a <strong>predetermined number of failures</strong> <InlineMath math="r" /> is reached, and then the test is stopped.
           </p>
           <div className="space-y-4">
             <div className="bg-white dark:bg-slate-950 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-center">

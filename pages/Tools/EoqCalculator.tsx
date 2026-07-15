@@ -303,7 +303,7 @@ const EoqCalculator: React.FC = () => {
         <div className="p-4 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-xl">
           <span className="font-bold text-slate-800 dark:text-slate-100">💡 Supply Chain Conclusion:</span>
           <p className="mt-1 text-slate-655 dark:text-slate-400">
-            "Instead of placing 12 monthly orders of 100 units (costing $1,125/yr total) or placing a single huge order of 1,200 units (costing $2,775/yr total), ordering **200 units every 2 months** yields the lowest possible overall cost of **$900**."
+            "Instead of placing 12 monthly orders of 100 units (costing $1,125/yr total) or placing a single huge order of 1,200 units (costing $2,775/yr total), ordering <strong>200 units every 2 months</strong> yields the lowest possible overall cost of <strong>$900</strong>."
           </p>
         </div>
       </div>
