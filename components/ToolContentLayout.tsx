@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp, Share2 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import ContextGlossaryPanel from './ContextGlossaryPanel';
 
 interface FAQItem {
@@ -167,9 +167,9 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                         <div className="bg-gradient-to-br from-cyan-900 to-slate-900 rounded-xl p-6 text-white shadow-lg">
                             <h3 className="font-bold text-lg mb-2">Need Help?</h3>
                             <p className="text-cyan-100 text-sm mb-4">Get professional reliability consulting for your facility.</p>
-                            <a href="/contact" className="block w-full bg-white text-cyan-900 text-center font-bold py-2 rounded-lg hover:bg-cyan-50 transition-colors">
+                            <Link to="/contact" className="block w-full bg-white text-cyan-900 text-center font-bold py-2 rounded-lg hover:bg-cyan-50 transition-colors">
                                 Contact Us
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
