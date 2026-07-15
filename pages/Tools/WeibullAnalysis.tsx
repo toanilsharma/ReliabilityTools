@@ -399,64 +399,75 @@ const WeibullAnalysis: React.FC = () => {
         </div>
 
         {activeModel && (
-          <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 space-y-4">
-            <div className={`grid ${activeModel.t0 ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
-              <div className="p-3 bg-white dark:bg-slate-800 rounded-lg text-center shadow-sm">
-                <div className="text-sm text-slate-500 dark:text-slate-400">Beta (&beta;)</div>
-                <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">{activeModel.beta.toFixed(3)}</div>
-              </div>
-              <div className="p-3 bg-white dark:bg-slate-800 rounded-lg text-center shadow-sm">
-                <div className="text-sm text-slate-500 dark:text-slate-400">Eta (&eta;)</div>
-                <div className="text-xl font-bold text-slate-900 dark:text-slate-200">{activeModel.eta.toFixed(1)}</div>
-              </div>
-              {activeModel.t0 ? (
-                <div className="p-3 bg-white dark:bg-slate-800 rounded-lg text-center shadow-sm">
-                  <div className="text-sm text-slate-500 dark:text-slate-400">t_0 (Guar.)</div>
-                  <div className="text-xl font-bold text-teal-600 dark:text-teal-400">{activeModel.t0.toFixed(1)}</div>
+          <div className="relative group">
+            {/* Glowing blur background halo */}
+            <div className="absolute -inset-0.5 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-700 bg-gradient-to-r from-cyan-500 to-indigo-500 animate-pulse"></div>
+            
+            <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+              <div className={`grid ${activeModel.t0 ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
+                  <div className="text-xs font-bold text-slate-500 dark:text-slate-400">Beta (Shape &beta;)</div>
+                  <div className="text-3xl font-black text-cyan-600 dark:text-cyan-400 mt-1">{activeModel.beta.toFixed(3)}</div>
                 </div>
-              ) : null}
-            </div>
-
-            <div className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-lg border-l-4 border-cyan-500 shadow-sm">
-              {getBetaInterpretation(activeModel.beta).icon}
-              <div>
-                <div className="text-sm font-bold text-slate-900 dark:text-white">{getBetaInterpretation(activeModel.beta).title}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">{getBetaInterpretation(activeModel.beta).description}</div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
+                  <div className="text-xs font-bold text-slate-500 dark:text-slate-400">Eta (Scale &eta;)</div>
+                  <div className="text-2xl font-black text-slate-900 dark:text-slate-200 mt-1">{activeModel.eta.toFixed(1)}</div>
+                </div>
+                {activeModel.t0 ? (
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div className="text-xs font-bold text-slate-500 dark:text-slate-400">t_0 (Guar.)</div>
+                    <div className="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1">{activeModel.t0.toFixed(1)}</div>
+                  </div>
+                ) : null}
               </div>
-            </div>
 
-            <div className="text-xs text-slate-400 text-center">R2 Fit: {activeModel.rSquared.toFixed(3)} | B10 Life: {activeModel.b10.toFixed(1)}</div>
-            {outliers.length > 0 && <div className="text-xs text-amber-600 dark:text-amber-400 text-center">Outliers detected: {outliers.length} points beyond 2-sigma residual</div>}
-
-            <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 mt-2 overflow-x-auto">
-              <h4 className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
-                <RotateCcw className="w-3 h-3" /> Live Equation
-              </h4>
-              <BlockMath math={`R(t) = e^{-\\left(\\frac{t ${activeModel.t0 ? `- ${activeModel.t0.toFixed(2)}` : ''}}{${activeModel.eta.toFixed(2)}}\\right)^{${activeModel.beta.toFixed(3)}}}`} />
-            </div>
-
-            <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 bg-white dark:bg-slate-800/70">
-              <div className="text-xs font-semibold text-slate-500 mb-2">Scenario Compare</div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={scenarioName}
-                  onChange={(e) => setScenarioName(e.target.value)}
-                  className="flex-1 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-2 py-1"
-                  placeholder="Design A"
-                />
-                <button onClick={addScenario} className="px-2 py-1 text-xs bg-cyan-600 text-white rounded flex items-center gap-1"><Save className="w-3 h-3" /> Save</button>
+              <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border-l-4 border-cyan-500 shadow-sm">
+                {getBetaInterpretation(activeModel.beta).icon}
+                <div>
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">{getBetaInterpretation(activeModel.beta).title}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">{getBetaInterpretation(activeModel.beta).description}</div>
+                </div>
               </div>
-              {scenarios.length > 0 && (
-                <div className="mt-2 space-y-1 max-h-20 overflow-auto text-xs">
-                  {scenarios.map(s => (
-                    <div key={s.id} className="flex items-center justify-between">
-                      <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }}></span>{s.name}</span>
-                      <span className="text-slate-500">beta {s.beta.toFixed(2)} / eta {s.eta.toFixed(0)}</span>
-                    </div>
-                  ))}
+
+              <div className="text-xs text-slate-450 text-center font-mono">
+                R&sup2; Fit: <span className="font-bold">{activeModel.rSquared.toFixed(3)}</span> | B10 Life: <span className="font-bold text-rose-500">{activeModel.b10.toFixed(1)}</span>
+              </div>
+              {outliers.length > 0 && (
+                <div className="text-xs text-amber-600 dark:text-amber-400 text-center font-semibold">
+                  ⚠️ Outliers detected: {outliers.length} points beyond 2-sigma residual
                 </div>
               )}
+
+              <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-850 text-slate-850 dark:text-slate-200 mt-2 overflow-x-auto">
+                <h4 className="flex items-center gap-2 text-xs font-black text-slate-400 dark:text-slate-550 mb-2 uppercase tracking-widest">
+                  <RotateCcw className="w-3.5 h-3.5" /> Live Equation
+                </h4>
+                <BlockMath math={`R(t) = e^{-\\left(\\frac{t ${activeModel.t0 ? `- ${activeModel.t0.toFixed(2)}` : ''}}{${activeModel.eta.toFixed(2)}}\\right)^{${activeModel.beta.toFixed(3)}}}`} />
+              </div>
+
+              <div className="rounded-xl border border-slate-205 dark:border-slate-700/80 p-3 bg-slate-50 dark:bg-slate-800/40">
+                <div className="text-xs font-extrabold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">Scenario Compare</div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={scenarioName}
+                    onChange={(e) => setScenarioName(e.target.value)}
+                    className="flex-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Design A"
+                  />
+                  <button onClick={addScenario} className="px-3 py-2 text-xs bg-cyan-600 text-white rounded-lg flex items-center gap-1 font-bold hover:bg-cyan-500 transition-colors"><Save className="w-3 h-3" /> Save</button>
+                </div>
+                {scenarios.length > 0 && (
+                  <div className="mt-3 space-y-1.5 max-h-24 overflow-auto text-xs border-t border-slate-200 dark:border-slate-700 pt-2 font-mono">
+                    {scenarios.map(s => (
+                      <div key={s.id} className="flex items-center justify-between">
+                        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: s.color }}></span>{s.name}</span>
+                        <span className="text-slate-450">&beta;={s.beta.toFixed(2)} / &eta;={s.eta.toFixed(0)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -731,6 +742,51 @@ const WeibullAnalysis: React.FC = () => {
           Ignoring suspensions completely introduces a major bias, making the system appear less reliable than it is. Our Weibull calculator utilizes the standard <strong>Johnson Method</strong> to adjust the failure rankings of subsequent failures, ensuring that suspensions are mathematically integrated into the final line-fitting equation. Simply append a plus sign (<code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">+</code>) or an <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">s</code> (e.g. <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">450+</code>) to denote suspensions in the calculator input box.
         </p>
 
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+          📖 Step-by-Step Practical Life Data Example: Wind Turbine Bearings
+        </h3>
+        <div className="space-y-4 text-sm leading-relaxed text-slate-750 dark:text-slate-300">
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 1: Life Data Collection</span>
+            <p className="mt-1">
+              A wind farm manager tracks the fatigue life of main bearings across 5 turbines (recorded in operating hours):
+              <br />
+              • turbine 1: <strong>12,500 hours</strong> (failed)
+              <br />
+              • turbine 2: <strong>18,200 hours</strong> (failed)
+              <br />
+              • turbine 3: <strong>24,100 hours</strong> (failed)
+              <br />
+              • turbine 4: <strong>28,000 hours</strong> (still operational - censored: <code>28000+</code>)
+              <br />
+              • turbine 5: <strong>31,500 hours</strong> (failed)
+            </p>
+          </div>
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 2: Regression and Parameter Extraction</span>
+            <p className="mt-1">
+              Applying the Johnson Method adjustments for the censored data point and executing median rank regression yields:
+              <br />
+              • Shape parameter: <strong>Beta (β) = 2.45</strong> (indicating progressive mechanical wear-out)
+              <br />
+              • Characteristic life: <strong>Eta (η) = 28,650 hours</strong> (63.2% probability of failing by this age)
+            </p>
+          </div>
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 3: Calculate B10 Life Target</span>
+            <p className="mt-1">
+              The B10 life represents the age where 10% of the bearing population has failed:
+              <BlockMath math="B_{10} = \eta \cdot \ln(1/0.90)^{1/\beta} = 28{,}650 \cdot (0.10536)^{1/2.45} \approx 11{,}420 \text{ hours}" />
+            </p>
+          </div>
+          <div className="p-4 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-xl">
+            <span className="font-bold text-slate-800 dark:text-slate-100">💡 Maintenance Recommendation:</span>
+            <p className="mt-1 text-slate-655 dark:text-slate-400">
+              "To mitigate expensive unexpected turbine downtime, main bearing swap-outs should be scheduled at <strong>11,000 hours</strong> (just before the B10 life threshold) or diagnostic vibration transmitters should be installed to flag the onset of bearing outer race defects."
+            </p>
+          </div>
+        </div>
+
         <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
           Reliability-Centered Maintenance Strategies Powered by Weibull Plots
         </h2>
@@ -760,16 +816,24 @@ const WeibullAnalysis: React.FC = () => {
 
   const faqs = [
     {
-      question: 'How do I drag the fitted line?',
-      answer: 'Open the Probability tab and drag the green/orange endpoints on the line. Beta and Eta update instantly.'
+      question: "How does the Johnson Method handle right-censored (suspended) data?",
+      answer: "When an asset is removed from service without failing, it is 'right-censored' (a suspension). If we ignore suspensions, we bias our model to look less reliable. If we treat them as failures, we bias it to look more reliable. The Johnson Method adjusts the order number (rank) of all failures that occur after the suspension point, effectively shifting their positions on the probability scale to reflect that fewer active units remain in the population."
     },
     {
-      question: 'What counts as an outlier?',
-      answer: 'Points with residuals above mean + 2 sigma from the fitted CDF trend are highlighted as outliers.'
+      question: "What is the physical meaning of the B10 Life, and how does it relate to L10 bearing ratings?",
+      answer: "B10 Life is the operational age at which 10% of a population is expected to fail (meaning 90% of the assets survive). In bearing design, this is equivalent to the L10 nominal fatigue life specified by manufacturers under ISO 281. It is a critical design metric for rotating equipment, used as a threshold for scheduling overhaul tasks."
     },
     {
-      question: 'Can I compare multiple designs?',
-      answer: 'Yes. Save each active fit as a scenario and it will be overlaid as dashed comparison curves.'
+      question: "When should I use 3-Parameter Weibull analysis instead of 2-Parameter?",
+      answer: "Use 3-Parameter Weibull when there is a physical reason to believe that failures cannot occur before a certain threshold time (t0, the location parameter). For example, a new machinery design with a guaranteed coating or a corrosion-resistant liner might have a 2,000-hour failure-free period. The 3-parameter model subtracts t0 from all data points (t - t0) before fitting the distribution."
+    },
+    {
+      question: "Why does dragging the fitted line endpoints update Beta and Eta?",
+      answer: "By default, the calculator performs a least-squares linear regression (median rank regression) on the linearized data to compute the slope (Beta) and intercept (to get Eta). When you drag the endpoints in the Probability plot, you override the regression with a manual visual fit. This recalculates Beta based on the slope of your custom line, and Eta based on the time where the line crosses the 63.2% probability marker."
+    },
+    {
+      question: "What are the typical values of the Weibull shape parameter (Beta) for industrial assets?",
+      answer: "Shape parameters dictate failure mechanics: (1) β = 0.5 to 0.8 represents infant mortality or burn-in defects, (2) β = 1.0 represents random external events (constant failure rate), (3) β = 1.5 to 2.2 represents early wear-out (like rolling element bearing fatigue), (4) β = 2.5 to 4.0 indicates progressive mechanical wear (such as reciprocating piston wear, mechanical seal degradation, or gear tooth fatigue), and (5) β > 4.0 signifies rapid structural wear-out."
     }
   ];
 

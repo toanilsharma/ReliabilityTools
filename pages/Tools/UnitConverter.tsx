@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRightLeft, Thermometer, Clock, Gauge, Zap, Activity, Droplets, RotateCw, Ruler, Waves, Weight, Beaker, Hammer
+  ArrowRightLeft, Thermometer, Clock, Gauge, Zap, Activity, Droplets, RotateCw, Ruler, Waves, Weight, Beaker, Hammer, Landmark
 } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import { InlineMath, BlockMath } from 'react-katex';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
 
@@ -23,17 +24,22 @@ const ConversionCard: React.FC<ConversionCardProps> = ({
   icon: Icon,
   color,
   children
-}) => (
-  <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden hover:border-cyan-500/30 transition-colors">
-    <div className={`px-6 py-4 border-b border-slate-100 dark:border-slate-700/50 flex items-center gap-3 ${color} bg-opacity-10 dark:bg-opacity-20`}>
-      <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-').replace('/10', '')}`} />
-      <h3 className="font-bold text-slate-900 dark:text-white">{title}</h3>
+}) => {
+  const textColor = color.replace('bg-', 'text-');
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-cyan-500/5 hover:border-cyan-500/40 dark:hover:border-cyan-500/30 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+      <div>
+        <div className={`px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 ${color} bg-opacity-5 dark:bg-opacity-10`}>
+          <Icon className={`w-5 h-5 ${textColor}`} />
+          <h3 className="font-extrabold text-slate-900 dark:text-white tracking-wide">{title}</h3>
+        </div>
+        <div className="p-6 space-y-6">
+          {children}
+        </div>
+      </div>
     </div>
-    <div className="p-6 space-y-6">
-      {children}
-    </div>
-  </div>
-);
+  );
+};
 
 const InputGroup = ({
   label,
@@ -47,16 +53,18 @@ const InputGroup = ({
   onChange: (val: string) => void;
 }) => (
   <div className="space-y-1">
-    <div className="flex justify-between">
-      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</label>
-      <span className="text-xs text-slate-400 font-mono">{unit}</span>
+    <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{label}</label>
+    <div className="relative rounded-lg shadow-sm">
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg pl-3 pr-14 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 outline-none font-mono text-sm transition-all h-10"
+      />
+      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-550">{unit}</span>
+      </div>
     </div>
-    <input
-      type="number"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 outline-none font-mono transition-shadow h-10"
-    />
   </div>
 );
 
@@ -372,34 +380,114 @@ const UnitConverter: React.FC = () => {
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Engineering Standardization</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Ensure uniformity across global reliability engineering databases. Convert disparate OEM operating metrics into standard units prior to performing a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis</Link> or scheduling routines in the <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.</p>
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          Understanding <span className="text-cyan-600 dark:text-cyan-400">Engineering Unit Conversions</span> in Reliability
+        </h2>
+        <p>
+          To maintain uniformity across global asset databases, engineers must convert raw mechanical telemetry into standard units before performing predictive modelling. Disparate OEM equipment ratings—whether specified in imperial units from US-based manufacturers or metric units from European/Asian manufacturers—must be harmonized. Using this <span className="font-extrabold text-cyan-600 dark:text-cyan-400">Engineering Unit Converter</span> helps prevent dangerous scaling mistakes in downstream lifetime models, such as a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis</Link> or maintenance scheduling in our <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.
+        </p>
       </div>
+
       <div className="grid md:grid-cols-2 gap-6">
-         <TheoryBlock 
-            title="Importance of Metric Harmony"
-            icon={<Hammer className="w-5 h-5" />}
-            delay={0.1}
-          >
-            <p>
-              Applying statistical distributions like normal or lognormal requires all failure timestamps to be recorded under the exact same standard. Mixing hours, days, and cycles in a single dataset will corrupt the calculation of MTTF and Beta shaping.
-            </p>
-         </TheoryBlock>
+        <TheoryBlock 
+          title="Importance of Metric Harmony"
+          icon={<Hammer className="w-5 h-5 text-cyan-650" />}
+          delay={0.1}
+        >
+          <p>
+            Statistical models (like Weibull and Lognormal distributions) assume that all input lifetime data points share identical unit types. Mixing calendar hours, operating cycles, or run-time years in a single column of time-to-failure data will distort the calculated shape parameter (Beta) and scale parameter (Eta), resulting in completely incorrect replacement suggestions.
+          </p>
+        </TheoryBlock>
+
+        <TheoryBlock 
+          title="Telemetry Mapping Rules"
+          icon={<Waves className="w-5 h-5 text-cyan-600" />}
+          delay={0.2}
+        >
+          <p>
+            Vibration velocity is typically converted from imperial Inches per Second (IPS) to ISO-standard millimeters per second (mm/s) to comply with ISO 10816 machinery health classifications. Bearing clearance is converted between mils (thousandths of an inch) and microns to track physical wear.
+          </p>
+        </TheoryBlock>
+      </div>
+
+      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+        📖 Step-by-Step Practical Conversion Example: Slurry Pump Import
+      </h3>
+
+      <div className="space-y-4 text-sm leading-relaxed text-slate-750 dark:text-slate-300">
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 1: Identify OEM Specifications (Imperial)</span>
+          <p className="mt-1">
+            An engineering team is importing a heavy-duty slurry pump with the following US OEM parameters:
+            <br />
+            &nbsp;&nbsp;• Maximum Vibration Limit: <InlineMath math="0.15 \text{ IPS}" />
+            <br />
+            &nbsp;&nbsp;• Rated Operating Flow: <InlineMath math="100 \text{ GPM}" />
+            <br />
+            &nbsp;&nbsp;• Process Temperature: <InlineMath math="212^{\circ}\text{F}" />
+            <br />
+            &nbsp;&nbsp;• Bearing Clearance: <InlineMath math="1 \text{ mil}" />
+          </p>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 2: Convert to Standard Metric/SI Units</span>
+          <p className="mt-1">
+            Using the appropriate scaling factors:
+            <BlockMath math="v_{\text{metric}} = 0.15 \text{ IPS} \times 25.4 = 3.81 \text{ mm/s}" />
+            <BlockMath math="Q_{\text{metric}} = 100 \text{ GPM} \times 0.227125 = 22.71 \text{ m}^3\text{/h}" />
+            <BlockMath math="T_{\text{celsius}} = (212^{\circ}\text{F} - 32) \times \frac{5}{9} = 100^{\circ}\text{C}" />
+            <BlockMath math="c_{\text{microns}} = 1 \text{ mil} \times 25.4 = 25.4 \text{ }\mu\text{m}" />
+          </p>
+        </div>
+
+        <div className="p-4 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-xl">
+          <span className="font-bold text-slate-800 dark:text-slate-100">💡 Asset Management Conclusion:</span>
+          <p className="mt-1 text-slate-655 dark:text-slate-400">
+            "By mapping the converted parameters to the plant CMMS, the diagnostic team can continuously evaluate pump condition limits against ISO 10816 vibration bounds (3.81 mm/s) and ensure replacement seals match the bearing clearance specification (25.4 microns)."
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Landmark className="w-5 h-5 text-cyan-600" /> Engineering Calibration Standards
+        </h3>
+        <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-350">
+          Industrial conversions are calibrated according to global quality frameworks:
+        </p>
+        <ul className="list-disc pl-6 space-y-2 text-sm text-slate-700 dark:text-slate-350">
+          <li><strong>ISO 10816:</strong> Mechanical vibration — Evaluation of machine vibration by measurements on non-rotating parts (mm/s vs. IPS limit mappings).</li>
+          <li><strong>ANSI/ASME PTC 19.1:</strong> Test Codes for Measurement Uncertainty — standard scaling values for temperature, pressure, and flow rates.</li>
+          <li><strong>IEEE/ASTM SI 10:</strong> American National Standard for Metric Practice — governing global standard rounding and conversion coefficients.</li>
+        </ul>
       </div>
     </div>
   );
 
   const faqs = [
     {
-        "question": "What is a FIT (Failure in Time)?",
-        "answer": "A FIT is a unit of failure rate equivalent to 1 failure per 10^9 (one billion) operational hours. It is widely used in semiconductor and electronics reliability analysis."
+      question: "What is the difference between CPM (Cycles Per Minute) and Hz (Hertz)?",
+      answer: "Both measure frequency. Hertz (Hz) is the SI unit representing cycles per second. CPM (Cycles Per Minute) represents cycles per minute. The conversion is CPM = Hz * 60. In vibration analysis, CPM is typically preferred for rotational shaft speeds (since it aligns with RPM—Revolutions Per Minute), while Hz is preferred for electrical line frequencies and signal processing."
     },
     {
-        "question": "How do I convert FITs to Failures Per Million Hours (FPMH)?",
-        "answer": "Since FPMH represents failures per 10^6 hours, 1 FPMH = 1,000 FITs. Simply divide the FIT value by 1,000 to get FPMH."
+      question: "How do you convert imperial vibration velocity in IPS (Inches Per Second) to metric in mm/s?",
+      answer: "Vibration velocity represents the speed at which a machine's housing or shaft oscillates. To convert IPS to millimeters per second (mm/s), multiply by 25.4 (since there are 25.4 millimeters in an inch). For example, a vibration level of 0.15 IPS is equal to 0.15 * 25.4 = 3.81 mm/s. This is critical for mapping machine condition to ISO 10816 standards."
+    },
+    {
+      question: "What is the distinction between Mils and Microns in precision bearing clearances?",
+      answer: "Mils is an imperial unit of length equal to one-thousandth of an inch (0.001 in). Microns (micrometers, µm) is a metric unit of length equal to one-millionth of a meter (10^-6 m). The conversion is: 1 mil = 25.4 µm. Precision clearances, shaft runout, and alignment tolerances are frequently specified in these units."
+    },
+    {
+      question: "Why is 8,760 hours used as the standard divisor for converting operational hours to reliability years?",
+      answer: "8,760 is the total number of hours in a standard calendar year (24 hours/day * 365 days/year). Reliability calculations (like MTBF and failure rates) are mathematically normalized to continuous 24/7/365 operations. If an asset runs only on single-shift schedules (e.g., 2,000 hours/year), you must use actual operational hours rather than calendar years in Weibull parameters to prevent severe overestimations of asset life."
+    },
+    {
+      question: "How is pressure converted between PSI (Pounds per Square Inch) and Bar?",
+      answer: "PSI is the imperial unit of pressure (lbf/in²), and Bar is a metric unit of pressure (1 Bar = 10^5 Pascals). The conversion is: 1 PSI ≈ 0.06895 Bar (or 1 Bar ≈ 14.504 PSI). For high-pressure hydraulics, Pascals (Pa) or Megapascals (MPa) are also common (1 MPa = 10 Bar)."
     }
-];
+  ];
 
   return (
     <ToolContentLayout
