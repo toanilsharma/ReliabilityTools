@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { calculateRPN } from '../../services/reliabilityMath';
-import { Sliders, Table as TableIcon, Undo, Redo, Plus, AlertTriangle, Activity, Search } from 'lucide-react';
+import { Sliders, Table as TableIcon, Undo, Redo, Plus, AlertTriangle, Activity, Search, Landmark } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import RelatedTools from '../../components/RelatedTools';
@@ -8,10 +8,10 @@ import ReactECharts from 'echarts-for-react';
 import { useTheme } from '../../context/ThemeContext';
 import ShareAndExport from '../../components/ShareAndExport';
 import { useRef } from 'react';
-
-
 import { Link } from 'react-router-dom';
-import { BlockMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
+import { motion } from 'framer-motion';
 
 interface FmeaRow {
   id: string;
@@ -104,9 +104,38 @@ const FmeaCalculator: React.FC = () => {
   const ToolComponent = (
     <div className="space-y-6" ref={toolRef}>
 
-      <div className="flex gap-2 p-1 bg-slate-200 dark:bg-slate-800 rounded-lg w-full max-w-sm mx-auto mb-8">
-        <button onClick={() => setActiveTab('worksheet')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-2 ${activeTab === 'worksheet' ? 'bg-white shadow text-slate-800 dark:bg-slate-700 dark:text-white' : 'text-slate-500'}`}><TableIcon className="w-4 h-4" /> Worksheet (Grid)</button>
-        <button onClick={() => setActiveTab('calculator')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-2 ${activeTab === 'calculator' ? 'bg-white shadow text-slate-800 dark:bg-slate-700 dark:text-white' : 'text-slate-500'}`}><Sliders className="w-4 h-4" /> Single Risk Calc</button>
+      <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-855 rounded-xl w-full max-w-sm mx-auto mb-8 relative border border-slate-200 dark:border-slate-800">
+        <button
+          onClick={() => setActiveTab('worksheet')}
+          className={`flex-1 py-2 text-xs font-extrabold rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 relative z-10 ${
+            activeTab === 'worksheet' ? 'text-slate-900 dark:text-white font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-350'
+          }`}
+        >
+          <TableIcon className="w-4 h-4" /> Worksheet (Grid)
+          {activeTab === 'worksheet' && (
+            <motion.div
+              layoutId="activeTabPill"
+              className="absolute inset-0 bg-white dark:bg-slate-700 rounded-lg -z-10 shadow-sm"
+              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            />
+          )}
+        </button>
+        
+        <button
+          onClick={() => setActiveTab('calculator')}
+          className={`flex-1 py-2 text-xs font-extrabold rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 relative z-10 ${
+            activeTab === 'calculator' ? 'text-slate-900 dark:text-white font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-350'
+          }`}
+        >
+          <Sliders className="w-4 h-4" /> Single Risk Calc
+          {activeTab === 'calculator' && (
+            <motion.div
+              layoutId="activeTabPill"
+              className="absolute inset-0 bg-white dark:bg-slate-700 rounded-lg -z-10 shadow-sm"
+              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            />
+          )}
+        </button>
       </div>
 
       {activeTab === 'worksheet' ? (
@@ -202,24 +231,31 @@ const FmeaCalculator: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-8 animate-fadeIn">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-8 bg-slate-50 dark:bg-slate-900/50 p-8 rounded-2xl border border-slate-200 dark:border-slate-700">
-              <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+          <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+            <div className="space-y-6 bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-inner">
+              <h3 className="font-extrabold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
                 <Sliders className="w-5 h-5 text-cyan-600" /> Assessment Inputs
               </h3>
 
               {[
-                { label: 'Severity (S)', val: severity, set: setSeverity, min: '1 (None)', max: '10 (Hazardous)' },
+                { label: 'Severity (S)', val: severity, set: setSeverity, min: '1 (None)', max: '10 (Catastrophic)' },
                 { label: 'Occurrence (O)', val: occurrence, set: setOccurrence, min: '1 (Remote)', max: '10 (Inevitable)' },
-                { label: 'Detection (D)', val: detection, set: setDetection, min: '1 (Certain)', max: '10 (Blind)' },
+                { label: 'Detection (D)', val: detection, set: setDetection, min: '1 (Certain)', max: '10 (Un-detectable)' },
               ].map((input, i) => (
-                <div key={i}>
-                  <div className="flex justify-between mb-2">
-                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{input.label}</label>
-                    <span className="font-mono font-bold text-cyan-600 bg-cyan-100 dark:bg-cyan-900/30 px-2 rounded">{input.val}</span>
+                <div key={i} className="bg-white dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{input.label}</span>
+                    <span className="text-sm font-black text-cyan-600 dark:text-cyan-400 font-mono">{input.val} / 10</span>
                   </div>
-                  <input type="range" min="1" max="10" value={input.val} onChange={(e) => input.set(parseInt(e.target.value))} className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-600" />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1">
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={input.val}
+                    onChange={(e) => input.set(parseInt(e.target.value))}
+                    className="w-full accent-cyan-600 cursor-pointer h-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg"
+                  />
+                  <div className="flex justify-between text-[10px] font-medium text-slate-400 mt-1">
                     <span>{input.min}</span>
                     <span>{input.max}</span>
                   </div>
@@ -227,10 +263,17 @@ const FmeaCalculator: React.FC = () => {
               ))}
             </div>
 
-            <div className={`p-8 rounded-2xl border-2 ${risk.bg} ${risk.border} dark:bg-opacity-10 flex flex-col items-center justify-center h-full text-center`}>
-              <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Risk Priority Number</div>
-              <div className={`text-8xl font-black ${risk.color} mb-4 drop-shadow-sm`}>{rpn}</div>
-              <div className={`px-4 py-1.5 rounded-full text-xs font-bold bg-white/80 dark:bg-slate-800 ${risk.color} border border-current shadow-sm`}>{risk.label}</div>
+            <div className="relative group h-full">
+              {/* Glowing blur background halo */}
+              <div className={`absolute -inset-0.5 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-700 bg-gradient-to-r ${
+                rpn >= 100 ? 'from-red-500 to-rose-600' : rpn >= 40 ? 'from-amber-500 to-orange-600' : 'from-emerald-500 to-teal-650'
+              }`}></div>
+              
+              <div className={`relative p-8 rounded-2xl border ${risk.border} ${risk.bg} dark:bg-opacity-10 flex flex-col items-center justify-center h-full text-center shadow-lg bg-slate-50 dark:bg-slate-900`}>
+                <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Risk Priority Number (RPN)</div>
+                <div className={`text-8xl font-black ${risk.color} mb-4 drop-shadow-sm font-mono`}>{rpn}</div>
+                <div className={`px-4 py-1.5 rounded-full text-xs font-extrabold bg-white/90 dark:bg-slate-800 ${risk.color} border border-current shadow-sm`}>{risk.label}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -271,7 +314,7 @@ const FmeaCalculator: React.FC = () => {
           Ultimate Risk Assessment Guide: FMEA and RPN Methodology
         </h2>
         <p>
-          In design engineering and industrial operations, predicting how a system might fail is key to avoiding catastrophic downtimes, safety hazards, and financial losses. This interactive <strong>FMEA calculator</strong> and <strong>RPN calculator online</strong> provides a structured workspace for engineers to perform Failure Modes and Effects Analysis (FMEA). By cataloging potential component failures, assigning risk indexes (Severity, Occurrence, and Detection), and computing the <strong>Risk Priority Number (RPN)</strong>, organizations can identify critical vulnerabilities and implement preventive action plans before they reach the plant floor. This tool represents a vital framework in our <strong>reliability engineering calculator</strong> repository.
+          In design engineering and industrial operations, predicting how a system might fail is key to avoiding catastrophic downtimes, safety hazards, and financial losses. This interactive <span className="font-extrabold text-cyan-600 dark:text-cyan-400">FMEA template</span> and <span className="font-extrabold text-cyan-600 dark:text-cyan-400">RPN calculator online</span> provides a structured workspace for engineers to perform Failure Modes and Effects Analysis (FMEA). By cataloging potential component failures, assigning risk indexes (Severity, Occurrence, and Detection), and computing the <strong>Risk Priority Number (RPN)</strong>, organizations can identify critical vulnerabilities and implement preventive action plans before they reach the plant floor. This tool represents a vital framework in our <strong>reliability engineering calculator</strong> repository.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -283,7 +326,7 @@ const FmeaCalculator: React.FC = () => {
         <p>
           There are two primary types of FMEA:
         </p>
-        <ul className="list-disc pl-6 space-y-2">
+        <ul className="list-disc pl-6 space-y-2 text-sm text-slate-700 dark:text-slate-350">
           <li>
             <strong>Design FMEA (DFMEA):</strong> Focuses on product design vulnerabilities at the subsystem or component level to prevent safety hazards, reduce warranty costs, and improve product life before manufacturing begins.
           </li>
@@ -322,7 +365,7 @@ const FmeaCalculator: React.FC = () => {
         <p>
           Detection is an assessment of the ability of current controls to detect a cause or failure mode *before* the defect escapes to the customer or leads to system failure. Crucially, <strong>Detection is scored in reverse</strong>:
         </p>
-        <ul className="list-disc pl-6 space-y-2">
+        <ul className="list-disc pl-6 space-y-2 text-sm text-slate-700 dark:text-slate-355 font-medium">
           <li>
             A score of <strong>1</strong> represents almost certain detection (e.g., automatic sensor loops shut down the machine instantly when an anomaly is detected).
           </li>
@@ -347,6 +390,59 @@ const FmeaCalculator: React.FC = () => {
           For example, a failure mode with a Severity of 10 (Critical Safety Risk), Occurrence of 2, and Detection of 4 yields an RPN of 80. Conversely, a Severity of 3 (Minor Operational Issue), Occurrence of 8, and Detection of 8 yields an RPN of 192. Relying strictly on the RPN score would lead engineers to address the minor issue first, leaving the critical safety hazard unmitigated. Therefore, modern guidelines prioritize failures based on the <strong>Severity score itself</strong>, establishing that any Severity score of 9 or 10 demands corrective action, regardless of the overall RPN.
         </p>
 
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+          📖 Step-by-Step Practical Example: Process Control Valve
+        </h3>
+        <div className="space-y-4 text-sm leading-relaxed text-slate-750 dark:text-slate-300">
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 1: Identify Process & Failure Mode</span>
+            <p className="mt-1">
+              • <strong>Process/Item:</strong> Chemical Reactor Feed Line Valve (Actuator System)
+              <br />
+              • <strong>Failure Mode:</strong> Valve stuck in "closed" position
+              <br />
+              • <strong>Failure Effect:</strong> Raw material flow is cut off, causing batch cooling, crystallization, and complete system shutdown, resulting in <strong>$50,000 in lost production</strong>.
+            </p>
+          </div>
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 2: Assign Initial Risk Scores (S, O, D)</span>
+            <p className="mt-1">
+              • <strong>Severity (S): 8 (Very High)</strong> — High financial loss and process downtime.
+              <br />
+              • <strong>Occurrence (O): 4 (Low-to-Medium)</strong> — Coil burnout happens occasionally (MTBF ~25,000 hours).
+              <br />
+              • <strong>Detection (D): 7 (Poor)</strong> — Visually checked daily, but internal coil degradation cannot be seen ahead of time.
+              <br />
+              • <strong>Initial RPN:</strong> <InlineMath math="8 \times 4 \times 7 = 224" /> (Critical Mitigation Zone).
+            </p>
+          </div>
+          <div>
+            <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 3: Implement Corrective Actions</span>
+            <p className="mt-1">
+              • Redesign with a <strong>dual redundant coil setup (1oo2 voting logic)</strong> to drop Occurrence to <strong>2</strong>.
+              <br />
+              • Install an <strong>automatic resistance feedback sensor</strong> to drop Detection to <strong>2</strong> (system alarms instantly when coil fails).
+              <br />
+              • <strong>New RPN:</strong> <InlineMath math="8 \times 2 \times 2 = 32" /> (85.7% risk reduction, shifting to safe Monitor Zone).
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <Landmark className="w-5 h-5 text-cyan-600" /> Industrial FMEA & Risk Standards
+          </h3>
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-350">
+            FMEA studies are highly structured to comply with major global engineering quality standards:
+          </p>
+          <ul className="list-disc pl-6 space-y-2 text-sm text-slate-700 dark:text-slate-350">
+            <li><strong>IEC 60812:</strong> International standard for Failure Modes and Effects Analysis (FMEA and FMECA), outlining standard worksheet formatting and risk matrices.</li>
+            <li><strong>AIAG & VDA FMEA Handbook:</strong> Combined automotive guidelines developed by the Automotive Industry Action Group and Verband der Automobilindustrie, establishing Action Priority (AP) tables.</li>
+            <li><strong>SAE ARP5580:</strong> Aerospace standard for failure modes, effects and criticality analysis (FMECA) in civil and military aviation systems.</li>
+            <li><strong>MIL-STD-1629A:</strong> The foundational military standard establishing RPN criticality analysis procedures.</li>
+          </ul>
+        </div>
+
         <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
           Advanced Risk Analysis: FTA and Root Cause Tools
         </h2>
@@ -355,13 +451,13 @@ const FmeaCalculator: React.FC = () => {
         </p>
         <div className="grid md:grid-cols-2 gap-6 my-8">
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-            <h4 className="font-bold text-rose-600 dark:text-rose-400 mb-2">Fault Tree Analysis (FTA)</h4>
+            <h4 className="font-bold text-rose-600 dark:text-rose-455 mb-2">Fault Tree Analysis (FTA)</h4>
             <p className="text-sm">
-              Use a top-down deductive model to identify the combination of component failures, software bugs, and human errors that could lead to a defined "Top Event" hazard. Analyze logical relationships using our interactive <Link to="/tools/fta" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fault Tree Analysis Tool</Link>.
+               Use a top-down deductive model to identify the combination of component failures, software bugs, and human errors that could lead to a defined "Top Event" hazard. Analyze logical relationships using our interactive <Link to="/tools/fta" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fault Tree Analysis Tool</Link>.
             </p>
           </div>
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-            <h4 className="font-bold text-rose-600 dark:text-rose-400 mb-2">Fishbone Diagram Generator</h4>
+            <h4 className="font-bold text-rose-600 dark:text-rose-455 mb-2">Fishbone Diagram Generator</h4>
             <p className="text-sm">
               Brainstorm and map all potential causes contributing to a failure mode across the "6 Ms" (Man, Machine, Material, Method, Measurement, Mother Nature). Visualize root causality in our <Link to="/tools/fishbone" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fishbone Diagram Tool</Link>.
             </p>
@@ -376,16 +472,24 @@ const FmeaCalculator: React.FC = () => {
 
   const faqs = [
     {
-      question: "What is a 'Good' RPN score?",
-      answer: "There is no universal threshold. Many companies use <strong>100</strong> as an action limit, but it depends on the industry. Medical devices might act at 40; general manufacturing might accept 150."
+      question: "What is the difference between FMEA and FMECA?",
+      answer: "FMEA (Failure Modes and Effects Analysis) catalogs failure modes and their local/system-wide consequences. FMECA (Failure Modes, Effects, and Criticality Analysis) builds directly upon FMEA by adding a Criticality Analysis, plotting each failure mode on a criticality matrix (likelihood vs. severity) to quantitatively identify safety-critical failure risks."
     },
     {
-      question: "Can I reduce Severity?",
-      answer: "Usually, NO. Severity is inherent to the failure effect (e.g., 'Engine Explosion'). You cannot make an explosion less severe. You can only reduce the Occurrence (make it rare) or improve Detection (catch it early)."
+      question: "Why does the modern AIAG-VDA standard deprecate relying solely on RPN thresholds?",
+      answer: "Relying on hard RPN limits (like only mitigating if RPN > 100) is dangerous. A severe safety risk with Severity=10, Occurrence=2, Detection=3 yields RPN=60 (ignored under thresholds), while a minor cosmetic defect with Severity=2, Occurrence=8, Detection=8 yields RPN=128 (prioritized). The AIAG-VDA standard replaces RPN thresholds with Action Priority (AP) tables (High, Medium, Low) to guarantee high-severity failure effects are always addressed first."
     },
     {
-      question: "Why is Detection scored in reverse?",
-      answer: "Detection is a measure of risk. Excellent detection (catching the bug immediately) is Low Risk (Score 1). No detection (flying blind) is High Risk (Score 10)."
+      question: "Can I reduce the Severity (S) score of a failure mode?",
+      answer: "Severity is inherent to the failure's physical effect (e.g., cylinder explosion). You cannot make an explosion physically less severe unless you redesign the system layout (e.g., adding blast shielding, venting ducts, or switching to lower operating pressures)."
+    },
+    {
+      question: "How do Occurrence (O) scores relate to industrial failure data like MTBF?",
+      answer: "Occurrence scores represent probability categories. Ideally, they map to actual failure rates (λ). For example, Occurrence=1 maps to a failure rate < 1 per million hours, while Occurrence=10 indicates failures are virtually constant. Teams consult internal maintenance logs or industry standards (OREDA, NPRD) to map MTBF data directly to FMEA occurrence categories."
+    },
+    {
+      question: "How does FMEA relate to Reliability-Centered Maintenance (RCM) and Root Cause Analysis (RCA)?",
+      answer: "FMEA is the core diagnostic step of RCM, identifying failure modes to select the best proactive maintenance tasks. FMEA is proactive (conducted before deployment or during design updates), while Root Cause Analysis (RCA) is reactive, triggered after a failure happens to investigate the specific physical, human, and organizational causes."
     }
   ];
 
