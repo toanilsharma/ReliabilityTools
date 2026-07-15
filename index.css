@@ -56,6 +56,12 @@ body {
   max-width: 100% !important;
 }
 
+.prose p {
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.8;
+}
+
 .prose h2 {
   position: relative;
   padding-bottom: 0.5rem;

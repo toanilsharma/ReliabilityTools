@@ -2,7 +2,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp, Share2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import EmbedCodeGenerator from './EmbedCodeGenerator';
 import ContextGlossaryPanel from './ContextGlossaryPanel';
 
 interface FAQItem {
@@ -119,8 +118,6 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                         {toolComponent}
                     </div>
                 </div>
-
-                <EmbedCodeGenerator toolId={toolId} title={title.split('-')[0].trim()} />
             </div>
 
             <div className="grid lg:grid-cols-4 gap-12">
@@ -164,16 +161,6 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 
                 <div className="lg:col-span-1 space-y-8">
                     <div className="sticky top-24 space-y-8">
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 border border-slate-100 dark:border-slate-700/50">
-                            <h3 className="font-bold text-slate-900 dark:text-white mb-4">Table of Contents</h3>
-                            <nav className="space-y-2 text-sm">
-                                <a href="#" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Introduction</a>
-                                <a href="#tool-container" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Calculator</a>
-                                <a href="#how-to" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">How to Calculate</a>
-                                <a href="#applications" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Applications</a>
-                                <a href="#standards" className="block text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Standards</a>
-                            </nav>
-                        </div>
 
                         <ContextGlossaryPanel />
 

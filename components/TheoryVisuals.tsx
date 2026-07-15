@@ -507,3 +507,136 @@ export const FaultTreeVisual: React.FC = () => {
     </div>
   );
 };
+
+// ==========================================
+// 8. INTERACTIVE CONFIDENCE INTERVAL VISUAL
+// ==========================================
+export const ConfidenceIntervalVisual: React.FC = () => {
+  const [confidence, setConfidence] = useState<90 | 95>(90);
+  const [failures, setFailures] = useState<'low' | 'high'>('low');
+
+  // Hardcoded realistic bounds for illustrative purposes (Mean is 2,000 hours)
+  const mean = 2000;
+  const bounds = {
+    low: {
+      90: { lower: 950, upper: 6200, desc: 'With only 3 failures, there is high uncertainty. We need a very wide range (950h to 6,200h) to be 90% sure the true MTBF is in here.' },
+      95: { lower: 810, upper: 8100, desc: 'To raise our confidence to 95% with only 3 failures, we must widen the range even further (810h to 8,100h) to cover the extra statistical risk.' }
+    },
+    high: {
+      90: { lower: 1420, upper: 3050, desc: 'With 20 failures, we have much more data! The interval shrinks to a tighter range (1,420h to 3,050h). We are 90% confident.' },
+      95: { lower: 1320, upper: 3310, desc: 'To be 95% confident with 20 failures, we widen the range slightly to (1,320h to 3,310h), but it is still much tighter than with 3 failures.' }
+    }
+  };
+
+  const current = bounds[failures][confidence];
+
+  // Visual percentages for SVG positioning (0 to 9000 scale)
+  const scaleX = (val: number) => {
+    // map 0 to 9000 to 5% to 95%
+    const minVal = 0;
+    const maxVal = 9000;
+    const p = ((val - minVal) / (maxVal - minVal)) * 90 + 5;
+    return `${p}%`;
+  };
+
+  return (
+    <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-inner space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h4 className="text-md font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+          <Activity className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> Interactive Confidence Bounds Visualizer
+        </h4>
+        
+        {/* Controls */}
+        <div className="flex flex-wrap items-center gap-3 text-xs">
+          <div className="flex bg-slate-200 dark:bg-slate-850 p-0.5 rounded-lg border border-slate-350 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={() => setFailures('low')}
+              className={`px-3 py-1.5 rounded-md font-bold transition-all ${failures === 'low' ? 'bg-cyan-600 text-white shadow' : 'text-slate-500 hover:text-slate-700 dark:hover:text-white'}`}
+            >
+              3 Failures (Low Data)
+            </button>
+            <button
+              type="button"
+              onClick={() => setFailures('high')}
+              className={`px-3 py-1.5 rounded-md font-bold transition-all ${failures === 'high' ? 'bg-cyan-600 text-white shadow' : 'text-slate-500 hover:text-slate-700 dark:hover:text-white'}`}
+            >
+              20 Failures (High Data)
+            </button>
+          </div>
+
+          <div className="flex bg-slate-200 dark:bg-slate-850 p-0.5 rounded-lg border border-slate-350 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={() => setConfidence(90)}
+              className={`px-3 py-1.5 rounded-md font-bold transition-all ${confidence === 90 ? 'bg-cyan-600 text-white shadow' : 'text-slate-500 hover:text-slate-700 dark:hover:text-white'}`}
+            >
+              90% Conf
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfidence(95)}
+              className={`px-3 py-1.5 rounded-md font-bold transition-all ${confidence === 95 ? 'bg-cyan-600 text-white shadow' : 'text-slate-500 hover:text-slate-700 dark:hover:text-white'}`}
+            >
+              95% Conf
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Visual Chart */}
+      <div className="relative h-44 w-full bg-white dark:bg-slate-950/80 rounded-xl border border-slate-200 dark:border-slate-900 shadow-sm p-4 flex flex-col justify-center overflow-hidden">
+        {/* Horizontal Axis Track */}
+        <div className="absolute left-[5%] right-[5%] h-[2px] bg-slate-200 dark:bg-slate-800 top-[60%]"></div>
+        
+        {/* Tick labels */}
+        <div className="absolute left-[5%] top-[68%] text-[9px] text-slate-400 dark:text-slate-500 font-bold">0 hrs</div>
+        <div className="absolute left-[50%] top-[68%] -translate-x-1/2 text-[9px] text-slate-400 dark:text-slate-500 font-bold">4,500 hrs</div>
+        <div className="absolute right-[5%] top-[68%] text-[9px] text-slate-400 dark:text-slate-500 font-bold">9,000 hrs</div>
+
+        {/* Mean Indicator */}
+        <div 
+          className="absolute w-[2px] h-12 bg-slate-400 dark:bg-slate-605 top-[35%] -translate-x-1/2 flex flex-col items-center" 
+          style={{ left: scaleX(mean) }}
+        >
+          <span className="absolute -top-7 text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm">
+            Mean: 2,000 hrs
+          </span>
+          <div className="w-2.5 h-2.5 bg-slate-500 dark:bg-slate-400 rounded-full mt-6"></div>
+        </div>
+
+        {/* Confidence Interval Bracket/Bar */}
+        <motion.div 
+          className="absolute h-3 bg-cyan-500/20 border-y-2 border-cyan-500 top-[56%] flex justify-between items-center"
+          initial={{ left: scaleX(current.lower), right: `calc(100% - ${scaleX(current.upper)})` }}
+          animate={{ left: scaleX(current.lower), right: `calc(100% - ${scaleX(current.upper)})` }}
+          transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+        >
+          {/* Left Bracket */}
+          <div className="w-[2px] h-7 bg-cyan-600 dark:bg-cyan-500 -translate-x-[2px] relative flex flex-col items-center">
+            <span className="absolute -top-6 text-[9px] font-bold text-cyan-600 dark:text-cyan-400 bg-white dark:bg-slate-950 px-1 py-0.5 rounded border border-cyan-500/30 shadow-sm whitespace-nowrap">
+              LCL: {current.lower} hrs
+            </span>
+          </div>
+          {/* Right Bracket */}
+          <div className="w-[2px] h-7 bg-cyan-600 dark:bg-cyan-500 translate-x-[2px] relative flex flex-col items-center">
+            <span className="absolute -top-6 text-[9px] font-bold text-cyan-600 dark:text-cyan-400 bg-white dark:bg-slate-950 px-1 py-0.5 rounded border border-cyan-500/30 shadow-sm whitespace-nowrap">
+              UCL: {current.upper} hrs
+            </span>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Description Explanation */}
+      <div className="p-4 bg-cyan-500/5 dark:bg-cyan-950/20 border border-cyan-500/10 dark:border-cyan-900/30 rounded-xl">
+        <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <strong>How to read this:</strong> {current.desc}
+        </p>
+        <div className="mt-2.5 flex flex-wrap gap-4 text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800/80 pt-2 font-medium">
+          <span>📉 <strong>LCL (Lower Confidence Limit)</strong>: Worst-case estimate. Essential for safety & warranties.</span>
+          <span>📈 <strong>UCL (Upper Confidence Limit)</strong>: Best-case estimate. Optimistic lifecycle potential.</span>
+        </div>
+      </div>
+    </div>
+  );
+};

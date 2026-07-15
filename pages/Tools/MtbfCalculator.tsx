@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { calculateMTBF } from "../../services/reliabilityMath";
 import 'katex/dist/katex.min.css';
 import { BlockMath, InlineMath } from 'react-katex';
-import { reliabilityStandards, getGroupedStandards } from "../../data/standards";
+import { motion } from "framer-motion";
 import {
   Clock,
   RotateCcw,
@@ -11,7 +11,6 @@ import {
   Check,
   Table,
   BarChart,
-  BookOpen,
   Target,
   TrendingUp,
   Activity,
@@ -37,7 +36,6 @@ interface MtbfState {
   mode: "MTBF" | "MTTF";
   totalHours: string;
   failures: string;
-  selectedStandardId: string;
   result: number | null;
 }
 
@@ -46,11 +44,10 @@ const MtbfCalculator: React.FC = () => {
     mode: "MTBF",
     totalHours: "8760",
     failures: "4",
-    selectedStandardId: "",
     result: null,
   });
 
-  const { mode, totalHours, failures, selectedStandardId, result } = state;
+  const { mode, totalHours, failures, result } = state;
   
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<{ hours?: string; failures?: string }>({});
@@ -127,24 +124,7 @@ const MtbfCalculator: React.FC = () => {
     }
   };
 
-  const handleStandardSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = e.target.value;
-    setState(s => ({ ...s, selectedStandardId: id }));
-    if (!id) return;
-    
-    const comp = reliabilityStandards.find(c => c.id === id);
-    if (comp) {
-       // comp.failureRate is in Failures Per Million Hours (FPMH)
-       const mHours = 1000000 / comp.failureRate;
-       setState(s => ({ 
-         ...s, 
-         totalHours: "1000000",
-         failures: comp.failureRate.toString(),
-         result: mHours
-       }));
-       setErrors({});
-    }
-  };
+
 
   const generateLookupTable = () => {
     const basis = 8760;
@@ -170,42 +150,35 @@ const MtbfCalculator: React.FC = () => {
     <div className="grid md:grid-cols-2 gap-8" ref={toolRef}>
       <AnimatedContainer animation="slideUp" delay={0.1} className="space-y-6">
         {/* Toggle Calculation Mode */}
-        <div className="bg-slate-100 dark:bg-slate-900/50 p-1 rounded-lg inline-flex">
+        <div className="bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-2xl inline-flex w-full sm:w-auto border border-slate-205 dark:border-slate-800 relative shadow-inner">
           <button
+            type="button"
             onClick={() => setState(s => ({ ...s, mode: "MTBF" }))}
-            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${mode === "MTBF" ? "bg-cyan-600 text-white shadow" : "text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}
+            className={`relative z-10 flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-sm font-black transition-colors duration-300 ${mode === "MTBF" ? "text-white" : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-350"}`}
           >
+            {mode === "MTBF" && (
+              <motion.div
+                layoutId="activeMode"
+                className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl -z-10 shadow-md shadow-cyan-500/25"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
             MTBF (Repairable)
           </button>
           <button
+            type="button"
             onClick={() => setState(s => ({ ...s, mode: "MTTF" }))}
-            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${mode === "MTTF" ? "bg-cyan-600 text-white shadow" : "text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}
+            className={`relative z-10 flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-sm font-black transition-colors duration-300 ${mode === "MTTF" ? "text-white" : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-350"}`}
           >
+            {mode === "MTTF" && (
+              <motion.div
+                layoutId="activeMode"
+                className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-600 rounded-xl -z-10 shadow-md shadow-violet-500/25"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
             MTTF (Non-Repairable)
           </button>
-        </div>
-
-        <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-cyan-600" /> Standard Component Library
-            <HelpTooltip text="Auto-fill failure rates from industry standards like MIL-HDBK-217F or Telcordia (values in Failures Per Million Hours)." />
-          </label>
-          <select 
-            value={selectedStandardId}
-            onChange={handleStandardSelect}
-            className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg p-3 text-sm text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-cyan-500 outline-none"
-          >
-            <option value="">-- Custom Input --</option>
-            {Object.entries(getGroupedStandards()).map(([std, comps]) => (
-              <optgroup key={std} label={std}>
-                {comps.map(c => (
-                  <option key={c.id} value={c.id}>
-                    {c.category} - {c.name} ({c.failureRate} FPMH)
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
         </div>
 
         <form onSubmit={handleCalculate} className="space-y-4">
@@ -214,13 +187,18 @@ const MtbfCalculator: React.FC = () => {
               Total Operational Time (Hours)
               <HelpTooltip text="Sum of runtime for all units. (e.g. 10 motors * 1000 hours = 10,000 unit-hours)" />
             </label>
-            <input
-              type="number"
-              value={totalHours}
-              onChange={(e) => setState(s => ({ ...s, totalHours: e.target.value }))}
-              placeholder="e.g., 8760"
-              className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-colors ${errors.hours ? "border-red-500" : "border-slate-300 dark:border-slate-700"}`}
-            />
+            <div className="relative rounded-lg shadow-sm">
+              <input
+                type="number"
+                value={totalHours}
+                onChange={(e) => setState(s => ({ ...s, totalHours: e.target.value }))}
+                placeholder="e.g., 8760"
+                className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg pl-4 pr-16 py-3 text-slate-900 dark:text-white focus:ring-2 ${mode === 'MTBF' ? 'focus:ring-cyan-500' : 'focus:ring-violet-500'} focus:border-transparent outline-none transition-colors ${errors.hours ? "border-red-500" : "border-slate-300 dark:border-slate-700"}`}
+              />
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-500">hours</span>
+              </div>
+            </div>
             {errors.hours && (
               <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
                 <AlertCircle className="w-3 h-3" /> {errors.hours}
@@ -241,13 +219,20 @@ const MtbfCalculator: React.FC = () => {
                 }
               />
             </label>
-            <input
-              type="number"
-              value={failures}
-              onChange={(e) => setState(s => ({ ...s, failures: e.target.value }))}
-              placeholder="e.g., 5"
-              className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-colors ${errors.failures ? "border-red-500" : "border-slate-300 dark:border-slate-700"}`}
-            />
+            <div className="relative rounded-lg shadow-sm">
+              <input
+                type="number"
+                value={failures}
+                onChange={(e) => setState(s => ({ ...s, failures: e.target.value }))}
+                placeholder="e.g., 5"
+                className={`w-full bg-slate-50 dark:bg-slate-900 border rounded-lg pl-4 pr-16 py-3 text-slate-900 dark:text-white focus:ring-2 ${mode === 'MTBF' ? 'focus:ring-cyan-500' : 'focus:ring-violet-500'} focus:border-transparent outline-none transition-colors ${errors.failures ? "border-red-500" : "border-slate-300 dark:border-slate-700"}`}
+              />
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                  {mode === "MTBF" ? "failures" : "units"}
+                </span>
+              </div>
+            </div>
             {errors.failures && (
               <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
                 <AlertCircle className="w-3 h-3" /> {errors.failures}
@@ -257,35 +242,71 @@ const MtbfCalculator: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20"
+            className={`w-full text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${mode === "MTBF" ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-cyan-500/20 hover:shadow-cyan-500/30" : "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-violet-500/20 hover:shadow-violet-500/30"}`}
           >
-            <Clock className="w-5 h-5" /> Calculate {mode}
+            <Clock className="w-5 h-5 animate-pulse" /> Calculate {mode}
           </button>
         </form>
 
         {result !== null && (
-          <AnimatedContainer animation="scaleUp" delay={0.1} className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 relative group">
-            <button
-              onClick={handleCopy}
-              className="absolute top-4 right-4 text-slate-400 hover:text-cyan-500 transition-colors"
+          <div className="relative group">
+            {/* Glowing blur background halo */}
+            <div className={`absolute -inset-0.5 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-700 ${mode === "MTBF" ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-gradient-to-r from-violet-500 to-fuchsia-600"}`}></div>
+            
+            <AnimatedContainer 
+              animation="scaleUp" 
+              delay={0.1} 
+              className={`relative border rounded-2xl p-6 shadow-xl bg-white dark:bg-slate-900 ${mode === "MTBF" ? "border-cyan-500/25 dark:border-cyan-500/35" : "border-violet-500/25 dark:border-violet-500/35"}`}
             >
-              {copied ? (
-                <Check className="w-5 h-5" />
-              ) : (
-                <Copy className="w-5 h-5" />
-              )}
-            </button>
-            <div className="text-sm text-slate-500 uppercase font-bold tracking-wider mb-1">
-              Result ({mode})
-            </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              {result.toLocaleString(undefined, { maximumFractionDigits: 1 })}{" "}
-              <span className="text-lg text-slate-500 font-normal">hours</span>
-            </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700 pt-2 mt-2">
-              failures/hour
-            </div>
-          </AnimatedContainer>
+              <button
+                onClick={handleCopy}
+                className={`absolute top-4 right-4 transition-colors ${mode === "MTBF" ? "text-slate-400 hover:text-cyan-500" : "text-slate-400 hover:text-violet-500"}`}
+              >
+                {copied ? (
+                  <Check className="w-5 h-5" />
+                ) : (
+                  <Copy className="w-5 h-5" />
+                )}
+              </button>
+
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${mode === "MTBF" ? "bg-cyan-100 dark:bg-cyan-950/55 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-900" : "bg-violet-100 dark:bg-violet-950/55 text-violet-705 dark:text-violet-300 border border-violet-200 dark:border-violet-900"}`}>
+                  {mode === "MTBF" ? "🛠️ Repairable System" : "🛑 Non-Repairable Asset"}
+                </span>
+              </div>
+
+              <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider mb-0.5">
+                Estimated Mean Time ({mode})
+              </div>
+              
+              <div className="text-3xl font-black text-slate-900 dark:text-white mb-4">
+                {result.toLocaleString(undefined, { maximumFractionDigits: 1 })}{" "}
+                <span className="text-lg text-slate-550 dark:text-slate-450 font-normal">hours</span>
+              </div>
+
+              {/* Detailed failure metrics grid */}
+              <div className="grid grid-cols-3 gap-3 border-t border-slate-200 dark:border-slate-800/80 pt-4 text-left">
+                <div>
+                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Hour</div>
+                  <div className={`text-xs font-black mt-0.5 truncate ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                    {(1 / result).toExponential(3)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Year</div>
+                  <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                    {(8760 / result).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failure Rate (FPMH)</div>
+                  <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                    {(1000000 / result).toLocaleString(undefined, { maximumFractionDigits: 1 })}
+                  </div>
+                </div>
+              </div>
+            </AnimatedContainer>
+          </div>
         )}
       </AnimatedContainer>
 
@@ -293,7 +314,7 @@ const MtbfCalculator: React.FC = () => {
         {/* Formula Box - Live Math Rendering */}
         <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto">
           <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white mb-3">
-            <RotateCcw className="w-4 h-4 text-cyan-600" /> Live Equation
+            <RotateCcw className={`w-4 h-4 ${mode === 'MTBF' ? 'text-cyan-600' : 'text-violet-605'}`} /> Live Equation
             <HelpTooltip text="Mathematical representation of the current inputs. Updates automatically as you type." />
           </h3>
           <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">
@@ -304,21 +325,21 @@ const MtbfCalculator: React.FC = () => {
         {/* MTBF vs Failure Rate Trend Graph */}
         <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm h-64 flex flex-col">
           <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white mb-4">
-            <TrendingUp className="w-4 h-4 text-cyan-600" /> MTBF vs Failure Frequency (Basis: 1 Yr / 8760 Hr)
+            <TrendingUp className={`w-4 h-4 ${mode === 'MTBF' ? 'text-cyan-600' : 'text-violet-605'}`} /> {mode} vs Failure Frequency (Basis: 1 Yr / 8760 Hr)
             <HelpTooltip text="Shows how rapidly MTBF degrades as breakdowns become more frequent. Notice the non-linear relationship." />
           </h3>
           <div className="flex-1 w-full text-xs">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lookupData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <Line type="monotone" dataKey="mtbf" stroke="#0891b2" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={1500} />
+                <Line type="monotone" dataKey="mtbf" stroke={mode === 'MTBF' ? '#06b6d4' : '#8b5cf6'} strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={1500} />
                 <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} opacity={0.3} />
                 <XAxis dataKey="period" stroke="#64748b" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
                 <YAxis stroke="#64748b" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} tickFormatter={(val) => `${val}h`} />
                 <RechartsTooltip 
                   contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#f8fafc' }}
-                  itemStyle={{ color: '#22d3ee' }}
+                  itemStyle={{ color: mode === 'MTBF' ? '#22d3ee' : '#c084fc' }}
                   labelStyle={{ fontWeight: 'bold', marginBottom: '4px' }}
-                  formatter={(value: number) => [`${Math.round(value).toLocaleString()} Hours`, 'MTBF']}
+                  formatter={(value: number) => [`${Math.round(value).toLocaleString()} Hours`, mode]}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -328,22 +349,29 @@ const MtbfCalculator: React.FC = () => {
         {/* Benchmarks */}
         <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
           <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white mb-4">
-            <BarChart className="w-4 h-4 text-cyan-600" /> Industry Benchmarks
-            (IEEE 493)
+            <BarChart className={`w-4 h-4 ${mode === 'MTBF' ? 'text-cyan-600' : 'text-violet-605'}`} /> Industry Benchmarks (IEEE 493)
           </h3>
-          <div className="space-y-3">
-            {Object.entries(ASSET_BENCHMARKS)
-              .slice(0, 3)
-              .map(([asset, data]) => (
-                <div key={asset} className="flex justify-between text-xs">
-                  <span className="text-slate-600 dark:text-slate-300 font-medium">
-                    {asset}
-                  </span>
-                  <span className="text-cyan-600 dark:text-cyan-400 font-bold">
-                    {data.range}
-                  </span>
-                </div>
-              ))}
+          <div className="overflow-hidden border border-slate-200 dark:border-slate-700 rounded-lg">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-xs">
+              <thead className="bg-slate-50 dark:bg-slate-900/50">
+                <tr>
+                  <th className="px-4 py-2.5 text-left font-extrabold text-slate-450 dark:text-slate-400 uppercase tracking-wider">Asset Type</th>
+                  <th className="px-4 py-2.5 text-right font-extrabold text-slate-450 dark:text-slate-400 uppercase tracking-wider">Typical Range</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-150 dark:divide-slate-700/40">
+                {Object.entries(ASSET_BENCHMARKS)
+                  .slice(0, 3)
+                  .map(([asset, data]) => (
+                    <tr key={asset} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors duration-150">
+                      <td className="px-4 py-2.5 font-bold text-slate-700 dark:text-slate-300">{asset}</td>
+                      <td className={`px-4 py-2.5 text-right font-extrabold ${mode === 'MTBF' ? 'text-cyan-600 dark:text-cyan-400' : 'text-violet-650 dark:text-violet-400'}`}>
+                        {data.range}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </AnimatedContainer>
@@ -358,8 +386,7 @@ const MtbfCalculator: React.FC = () => {
             inputs: {
               "Calculation Mode": mode,
               "Operational Time (Hrs)": totalHours,
-              "Number of Failures": failures,
-              "Standard Component": selectedStandardId ? reliabilityStandards.find(s => s.id === selectedStandardId)?.name || "Custom" : "Custom"
+              "Number of Failures": failures
             },
             results: {
               [`Mean Time (${mode})`]: `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours`,
@@ -384,30 +411,30 @@ const MtbfCalculator: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="space-y-6">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
-          Ultimate Reliability Metrics Guide: MTBF vs. MTTF
+          Ultimate Reliability Metrics Guide: <span className="text-cyan-600 dark:text-cyan-400">MTBF</span> vs. <span className="text-violet-600 dark:text-violet-400">MTTF</span>
         </h2>
         <p>
-          In the field of modern asset management and plant maintenance, understanding failure patterns is critical to achieving high reliability. This comprehensive guide, integrated into our <strong>reliability engineering calculator</strong> platform, explores the core concepts of Mean Time Between Failures (MTBF) and Mean Time To Failure (MTTF). By utilizing this <strong>MTBF calculator free</strong> online tool, reliability engineers and maintenance supervisors can extract actionable insights from raw operational data, transitioning from reactive firefighting to predictive maintenance excellence.
+          In the field of modern asset management and plant maintenance, understanding failure patterns is critical to achieving high reliability. This comprehensive guide, integrated into our <strong>reliability engineering calculator</strong> platform, explores the core concepts of <span className="font-extrabold text-cyan-600 dark:text-cyan-400">Mean Time Between Failures (MTBF)</span> and <span className="font-extrabold text-violet-600 dark:text-violet-400">Mean Time To Failure (MTTF)</span>. By utilizing this <strong>MTBF calculator free</strong> online tool, reliability engineers and maintenance supervisors can extract actionable insights from raw operational data, transitioning from reactive firefighting to predictive maintenance excellence.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
-          What is MTBF? (Designed for Repairable Systems)
+          What is <span className="text-cyan-600 dark:text-cyan-400">MTBF</span>? (Designed for Repairable Systems)
         </h3>
         <p>
-          Mean Time Between Failures (MTBF) is a foundational metric representing the average operational time elapsed between consecutive failures of a repairable system or asset. A system is defined as "repairable" if it can be restored to full operational capacity through maintenance actions (such as part replacement, calibration, or software patching) without replacing the entire asset. Typical examples of repairable assets include industrial pumps, gearboxes, compressor trains, manufacturing assembly robots, and software operating systems.
+          <span className="font-extrabold text-cyan-600 dark:text-cyan-400">Mean Time Between Failures (MTBF)</span> is a foundational metric representing the average operational time elapsed between consecutive failures of a repairable system or asset. A system is defined as "repairable" if it can be restored to full operational capacity through maintenance actions (such as part replacement, calibration, or software patching) without replacing the entire asset. Typical examples of repairable assets include industrial pumps, gearboxes, compressor trains, manufacturing assembly robots, and software operating systems.
         </p>
         <p>
-          Calculating MTBF helps plant engineers assess the overall health and reliability profile of their physical assets. A declining MTBF indicates a deteriorating system that may require immediate design review, root cause analysis, or a revised preventive maintenance strategy. It is essential to recognize that MTBF applies to the "Useful Life" phase of an asset's lifecycle, where the failure rate remains relatively constant. For non-constant failure rates, such as during run-in wear or rapid aging, modeling must be performed using a dedicated <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link> to accurately determine the wear-out shape parameters.
+          Calculating <span className="font-bold text-cyan-600 dark:text-cyan-400">MTBF</span> helps plant engineers assess the overall health and reliability profile of their physical assets. A declining MTBF indicates a deteriorating system that may require immediate design review, root cause analysis, or a revised preventive maintenance strategy. It is essential to recognize that MTBF applies to the <span className="font-extrabold text-emerald-600 dark:text-emerald-450">Useful Life</span> phase of an asset's lifecycle, where the failure rate remains relatively constant. For non-constant failure rates, such as during run-in wear or rapid aging, modeling must be performed using a dedicated <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull Analysis Tool</Link> to accurately determine the wear-out shape parameters.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
-          What is MTTF? (Designed for Non-Repairable Components)
+          What is <span className="text-violet-600 dark:text-violet-400">MTTF</span>? (Designed for Non-Repairable Components)
         </h3>
         <p>
-          In contrast, Mean Time To Failure (MTTF) is a statistical metric representing the expected operational lifespan of a non-repairable component before it fails and is discarded. Because these items cannot be cost-effectively repaired, the first failure terminates their service life. Examples of non-repairable parts include microprocessors, LED light bulbs, rolling-element bearings, electrical fuses, and structural bolts.
+          In contrast, <span className="font-extrabold text-violet-650 dark:text-violet-400">Mean Time To Failure (MTTF)</span> is a statistical metric representing the expected operational lifespan of a non-repairable component before it fails and is discarded. Because these items cannot be cost-effectively repaired, the first failure terminates their service life. Examples of non-repairable parts include microprocessors, LED light bulbs, rolling-element bearings, electrical fuses, and structural bolts.
         </p>
         <p>
-          MTTF represents the true average lifetime of an asset class. In practice, MTTF is calculated by testing a large batch of identical components until they all fail, summing their cumulative operating lifetimes, and dividing by the total number of tested items. When engineering systems for critical applications, selecting components with verified high MTTF scores is paramount to preventing premature catastrophic system failure.
+          <span className="font-bold text-violet-650 dark:text-violet-400">MTTF</span> represents the true average lifetime of an asset class. In practice, MTTF is calculated by testing a large batch of identical components until they all fail, summing their cumulative operating lifetimes, and dividing by the total number of tested items. When engineering systems for critical applications, selecting components with verified high MTTF scores is paramount to preventing premature catastrophic system failure.
         </p>
 
         <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
@@ -459,30 +486,30 @@ const MtbfCalculator: React.FC = () => {
         </p>
 
         <h2 id="applications" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
-          The Bathtub Curve and Failure Rate Profiles
+          The <span className="text-cyan-600 dark:text-cyan-400">Bathtub Curve</span> and Failure Rate Profiles
         </h2>
         <p>
-          To apply MTBF effectively, engineers must reference the <strong>Bathtub Curve</strong>, which describes the hazard rate (failure frequency) of a product over time. The curve is divided into three distinct phases:
+          To apply MTBF effectively, engineers must reference the <strong>Bathtub Curve</strong>, which describes the hazard rate (failure frequency of a product over time). The curve is divided into three distinct phases:
         </p>
         
         <div className="my-8">
           <BathtubCurveDiagram />
         </div>
         <div className="grid md:grid-cols-3 gap-6 my-8">
-          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">1. Infant Mortality</h4>
+          <div className="p-5 bg-gradient-to-b from-rose-500/5 to-transparent border border-rose-500/20 dark:border-rose-500/30 rounded-2xl shadow-sm">
+            <h4 className="font-bold text-rose-600 dark:text-rose-455 mb-2">1. Infant Mortality</h4>
             <p className="text-sm">
               Characterized by a rapidly decreasing failure rate. Failures are caused by manufacturing defects, poor installation, or material weaknesses. To analyze infant mortality and fit life data parameters, engineers rely on a <Link to="/weibull-analysis" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Weibull analysis tool</Link> with Beta (β) &lt; 1.
             </p>
           </div>
-          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">2. Useful Life</h4>
+          <div className="p-5 bg-gradient-to-b from-emerald-500/5 to-transparent border border-emerald-500/20 dark:border-emerald-500/30 rounded-2xl shadow-sm">
+            <h4 className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">2. Useful Life</h4>
             <p className="text-sm">
               The failure rate remains low and statistically constant (constant hazard rate, β = 1). Failures occur randomly due to environmental stresses or operator error. <strong>MTBF is only valid during this phase.</strong>
             </p>
           </div>
-          <div className="p-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-            <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">3. Wear-Out Phase</h4>
+          <div className="p-5 bg-gradient-to-b from-amber-500/5 to-transparent border border-amber-500/20 dark:border-amber-500/30 rounded-2xl shadow-sm">
+            <h4 className="font-bold text-amber-600 dark:text-amber-455 mb-2">3. Wear-Out Phase</h4>
             <p className="text-sm">
               Characterized by a rapidly increasing failure rate (β &gt; 1) as components reach their mechanical limits due to friction, fatigue, or corrosion. Engineers must track this to compute the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link>.
             </p>
@@ -490,7 +517,7 @@ const MtbfCalculator: React.FC = () => {
         </div>
 
         <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
-          Integrating MTBF, MTTR, and System Availability
+          Integrating <span className="text-cyan-600 dark:text-cyan-400">MTBF</span>, <span className="text-rose-600 dark:text-rose-400">MTTR</span>, and System <span className="text-emerald-600 dark:text-emerald-400">Availability</span>
         </h2>
         <p>
           MTBF cannot be viewed in isolation. True plant uptime is governed by the relationship between how frequently a system breaks down (MTBF) and how fast it can be repaired (Mean Time to Repair, or MTTR). Together, these metrics define the system's <strong>Inherent Availability (Ai)</strong>:
