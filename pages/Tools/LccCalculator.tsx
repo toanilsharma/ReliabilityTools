@@ -1,354 +1,873 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { DollarSign, TrendingUp, Activity, BookOpen, Target, Award, CheckCircle, AlertCircle, ArrowRight, Clock, Shield, AlertTriangle, Settings, Info, BarChart2, RotateCcw } from 'lucide-react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  DollarSign, 
+  TrendingUp, 
+  Activity, 
+  BookOpen, 
+  Target, 
+  Award, 
+  CheckCircle, 
+  AlertCircle, 
+  ArrowRight, 
+  Clock, 
+  Shield, 
+  AlertTriangle, 
+  Settings, 
+  Info, 
+  BarChart2, 
+  RotateCcw,
+  Layers,
+  Sparkles
+} from 'lucide-react';
 import 'katex/dist/katex.min.css';
-import { BlockMath } from 'react-katex';
+import { BlockMath, InlineMath } from 'react-katex';
+import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
-import ReactECharts from 'echarts-for-react';
-import { useTheme } from '../../context/ThemeContext';
+import RelatedTools from '../../components/RelatedTools';
+import AnimatedContainer from '../../components/AnimatedContainer';
 import ShareAndExport from '../../components/ShareAndExport';
-import { useRef } from 'react';
+import { useRecentTools } from '../../hooks/useRecentTools';
+import { useShareableState } from '../../hooks/useShareableState';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
+import { motion } from 'framer-motion';
 
+const CURRENCIES = [
+  { code: 'USD', symbol: '$', label: 'USD ($)' },
+  { code: 'EUR', symbol: '€', label: 'EUR (€)' },
+  { code: 'GBP', symbol: '£', label: 'GBP (£)' },
+  { code: 'INR', symbol: '₹', label: 'INR (₹)' },
+  { code: 'JPY', symbol: '¥', label: 'JPY (¥)' },
+  { code: 'CAD', symbol: 'C$', label: 'CAD (C$)' },
+  { code: 'AUD', symbol: 'A$', label: 'AUD (A$)' },
+  { code: 'CNY', symbol: '¥', label: 'CNY (¥)' }
+];
 
-// Mock function if service is missing or not exposed properly, 
-// though we usually expect services to be there. 
-// I will implement the calculation logic locally to be safe and self-contained.
-const calculateLCCLocal = (params: any) => {
-  const { capex, energy, maint, downtimeHours, downtimeCostPerHour, years, residual, discountRate, inflationRate } = params;
+interface LccState {
+  currency: string;
+  discountRate: number;
+  inflationRate: number;
+  lifespan: number;
+  downtimeCost: number;
+  
+  // Option A (Standard)
+  costA: number;
+  installationA: number;
+  energyA: number;
+  maintA: number;
+  downtimeA: number;
+  overhaulA: number;
+  overhaulYearA: number;
+  disposalA: number;
+  residualA: number;
+  
+  // Option B (Premium)
+  costB: number;
+  installationB: number;
+  energyB: number;
+  maintB: number;
+  downtimeB: number;
+  overhaulB: number;
+  overhaulYearB: number;
+  disposalB: number;
+  residualB: number;
+}
+
+const calculateLCCLocal = (params: {
+  capex: number;
+  installation: number;
+  energy: number;
+  maint: number;
+  downtimeHours: number;
+  downtimeCostPerHour: number;
+  overhaul: number;
+  overhaulYear: number;
+  disposal: number;
+  years: number;
+  residual: number;
+  discountRate: number;
+  inflationRate: number;
+}) => {
+  const { capex, installation, energy, maint, downtimeHours, downtimeCostPerHour, overhaul, overhaulYear, disposal, years, residual, discountRate, inflationRate } = params;
   const r = discountRate / 100;
   const i = inflationRate / 100;
-  let npv = capex;
-  const cumulativeData = [{ year: 0, cost: capex }];
-  const baseAnnualOpex = energy + maint + (downtimeHours * downtimeCostPerHour);
-  let currentAccumulated = capex;
+
+  const pvAcquisition = capex + installation;
+  let runningNPV = pvAcquisition;
+  const cumulativeData = [{ year: 0, cost: pvAcquisition }];
+  
+  let pvEnergy = 0;
+  let pvMaint = 0;
+  let pvDowntime = 0;
+  let pvOverhaul = 0;
 
   for (let year = 1; year <= years; year++) {
-    const inflatedOpex = baseAnnualOpex * Math.pow(1 + i, year);
-    const pvOpex = inflatedOpex / Math.pow(1 + r, year);
-    npv += pvOpex;
-    currentAccumulated += pvOpex;
+    const opexRecur = energy + maint + (downtimeHours * downtimeCostPerHour);
+    const pvOpex = (opexRecur * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+    
+    pvEnergy += (energy * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+    pvMaint += (maint * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+    pvDowntime += ((downtimeHours * downtimeCostPerHour) * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
 
-    if (year === years && residual > 0) {
-      const inflatedResidual = residual * Math.pow(1 + i, year);
-      const pvResidual = inflatedResidual / Math.pow(1 + r, year);
-      npv -= pvResidual;
-      currentAccumulated -= pvResidual;
+    let yearOverhaulPV = 0;
+    if (year === overhaulYear && overhaul > 0) {
+      yearOverhaulPV = (overhaul * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+      pvOverhaul += yearOverhaulPV;
     }
-    cumulativeData.push({ year, cost: currentAccumulated });
+
+    let yearDisposalPV = 0;
+    let yearResidualPV = 0;
+    if (year === years) {
+      if (disposal > 0) {
+        yearDisposalPV = (disposal * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+      }
+      if (residual > 0) {
+        yearResidualPV = (residual * Math.pow(1 + i, year)) / Math.pow(1 + r, year);
+      }
+    }
+
+    runningNPV += pvOpex + yearOverhaulPV + yearDisposalPV - yearResidualPV;
+    cumulativeData.push({ year, cost: runningNPV });
   }
-  return { npv, cumulativeData, baseAnnualOpex };
+
+  const pvDisposal = (disposal * Math.pow(1 + i, years)) / Math.pow(1 + r, years);
+  const pvResidual = (residual * Math.pow(1 + i, years)) / Math.pow(1 + r, years);
+
+  return {
+    npv: runningNPV,
+    cumulativeData,
+    pvAcquisition,
+    pvEnergy,
+    pvMaint: pvMaint + pvOverhaul,
+    pvDowntime,
+    pvDisposal,
+    pvResidual
+  };
+};
+
+const CostBreakdownChart = ({ analysisA, analysisB, curSymbol }: { analysisA: any; analysisB: any; curSymbol: string }) => {
+  const maxNpv = Math.max(analysisA.npv, analysisB.npv);
+  
+  const getWidthPercent = (val: number) => {
+    if (maxNpv <= 0) return "0%";
+    return `${(val / maxNpv) * 100}%`;
+  };
+
+  const renderOptionBar = (label: string, data: any, isPremium: boolean) => {
+    const wAcq = getWidthPercent(data.pvAcquisition);
+    const wEnergy = getWidthPercent(data.pvEnergy);
+    const wMaint = getWidthPercent(data.pvMaint);
+    const wDowntime = getWidthPercent(data.pvDowntime);
+    const wDisposal = getWidthPercent(data.pvDisposal);
+    
+    return (
+      <div className="space-y-1.5">
+        <div className="flex justify-between items-center text-xs font-bold">
+          <span className={isPremium ? "text-cyan-600 dark:text-cyan-400" : "text-slate-600 dark:text-slate-400"}>{label}</span>
+          <span className="font-mono text-slate-800 dark:text-slate-300">{curSymbol}{Math.round(data.npv).toLocaleString()}</span>
+        </div>
+        
+        <div className="w-full bg-slate-100 dark:bg-slate-900/60 h-8 rounded-xl overflow-hidden flex border border-slate-205 dark:border-slate-800 shadow-inner">
+          <div style={{ width: wAcq }} className="bg-indigo-500 hover:opacity-90 transition-all flex items-center justify-center text-[10px] text-white font-bold" title={`Capex: ${curSymbol}${Math.round(data.pvAcquisition).toLocaleString()}`}>
+            {parseFloat(wAcq) > 12 && "CapEx"}
+          </div>
+          <div style={{ width: wEnergy }} className="bg-amber-500 hover:opacity-90 transition-all flex items-center justify-center text-[10px] text-white font-bold" title={`Energy: ${curSymbol}${Math.round(data.pvEnergy).toLocaleString()}`}>
+            {parseFloat(wEnergy) > 12 && "Power"}
+          </div>
+          <div style={{ width: wMaint }} className="bg-emerald-500 hover:opacity-90 transition-all flex items-center justify-center text-[10px] text-white font-bold" title={`Maintenance: ${curSymbol}${Math.round(data.pvMaint).toLocaleString()}`}>
+            {parseFloat(wMaint) > 12 && "Maint"}
+          </div>
+          <div style={{ width: wDowntime }} className="bg-rose-500 hover:opacity-90 transition-all flex items-center justify-center text-[10px] text-white font-bold" title={`Downtime: ${curSymbol}${Math.round(data.pvDowntime).toLocaleString()}`}>
+            {parseFloat(wDowntime) > 12 && "Down"}
+          </div>
+          {data.pvDisposal > 0 && (
+            <div style={{ width: wDisposal }} className="bg-slate-500 hover:opacity-90 transition-all flex items-center justify-center text-[10px] text-white font-bold" title={`Disposal: ${curSymbol}${Math.round(data.pvDisposal).toLocaleString()}`}>
+              {parseFloat(wDisposal) > 12 && "Disp"}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+      <h3 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+        <Layers className="w-4 h-4 text-cyan-600" /> Life Cycle Cost Breakdown (NPV)
+      </h3>
+      
+      <div className="space-y-4">
+        {renderOptionBar("Option A (Standard)", analysisA, false)}
+        {renderOptionBar("Option B (Premium)", analysisB, true)}
+      </div>
+
+      <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-700 pt-3">
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-indigo-500 rounded-md"></span> Acquisition (CapEx)</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-amber-500 rounded-md"></span> Energy / Power</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-emerald-500 rounded-md"></span> Maint & Overhauls</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 bg-rose-500 rounded-md"></span> Outage Downtime</span>
+      </div>
+    </div>
+  );
 };
 
 const LccCalculator: React.FC = () => {
   const toolRef = useRef<HTMLDivElement>(null);
-  const shareUrl = window.location.href;
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const { addRecentTool } = useRecentTools();
+  const location = useLocation();
 
-  const [params, setParams] = useState({
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [state, setState, shareUrl] = useShareableState<LccState>({
     currency: 'USD',
     discountRate: 8,
-    inflationRate: 2,
-    lifespan: 10,
-    costA: 15000, energyA: 4000, maintA: 1200, downtimeA: 20, residualA: 0,
-    costB: 22000, energyB: 2500, maintB: 400, downtimeB: 5, residualB: 2000,
-    downtimeCost: 500
+    inflationRate: 2.5,
+    lifespan: 12,
+    downtimeCost: 600,
+    
+    costA: 15000,
+    installationA: 1500,
+    energyA: 4200,
+    maintA: 1300,
+    downtimeA: 24,
+    overhaulA: 3000,
+    overhaulYearA: 6,
+    disposalA: 1000,
+    residualA: 500,
+    
+    costB: 24000,
+    installationB: 2000,
+    energyB: 2200,
+    maintB: 450,
+    downtimeB: 6,
+    overhaulB: 0,
+    overhaulYearB: 0,
+    disposalB: 800,
+    residualB: 3000
   });
 
-  const handleChange = (field: string, value: any) => {
-    setParams(prev => ({ ...prev, [field]: value }));
+  const {
+    currency, discountRate, inflationRate, lifespan, downtimeCost,
+    costA, installationA, energyA, maintA, downtimeA, overhaulA, overhaulYearA, disposalA, residualA,
+    costB, installationB, energyB, maintB, downtimeB, overhaulB, overhaulYearB, disposalB, residualB
+  } = state;
+
+  useEffect(() => {
+    addRecentTool({
+      id: 'lcc',
+      name: 'Life Cycle Cost (LCC)',
+      path: '/tools/lcc'
+    });
+  }, []);
+
+  const validateInputs = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+
+    const checkPositive = (val: number, name: string) => {
+      if (isNaN(val) || val < 0) {
+        newErrors[name] = "Enter a valid positive number.";
+        isValid = false;
+      }
+    };
+
+    checkPositive(discountRate, "discountRate");
+    checkPositive(inflationRate, "inflationRate");
+    checkPositive(lifespan, "lifespan");
+    checkPositive(downtimeCost, "downtimeCost");
+
+    checkPositive(costA, "costA");
+    checkPositive(energyA, "energyA");
+    checkPositive(maintA, "maintA");
+    checkPositive(downtimeA, "downtimeA");
+
+    checkPositive(costB, "costB");
+    checkPositive(energyB, "energyB");
+    checkPositive(maintB, "maintB");
+    checkPositive(downtimeB, "downtimeB");
+
+    if (showAdvanced) {
+      checkPositive(installationA, "installationA");
+      checkPositive(overhaulA, "overhaulA");
+      checkPositive(disposalA, "disposalA");
+      checkPositive(residualA, "residualA");
+      
+      checkPositive(installationB, "installationB");
+      checkPositive(overhaulB, "overhaulB");
+      checkPositive(disposalB, "disposalB");
+      checkPositive(residualB, "residualB");
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
-  const analysisA = useMemo(() => calculateLCCLocal({
-    capex: params.costA, energy: params.energyA, maint: params.maintA,
-    downtimeHours: params.downtimeA, downtimeCostPerHour: params.downtimeCost,
-    years: params.lifespan, residual: params.residualA,
-    discountRate: params.discountRate, inflationRate: params.inflationRate
-  }), [params]);
+  const handleFieldChange = (field: keyof LccState, val: string | number) => {
+    setState(s => ({ ...s, [field]: typeof val === 'string' ? (field === 'currency' ? val : parseFloat(val) || 0) : val }));
+  };
 
-  const analysisB = useMemo(() => calculateLCCLocal({
-    capex: params.costB, energy: params.energyB, maint: params.maintB,
-    downtimeHours: params.downtimeB, downtimeCostPerHour: params.downtimeCost,
-    years: params.lifespan, residual: params.residualB,
-    discountRate: params.discountRate, inflationRate: params.inflationRate
-  }), [params]);
+  const currentCurrency = useMemo(() => {
+    return CURRENCIES.find(c => c.code === currency) || CURRENCIES[0];
+  }, [currency]);
+
+  const curSymbol = currentCurrency.symbol;
+
+  const analysisA = useMemo(() => {
+    return calculateLCCLocal({
+      capex: costA,
+      installation: showAdvanced ? installationA : 0,
+      energy: energyA,
+      maint: maintA,
+      downtimeHours: downtimeA,
+      downtimeCostPerHour: downtimeCost,
+      overhaul: showAdvanced ? overhaulA : 0,
+      overhaulYear: showAdvanced ? overhaulYearA : 0,
+      disposal: showAdvanced ? disposalA : 0,
+      years: lifespan,
+      residual: showAdvanced ? residualA : 0,
+      discountRate,
+      inflationRate
+    });
+  }, [state, showAdvanced]);
+
+  const analysisB = useMemo(() => {
+    return calculateLCCLocal({
+      capex: costB,
+      installation: showAdvanced ? installationB : 0,
+      energy: energyB,
+      maint: maintB,
+      downtimeHours: downtimeB,
+      downtimeCostPerHour: downtimeCost,
+      overhaul: showAdvanced ? overhaulB : 0,
+      overhaulYear: showAdvanced ? overhaulYearB : 0,
+      disposal: showAdvanced ? disposalB : 0,
+      years: lifespan,
+      residual: showAdvanced ? residualB : 0,
+      discountRate,
+      inflationRate
+    });
+  }, [state, showAdvanced]);
 
   const diff = analysisA.npv - analysisB.npv;
   const isBBetter = analysisB.npv < analysisA.npv;
-  const savingsPercent = (Math.abs(diff) / analysisA.npv) * 100;
-
-  const { theme } = useTheme();
-  const chartColors = {
-    grid: theme === 'dark' ? '#334155' : '#e2e8f0',
-    axis: theme === 'dark' ? '#94a3b8' : '#64748b',
-  };
+  const savingsPercent = (Math.abs(diff) / Math.max(1, analysisA.npv)) * 100;
 
   const chartData = useMemo(() => {
-    return analysisA.cumulativeData.map((a, i) => ({
-      year: a.year,
-      costA: Math.round(a.cost),
-      costB: Math.round(analysisB.cumulativeData[i]?.cost || 0)
+    return analysisA.cumulativeData.map((pt, idx) => ({
+      year: pt.year,
+      "Option A (Standard)": Math.round(pt.cost),
+      "Option B (Premium)": Math.round(analysisB.cumulativeData[idx]?.cost || 0)
     }));
   }, [analysisA, analysisB]);
 
-  // --- Components for the Tool Area ---
-  const InputRow = ({ label, value, onChange, icon }: any) => (
-    <div className="flex items-center justify-between mb-2">
-      <label className="text-xs font-semibold text-slate-500 uppercase">{label}</label>
-      <div className="relative w-32">
-        <span className="absolute left-3 top-1.5 text-slate-400 text-xs font-bold">{icon}</span>
-        <input
-          type="number"
-          value={value}
-          onChange={e => onChange(Number(e.target.value))}
-          className="w-full py-1 pl-8 pr-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded text-sm font-bold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-cyan-500 outline-none"
+  // Compute break-even year
+  const breakevenYear = useMemo(() => {
+    for (let y = 0; y <= lifespan; y++) {
+      const ptA = analysisA.cumulativeData[y];
+      const ptB = analysisB.cumulativeData[y];
+      if (ptB && ptA && ptB.cost < ptA.cost) {
+        return y;
+      }
+    }
+    return null;
+  }, [analysisA, analysisB, lifespan]);
+
+  const ToolComponent = (
+    <div className="space-y-6" ref={toolRef}>
+      
+      {/* Settings Grid Card */}
+      <div className="bg-slate-105 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative shadow-inner">
+        <div className="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <h3 className="text-sm font-black text-slate-805 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <Settings className="w-4 h-4 text-cyan-600" /> Economic Parameters
+          </h3>
+          <button 
+            onClick={() => setShowAdvanced(!showAdvanced)} 
+            className="text-xs bg-white dark:bg-slate-850 hover:border-cyan-500 border border-slate-200 dark:border-slate-700 px-3.5 py-1.5 rounded-xl font-black text-cyan-655 dark:text-cyan-400 shadow-sm transition"
+          >
+            {showAdvanced ? "⚡ Simple Modeling" : "🛠️ Enable Advanced Fields"}
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs font-bold text-slate-500">Currency</label>
+              <HelpTooltip text="Select the currency for CapEx, OpEx, and Downtime Cost calculations." />
+            </div>
+            <select
+              value={currency}
+              onChange={(e) => handleFieldChange("currency", e.target.value)}
+              className="w-full bg-white dark:bg-slate-850 border border-slate-305 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-cyan-500 outline-none cursor-pointer"
+            >
+              {CURRENCIES.map(c => (
+                <option key={c.code} value={c.code}>{c.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs font-bold text-slate-500">Discount Rate (%)</label>
+              <HelpTooltip text="The annual cost of capital, representing the earning potential if money was invested elsewhere." />
+            </div>
+            <input
+              type="number"
+              step="0.5"
+              value={discountRate}
+              onChange={(e) => handleFieldChange("discountRate", e.target.value)}
+              className="w-full bg-white dark:bg-slate-850 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs font-bold text-slate-500">Inflation Rate (%)</label>
+              <HelpTooltip text="The annual rate at which OPEX costs (labor, power, materials) will increase over time." />
+            </div>
+            <input
+              type="number"
+              step="0.1"
+              value={inflationRate}
+              onChange={(e) => handleFieldChange("inflationRate", e.target.value)}
+              className="w-full bg-white dark:bg-slate-855 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs font-bold text-slate-500">Asset Lifespan (Years)</label>
+              <HelpTooltip text="Duration of life-cycle evaluation." />
+            </div>
+            <input
+              type="number"
+              value={lifespan}
+              onChange={(e) => handleFieldChange("lifespan", e.target.value)}
+              className="w-full bg-white dark:bg-slate-850 border border-slate-305 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+            />
+          </div>
+
+          <div className="col-span-2 sm:col-span-1">
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs font-bold text-slate-505">Downtime Cost ({curSymbol}/Hr)</label>
+              <HelpTooltip text="Production loss or operational cost penalty per hour of unscheduled breakdown." />
+            </div>
+            <input
+              type="number"
+              value={downtimeCost}
+              onChange={(e) => handleFieldChange("downtimeCost", e.target.value)}
+              className="w-full bg-white dark:bg-slate-850 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-slate-900 dark:text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Grid */}
+      <div className="grid md:grid-cols-2 gap-8">
+        
+        {/* Option A (Standard) */}
+        <AnimatedContainer animation="slideUp" delay={0.1} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-205 dark:border-slate-700/80 shadow-sm relative border-t-4 border-t-slate-450">
+          <div className="absolute top-4 right-4 bg-slate-105 dark:bg-slate-900/60 px-2 py-0.5 rounded text-[10px] font-black uppercase text-slate-400 border border-slate-200 dark:border-slate-800">
+            Baseline Design
+          </div>
+          <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-6">Option A (Standard)</h3>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Purchase Price (CapEx)</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={costA} onChange={(e) => handleFieldChange("costA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Annual Energy Cost</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={energyA} onChange={(e) => handleFieldChange("energyA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-905 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Annual Maintenance</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={maintA} onChange={(e) => handleFieldChange("maintA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-905 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Downtime (Hrs/Yr)</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <input type="number" value={downtimeA} onChange={(e) => handleFieldChange("downtimeA", e.target.value)} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                  <span className="absolute right-3 top-2.5 text-slate-400 text-[10px]">hrs</span>
+                </div>
+              </div>
+            </div>
+
+            {showAdvanced && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-4 border-t border-slate-100 dark:border-slate-750 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Installation Cost</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={installationA} onChange={(e) => handleFieldChange("installationA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Mid-Life Overhaul Cost</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={overhaulA} onChange={(e) => handleFieldChange("overhaulA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Overhaul Year</label>
+                  <input type="number" value={overhaulYearA} onChange={(e) => handleFieldChange("overhaulYearA", e.target.value)} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">End-of-Life Disposal</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={disposalA} onChange={(e) => handleFieldChange("disposalA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Salvage / Residual Value</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={residualA} onChange={(e) => handleFieldChange("residualA", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs font-bold text-slate-505">
+              <span>Standard NPV:</span>
+              <span className="text-lg font-black text-slate-900 dark:text-slate-200">{curSymbol}{Math.round(analysisA.npv).toLocaleString()}</span>
+            </div>
+          </div>
+        </AnimatedContainer>
+
+        {/* Option B (Premium) */}
+        <AnimatedContainer animation="slideUp" delay={0.2} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm relative border-t-4 border-t-cyan-505">
+          <div className="absolute top-4 right-4 bg-cyan-100 dark:bg-cyan-955/60 px-2 py-0.5 rounded text-[10px] font-black uppercase text-cyan-600 border border-cyan-200 dark:border-cyan-900">
+            Premium Design
+          </div>
+          <h3 className="font-extrabold text-lg text-slate-905 dark:text-white mb-6">Option B (Premium)</h3>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Purchase Price (CapEx)</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={costB} onChange={(e) => handleFieldChange("costB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Annual Energy Cost</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={energyB} onChange={(e) => handleFieldChange("energyB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Annual Maintenance</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                  <input type="number" value={maintB} onChange={(e) => handleFieldChange("maintB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Downtime (Hrs/Yr)</label>
+                <div className="relative rounded-lg shadow-sm">
+                  <input type="number" value={downtimeB} onChange={(e) => handleFieldChange("downtimeB", e.target.value)} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                  <span className="absolute right-3 top-2.5 text-slate-400 text-[10px]">hrs</span>
+                </div>
+              </div>
+            </div>
+
+            {showAdvanced && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-4 border-t border-slate-100 dark:border-slate-750 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Installation Cost</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={installationB} onChange={(e) => handleFieldChange("installationB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Mid-Life Overhaul Cost</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={overhaulB} onChange={(e) => handleFieldChange("overhaulB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-950 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Overhaul Year</label>
+                  <input type="number" value={overhaulYearB} onChange={(e) => handleFieldChange("overhaulYearB", e.target.value)} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-905 dark:text-white outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">End-of-Life Disposal</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={disposalB} onChange={(e) => handleFieldChange("disposalB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Salvage / Residual Value</label>
+                  <div className="relative rounded-lg shadow-sm">
+                    <span className="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">{curSymbol}</span>
+                    <input type="number" value={residualB} onChange={(e) => handleFieldChange("residualB", e.target.value)} className="w-full pl-7 pr-2 py-2 text-sm font-bold bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white outline-none" />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs font-bold text-cyan-600 dark:text-cyan-400">
+              <span>Premium NPV:</span>
+              <span className="text-lg font-black">{curSymbol}{Math.round(analysisB.npv).toLocaleString()}</span>
+            </div>
+          </div>
+        </AnimatedContainer>
+      </div>
+
+      {/* Decision Results Panel */}
+      <div className={`p-6 rounded-2xl border ${isBBetter ? 'bg-cyan-50 border-cyan-200 dark:bg-cyan-950/20 dark:border-cyan-900/40' : 'bg-slate-100 border-slate-205 dark:bg-slate-800/40 dark:border-slate-700/80'}`}>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-center md:text-left space-y-1">
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <span className="text-xs bg-emerald-105 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-350 border border-emerald-200 dark:border-emerald-900 px-2 py-0.5 rounded-full font-black uppercase">
+                🎯 Best NPV Choice
+              </span>
+            </div>
+            <h4 className="font-black text-xl text-slate-900 dark:text-white">
+              {isBBetter ? "Option B (Premium) is the recommended investment" : "Option A (Standard) is the recommended investment"}
+            </h4>
+            <p className="text-sm text-slate-505 dark:text-slate-400">
+              By selecting the recommended option, you will save <strong className="text-emerald-600 dark:text-emerald-450">{curSymbol}{Math.round(Math.abs(diff)).toLocaleString()}</strong> in present value dollars over the {lifespan} year evaluation period.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">NPV Savings</span>
+              <span className="text-2xl font-black text-emerald-505 block mt-1">
+                {savingsPercent.toFixed(1)}%
+              </span>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Payback Break-Even</span>
+              <span className="text-2xl font-black text-cyan-600 dark:text-cyan-400 block mt-1">
+                {breakevenYear !== null ? `Year ${breakevenYear}` : "No breakeven"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dynamic Breakdown Bars */}
+      <CostBreakdownChart analysisA={analysisA} analysisB={analysisB} curSymbol={curSymbol} />
+
+      {/* Recharts Chart - Cumulative Break-Even Curve */}
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+        <div>
+          <h3 className="text-sm font-black text-slate-805 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <BarChart2 className="w-4 h-4 text-cyan-600" /> Cumulative Present Value Cost curves
+          </h3>
+          <p className="text-[11px] text-slate-400 mt-1 leading-normal">
+            The intersection point represents the payback year. After this point, Option B's lower OPEX pays off its higher purchase CapEx.
+          </p>
+        </div>
+
+        <div className="h-80 w-full text-xs">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData} margin={{ top: 15, right: 10, bottom: 5, left: 10 }}>
+              <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} opacity={0.2} />
+              <XAxis dataKey="year" stroke="#64748b" axisLine={false} tickLine={false} />
+              <YAxis stroke="#64748b" axisLine={false} tickLine={false} tickFormatter={(val) => `${curSymbol}${val.toLocaleString()}`} />
+              <RechartsTooltip 
+                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', color: '#f8fafc' }}
+                labelStyle={{ fontWeight: 'bold', marginBottom: '6px' }}
+                formatter={(value: any) => [`${curSymbol}${value.toLocaleString()}`, undefined]}
+              />
+              <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ paddingBottom: '12px' }} />
+              <Line type="monotone" dataKey="Option A (Standard)" stroke="#94a3b8" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="Option B (Premium)" stroke="#06b6d4" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* KaTeX Equation steps */}
+      <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-205 dark:border-slate-700 overflow-x-auto">
+        <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white mb-3">
+          <RotateCcw className="w-4 h-4 text-cyan-600" /> Life Cycle Cost NPV Formula
+        </h3>
+        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 space-y-4">
+          <p className="text-xs text-slate-505 leading-normal">
+            Calculated as the sum of purchase price, installation, and annually discounted/inflated operational costs, minus final salvage value:
+          </p>
+          <BlockMath math={`\\text{NPV} = \\text{Capex} + \\text{Install} + \\sum_{t=1}^{N} \\frac{\\text{Energy} + \\text{Maint} + \\text{Downtime}}{(1 + r - i)^t} + \\frac{\\text{Overhaul}}{(1+r-i)^{k}} + \\frac{\\text{Disposal} - \\text{Residual}}{(1+r-i)^N}`} />
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 grid gap-2 text-xs">
+            <div className="flex justify-between font-mono">
+              <span className="text-slate-500">Option A NPV:</span>
+              <span className="font-black text-slate-800 dark:text-slate-200">{curSymbol}{Math.round(analysisA.npv).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between font-mono">
+              <span className="text-slate-500">Option B NPV:</span>
+              <span className="font-black text-cyan-605 dark:text-cyan-400">{curSymbol}{Math.round(analysisB.npv).toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Share and Export */}
+      <div className="mt-4">
+        <ShareAndExport 
+          toolName="LCC Calculator"
+          shareUrl={shareUrl}
+          chartRef={toolRef}
+          resultSummary={isBBetter ? "Option B (Premium) is recommended" : "Option A (Standard) is recommended"}
+          pdfData={{
+            inputs: {
+              "Currency Type": currency,
+              "Lifespan Evaluated": `${lifespan} Years`,
+              "Discount Rate": `${discountRate}%`,
+              "Inflation Rate": `${inflationRate}%`,
+              "Downtime Cost Rate": `${curSymbol}${downtimeCost}/Hour`,
+              "Option A CapEx / Install": `${curSymbol}${costA} / ${curSymbol}${installationA}`,
+              "Option A Energy / Maint": `${curSymbol}${energyA} / ${curSymbol}${maintA} (Annual)`,
+              "Option B CapEx / Install": `${curSymbol}${costB} / ${curSymbol}${installationB}`,
+              "Option B Energy / Maint": `${curSymbol}${energyB} / ${curSymbol}${maintB} (Annual)`
+            },
+            results: {
+              "Option A Life Cycle NPV": `${curSymbol}${Math.round(analysisA.npv).toLocaleString()}`,
+              "Option B Life Cycle NPV": `${curSymbol}${Math.round(analysisB.npv).toLocaleString()}`,
+              "Discounted Savings": `${curSymbol}${Math.round(Math.abs(diff)).toLocaleString()}`,
+              "Break-Even Year": breakevenYear !== null ? `Year ${breakevenYear}` : "Never breaks even",
+              "Recommendation": isBBetter ? "Option B (Premium)" : "Option A (Standard)"
+            }
+          }}
+          exportData={[
+            { Parameter: "Currency Select", Value: currency },
+            { Parameter: "Lifespan (Years)", Value: lifespan },
+            { Parameter: "Discount Rate (%)", Value: discountRate },
+            { Parameter: "Inflation Rate (%)", Value: inflationRate },
+            { Parameter: `Downtime Hourly Rate (${curSymbol}/hr)`, Value: downtimeCost },
+            { Parameter: `Option A CapEx (${curSymbol})`, Value: costA },
+            { Parameter: `Option A Annual Energy (${curSymbol})`, Value: energyA },
+            { Parameter: `Option A Annual Maint (${curSymbol})`, Value: maintA },
+            { Parameter: "Option A Downtime (Hrs/yr)", Value: downtimeA },
+            { Parameter: `Option A NPV Cost (${curSymbol})`, Value: analysisA.npv },
+            { Parameter: `Option B CapEx (${curSymbol})`, Value: costB },
+            { Parameter: `Option B Annual Energy (${curSymbol})`, Value: energyB },
+            { Parameter: `Option B Annual Maint (${curSymbol})`, Value: maintB },
+            { Parameter: "Option B Downtime (Hrs/yr)", Value: downtimeB },
+            { Parameter: `Option B NPV Cost (${curSymbol})`, Value: analysisB.npv },
+            { Parameter: `Life Cycle Savings (${curSymbol})`, Value: Math.abs(diff) },
+            { Parameter: "Payback Period (Years)", Value: breakevenYear || "N/A" }
+          ]}
         />
       </div>
     </div>
   );
 
-  const ToolComponent = (
-    <div className="space-y-6" ref={toolRef}>
-
-      {/* Global Settings */}
-      <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-wrap gap-4 items-center justify-between">
-        <div className="flex flex-wrap gap-4">
-          <div className="w-28">
-            <label className="text-xs font-bold text-slate-500">Discount Rate %</label>
-            <input type="number" value={params.discountRate} onChange={e => handleChange('discountRate', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
-          </div>
-          <div className="w-28">
-            <label className="text-xs font-bold text-slate-500">Inflation Rate %</label>
-            <input type="number" value={params.inflationRate} onChange={e => handleChange('inflationRate', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
-          </div>
-          <div className="w-28">
-            <label className="text-xs font-bold text-slate-500">Lifespan (Yrs)</label>
-            <input type="number" value={params.lifespan} onChange={e => handleChange('lifespan', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
-          </div>
-          <div className="w-32">
-            <label className="text-xs font-bold text-slate-500">Downtime Cost $/Hr</label>
-            <input type="number" value={params.downtimeCost} onChange={e => handleChange('downtimeCost', Number(e.target.value))} className="w-full p-1 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
-          </div>
-        </div>
-        <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs text-cyan-600 font-bold underline">
-          {showAdvanced ? "Simple Mode" : "Advanced Mode"}
-        </button>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Option A */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border-l-4 border-slate-400 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2 bg-slate-100 dark:bg-slate-700 rounded-bl-xl text-xs font-bold text-slate-500">Standard Option</div>
-          <h3 className="font-bold text-lg text-slate-800 dark:text-white mb-4">Option A (Standard)</h3>
-          <InputRow label="Purchase Cost" value={params.costA} onChange={(v: any) => handleChange('costA', v)} icon="$" />
-          <InputRow label="Annual Energy" value={params.energyA} onChange={(v: any) => handleChange('energyA', v)} icon="$" />
-          <InputRow label="Annual Maint" value={params.maintA} onChange={(v: any) => handleChange('maintA', v)} icon="$" />
-          <InputRow label="Downtime Hrs/Yr" value={params.downtimeA} onChange={(v: any) => handleChange('downtimeA', v)} icon="H" />
-          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-            <div className="flex justify-between font-bold text-slate-600 dark:text-slate-400">
-              <span>Total NPV:</span>
-              <span>${analysisA.npv.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Option B */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border-l-4 border-cyan-500 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2 bg-cyan-100 dark:bg-cyan-900 rounded-bl-xl text-xs font-bold text-cyan-700 dark:text-cyan-400">Premium Option</div>
-          <h3 className="font-bold text-lg text-slate-800 dark:text-white mb-4">Option B (Premium)</h3>
-          <InputRow label="Purchase Cost" value={params.costB} onChange={(v: any) => handleChange('costB', v)} icon="$" />
-          <InputRow label="Annual Energy" value={params.energyB} onChange={(v: any) => handleChange('energyB', v)} icon="$" />
-          <InputRow label="Annual Maint" value={params.maintB} onChange={(v: any) => handleChange('maintB', v)} icon="$" />
-          <InputRow label="Downtime Hrs/Yr" value={params.downtimeB} onChange={(v: any) => handleChange('downtimeB', v)} icon="H" />
-          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-            <div className="flex justify-between font-bold text-cyan-600 dark:text-cyan-400">
-              <span>Total NPV:</span>
-              <span>${analysisB.npv.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Results Banner */}
-      <div className={`p-6 rounded-xl border ${isBBetter ? 'bg-cyan-50 border-cyan-200 dark:bg-cyan-900/20 dark:border-cyan-800' : 'bg-slate-100 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700'}`}>
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-          <div>
-            <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-1">
-              {isBBetter ? "Option B is the better investment" : "Option A is the better investment"}
-            </h4>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              You will save <strong className={isBBetter ? "text-cyan-600" : "text-slate-600"}>${Math.abs(diff).toLocaleString(undefined, { maximumFractionDigits: 0 })}</strong> over {params.lifespan} years.
-            </p>
-          </div>
-          <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-lg shadow-sm border border-slate-100 dark:border-slate-800">
-            <div className="text-xs text-slate-400 uppercase font-bold">ROI / Savings</div>
-            <div className="text-xl font-bold text-green-500">{savingsPercent.toFixed(1)}%</div>
-          </div>
-        </div>
-
-        {/* Chart */}
-        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-lg mt-6 border border-slate-200 dark:border-slate-800 h-80">
-          <h4 className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
-            <BarChart2 className="w-4 h-4 text-cyan-500" /> Cumulative Cost Analysis (Break-Even)
-          </h4>
-          <ReactECharts
-            option={{
-              animation: false,
-              grid: { left: '15%', right: '5%', top: '15%', bottom: '15%' },
-              tooltip: { 
-                trigger: 'axis', 
-                backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-                borderColor: '#334155', 
-                textStyle: { color: '#f8fafc' },
-                formatter: (params: any) => {
-                  let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1">Year ${params[0].value[0]}</div>`;
-                  params.forEach((p: any) => {
-                    res += `<div class="flex justify-between gap-4 mt-1"><span style="color:${p.color}">${p.seriesName}</span> <span class="font-mono">$${p.value[p.seriesIndex + 1].toLocaleString()}</span></div>`;
-                  });
-                  return res;
-                }
-              },
-              legend: { data: ['Option A (Standard)', 'Option B (Premium)'], bottom: 0, textStyle: { color: chartColors.axis } },
-              xAxis: { 
-                type: 'value', 
-                name: 'Years', 
-                nameLocation: 'middle', 
-                nameGap: 25, 
-                splitLine: { show: false }, 
-                axisLabel: { color: chartColors.axis } 
-              },
-              yAxis: { 
-                type: 'value', 
-                name: 'Cumulative Cost ($)', 
-                splitLine: { lineStyle: { color: chartColors.grid, type: 'dashed' } }, 
-                axisLabel: { color: chartColors.axis, formatter: (val: number) => `$${val.toLocaleString()}` } 
-              },
-              series: [
-                { name: 'Option A (Standard)', type: 'line', data: chartData.map(d => [d.year, d.costA, d.costB]), encode: { x: 0, y: 1 }, itemStyle: { color: '#94a3b8' }, lineStyle: { width: 3 } },
-                { name: 'Option B (Premium)', type: 'line', data: chartData.map(d => [d.year, d.costA, d.costB]), encode: { x: 0, y: 2 }, itemStyle: { color: '#06b6d4' }, lineStyle: { width: 3 } }
-              ]
-            }}
-            style={{ height: 'calc(100% - 30px)', width: '100%' }}
-            opts={{ renderer: 'svg' }}
-          />
-        </div>
-
-        {/* Live Math Rendering */}
-        <div className="bg-white dark:bg-slate-900/80 p-5 rounded-lg mt-6 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 overflow-x-auto shadow-inner">
-           <h4 className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
-             <RotateCcw className="w-3 h-3 text-cyan-500" /> Live Equation (NPV for ${isBBetter ? 'Option B' : 'Option A'})
-           </h4>
-           <div className="text-sm">
-             <BlockMath math={`\\text{NPV} = \\text{Capex} + \\sum_{t=1}^{${params.lifespan}} \\frac{\\text{Recurring Costs}}{(1 + ${params.discountRate/100} - ${params.inflationRate/100})^t} = \\mathbf{\\$${(isBBetter ? analysisB.npv : analysisA.npv).toLocaleString(undefined, { maximumFractionDigits: 0 })}}`} />
-           </div>
-        </div>
-        <div className="mt-4">
-          <ShareAndExport 
-            toolName="LCC Calculator"
-            shareUrl={shareUrl}
-            chartRef={toolRef}
-            resultSummary={isBBetter ? "Option B is Better" : "Option A is Better"}
-            exportData={[
-              { Parameter: "Lifespan (Years)", Value: params.lifespan.toString() },
-              { Parameter: "Discount Rate (%)", Value: params.discountRate.toString() },
-              { Parameter: "Inflation Rate (%)", Value: params.inflationRate.toString() },
-              {},
-              { Parameter: "--- OPTION A ---", Value: "" },
-              { Parameter: "Purchase Cost", Value: params.costA.toString() },
-              { Parameter: "NPV", Value: analysisA.npv.toFixed(0) },
-              {},
-              { Parameter: "--- OPTION B ---", Value: "" },
-              { Parameter: "Purchase Cost", Value: params.costB.toString() },
-              { Parameter: "NPV", Value: analysisB.npv.toFixed(0) },
-              {},
-              { Parameter: "--- COMPARISON ---", Value: "" },
-              { Parameter: "Savings", Value: Math.abs(diff).toFixed(0) },
-              { Parameter: "Better Option", Value: isBBetter ? "Option B" : "Option A" }
-            ]}
-          />
-        </div>
-      </div>
-    </div>
-
-  );
-
   const Content = (
-    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-      <div className="text-center mb-10">
-        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Total Cost of Ownership (TCO) Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Life Cycle Costing (LCC) is a rigorous economic analysis. To balance these lifetime costs against specific system design configurations, evaluate options using a <Link to="/tools/rbd" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD)</Link>.</p>
-      </div>
+    <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-805">
+      <div className="space-y-6">
+        <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+          Understanding Life Cycle Costing (LCC) & Total Cost of Ownership
+        </h2>
+        <p>
+          In capital-intensive industries (such as chemical processing, power generation, and heavy manufacturing), the purchase price of an asset is only the <strong>"tip of the iceberg."</strong> Typically, acquisition CapEx represents only <strong>10% to 20%</strong> of the total cost incurred over the asset's service life. The remaining 80% to 90% is spent on electricity/energy, preventative repairs, operational labor, and unscheduled downtime.
+        </p>
+        <p>
+          <strong>Life Cycle Costing (LCC)</strong>, also referred to as Total Cost of Ownership (TCO) analysis, is a structured financial engineering process that converts all future operating costs into "Present Value" dollars. This enables equal side-by-side comparison between high-initial-price premium assets (Option B) and low-initial-price standard options (Option A).
+        </p>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <TheoryBlock 
-          title="Capex (Capital Expenditure)"
-          icon={<DollarSign className="w-5 h-5" />}
-          delay={0.1}
-        >
-          <p>
-            The upfront cost to buy and install the equipment. This is the "Tip of the Iceberg", typically representing only <strong>10-20%</strong> of the total cost.
-          </p>
-        </TheoryBlock>
+        <h3 className="text-2xl font-bold text-slate-905 dark:text-white mt-8 mb-4">
+          Discount Rates & The Time Value of Money (NPV)
+        </h3>
+        <p>
+          LCC relies on the economic principle that money today is worth more than the same amount of money in the future. This is because capital today can be invested to earn interest or returns. 
+        </p>
+        <p>
+          To make future expenses comparable to cash spent today, future costs are discounted using the <strong>Discount Rate (r)</strong>. Simultaneously, the <strong>Inflation Rate (i)</strong> is applied to opex costs to adjust for the rising cost of labor, spares, and utilities. If the discount rate is high, future maintenance costs carry less weight in today's decisions. If inflation is high, the financial benefit of purchasing an efficient, low-maintenance premium option today increases dramatically.
+        </p>
 
-        <TheoryBlock 
-          title="Opex (Operational Expenditure)"
-          icon={<Activity className="w-5 h-5" />}
-          delay={0.2}
-        >
-          <p>
-            The ongoing cost to run, maintain, and power the asset. This is the submerged part of the iceberg, commonly responsible for <strong>80-90%</strong> of the total lifetime cost.
-          </p>
-        </TheoryBlock>
-      </div>
-
-      <div className="mt-8">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">Net Present Value (NPV) Justification</h3>
-        <TheoryBlock 
-          title="The Time Value of Money"
-          icon={<TrendingUp className="w-5 h-5" />}
-          formula="\text{NPV} = \sum_{t=1}^{N} \frac{\text{Cash Flow}_t}{(1 + r)^t} - \text{Initial Investment}"
-          delay={0.3}
-        >
-          <p>
-            Money today is worth more than money tomorrow. A dollar spent 10 years from now mathematically hurts less than a dollar spent today due to the potential earning power of capital.
-          </p>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            LCC uses discounted cash flow analysis to convert all future Operational Expenditures into "Present Value" dollars. This allows for an equal comparison between a cheap asset with high running costs and an expensive asset with low running costs.
-          </p>
-        </TheoryBlock>
+        <h2 id="math" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
+          Advanced Cost Breakdown Drivers
+        </h2>
+        <p>
+          When modeling Life Cycle Costs in professional plant engineering (standards like ISO 15663), calculations are grouped into five primary categories:
+        </p>
+        <ul className="list-disc pl-6 space-y-3">
+          <li>
+            <strong>Acquisition (Capex + Installation):</strong> Upfront cash flow to buy, transport, mount, and commission the equipment.
+          </li>
+          <li>
+            <strong>Operating Costs (Energy):</strong> Ongoing power consumption. High-efficiency premium motors, pumps, and gearboxes can lower electricity bills enough to pay off their price difference in under two years.
+          </li>
+          <li>
+            <strong>Maintenance Costs (Maint + Overhaul):</strong> Cumulative costs of oil checks, seals, spare gaskets, and major mid-life overhauls.
+          </li>
+          <li>
+            <strong>Unscheduled Downtime:</strong> The cost of lost production. A premium machine that reduces breakdown frequency (calculated using an <Link to="/mtbf-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link>) from 24 hours a year to 6 hours a year will easily justify its premium price tag in factories where hourly losses exceed $1,000.
+          </li>
+          <li>
+            <strong>End-of-Life (Disposal - Salvage):</strong> Costs to decommission, transport, and recycle materials, minus any salvage/resale scrap value of the retired machine.
+          </li>
+        </ul>
       </div>
     </div>
   );
 
   const faqs = [
     {
-      question: "What is a 'Discount Rate'?",
-      answer: "The discount rate represents the 'Time Value of Money'. It is the interest rate you <em>could</em> earn if you invested the money elsewhere (e.g., 8%). A higher discount rate reduces the impact of future costs."
+      question: "What is the typical discount rate used in LCC?",
+      answer: "In corporate asset management, the discount rate is usually set to the company's <strong>Weighted Average Cost of Capital (WACC)</strong>, typically ranging between <strong>6% and 12%</strong>. Government projects or municipal utility evaluations often use lower discount rates (3% to 5%)."
     },
     {
-      question: "What is Residual Value?",
-      answer: "The estimated scrap or resale value of the asset at the end of its useful life. This is subtracted from the total life cycle cost."
+      question: "How does inflation affect the break-even payback year?",
+      answer: "Higher inflation increases future operating expenses (opex) such as labor and electricity. This makes standard/inefficient options more expensive over time, pushing the break-even curve earlier and making the premium Option B more financially attractive."
     },
     {
-      question: "How does inflation affect LCC?",
-      answer: "Inflation increases future Opex costs (labor, energy, parts). If inflation is high, the value of buying an efficient, low-maintenance asset today increases because future maintenance will be very expensive."
+      question: "Why should downtime be included in Life Cycle Costing?",
+      answer: "For critical factory assets, a single hour of downtime can cost thousands of dollars in lost production. Selecting a highly reliable design with a high MTBF and low MTTR minimizes this cost driver, which is often the largest opex variable in LCC calculations."
+    },
+    {
+      question: "What is the difference between Simple Payback and LCC NPV?",
+      answer: "Simple payback ignores the 'Time Value of Money' and does not discount future cash flows. Life Cycle Costing uses Net Present Value (NPV), which is mathematically accurate because it accounts for discount rates, inflation rates, and the timing of mid-life overhauls or salvage values."
+    },
+    {
+      question: "Can I model Life Cycle Costing for software or cloud assets?",
+      answer: "Yes. In IT and software architectures, CapEx represents the initial setup/development, while OpEx represents monthly hosting subscriptions, database storage fees, and system administration labor. The same NPV calculations apply."
     }
   ];
 
   return (
     <ToolContentLayout
-      title="Life Cycle Cost (LCC) Calculator"
-      description="Compare the Total Cost of Ownership (TCO) of two options using Net Present Value (NPV) analysis. Make smarter investment decisions by looking beyond the price tag."
+      title="Life Cycle Cost (LCC) Calculator - Total Cost of Ownership"
+      description="Compare the Total Cost of Ownership (TCO) of two equipment options using Net Present Value (NPV) and break-even payback analysis."
       toolComponent={ToolComponent}
-      content={Content}
+      content={
+        <>
+          {Content}
+          <RelatedTools currentToolId="lcc" />
+        </>
+      }
       faqs={faqs}
-      keywords="life cycle cost calculator, LCC analysis tool, NPV capex opex, asset total cost of ownership, net present value maintenance, LCC formula, reliability engineering calculator"
+      keywords="life cycle cost calculator, LCC calculator, total cost of ownership, NPV calculator capex opex, break even payback year, finance reliability engineering, asset lifecycle cost ISO 15663"
       canonicalUrl="https://reliabilitytools.co.in/#/tools/lcc"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "LCC Calculator",
-        "applicationCategory": "FinanceApplication"
+        name: "Life Cycle Cost (LCC) Calculator - Total Cost of Ownership",
+        applicationCategory: "FinanceApplication",
       }}
     />
   );

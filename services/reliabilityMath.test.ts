@@ -1,9 +1,7 @@
 import { calculateMTBF, calculateMTTR, calculateAvailability, calculateSeriesReliability, calculateParallelReliability } from './reliabilityMath';
 
-// Declaring test globals to fix TypeScript errors when types are not installed
-declare const describe: (name: string, callback: () => void) => void;
-declare const test: (name: string, callback: () => void) => void;
-declare const expect: (value: any) => any;
+// @ts-ignore
+import { describe, test, expect } from 'vitest';
 
 describe('Reliability Calculator Tests', () => {
   
