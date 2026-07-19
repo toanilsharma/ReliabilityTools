@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Gamepad2, Cpu, ExternalLink, Zap, ShieldCheck, HelpCircle, Activity, CheckCircle2 } from 'lucide-react';
+import { Gamepad2, Cpu, ExternalLink, Zap, ShieldCheck, HelpCircle, Activity, CheckCircle2, Shield } from 'lucide-react';
 import SEO from '../components/SEO';
 
 interface InteractiveItem {
@@ -52,6 +52,25 @@ const INTERACTIVE_ITEMS: InteractiveItem[] = [
     usefulness: 'Allows engineers and control room operators to simulate grid failure events, test bypass transfer speeds, and study battery capacities under varying loads - building operator muscle memory without risking plant shutdowns or system damage.',
     icon: <Cpu className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />,
     badgeColor: 'bg-cyan-100 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-300 border-cyan-200 dark:border-cyan-900/30'
+  },
+  {
+    id: 'relay-school',
+    title: 'Relay School',
+    type: 'simulator',
+    typeLabel: 'Protection Relay Training',
+    description: 'An interactive learning platform for electrical protection engineers to understand relay principles, protection schemes, relay coordination, testing procedures, fault analysis, and industry best practices through practical simulations and visual demonstrations.',
+    url: 'https://relayschool.netlify.app',
+    buttonLabel: 'Launch Relay School',
+    features: [
+      'Distance, Differential, Overcurrent and Earth Fault relay simulations',
+      'Relay coordination visualization',
+      'Protection scheme tutorials',
+      'Fault scenario simulations',
+      'Interactive learning modules'
+    ],
+    usefulness: '• Learn numerical and electromechanical relay concepts\n• Practice relay coordination studies\n• Understand protection logic and fault clearing\n• Improve troubleshooting and commissioning skills',
+    icon: <Shield className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />,
+    badgeColor: 'bg-indigo-100 dark:bg-indigo-950/40 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900/30'
   }
 ];
 
@@ -192,7 +211,7 @@ const InteractiveHub: React.FC = () => {
                       <HelpCircle className="w-3 h-3 text-cyan-500" />
                       Industrial Value
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium whitespace-pre-line">
                       {item.usefulness}
                     </p>
                   </div>
