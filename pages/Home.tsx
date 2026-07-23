@@ -41,7 +41,8 @@ import {
   Box,
   Calendar,
   ClipboardList,
-  Droplets
+  Droplets,
+  Sparkles
 } from 'lucide-react';
 import { TOOLS, ARTICLES } from '../constants';
 import { calculateMTBF } from '../services/reliabilityMath';
@@ -50,6 +51,7 @@ import SEO from '../components/SEO';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { useCounterAnimation } from '../hooks/useCounterAnimation';
 import RecentTools from '../components/RecentTools';
+import QuickStartWizard from '../components/QuickStartWizard';
 
 // Lazy load widgets to avoid loading Recharts library on initial page load
 const AvailabilityChartWidget = React.lazy(() => import('../components/widgets/AvailabilityChart'));
@@ -162,9 +164,14 @@ const Home: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 text-sm font-medium mb-6 border border-cyan-200 dark:border-cyan-700/50">
-            <Shield className="w-4 h-4" />
-            <span>100% Free · No Login · ISO/IEC Standard Formulas</span>
+          {/* Hero Trust Badge Metric Proof */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-cyan-100/90 dark:bg-cyan-950/80 text-cyan-800 dark:text-cyan-200 text-sm font-semibold mb-6 border border-cyan-300/80 dark:border-cyan-700/60 shadow-sm backdrop-blur-sm">
+            <div className="flex -space-x-1.5 overflow-hidden">
+              <span className="inline-block w-5 h-5 rounded-full bg-cyan-600 text-white text-[10px] font-bold flex items-center justify-center border border-white dark:border-slate-900">10k</span>
+              <span className="inline-block w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center border border-white dark:border-slate-900">50+</span>
+            </div>
+            <span className="font-extrabold tracking-wide">10,000+ engineers from 50+ countries trust these tools</span>
+            <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           </div>
 
           <h1 className="font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight" style={{ fontSize: 'clamp(2.5rem, 4.5vw + 1rem, 3.8rem)' }}>
@@ -184,12 +191,21 @@ const Home: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 mb-6">
+            <button
+              onClick={() => {
+                document.getElementById('quick-start-wizard')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold shadow-lg shadow-cyan-900/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-5 h-5 text-amber-300" />
+              Quick Start Wizard (3 Steps)
+            </button>
             <Link
               to="/mtbf-calculator"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-white font-bold shadow-md transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Rocket className="w-5 h-5" />
-              Start Free - MTBF Calculator
+              MTBF Calculator
             </Link>
             <Link
               to="/interactive-hub"
@@ -197,13 +213,6 @@ const Home: React.FC = () => {
             >
               <Gamepad2 className="w-5 h-5 text-amber-500" />
               Simulators & Games
-            </Link>
-            <Link
-              to="/learning"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
-            >
-              <BookOpen className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-              Explore Learning Hub
             </Link>
           </div>
 
@@ -243,8 +252,8 @@ const Home: React.FC = () => {
               <div className="text-sm">Engineering Tools</div>
             </div>
             <div className="flex flex-col items-center">
-              <div className="font-bold text-2xl text-slate-900 dark:text-white" ref={trustRef}>{trustScore}%</div>
-              <div className="text-sm">Client-Side Privacy</div>
+              <div className="font-bold text-2xl text-slate-900 dark:text-white">10,000+</div>
+              <div className="text-sm">Engineers (50+ Countries)</div>
             </div>
             <div className="flex flex-col items-center">
               <div className="font-bold text-2xl text-slate-900 dark:text-white">IEC/ISO</div>
@@ -257,6 +266,9 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Quick Start Wizard Component */}
+      <QuickStartWizard />
 
       {/* What You'll Achieve - Persona-Specific Value Propositions */}
       <section className="bg-slate-50 dark:bg-slate-900/50 py-20 border-y border-slate-200 dark:border-slate-800">

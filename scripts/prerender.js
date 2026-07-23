@@ -75,6 +75,7 @@ function getContentType(filePath) {
 }
 
 function startServer() {
+  const templateHtml = fs.readFileSync(path.join(DIST_DIR, 'index.html'), 'utf8');
   return new Promise((resolve) => {
     const server = http.createServer((req, res) => {
       let reqPath = req.url.split('?')[0];
@@ -84,44 +85,63 @@ function startServer() {
         res.writeHead(200, { 'Content-Type': getContentType(filePath) });
         fs.createReadStream(filePath).pipe(res);
       } else {
-        // Fallback to dist/index.html for SPA routes
-        const indexPath = path.join(DIST_DIR, 'index.html');
+        // Fallback to original SPA template index.html in memory
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        fs.createReadStream(indexPath).pipe(res);
+        res.end(templateHtml);
       }
     });
 
-    server.listen(PORT, () => {
-      console.log(`Prerender server running on http://localhost:${PORT}`);
-      resolve(server);
+    server.listen(0, () => {
+      const port = server.address().port;
+      console.log(`Prerender server running on http://localhost:${port}`);
+      resolve({ server, port });
     });
   });
 }
 
 async function prerender() {
   console.log('Starting prerendering process...');
-  const server = await startServer();
-  const browser = await puppeteer.launch({
+  const { server, port } = await startServer();
+  const chromePath = [
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+  ].find(p => fs.existsSync(p));
+
+  const launchOptions = {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  };
+  if (chromePath) {
+    console.log(`Using browser engine at: ${chromePath}`);
+    launchOptions.executablePath = chromePath;
+  }
+
+  const browser = await puppeteer.launch(launchOptions);
 
   const page = await browser.newPage();
+  page.on('pageerror', err => console.error('PAGE ERROR:', err.message));
+  page.on('console', msg => {
+    if (msg.type() === 'error') console.error('PAGE CONSOLE ERROR:', msg.text());
+  });
   await page.setViewport({ width: 1280, height: 800 });
 
   for (const route of ROUTES) {
-    const targetUrl = `http://localhost:${PORT}${route}`;
+    const targetUrl = `http://localhost:${port}${route}`;
 
     try {
-      await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
       
       // Wait until initial loader disappears
-      await page.waitForFunction(() => !document.querySelector('.initial-loader'), { timeout: 10000 });
+      await page.waitForFunction(() => !document.querySelector('.initial-loader'), { timeout: 30000 });
       
       // Wait an additional 500ms for Helmet & React renders to finalize
       await new Promise(r => setTimeout(r, 500));
 
       let html = await page.content();
+      if (route === '/') {
+        console.log('DEBUG / ROUTE -> Has wizard:', html.includes('quick-start-wizard'), '| Has proof:', html.includes('10,000+ engineers'));
+      }
 
       let outDir;
       let outFile;

@@ -17,7 +17,9 @@ const appComponent = (
   </React.StrictMode>
 );
 
-if (rootElement.hasChildNodes()) {
+const isPrerendered = rootElement.hasChildNodes() && !rootElement.querySelector('.initial-loader');
+
+if (isPrerendered) {
   ReactDOM.hydrateRoot(rootElement, appComponent);
 } else {
   const root = ReactDOM.createRoot(rootElement);
