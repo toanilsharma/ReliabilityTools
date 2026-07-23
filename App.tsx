@@ -80,15 +80,21 @@ const App: React.FC = () => {
               {/* Tools */}
               <Route path="tools" element={<AllTools />} />
               <Route path="mtbf-calculator" element={<MtbfCalculator />} />
+              <Route path="tools/mtbf-calculator" element={<MtbfCalculator />} />
               <Route path="weibull-analysis" element={<WeibullAnalysis />} />
+              <Route path="tools/weibull-calculator" element={<WeibullAnalysis />} />
               <Route path="tools/rbd" element={<RbdTool />} />
               <Route path="tools/availability" element={<AvailabilityCalculator />} />
+              <Route path="tools/availability-calculator" element={<AvailabilityCalculator />} />
               <Route path="tools/mttr" element={<MttrCalculator />} />
+              <Route path="tools/mttr-calculator" element={<MttrCalculator />} />
               <Route path="tools/pm" element={<PmScheduler />} />
+              <Route path="tools/pm-optimization" element={<OptimalReplacement />} />
               <Route path="tools/spares" element={<SparePartEstimator />} />
               <Route path="tools/lcc" element={<LccCalculator />} />
               <Route path="oee-calculator" element={<OeeCalculator />} />
               <Route path="tools/test-planner" element={<TestPlanner />} />
+              <Route path="tools/sample-size" element={<TestPlanner />} />
               <Route path="tools/assessment" element={<MaturityAssessment />} />
               <Route path="tools/converter" element={<UnitConverter />} />
               {/* New Routes */}
@@ -99,7 +105,10 @@ const App: React.FC = () => {
               <Route path="tools/confidence-interval" element={<ConfidenceInterval />} />
               <Route path="tools/k-out-of-n" element={<KOutOfN />} />
               <Route path="tools/hazard-rate" element={<HazardRateCalculator />} />
+              <Route path="tools/failure-rate-calculator" element={<HazardRateCalculator />} />
               <Route path="tools/validator" element={<SystemReliabilityValidator />} />
+              <Route path="tools/system-reliability" element={<SystemReliabilityValidator />} />
+              <Route path="tools/reliability-calculator" element={<MtbfCalculator />} />
               <Route path="tools/fishbone" element={<FishboneDiagramGenerator />} />
               <Route path="tools/fta" element={<FaultTreeAnalysis />} />
               <Route path="tools/markov" element={<MarkovChainTool />} />
