@@ -43,7 +43,7 @@
     "postcss": "^8.4.35",
     "react-snap": "^1.13.1",
     "typescript": "^4.9.5",
-    "vite": "^8.1.5"
+    "vite": "^7.0.0"
   },
   "browserslist": {
     "production": [
