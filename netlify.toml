@@ -4,7 +4,7 @@
   functions = ""
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "22"
   NPM_FLAGS    = "--legacy-peer-deps"
 
 # SPA routing: serve index.html for all unmatched routes
