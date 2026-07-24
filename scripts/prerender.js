@@ -1,3 +1,10 @@
+// Skip prerendering in CI environments (e.g., Netlify) where the bundled
+// Chromium may be too old for the ES2020+ syntax emitted by Vite.
+if (process.env.CI || process.env.NETLIFY) {
+  console.log('CI environment detected – skipping prerendering.');
+  process.exit(0);
+}
+
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
