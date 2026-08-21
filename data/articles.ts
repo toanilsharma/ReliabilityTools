@@ -6,7 +6,7 @@ export const ARTICLES: LearningArticle[] = [
     title: 'What is MTBF? Complete Guide with Examples and Calculator',
     summary: 'Master the Mean Time Between Failures calculation, its impact on maintenance scheduling, and how it differs from MTTF.',
     date: 'January 5, 2026',
-    author: 'Reliability Engineering Team',
+    author: 'Anil Sharma',
     content: `
 ## Introduction to MTBF
 
@@ -113,7 +113,7 @@ MTBF is a foundational metric that bridges the gap between raw data on the facto
     title: 'Weibull Analysis Explained: Step-by-Step with Examples',
     summary: 'A deep dive into Weibull analysis, the Shape (Beta) and Scale (Eta) parameters, and how to use it to predict equipment life.',
     date: 'January 12, 2026',
-    author: 'Reliability Engineering Team',
+    author: 'Anil Sharma',
     content: `
 ## Introduction to Weibull Analysis
 
@@ -201,7 +201,7 @@ Weibull Analysis transforms chaotic, unpredictable breakdown data into clear, ac
     title: 'OEE Explained: Formula, Benchmarks, and How to Improve It',
     summary: 'Discover how to measure Overall Equipment Effectiveness (OEE) and uncover the "Hidden Factory" of lost production time.',
     date: 'January 19, 2026',
-    author: 'Reliability Engineering Team',
+    author: 'Anil Sharma',
     content: `
 ## What is OEE?
 
@@ -403,7 +403,7 @@ RCM is not a software tool or a one-time project-it is a philosophy of maintenan
     title: 'FMEA Guide: How to Perform Failure Mode and Effects Analysis',
     summary: 'Learn how to identify risks, calculate Risk Priority Numbers (RPN), and implement FMEA in your organization.',
     date: 'February 2, 2026',
-    author: 'Reliability Engineering Team',
+    author: 'Anil Sharma',
     content: `
 ## Introduction to FMEA
 
@@ -627,7 +627,7 @@ FMEA is not a regulatory burden - it is a competitive advantage. Indian manufact
     title: 'Bathtub Curve in Reliability Engineering: What It Means',
     summary: 'Understand the three phases of asset life-Infant Mortality, Useful Life, and Wear-Out-and how they dictate maintenance strategies.',
     date: 'February 16, 2026',
-    author: 'Reliability Engineering Team',
+    author: 'Anil Sharma',
     content: `
 ## The Most Famous Shape in Reliability
 
@@ -957,5 +957,452 @@ Once you've calculated MTBF, explore these related metrics:
 
 Calculating MTBF doesn't require expensive software or consultants. Our free MTBF calculator gives Indian maintenance teams the same analytical power used by world-class plants globally. Start by calculating the MTBF for your most critical assets, use the results to set data-driven PM intervals, and watch your unplanned downtime decrease month over month.
     `
+  },
+  {
+    id: 'spare-parts-optimization-guide',
+    title: 'Spare Parts Optimization: How to Calculate Min/Max Levels to Avoid Stockouts & Overstocking',
+    summary: 'A masterclass for Plant Managers, Maintenance Supervisors, and Supply Chain Engineers on using Poisson distribution and MTBF to optimize MRO inventory.',
+    date: 'February 21, 2026',
+    author: 'Anil Sharma',
+    content: `
+## The $500,000 Dilemma: Overstocking vs. Line Stops
+
+In modern manufacturing, plant leadership is caught between two financial fires:
+
+> **The $50,000 Overstocking Mistake:** Carrying tens of thousands of dollars in obsolete bearings, mechanical seals, and drive boards that sit on warehouse shelves collecting dust and rusting.
+>
+> **The $500,000 Catastrophe:** A critical $400 motor bearing fails at 2:00 AM on a Friday, but the warehouse has zero stock. The entire production line grinds to a halt for 36 hours while an emergency courier is dispatched across the country.
+
+Most maintenance facilities manage MRO (Maintenance, Repair, and Operations) inventory using gut feeling, historical habits, or crude rule-of-thumb numbers entered into Excel 15 years ago. Supply chain management wants inventory cut to zero; plant managers want ten spares of everything "just in case." 
+
+Without a data-driven **spare parts inventory optimization calculator**, both sides lose money. 
+
+This guide delivers a step-by-step framework grounded in reliability engineering and Poisson statistical distributions to calculate exact **Min/Max stock levels**, **Reorder Points (ROP)**, and **Safety Stock**—ensuring 99%+ operational availability while reducing holding costs by up to 30%.
+
+---
+
+## Why Standard Retail Inventory Models Fail for Industrial Spares
+
+Traditional supply chain management relies on Gaussian (Normal Distribution) models designed for retail goods like cereal boxes or clothing. These models assume:
+1. Demand occurs continuously every single day.
+2. Demand follows a symmetric bell curve.
+
+Industrial maintenance spares operate under completely different physics:
+- **Low-Frequency, High-Impact Demand:** A high-pressure hydraulic pump might run for 18 months without failing, and then suddenly demand 2 replacement seals in 48 hours.
+- **Intermittent & Lumpy Consumption:** Zero demand for 300 days followed by a spike during a turnaround.
+- **Poisson Failure Physics:** Unplanned machine breakdowns in the "useful life" phase occur randomly according to a **Poisson Distribution**.
+
+Attempting to calculate a **min max stock calculation** using standard retail formulas results in either massive overstocking of slow-moving critical spares or catastrophic stockouts on high-wear consumables.
+
+---
+
+## Simplified Reliability Math: The Poisson Distribution Explained
+
+You do not need a degree in advanced calculus to calculate optimal spare levels. You simply need to link two fundamental numbers:
+1. **Asset Failure Rate ($\lambda$ or MTBF):** How often the equipment breaks down.
+2. **Supplier Lead Time ($L$):** How long it takes from issuing a Purchase Order (PO) to having the part physically delivered and tagged in your storeroom.
+
+### Expected Demand During Lead Time ($\mu$)
+
+The baseline expected consumption during supplier lead time ($\mu$) is given by:
+
+$$\mu = \frac{\text{Lead Time (Hours)}}{\text{Mean Time Between Failures (MTBF in Hours)}} \times \text{Number of Operating Units}$$
+
+#### Practical Engineering Example:
+Consider a chemical processing facility operating **4 identical centrifugal pumps** running 24/7/365 (8,760 hours/year).
+- **Component:** Mechanical Seal
+- **MTBF per Pump:** 2,000 operating hours
+- **Supplier Lead Time ($L$):** 4 weeks (672 hours)
+- **Total Operating Hours Across 4 Pumps during Lead Time:** $4 \times 672 = 2,688 \text{ hours}$
+
+$$\mu = \frac{2,688 \text{ hours}}{2,000 \text{ hours}} = 1.344 \text{ expected seal failures during lead time}$$
+
+If you only order 1 seal, you have a high mathematical probability of experiencing a stockout before the shipment arrives. How many extra seals should you hold as Safety Stock?
+
+### The Poisson Probability Formula
+The Poisson distribution calculates the exact probability $P(X = k)$ of encountering exactly $k$ failures during lead time:
+
+$$P(X = k) = \frac{e^{-\mu} \cdot \mu^k}{k!}$$
+
+Using our expected demand $\mu = 1.344$:
+- Probability of 0 failures during lead time: $26.1\%$
+- Probability of 1 failure: $35.1\%$
+- Probability of 2 failures: $23.6\%$
+- Probability of 3 failures: $10.6\%$
+- Probability of 4 failures: $3.5\%$
+
+To achieve a **95% Service Level Availability** (meaning a 95% certainty of never suffering a stockout during lead time), we calculate cumulative probabilities:
+$$P(X \le 0) = 26.1\%$$
+$$P(X \le 1) = 61.2\%$$
+$$P(X \le 2) = 84.8\%$$
+$$P(X \le 3) = 95.4\% \quad \leftarrow \text{Target Achieved!}$$
+
+**Conclusion:** You must set your **Reorder Point (ROP)** to **3 units**.
+
+---
+
+## Step-by-Step Guide to Calculating Min/Max Stock Levels
+
+To implement a data-driven **reorder point formula reliability** system across your storeroom, follow this 4-step workflow:
+
+### Step 1: Establish Your Target Service Level
+Categorize parts using an ABC/Criticality Matrix:
+- **Critical (Class A / VITAL):** Spares whose absence stops the entire plant. Target Service Level = **98% – 99.5%**.
+- **Important (Class B / ESSENTIAL):** Spares that cause partial capacity reduction. Target Service Level = **90% – 95%**.
+- **Non-Critical (Class C / DESIRABLE):** Standard off-the-shelf items (bolts, fittings). Target Service Level = **80% – 85%**.
+
+### Step 2: Calculate Safety Stock (SS)
+Safety Stock is the buffer maintained to protect against lead time delays or unexpected failure surges:
+
+$$\text{Safety Stock (SS)} = \text{Reorder Point (ROP)} - \text{Expected Lead Time Demand } (\mu)$$
+
+In our pump example:
+$$\text{Safety Stock} = 3 - 1.344 = 1.656 \approx 2 \text{ units}$$
+
+### Step 3: Calculate Minimum Level (Min)
+The Minimum Level (Min) is the trigger point to issue a purchase order. In reliability engineering, **Minimum Level = Reorder Point (ROP)**:
+
+$$\text{Min Level} = \text{Lead Time Demand } (\mu) + \text{Safety Stock (SS)}$$
+
+### Step 4: Calculate Maximum Level (Max)
+The Maximum Level prevents overstocking and cash flow stagnation. It combines the Min level with the Economic Order Quantity (EOQ):
+
+$$\text{Max Level} = \text{Min Level} + \text{Economic Order Quantity (EOQ)}$$
+
+Where EOQ is determined by annual consumption ($D$), ordering cost ($S$), and holding cost ($H$):
+$$EOQ = \sqrt{\frac{2 \cdot D \cdot S}{H}}$$
+
+---
+
+## Interactive Tool Integration: Why Ditch Excel?
+
+While spreadsheet formulas work for basic arithmetic, Excel struggles with cumulative Poisson series and dynamic lead time distributions. 
+
+Instead of manual spreadsheet calculations, leverage our free **[Spare Part Estimator Tool](/tools/spares)**:
+
+{{CALCULATOR:spares}}
+
+### Why Reliability Engineers Prefer the Online Estimator:
+1. **Automated Poisson Probability Curves:** Instantly computes exact cumulative service levels without writing complex POISSON.DIST macro functions.
+2. **Dual Model Modes:** Supports both Poisson modeling (for low-volume spares) and normal distribution models (for high-volume consumables).
+3. **Financial Exposure Quantification:** Instantly calculates your total tied-up capital and holding cost per annum.
+4. **PDF/CSV Export:** Generate executive purchasing reports for supply chain sign-off in seconds.
+
+---
+
+## Real-World Case Study: 30% Inventory Reduction at a Textile Mill
+
+### Background
+A major textile processing mill in Gujarat operating 120 spinning frames was facing severe financial pressure. Their storeroom held **₹45 Lakhs ($54,000 USD)** in mechanical spare parts, yet the plant suffered 14 hours of unplanned downtime in a single quarter due to missing spindle bearings.
+
+### The Problem
+The storeroom manager maintained a flat rule: *"Keep 5 units of every motor and 20 units of every bearing."*
+- High-wear $15 bearings were constantly out of stock.
+- Expensive $1,200 specialized gearbox shafts were overstocked with 8 units sitting idle for 6 years.
+
+### The Solution
+The reliability team conducted an audit using our **spare parts estimator tool**:
+1. Extracted historical MTBF data from their CMMS for all critical drive motors and bearings.
+2. Categorized parts by criticality (Class A: Spindles & Main Drives; Class C: Standard Hardware).
+3. Applied Poisson distribution calculations with a **99% Service Level** for Class A items and **85% Service Level** for Class C items.
+
+### The Results After 6 Months:
+- **Total MRO Inventory Value:** Reduced from ₹45 Lakhs to **₹31.5 Lakhs** (a **30% reduction in tied-up capital**).
+- **Stockout Incidents:** Reduced from 14 per quarter to **ZERO**.
+- **Warehouse Space Freed:** 25% additional shelf capacity created for critical assembly units.
+
+---
+
+## Frequently Asked Questions (FAQs)
+
+### How often should I review Min/Max spare levels?
+We recommend a **quarterly review** for Class A critical spares and a **semi-annual review** for Class B/C items. Additionally, trigger an immediate recalculation whenever operating context changes (e.g., adding a 3rd production shift or changing equipment operating speed).
+
+### What if supplier lead times fluctuate unexpectedly?
+If lead time variability is high, calculate **Max Lead Time Demand** instead of average lead time demand. You can also increase your target Service Level parameter by 3–5% in our **spare parts inventory optimization calculator** to automatically expand your Safety Stock cushion.
+
+### Does Poisson distribution work for rotating / repairable spares?
+Yes! For repairable components (like spare gearboxes or rewindable motors), substitute supplier lead time with **Mean Time To Repair (MTTR)** or overhaul turnaround time. The Poisson model accurately reflects the probability of secondary failures occurring while the primary unit is undergoing repair at the workshop.
+
+---
+
+## Summary & Action Plan for Plant Leadership
+
+Optimizing spare parts inventory is not about guessing—it is a rigorous statistical discipline. By shifting from arbitrary rules of thumb to **MTBF-based Poisson calculations**, you protect your production line from catastrophic stockouts while freeing up vital capital.
+
+### Next Steps:
+1. Identify your top 10 most critical production assets.
+2. Pull their MTBF and supplier lead times from your CMMS.
+3. Run the parameters through our **[Spare Part Estimator](/tools/spares)**.
+4. Update your ERP/Storeroom Min-Max thresholds today.
+    `
+  },
+  {
+    id: 'mtbf-vs-mttf-vs-mttr-guide',
+    title: 'MTBF vs. MTTF vs. MTTR: When to Use Which Metric (And When NOT To)',
+    summary: 'The definitive guide for students and junior engineers to understand the difference between MTBF, MTTF, and MTTR with comparison charts and decision flowcharts.',
+    date: 'May 10, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Executive Summary & Quick Answer
+
+The fundamental **difference between MTBF and MTTF** comes down to repairability: **MTBF (Mean Time Between Failures)** measures operational uptime between unexpected breakdowns for **repairable assets** (like motors, pumps, and compressors), whereas **MTTF (Mean Time To Failure)** measures the total expected lifespan of **non-repairable items** (like lightbulbs, electrical fuses, and single-use seals) that must be discarded after failing. **MTTR (Mean Time To Repair)** measures maintainability speed—the average time required to diagnose, repair, and restore a failed asset back to service.
+
+---
+
+## Executive Comparison Table
+
+| Metric | Full Name | Definition | Best Used For | Common Mistake |
+|---|---|---|---|---|
+| **MTBF** | Mean Time Between Failures | Average operational uptime between unexpected breakdowns. | Repairable machinery, production lines, pumps. | Confusing MTBF with asset lifespan or service life. |
+| **MTTF** | Mean Time To Failure | Average total operating lifespan before permanent failure. | Non-repairable parts, fuses, bearings, LEDs. | Calculating MTBF for items that are thrown away after breaking. |
+| **MTTR** | Mean Time To Repair | Average time spent diagnosing and fixing a breakdown. | Maintenance crew efficiency, work order speed. | Assuming MTTR measures machine quality (it measures maintainability). |
+
+---
+
+## Deep Dive 1: MTBF (Mean Time Between Failures)
+
+### What is MTBF?
+**MTBF** is the primary benchmark for equipment **reliability**. It answers the core engineering question: *"How long can we expect this machine to run continuously before it breaks down?"*
+
+Crucially, MTBF applies **only to repairable assets**.
+
+$$\text{MTBF} = \frac{\text{Total Operational Uptime}}{\text{Total Number of Unplanned Failures}}$$
+
+### Practical Industrial Example: Conveyor Belt Drive Motor
+Consider a bottling plant operating a main conveyor belt motor:
+- Total Operating Time: **720 hours** over a 30-day period.
+- Unplanned Breakdowns: The motor tripped **3 times**.
+
+$$\text{MTBF} = \frac{720 \text{ hours}}{3 \text{ failures}} = 240 \text{ hours}$$
+
+This means the conveyor belt runs an average of 240 operating hours before experiencing a failure.
+
+### Interactive Tool Link
+To calculate MTBF for your facility, use our free **[MTBF Calculator](/tools/mtbf-calculator)**:
+
+{{CALCULATOR:mtbf}}
+
+---
+
+## Deep Dive 2: MTTF (Mean Time To Failure)
+
+### What is MTTF?
+**MTTF** is the primary benchmark for non-repairable component **lifespan**. It answers the question: *"How long will this component last before it dies permanently and must be replaced?"*
+
+When a non-repairable component fails, there is no "between" failures—the item goes directly into the scrap bin.
+
+$$\text{MTTF} = \frac{\text{Total Operating Hours Across All Units Tested}}{\text{Total Number of Units Failed}}$$
+
+### Practical Industrial Example: Factory Overhead LED Fixtures & Fuses
+A electronics plant installs 100 industrial LED light fixtures. Over a test period:
+- Total combined operating hours across all 100 units = **500,000 hours**.
+- All 100 units eventually burn out and are discarded.
+
+$$\text{MTTF} = \frac{500,000 \text{ hours}}{100 \text{ fixtures}} = 5,000 \text{ hours}$$
+
+### Why Using MTBF for Non-Repairable Spares is Wrong
+Calling an electrical fuse's lifespan "MTBF" is mathematically incorrect. Because a blown fuse cannot be repaired, there are zero subsequent failures for that specific unit. Using MTBF here creates confusion in procurement and reliability modeling.
+
+---
+
+## Deep Dive 3: MTTR (Mean Time To Repair)
+
+### What is MTTR?
+Unlike MTBF and MTTF (which measure reliability), **MTTR** measures **maintainability** and technician response speed. It answers the question: *"How fast can our team diagnose, fix, and restart a failed asset?"*
+
+$$\text{MTTR} = \frac{\text{Total Maintenance Downtime Hours}}{\text{Total Number of Repairs Made}}$$
+
+### Practical Example: Hydraulic Press Repair
+Over one month, a hydraulic press suffered 4 unexpected breakdowns:
+- Repair 1: 1.5 hours
+- Repair 2: 2.0 hours
+- Repair 3: 0.5 hours
+- Repair 4: 4.0 hours
+- Total Downtime: **8.0 hours**
+
+$$\text{MTTR} = \frac{8.0 \text{ hours}}{4 \text{ repairs}} = 2.0 \text{ hours per repair}$$
+
+### The Golden Formula: Connecting MTBF and MTTR to Availability
+System Availability ($A$) is directly derived from MTBF and MTTR:
+
+$$\text{Availability } (A) = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}} \times 100\%$$
+
+If MTBF = 240 hours and MTTR = 10 hours:
+
+$$A = \frac{240}{240 + 10} = \frac{240}{250} = 96.0\%$$
+
+Calculate your overall facility uptime using our free **[OEE & Availability Calculator](/oee-calculator)**.
+
+---
+
+## The "Gotcha" Section: Why Vendor MTBF Claims Are Misleading
+
+Junior engineers are often baffled when a OEM catalog claims an MTBF of **1,000,000 hours (114 years)** for a commercial hard drive or pump seal. 
+
+### Why Vendor Claims Don't Match the Plant Floor:
+
+1. **Ideal Laboratory Conditions vs. Real Factory Environments:** Vendor testing occurs in pristine, climate-controlled labs. On your plant floor, assets face vibration, dust, voltage spikes, thermal cycling, and improper lubrication.
+2. **Population Testing Tricks:** If a manufacturer tests 1,000 units for 1,000 hours (total 1,000,000 operating hours) and 1 unit fails, the statistical MTBF is $1,000,000 \text{ hours}$. This does **NOT** mean your single pump will last 114 years!
+3. **Infant Mortality Ignored:** Vendor specifications assume the asset is strictly operating in the middle "Useful Life" phase of the Bathtub Curve, ignoring early installation failures and end-of-life wear-out.
+
+---
+
+## Decision Checklist: Which Metric Do You Need?
+
+Follow this simple decision tree when analyzing your plant data:
+
+### Question 1: Can the item be repaired when it breaks?
+- **YES:** You need **MTBF** (to measure uptime) and **MTTR** (to measure repair speed).
+- **NO:** You need **MTTF** (to measure component lifespan before scrap).
+
+### Question 2: Are you setting Preventive Maintenance (PM) schedules?
+- **Use MTBF:** Set your PM interval to $\frac{\text{MTBF}}{2}$ or $\frac{\text{MTBF}}{3}$ for critical machinery.
+
+### Question 3: Are you staffing your maintenance shifts?
+- **Use MTTR:** If your MTTR is high due to slow troubleshooting, you need better diagnostic tools, technician training, or shift coverage.
+
+### Question 4: Are you calculating spare parts stock?
+- **Use MTTF & MTBF:** Use MTTF for consumable replacement rates and MTBF for spare rotating equipment sizing in our **[Spare Part Estimator](/tools/spares)**.
+
+---
+
+## Summary & Key Takeaways
+
+    `
+  },
+  {
+    id: 'weibull-analysis-spinning-machines-case-study',
+    title: 'Reducing Unplanned Downtime in High-Speed Spinning Machines: A Weibull Analysis Case Study',
+    summary: 'How an Indian textile mill in Coimbatore solved recurring high-speed spindle bearing failures, achieved zero unplanned downtime for 6 months, and generated a 50x ROI using Weibull Analysis.',
+    date: 'June 15, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Executive Summary: The ₹5 Lakh/Month Nightmare
+
+In high-speed textile manufacturing, spinning machines operate under relentless conditions. Operating 24/7 at spindle speeds exceeding 20,000 RPM, even minor mechanical imperfections compound rapidly into catastrophic thermal seizures.
+
+A major yarn manufacturing mill in Coimbatore, Tamil Nadu, was facing a severe operational crisis:
+- **Equipment:** 24 High-Speed Ring Spinning Frames (1,200 spindles per frame).
+- **Failure Mode:** Recurrent main drive-end rotor bearing seizures.
+- **Frequency:** Sudden breakdowns occurring every 3 to 3.5 weeks.
+- **Financial Exposure:** Unplanned line stops, ruined yarn batches, and emergency maintenance labor cost the facility **₹5 Lakhs ($6,000 USD) per month**.
+
+This case study demonstrates how applying **Weibull analysis in the textile industry** shifted the facility from reactive firefighting to predictive perfection, generating a **50x Return on Investment (ROI)**.
+
+---
+
+## The Failed Attempt: Conventional Time-Based Maintenance
+
+Faced with mounting losses, the maintenance supervisor implemented what seemed like a logical fix: **Time-Based Preventive Maintenance (PM)**.
+
+Based on industry rules of thumb, the plant scheduled a complete bearing overhaul every **4 weeks (28 days)**. 
+
+### Why the Initial Fix Failed:
+The strategy was a total disaster. Bearing seizures continued occurring around Day 20 to Day 24—just days *before* the scheduled 28-day PM cycle.
+
+> *"We were changing bearings every month, yet machines were still blowing up at 3 AM. We were spending money on maintenance and still losing production. The team assumed we had received a bad batch of bearings."*
+> — **Anil Sharma**, Senior Reliability Consultant
+
+The plant leadership was treating all failures as if they were **random events**. In reality, they were trying to solve a deterministic wear-out problem with an arbitrary calendar schedule.
+
+---
+
+## The Weibull Solution: Decoding Failure Physics
+
+Instead of guessing, the reliability team gathered historical time-to-failure data (in operating hours) for 8 consecutive bearing failures:
+
+- **Unit 1:** 480 hours (20.0 days)
+- **Unit 2:** 512 hours (21.3 days)
+- **Unit 3:** 528 hours (22.0 days)
+- **Unit 4:** 540 hours (22.5 days)
+- **Unit 5:** 565 hours (23.5 days)
+- **Unit 6:** 590 hours (24.5 days)
+- **Unit 7:** 610 hours (25.4 days)
+- **Unit 8:** 640 hours (26.6 days)
+
+The team loaded these hours into our free online **[Weibull Analysis Tool](/weibull-analysis)**:
+
+{{CALCULATOR:weibull}}
+
+### The Output Parameters:
+1. **Shape Parameter ($\beta$ / Beta):** **3.52**
+2. **Scale Parameter ($\eta$ / Eta - Characteristic Life):** **578.4 Operating Hours**
+3. **Correlation Coefficient ($R^2$):** **0.984** (Exceptional fit to Weibull distribution)
+
+---
+
+## Visualizing the Failure Mode: The Weibull Plot
+
+~~~
+     Cumulative Failure Probability F(t) (%)
+ 99% |                                     / (Wear-Out Line)
+     |                                    /
+ 50% |                                  /   Eta (n) = 578.4 Hours
+     |                                /
+ 10% |----------------------------* (B10 Life = 425 Hours)
+  1% |                          /
+     +--------------------------------------------------------> Operating Hours
+     0                        425     578        700
+~~~
+*Figure 1: Weibull Probability Plot for Ring Frame Main Spindle Bearings ($\beta = 3.52, \eta = 578.4 \text{ hrs}$).*
+
+### The Breakthrough Engineering Insight: Understanding $\beta = 3.52$
+
+The Shape parameter ($\beta$) is the most critical metric in **bearing failure prediction**:
+- **If $\beta < 1.0$ (Infant Mortality):** Failures are caused by poor installation, manufacturing defects, or contamination immediately after startup.
+- **If $\beta = 1.0$ (Random Failures):** Failures are independent of age (caused by random power surges or external impacts). Time-based PM is useless.
+- **If $\beta > 1.0$ (Wear-Out Mode):** Failures are strictly age-dependent. As operating hours increase, failure probability rises exponentially.
+
+Because our calculated **$\beta = 3.52$**, the data proved with 98%+ statistical confidence that the bearings were suffering from **classic fatigue wear-out** driven by dynamic radial loads at 20,000 RPM.
+
+Furthermore, a Beta of 3.5 mimics a Gaussian normal distribution. The failure window was tightly clustered between 480 and 640 hours—making a 28-day (672 hour) PM cycle mathematically guaranteed to fail!
+
+---
+
+## The Data-Driven Fix: Calculating B10 Life
+
+To eliminate unplanned breakdowns entirely, the plant could not wait until average life ($\eta$). They needed to replace the bearings before the **first 10% of the population failed**.
+
+In reliability engineering, this is known as the **$B_{10}$ Life**:
+
+$$B_{10} = \eta \cdot \left[ -\ln(1 - 0.10) \right]^{1/\beta}$$
+
+Plugging in our parameters ($\eta = 578.4, \beta = 3.52$):
+
+$$B_{10} = 578.4 \cdot \left[ -\ln(0.90) \right]^{1/3.52} = 578.4 \cdot (0.10536)^{0.284} = 424.8 \text{ Hours}$$
+
+### Revised Maintenance Action Plan:
+1. **New Replacement Window:** $424.8 \text{ hours} \div 24 \text{ hrs/day} \approx \mathbf{17.7 \text{ Days (2.5 Weeks)}}$.
+2. **Execution:** The plant changed the PM overhaul schedule from 4 weeks to **every 2.5 weeks (17 days)**.
+3. **Lubrication Adjustment:** Synthetic synthetic polyurea grease with high viscosity index was introduced to extend the base scale parameter $\eta$.
+
+---
+
+## The Results: Zero Downtime & 50x ROI
+
+Within 30 days of implementing the $B_{10}$-based replacement schedule:
+
+1. **Unplanned Downtime:** Reduced from 14 hours/month to **0 hours**.
+2. **Zero Failures:** The spinning mill completed **6 consecutive months with ZERO unplanned bearing seizures**.
+3. **Direct Savings:**
+   - Saved **₹30 Lakhs ($36,000 USD)** in prevented production losses over 6 months.
+   - Saved ₹1.8 Lakhs in damaged rotor shaft repairs.
+4. **ROI of Analysis:** The total cost of conducting the Weibull analysis (engineering time + software tool utilization) was under ₹10,000. The operational ROI exceeded **5000% (50x)**.
+
+---
+
+## Key Lessons for Spinning Machine Maintenance
+
+1. **Never Assume Randomness:** Rotating machinery operating at high speeds rarely fails randomly. Always plot failure data to verify $\beta$.
+2. **Stop Using Fixed 30-Day PMs:** Equipment failure modes do not care about calendar months. Calculate $B_{10}$ or $B_{5}$ life based on operating hours.
+3. **Free Tools Deliver Enterprise Value:** You do not need ₹20 Lakh enterprise software suites. Free statistical calculators provide world-class reliability math instantly.
+
+### Action Item for Reliability Engineers:
+Do you have recurring component failures on your plant floor? Gather 5 to 10 failure timestamps and run them through our **[Weibull Analysis Tool](/weibull-analysis)** today to calculate your exact $B_{10}$ life.
+    `
   }
 ];
+
+
+

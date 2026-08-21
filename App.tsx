@@ -118,11 +118,15 @@ const App: React.FC = () => {
               <Route path="tools/gearbox" element={<GearboxReliability />} />
               <Route path="tools/lubricant-life" element={<LubricantLifeOptimizer />} />
 
-              {/* Content */}
+              {/* Content & Articles */}
               <Route path="learning" element={<LearningCenter />} />
-              <Route path="knowledge-hub" element={<KnowledgeHub />} /> {/* New Route */}
+              <Route path="articles" element={<LearningCenter />} />
+              <Route path="blog" element={<LearningCenter />} />
+              <Route path="knowledge-hub" element={<KnowledgeHub />} />
               <Route path="interactive-hub" element={<InteractiveHub />} />
               <Route path="learning/:articleId" element={<ArticleView />} />
+              <Route path="articles/:articleId" element={<ArticleView />} />
+              <Route path="blog/:articleId" element={<ArticleView />} />
               <Route path="faq" element={<Faq />} />
               <Route path="reliability-engineering-glossary" element={<Glossary />} />
               <Route path="methodology" element={<Methodology />} />
