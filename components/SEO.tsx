@@ -9,17 +9,17 @@ interface SEOProps {
   keywords?: string;
   canonicalUrl?: string;
   image?: string;
-  schema?: object;
+  schema?: object | object[];
 }
 
 const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, image, schema }) => {
   useEffect(() => {
     // 1. Update Title
     if (title) {
-      if (title.includes('Reliability Tools')) {
+      if (title.includes('Reliability Tools') || title.includes('ReliabilityTools.co.in')) {
         document.title = title;
       } else {
-        document.title = `${title} | Reliability Tools`;
+        document.title = `${title} - Free Online Reliability Tool | ReliabilityTools.co.in`;
       }
     }
 
@@ -89,10 +89,13 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, i
       const script = document.createElement('script');
       script.type = 'application/ld+json';
       script.text = JSON.stringify(schema);
+      script.setAttribute('data-schema-type', 'dynamic-jsonld');
       document.head.appendChild(script);
 
       return () => {
-        document.head.removeChild(script);
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
       };
     }
   }, [title, description, keywords, canonicalUrl, schema, image]);

@@ -15,7 +15,19 @@ export default defineConfig(({ mode }) => {
       // 'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
     },
     build: {
-      target: 'es2020'
+      target: 'es2020',
+      minify: 'esbuild',
+      cssMinify: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-icons': ['lucide-react'],
+            'vendor-katex': ['katex', 'react-katex'],
+            'vendor-recharts': ['recharts']
+          }
+        }
+      }
     },
     resolve: {
       alias: {

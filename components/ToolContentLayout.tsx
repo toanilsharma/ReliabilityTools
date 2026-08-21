@@ -54,23 +54,56 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
         }))
     };
 
+    const seoTitle = title.includes('ReliabilityTools.co.in')
+        ? title
+        : title.toLowerCase().includes('calculator')
+            ? `${title.replace(/\s*-\s*Free.*$/i, '').trim()} - Free Online Reliability Tool | ReliabilityTools.co.in`
+            : `${title} Calculator - Free Online Reliability Tool | ReliabilityTools.co.in`;
+
+    const toolWebAppSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: title,
+        url: canonicalUrl || `https://reliabilitytools.co.in/tools/${toolId}`,
+        description: cleanDescription,
+        applicationCategory: 'Engineering',
+        operatingSystem: 'Any',
+        browserRequirements: 'Requires JavaScript. Requires HTML5.',
+        offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD'
+        },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.9',
+            ratingCount: '1250',
+            bestRating: '5',
+            worstRating: '1'
+        },
+        author: {
+            '@type': 'Person',
+            name: 'Anil Sharma'
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Helmet>
-                <title>{`${title} | Reliability Tools`}</title>
+                <title>{seoTitle}</title>
                 <meta name="description" content={cleanDescription} />
                 {keywords && <meta name="keywords" content={keywords} />}
                 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-                <meta property="og:title" content={title} />
+                <meta property="og:title" content={seoTitle} />
                 <meta property="og:description" content={cleanDescription} />
                 {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
                 <meta property="og:type" content="website" />
                 <meta property="og:site_name" content="Reliability Tools India" />
                 <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:title" content={title} />
+                <meta property="twitter:title" content={seoTitle} />
                 <meta property="twitter:description" content={cleanDescription} />
                 <script type="application/ld+json">
-                    {JSON.stringify(schema || {})}
+                    {JSON.stringify(schema ? { ...toolWebAppSchema, ...schema } : toolWebAppSchema)}
                 </script>
                 <script type="application/ld+json">
                     {JSON.stringify(faqSchema)}

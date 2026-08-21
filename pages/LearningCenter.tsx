@@ -18,7 +18,12 @@ const LearningCenter: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-16 pb-12">
-      <SEO schema={schema} />
+      <SEO
+        title="Reliability Learning Hub - Free Guides & Tutorials | ReliabilityTools.co.in"
+        description="Explore free reliability engineering guides, tutorials, and practical articles on MTBF, Weibull analysis, FMEA, and predictive maintenance."
+        canonicalUrl="https://reliabilitytools.co.in/learning"
+        schema={schema}
+      />
 
       <div className="text-center py-16 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800">
         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">

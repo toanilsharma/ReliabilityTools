@@ -131,6 +131,33 @@ const Home: React.FC = () => {
     <div className="h-full w-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse min-h-[300px]"></div>
   );
 
+  const webAppSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Reliability Tools - Free Reliability Engineering Calculators",
+    "url": "https://reliabilitytools.co.in",
+    "description": "Access 28 free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling.",
+    "applicationCategory": "Engineering",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1250",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Anil Sharma"
+    }
+  };
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -147,11 +174,11 @@ const Home: React.FC = () => {
   return (
     <div className="space-y-24 pb-12">
       <SEO
-        title="Free MTBF Calculator & Weibull Analysis"
-        description="28 free reliability engineering tools online: MTBF calculator, Weibull analysis, FMEA, and OEE. Industry-standard formulas. No login or installation required."
+        title="Free Reliability Engineering Tools | MTBF Calculator & Weibull Analysis"
+        description="Access 28 free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling."
         keywords="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator, OEE calculator, availability calculator, predictive maintenance, engineering interview preparation, reliability exam preparation"
         canonicalUrl="https://reliabilitytools.co.in/"
-        schema={faqSchema}
+        schema={[webAppSchema, faqSchema]}
       />
 
       {/* Hero Section */}

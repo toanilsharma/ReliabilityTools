@@ -34,13 +34,14 @@ const ArticleView: React.FC = () => {
 
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "TechArticle",
+    "@type": "Article",
     "headline": article.title,
     "description": article.summary,
-    "image": "https://reliabilitytools.co.in/logo.png",
+    "image": article.image || "https://reliabilitytools.co.in/social-preview.png",
+    "datePublished": article.date,
     "author": {
       "@type": "Person",
-      "name": article.author
+      "name": article.author || "Anil Sharma"
     },
     "publisher": {
       "@type": "Organization",
@@ -50,7 +51,6 @@ const ArticleView: React.FC = () => {
         "url": "https://reliabilitytools.co.in/logo.png"
       }
     },
-    "datePublished": article.date,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://reliabilitytools.co.in/learning/${article.id}`
@@ -269,7 +269,12 @@ const ArticleView: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto animate-fade-in">
-      <SEO schema={articleSchema} />
+      <SEO
+        title={`${article.title} | Reliability Learning Hub`}
+        description={article.summary}
+        canonicalUrl={`https://reliabilitytools.co.in/learning/${article.id}`}
+        schema={articleSchema}
+      />
 
       <div className="flex justify-between items-center mb-6 no-print">
         <Link
