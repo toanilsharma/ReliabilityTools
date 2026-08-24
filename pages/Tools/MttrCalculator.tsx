@@ -23,6 +23,7 @@ import {
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
+import { trackToolCalculation } from '../../utils/analytics';
 import RelatedTools from '../../components/RelatedTools';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import ShareAndExport from '../../components/ShareAndExport';
@@ -195,7 +196,9 @@ const MttrCalculator: React.FC = () => {
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
-    validateInputs();
+    if (validateInputs()) {
+      trackToolCalculation('MTTR Calculator', 'mttr');
+    }
   };
 
   // Perform calculations based on inputs

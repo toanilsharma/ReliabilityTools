@@ -2,6 +2,7 @@
 import React from 'react';
 import { FileSpreadsheet, Download, Shield, FileText, Activity, Layers, PenTool, Database, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
+import { trackTemplateDownload } from '../utils/analytics';
 
 interface Template {
   id: string;
@@ -238,6 +239,7 @@ const Downloads: React.FC = () => {
   };
 
   const handleDownload = (template: Template) => {
+    trackTemplateDownload(template.title);
     const csvContent = [
       template.headers.join(','),
       template.exampleRow.join(',')

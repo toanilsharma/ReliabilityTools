@@ -1,10 +1,12 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp, Share2 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import ContextGlossaryPanel from './ContextGlossaryPanel';
 import SEO from './SEO';
 import { getSeoMetadata } from '../utils/seoConfig';
+import { createToolSchema, createFaqSchema } from '../utils/schemaGenerator';
+
+import ToolToArticleBanner from './ToolToArticleBanner';
 
 interface FAQItem {
     question: string;
@@ -30,74 +32,25 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
     faqs,
     keywords,
     canonicalUrl: customCanonicalUrl,
-    schema
+    schema: customSchema
 }) => {
     const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
     const location = useLocation();
     const defaultSeo = getSeoMetadata(location.pathname);
 
-    const toolId = location.pathname.split('/').filter(Boolean).pop() || '';
-
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
-    const cleanDescription = description.replace(/<[^>]*>?/gm, '');
-
     const canonicalUrl = customCanonicalUrl || defaultSeo.canonical;
 
-    const faqSchema = {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: faqs.map(faq => ({
-            '@type': 'Question',
-            name: faq.question,
-            acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.answer
-            }
-        }))
-    };
-
-    const toolWebAppSchema = {
-        '@context': 'https://schema.org',
-        '@type': 'WebApplication',
-        name: title,
-        url: canonicalUrl,
-        description: cleanDescription,
-        applicationCategory: 'Engineering',
-        operatingSystem: 'Any',
-        browserRequirements: 'Requires JavaScript. Requires HTML5.',
-        offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD'
-        },
-        aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.9',
-            ratingCount: '1250',
-            bestRating: '5',
-            worstRating: '1'
-        },
-        author: {
-            '@type': 'Person',
-            name: 'Anil Sharma'
-        }
-    };
+    // Structured JSON-LD Schemas
+    const toolWebAppSchema = createToolSchema(title, description, canonicalUrl, customSchema);
+    const faqSchema = createFaqSchema(faqs);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <SEO keywords={keywords} />
-
-            <Helmet>
-                <script type="application/ld+json">
-                    {JSON.stringify(schema ? { ...toolWebAppSchema, ...schema } : toolWebAppSchema)}
-                </script>
-                <script type="application/ld+json">
-                    {JSON.stringify(faqSchema)}
-                </script>
-            </Helmet>
+            <SEO keywords={keywords} schema={[toolWebAppSchema, faqSchema]} />
 
             <div className="mb-10 text-center max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
@@ -147,6 +100,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     <article className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-a:text-cyan-600 dark:prose-a:text-cyan-400 hover:prose-a:text-cyan-500">
                         {content}
                     </article>
+
+                    <ToolToArticleBanner />
 
                     <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>

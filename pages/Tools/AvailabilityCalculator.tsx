@@ -11,6 +11,7 @@ import ShareAndExport from '../../components/ShareAndExport';
 import { AvailabilityTimeline } from '../../components/TheoryVisuals';
 import 'katex/dist/katex.min.css';
 import { BlockMath, InlineMath } from 'react-katex';
+import { trackToolCalculation } from '../../utils/analytics';
 
 import { Link } from 'react-router-dom';
 
@@ -78,6 +79,7 @@ const AvailabilityCalculator: React.FC = () => {
       setHourlyRevenue(draftHourlyRevenue);
       setOperationMode(draftOperationMode);
       setIsCalculating(false);
+      trackToolCalculation('Availability Calculator', 'availability');
     }, 350);
   };
 

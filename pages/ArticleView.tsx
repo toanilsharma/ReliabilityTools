@@ -1,9 +1,24 @@
-
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { ARTICLES, TOOLS } from '../constants';
-import { ChevronRight, Calendar, User, Printer, Info, CheckCircle2, Wrench } from 'lucide-react';
+import {
+  ChevronRight,
+  Calendar,
+  User,
+  Printer,
+  Clock,
+  Share2,
+  Copy,
+  Check,
+  Linkedin,
+  Wrench,
+  CheckCircle2,
+  Sparkles
+} from 'lucide-react';
 import SEO from '../components/SEO';
+import { createArticleSchema, createBreadcrumbSchema, BASE_URL } from '../utils/schemaGenerator';
+import ArticleToToolCTA from '../components/ArticleToToolCTA';
+import TableOfContents, { slugifyHeading } from '../components/TableOfContents';
 
 const MtbfCalculator = lazy(() => import('./Tools/MtbfCalculator'));
 const WeibullAnalysis = lazy(() => import('./Tools/WeibullAnalysis'));
@@ -24,6 +39,8 @@ const ArticleView: React.FC = () => {
   const { articleId } = useParams<{ articleId: string }>();
   const article = ARTICLES.find(a => a.id === articleId);
 
+  const [copiedLink, setCopiedLink] = useState(false);
+
   if (!article) {
     return <Navigate to="/learning" replace />;
   }
@@ -32,44 +49,40 @@ const ArticleView: React.FC = () => {
     window.print();
   };
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": article.title,
-    "description": article.summary,
-    "image": article.image || "https://reliabilitytools.co.in/social-preview.png",
-    "datePublished": article.date,
-    "author": {
-      "@type": "Person",
-      "name": article.author || "Anil Sharma"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Reliability Tools",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://reliabilitytools.co.in/logo.png"
-      }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://reliabilitytools.co.in/learning/${article.id}`
-    }
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
+
+  const handleLinkedInShare = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=600');
+  };
+
+  const articleUrl = `${BASE_URL}/learning/${article.id}/`;
+
+  // Calculate Reading Time dynamically
+  const wordCount = article.content.trim().split(/\s+/).length;
+  const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
+
+  const articleSchema = createArticleSchema(article, articleUrl);
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Home', url: `${BASE_URL}/` },
+    { name: 'Learning Center', url: `${BASE_URL}/learning/` },
+    { name: article.title, url: articleUrl }
+  ]);
 
   // Helper to render Math expressions with basic LaTeX formatting
   const renderMathContent = (latex: string) => {
-    // Handle superscripts: e^{-t} -> e<sup>-t</sup>
     const parts = latex.split(/(\^\{.*?\}|\^.)/g);
 
     return parts.map((part, i) => {
-      // Match ^{...} or ^x
       if (part.startsWith('^')) {
         let content = part.startsWith('^{') ? part.slice(2, -1) : part.slice(1);
         return <sup key={i} className="text-xs">{content}</sup>;
       }
 
-      // Basic symbol replacement for the base text
       let text = part
         .replace(/\\approx/g, '≈')
         .replace(/\\lambda/g, 'λ')
@@ -79,7 +92,7 @@ const ArticleView: React.FC = () => {
         .replace(/\\le/g, '≤')
         .replace(/\\ge/g, '≥')
         .replace(/\\infty/g, '∞')
-        .replace(/[{}]/g, ''); // Clean up remaining braces
+        .replace(/[{}]/g, '');
 
       return <span key={i}>{text}</span>;
     });
@@ -87,8 +100,6 @@ const ArticleView: React.FC = () => {
 
   // Process text for Italics (*...*)
   const processItalics = (text: string) => {
-    // Regex matches *text* but excludes **text** (bold) by ensuring we are inside the bold splitter's result
-    // Simple approach: split by *
     const parts = text.split(/(\*[^*]+?\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('*') && part.endsWith('*')) {
@@ -109,7 +120,7 @@ const ArticleView: React.FC = () => {
     });
   };
 
-  // Process text for Math ($...$) - Priority over Bold/Italic
+  // Process text for Math ($...$)
   const processMath = (text: string) => {
     const parts = text.split(/(\$.*?\$)/g);
     return parts.map((part, i) => {
@@ -120,7 +131,6 @@ const ArticleView: React.FC = () => {
           </span>
         );
       }
-      // If not math, proceed to parse Bold/Italic
       return <React.Fragment key={i}>{processBold(part)}</React.Fragment>;
     });
   };
@@ -152,54 +162,53 @@ const ArticleView: React.FC = () => {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // Handle Tables
       if (line.trim().startsWith('|')) {
         inTable = true;
         tableBuffer.push(line);
         continue;
       } else if (inTable) {
-        // Render the buffered table
         elements.push(renderTable(tableBuffer, i));
         tableBuffer = [];
         inTable = false;
       }
 
-      // Headers
+      // Headers with Slugified ID for Table of Contents & Scroll-Spy
       if (line.startsWith('## ')) {
+        const rawText = line.replace('## ', '').trim();
+        const headingId = slugifyHeading(rawText);
         elements.push(
-          <h2 key={i} className="text-2xl font-bold text-slate-900 dark:text-white mt-12 mb-6 border-l-4 border-cyan-500 pl-4">
-            {line.replace('## ', '')}
+          <h2 id={headingId} key={i} className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 border-l-4 border-cyan-500 pl-4 scroll-mt-24">
+            {rawText}
           </h2>
         );
       } else if (line.startsWith('### ')) {
+        const rawText = line.replace('### ', '').trim();
+        const headingId = slugifyHeading(rawText);
         elements.push(
-          <h3 key={i} className="text-xl font-bold text-slate-800 dark:text-slate-200 mt-8 mb-4">
-            {line.replace('### ', '')}
+          <h3 id={headingId} key={i} className="text-xl font-bold text-slate-800 dark:text-slate-200 mt-8 mb-4 scroll-mt-24">
+            {rawText}
           </h3>
         );
       }
-      // Bullets
       else if (line.startsWith('• ') || line.startsWith('- ')) {
         elements.push(
           <div key={i} className="flex items-start gap-3 mb-3 ml-2">
             <CheckCircle2 className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-1 shrink-0" />
-            <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg">
+            <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg">
               {parseText(line.replace(/^[-•] /, ''))}
             </span>
           </div>
         );
       }
-      // Callouts
       else if (line.startsWith('> ')) {
         elements.push(
-          <div key={i} className="bg-slate-50 dark:bg-slate-800 border-l-4 border-cyan-500 p-6 my-8 rounded-r-lg shadow-sm">
+          <div key={i} className="bg-slate-50 dark:bg-slate-800/80 border-l-4 border-cyan-500 p-6 my-8 rounded-r-2xl shadow-sm">
             <div className="text-slate-700 dark:text-slate-300 italic leading-relaxed text-lg font-serif">
               {parseText(line.replace('> ', ''))}
             </div>
           </div>
         );
       }
-      // Embeds
       else if (line.trim().startsWith('{{CALCULATOR:') && line.trim().endsWith('}}')) {
         const id = line.trim().replace('{{CALCULATOR:', '').replace('}}', '');
         elements.push(
@@ -211,21 +220,17 @@ const ArticleView: React.FC = () => {
           </div>
         );
       }
-      // Empty Lines
       else if (line.trim() === '') {
-        elements.push(<div key={i} className="h-4"></div>);
-      }
-      // Paragraphs
-      else {
+        elements.push(<div key={i} className="h-4" />);
+      } else {
         elements.push(
-          <p key={i} className="text-slate-600 dark:text-slate-300 leading-8 mb-4 text-lg">
+          <p key={i} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg mb-6">
             {parseText(line)}
           </p>
         );
       }
     }
 
-    // Flush any remaining table at end of file
     if (inTable) {
       elements.push(renderTable(tableBuffer, lines.length));
     }
@@ -233,20 +238,21 @@ const ArticleView: React.FC = () => {
     return elements;
   };
 
-  const renderTable = (rows: string[], keyPrefix: number) => {
-    if (rows.length < 3) return null;
+  const renderTable = (tableLines: string[], keyPrefix: number) => {
+    if (tableLines.length < 2) return null;
 
-    const headers = rows[0].split('|').filter(c => c.trim()).map(c => c.trim());
-    const bodyRows = rows.slice(2).map(r => r.split('|').filter(c => c.trim()).map(c => c.trim()));
+    const parseRow = (rowStr: string) => rowStr.split('|').slice(1, -1).map(c => c.trim());
+    const headerRow = parseRow(tableLines[0]);
+    const bodyRows = tableLines.slice(2).map(parseRow);
 
     return (
-      <div key={`table-${keyPrefix}`} className="overflow-x-auto my-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div key={keyPrefix} className="my-8 overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white uppercase font-bold">
+          <thead className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white uppercase font-bold text-xs">
             <tr>
-              {headers.map((h, idx) => (
-                <th key={idx} className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 whitespace-nowrap">
-                  {h}
+              {headerRow.map((col, idx) => (
+                <th key={idx} className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                  {parseText(col)}
                 </th>
               ))}
             </tr>
@@ -268,81 +274,144 @@ const ArticleView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
       <SEO
-        title={`${article.title} | Reliability Learning Hub`}
+        title={`${article.title} | Reliability Tools`}
         description={article.summary}
-        canonicalUrl={`https://reliabilitytools.co.in/learning/${article.id}`}
-        schema={articleSchema}
+        canonicalUrl={articleUrl}
+        schema={[articleSchema, breadcrumbSchema]}
       />
 
-      <div className="flex justify-between items-center mb-6 no-print">
+      {/* Top Header Navigation */}
+      <div className="flex justify-between items-center mb-8 no-print">
         <Link
           to="/learning"
-          className="flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors font-medium group"
+          className="flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors font-bold text-sm group"
         >
-          <ChevronRight className="w-4 h-4 rotate-180 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Articles
+          <ChevronRight className="w-4 h-4 rotate-180 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Learning Hub
         </Link>
-        <button
-          onClick={handlePrint}
-          className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition-colors text-sm font-medium"
-        >
-          <Printer className="w-4 h-4" /> Print Article
-        </button>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleCopyLink}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 transition-all text-xs font-bold shadow-sm"
+          >
+            {copiedLink ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-slate-500" />}
+            {copiedLink ? 'Copied!' : 'Copy Link'}
+          </button>
+
+          <button
+            onClick={handleLinkedInShare}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#0A66C2] hover:bg-[#084e96] text-white rounded-xl transition-all text-xs font-bold shadow-sm"
+          >
+            <Linkedin className="w-4 h-4" /> Share
+          </button>
+
+          <button
+            onClick={handlePrint}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-600 dark:text-slate-300 transition-colors text-xs font-bold"
+          >
+            <Printer className="w-4 h-4" /> Print
+          </button>
+        </div>
       </div>
 
-      <article className="bg-white dark:bg-slate-900 rounded-3xl p-8 md:p-14 border border-slate-200 dark:border-slate-800 shadow-xl">
-        <header className="mb-10 pb-10 border-b border-slate-200 dark:border-slate-800">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8 leading-tight">
-            {article.title}
-          </h1>
-          <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full">
-              <Calendar className="w-4 h-4 text-cyan-600" /> {article.date}
-            </div>
-            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full">
-              <User className="w-4 h-4 text-cyan-600" /> {article.author}
-            </div>
-            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full">
-              <Info className="w-4 h-4 text-cyan-600" /> ~10 min read
-            </div>
-          </div>
-        </header>
+      {/* Main 2-Column Grid Layout */}
+      <div className="grid lg:grid-cols-4 gap-10">
 
-        <div className="max-w-none">
-          {renderContent(article.content)}
-        </div>
+        {/* Left Sidebar Table of Contents (Desktop) */}
+        <aside className="lg:col-span-1">
+          <TableOfContents content={article.content} />
+        </aside>
 
-        <div className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800">
-          <div className="mb-10 no-print">
-            <h4 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white mb-4">
-              <Wrench className="w-5 h-5 text-cyan-600" /> Tools Mentioned
-            </h4>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {TOOLS.slice(0, 3).map(tool => (
-                <Link key={tool.id} to={tool.path} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
-                  <div>
-                    <div className="font-bold text-slate-900 dark:text-white">{tool.name}</div>
-                    <div className="text-xs text-slate-500">{tool.category}</div>
+        {/* Main Article Container */}
+        <main className="lg:col-span-3">
+          <article className="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-12 border border-slate-200 dark:border-slate-800 shadow-xl">
+            <header className="mb-10 pb-8 border-b border-slate-200 dark:border-slate-800 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5" /> Authoritative Guide
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                {article.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3.5 py-2 rounded-full border border-slate-200 dark:border-slate-700">
+                  <User className="w-4 h-4 text-cyan-500" /> {article.author}
+                </div>
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3.5 py-2 rounded-full border border-slate-200 dark:border-slate-700">
+                  <Calendar className="w-4 h-4 text-cyan-500" /> Last Updated: {article.date}
+                </div>
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3.5 py-2 rounded-full border border-slate-200 dark:border-slate-700">
+                  <Clock className="w-4 h-4 text-cyan-500" /> {readingTimeMinutes} min read
+                </div>
+              </div>
+            </header>
+
+            <div className="max-w-none">
+              {renderContent(article.content)}
+            </div>
+
+            <ArticleToToolCTA articleId={article.id} />
+
+            {/* Author Credentials & Footer Social Share */}
+            <footer className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800 space-y-10">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 no-print">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg">
+                    {article.author.charAt(0)}
                   </div>
-                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-600 transition-colors" />
-                </Link>
-              ))}
-            </div>
-          </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Written By</div>
+                    <div className="text-lg font-black text-slate-900 dark:text-white">{article.author}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Reliability & Maintenance Engineering Expert</div>
+                  </div>
+                </div>
 
-          <div className="flex items-center gap-6 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg">
-              {article.author.charAt(0)}
-            </div>
-            <div>
-              <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Written By</div>
-              <div className="text-xl font-bold text-slate-900 dark:text-white">{article.author}</div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Technical Professional & Reliability Expert</div>
-            </div>
-          </div>
-        </div>
-      </article>
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-100 transition-colors shadow-sm"
+                  >
+                    {copiedLink ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-slate-400" />}
+                    {copiedLink ? 'Link Copied!' : 'Copy Link'}
+                  </button>
+
+                  <button
+                    onClick={handleLinkedInShare}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0A66C2] text-white rounded-xl font-bold text-xs hover:bg-[#084e96] transition-colors shadow-sm"
+                  >
+                    <Linkedin className="w-4 h-4" /> Share on LinkedIn
+                  </button>
+                </div>
+              </div>
+
+              {/* Related Tools Showcase */}
+              <div className="no-print">
+                <h4 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white mb-4">
+                  <Wrench className="w-5 h-5 text-cyan-500" /> Popular Reliability Tools
+                </h4>
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {TOOLS.slice(0, 3).map(tool => (
+                    <Link
+                      key={tool.id}
+                      to={tool.path}
+                      className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/60 hover:border-cyan-500/50 transition-all group"
+                    >
+                      <div>
+                        <div className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-cyan-500 transition-colors">{tool.name}</div>
+                        <div className="text-xs text-slate-500">{tool.category}</div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </footer>
+          </article>
+        </main>
+      </div>
     </div>
   );
 };

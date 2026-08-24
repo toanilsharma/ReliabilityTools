@@ -2,28 +2,10 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-declare global {
-    interface Window {
-        gtag: (
-            command: "config" | "event" | "js",
-            targetId: string | Date,
-            config?: Record<string, any>
-        ) => void;
-    }
-}
 
-/**
- * Track a custom event in Google Analytics.
- * Usage: trackEvent('tool_used', { tool_name: 'mtbf-calculator' })
- */
-export const trackEvent = (
-    eventName: string,
-    params?: Record<string, string | number | boolean>
-) => {
-    if (window.gtag) {
-        window.gtag("event", eventName, params);
-    }
-};
+
+import { trackEvent } from "../utils/analytics";
+export { trackEvent };
 
 const GoogleAnalyticsTracker = () => {
     const location = useLocation();

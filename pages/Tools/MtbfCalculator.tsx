@@ -31,6 +31,7 @@ import AnimatedContainer from "../../components/AnimatedContainer";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import TheoryBlock from "../../components/TheoryBlock";
 import { BathtubCurveDiagram, AvailabilityTimeline } from "../../components/TheoryVisuals";
+import { trackToolCalculation } from "../../utils/analytics";
 
 interface MtbfState {
   mode: "MTBF" | "MTTF";
@@ -111,6 +112,7 @@ const MtbfCalculator: React.FC = () => {
     e.preventDefault();
     if (validateInputs()) {
       setState(s => ({ ...s, result: calculateMTBF(parseFloat(s.totalHours), parseFloat(s.failures)) }));
+      trackToolCalculation('MTBF / MTTF Calculator', 'mtbf');
     } else {
       setState(s => ({ ...s, result: null }));
     }

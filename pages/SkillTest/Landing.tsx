@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Award, ArrowRight, FileText, Linkedin, Sparkles, Clock, ShieldAlert, Ban, CheckCircle2 } from 'lucide-react';
 import SEO from '../../components/SEO';
+import { trackSkillTestStart } from '../../utils/analytics';
 
 const Landing: React.FC = () => {
   const [name, setName] = useState('');
@@ -17,6 +18,7 @@ const Landing: React.FC = () => {
   };
 
   const handleStartExam = () => {
+    trackSkillTestStart();
     navigate('/skill-test/quiz', { state: { name: name.trim(), discipline } });
   };
 

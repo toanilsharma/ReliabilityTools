@@ -52,11 +52,11 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:image" content={`${BASE_URL}/social-preview.png`} />
 
       {/* JSON-LD Structured Data Schema */}
-      {schema && (
-        <script type="application/ld+json">
-          {JSON.stringify(schema)}
+      {schema && (Array.isArray(schema) ? schema : [schema]).filter(Boolean).map((s, idx) => (
+        <script key={idx} type="application/ld+json">
+          {JSON.stringify(s)}
         </script>
-      )}
+      ))}
     </Helmet>
   );
 };

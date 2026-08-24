@@ -17,6 +17,7 @@ import { useRecentTools } from '../../hooks/useRecentTools';
 import { useLocation, Link } from 'react-router-dom';
 import { BathtubCurveDiagram } from '../../components/TheoryVisuals';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
+import { trackToolCalculation } from '../../utils/analytics';
 
 type ChartTab = 'prob' | 'rel' | 'pdf' | 'hazard' | 'contour';
 
@@ -180,6 +181,7 @@ const WeibullAnalysis: React.FC = () => {
       const res = is3Parameter ? calculate3ParameterWeibull(dataPoints) : calculateWeibull(dataPoints);
       setResult(res);
       setIsCalculating(false);
+      trackToolCalculation('Weibull Analysis', 'weibull');
     }, 350);
   };
 
