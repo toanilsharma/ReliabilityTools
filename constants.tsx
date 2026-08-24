@@ -20,7 +20,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'mtbf',
     name: 'MTBF / MTTF Calculator',
     description: 'Calculate Mean Time Between Failures based on operational hours and failure counts.',
-    path: '/mtbf-calculator',
+    path: '/tools/mtbf/',
     category: 'Calculator',
     iconName: 'Activity',
     colorTheme: 'cyan'
@@ -29,7 +29,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'confidence-interval',
     name: 'MTBF Confidence Interval',
     description: 'Calculate the statistical range (Lower/Upper bounds) of your MTBF using Chi-Square distribution.',
-    path: '/tools/confidence-interval',
+    path: '/tools/confidence-interval/',
     category: 'Analysis',
     iconName: 'BarChart2',
     colorTheme: 'indigo'
@@ -38,7 +38,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'k-out-of-n',
     name: 'K-out-of-N Redundancy',
     description: 'Calculate reliability for complex redundancy systems where k units out of n must operate.',
-    path: '/tools/k-out-of-n',
+    path: '/tools/k-out-of-n/',
     category: 'Analysis',
     iconName: 'Layers',
     colorTheme: 'blue'
@@ -47,7 +47,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'optimal-replacement',
     name: 'Optimal Replacement Age',
     description: 'Calculate the exact time to preventively replace a part to minimize total cost (Cp vs Cf).',
-    path: '/tools/optimal-replacement',
+    path: '/tools/optimal-replacement/',
     category: 'Planning',
     iconName: 'Clock',
     colorTheme: 'amber'
@@ -56,7 +56,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'fmea-calculator',
     name: 'FMEA RPN Calculator',
     description: 'Quickly calculate Risk Priority Numbers (Severity × Occurrence × Detection) with risk highlighting.',
-    path: '/fmea-tool',
+    path: '/tools/fmea/',
     category: 'Analysis',
     iconName: 'AlertTriangle',
     colorTheme: 'rose'
@@ -65,7 +65,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'sil-verification',
     name: 'SIL Verification (PFD)',
     description: 'Calculate Probability of Failure on Demand (PFDavg) for Safety Instrumented Functions.',
-    path: '/tools/sil',
+    path: '/tools/sil/',
     category: 'Analysis',
     iconName: 'ShieldCheck',
     colorTheme: 'emerald'
@@ -74,7 +74,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'eoq',
     name: 'EOQ Calculator',
     description: 'Determine the Economic Order Quantity for spares to balance holding and ordering costs.',
-    path: '/tools/eoq',
+    path: '/tools/eoq/',
     category: 'Planning',
     iconName: 'Package',
     colorTheme: 'amber'
@@ -83,7 +83,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'weibull',
     name: 'Weibull Analysis',
     description: 'Fit life data to a Weibull distribution to determine characteristic life and failure modes.',
-    path: '/weibull-analysis',
+    path: '/tools/weibull/',
     category: 'Analysis',
     iconName: 'TrendingUp',
     colorTheme: 'purple'
@@ -92,7 +92,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'converter',
     name: 'Engineering Unit Converter',
     description: 'Quick conversions for Reliability (Hours/Years), Temperature, Pressure, and Power.',
-    path: '/tools/converter',
+    path: '/tools/converter/',
     category: 'Calculator',
     iconName: 'ArrowRightLeft',
     colorTheme: 'slate'
@@ -101,7 +101,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'availability',
     name: 'Availability Calculator',
     description: 'Determine system availability using MTBF and MTTR inputs.',
-    path: '/tools/availability',
+    path: '/tools/availability/',
     category: 'Calculator',
     iconName: 'CheckCircle',
     colorTheme: 'teal'
@@ -110,7 +110,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'mttr',
     name: 'MTTR Calculator',
     description: 'Calculate Mean Time To Repair and analyze the impact on production uptime.',
-    path: '/tools/mttr',
+    path: '/tools/mttr/',
     category: 'Calculator',
     iconName: 'Wrench',
     colorTheme: 'orange'
@@ -119,7 +119,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'lcc',
     name: 'Life Cycle Cost (LCC)',
     description: 'Compare the Total Cost of Ownership (Capex + Opex) of assets over their lifespan.',
-    path: '/tools/lcc',
+    path: '/tools/lcc/',
     category: 'Planning',
     iconName: 'Banknote',
     colorTheme: 'emerald'
@@ -128,7 +128,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'oee',
     name: 'OEE Calculator',
     description: 'Calculate Overall Equipment Effectiveness (Availability × Performance × Quality).',
-    path: '/oee-calculator',
+    path: '/tools/oee/',
     category: 'Calculator',
     iconName: 'Gauge',
     colorTheme: 'fuchsia'
@@ -137,7 +137,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'rbd',
     name: 'RBD Builder',
     description: 'Reliability Block Diagram tool to model complex system reliability (Series/Parallel).',
-    path: '/tools/rbd',
+    path: '/tools/rbd/',
     category: 'Analysis',
     iconName: 'Network',
     colorTheme: 'indigo'
@@ -146,7 +146,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'spares',
     name: 'Spare Part Estimator',
     description: 'Estimate spare part consumption and reorder points based on failure rates.',
-    path: '/tools/spares',
+    path: '/tools/spares/',
     category: 'Planning',
     iconName: 'Box',
     colorTheme: 'amber'
@@ -155,7 +155,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'pm',
     name: 'PM Scheduler',
     description: 'Simple Preventive Maintenance scheduling tool based on usage intervals.',
-    path: '/tools/pm',
+    path: '/tools/pm/',
     category: 'Planning',
     iconName: 'Calendar',
     colorTheme: 'blue'
@@ -164,7 +164,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'test-planner',
     name: 'Reliability Test Planner',
     description: 'Calculate required sample sizes and test durations to demonstrate reliability targets (Zero-Failure).',
-    path: '/tools/test-planner',
+    path: '/tools/test-planner/',
     category: 'Planning',
     iconName: 'Target',
     colorTheme: 'rose'
@@ -173,7 +173,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'assessment',
     name: 'Maturity Assessment',
     description: 'Interactive audit tool to score your facility\'s reliability culture and processes.',
-    path: '/tools/assessment',
+    path: '/tools/assessment/',
     category: 'Analysis',
     iconName: 'ClipboardList',
     colorTheme: 'teal'
@@ -182,7 +182,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'gearbox-agma',
     name: 'Gearbox Reliability (AGMA)',
     description: 'Calculate required reliability factors and failure probability for gears based on ANSI/AGMA 2001-D04.',
-    path: '/tools/gearbox',
+    path: '/tools/gearbox/',
     category: 'Analysis',
     iconName: 'Settings',
     colorTheme: 'slate'
@@ -191,7 +191,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'lubricant-life',
     name: 'Lubricant Life Optimizer',
     description: 'Predict remaining useful life based on the Arrhenius rate rule, ISO 4406 particulate, and water contamination.',
-    path: '/tools/lubricant-life',
+    path: '/tools/lubricant-life/',
     category: 'Analysis',
     iconName: 'Droplets',
     colorTheme: 'cyan'
@@ -200,7 +200,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'hazard-rate',
     name: 'Hazard Rate Calculator',
     description: 'Calculate instantaneous failure rates and reliability functions for different distributions.',
-    path: '/tools/hazard-rate',
+    path: '/tools/hazard-rate/',
     category: 'Calculator',
     iconName: 'Zap',
     colorTheme: 'orange'
@@ -209,7 +209,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'validator',
     name: 'System Reliability Validator',
     description: 'Audit your system design against core reliability engineering principles and standards.',
-    path: '/tools/validator',
+    path: '/tools/validator/',
     category: 'Analysis',
     iconName: 'ShieldCheck',
     colorTheme: 'emerald'
@@ -218,7 +218,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'fishbone',
     name: 'Fishbone Diagram (RCA)',
     description: 'Interactive Ishikawa diagram to identify root causes across People, Process, and Machine categories.',
-    path: '/tools/fishbone',
+    path: '/tools/fishbone/',
     category: 'Analysis',
     iconName: 'Network',
     colorTheme: 'indigo'
@@ -227,7 +227,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'fta',
     name: 'Fault Tree Analysis',
     description: 'Model system failures using Boolean logic (AND/OR gates) to calculate top-event probability.',
-    path: '/tools/fta',
+    path: '/tools/fta/',
     category: 'Analysis',
     iconName: 'Layers',
     colorTheme: 'blue'
@@ -236,7 +236,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'markov',
     name: 'Markov Chain Analysis',
     description: 'Predict system state transitions and steady-state availability for complex repairable systems.',
-    path: '/tools/markov',
+    path: '/tools/markov/',
     category: 'Analysis',
     iconName: 'ArrowRightLeft',
     colorTheme: 'purple'
@@ -245,7 +245,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'growth',
     name: 'Reliability Growth Modeling',
     description: 'Analyze reliability improvements over time using Crow-AMSAA (NHPP) models.',
-    path: '/tools/growth',
+    path: '/tools/growth/',
     category: 'Analysis',
     iconName: 'TrendingUp',
     colorTheme: 'cyan'
@@ -254,7 +254,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'warranty',
     name: 'Warranty Cost Predictor',
     description: 'Forecast future warranty claims and financial exposure based on early life failure data.',
-    path: '/tools/warranty',
+    path: '/tools/warranty/',
     category: 'Planning',
     iconName: 'Shield',
     colorTheme: 'rose'
@@ -263,7 +263,7 @@ export const TOOLS: ToolDefinition[] = [
     id: 'cost-risk',
     name: 'Cost-Risk Optimization',
     description: 'Balance the cost of maintenance against the risk of failure to find the economic sweet spot.',
-    path: '/tools/cost-risk',
+    path: '/tools/cost-risk/',
     category: 'Planning',
     iconName: 'Banknote',
     colorTheme: 'amber'

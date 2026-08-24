@@ -1,106 +1,64 @@
-
-import React, { useEffect } from 'react';
-
-const BASE_URL = 'https://reliabilitytools.co.in';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
+import { getSeoMetadata, BASE_URL } from '../utils/seoConfig';
 
 interface SEOProps {
   title?: string;
   description?: string;
-  keywords?: string;
   canonicalUrl?: string;
-  image?: string;
-  schema?: object | object[];
+  keywords?: string;
+  schema?: any;
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, keywords, canonicalUrl, image, schema }) => {
-  useEffect(() => {
-    // 1. Update Title
-    if (title) {
-      if (title.includes('Reliability Tools') || title.includes('ReliabilityTools.co.in')) {
-        document.title = title;
-      } else {
-        document.title = `${title} - Free Online Reliability Tool | ReliabilityTools.co.in`;
-      }
-    }
+const SEO: React.FC<SEOProps> = ({
+  title: customTitle,
+  description: customDescription,
+  canonicalUrl: customCanonicalUrl,
+  keywords,
+  schema
+}) => {
+  const location = useLocation();
+  const defaultSeo = getSeoMetadata(location.pathname);
 
-    // 2. Helper to update/create meta tags
-    const updateMetaTag = (name: string, content: string) => {
-      let element = document.querySelector(`meta[name="${name}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute('name', name);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
+  const title = customTitle || defaultSeo.title;
+  const description = customDescription || defaultSeo.description;
+  const canonicalUrl = customCanonicalUrl || defaultSeo.canonical;
 
-    const updateOgTag = (property: string, content: string) => {
-      let element = document.querySelector(`meta[property="${property}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute('property', property);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
+  return (
+    <Helmet>
+      {/* Title Tag (50-60 chars ending with '| Reliability Tools') */}
+      <title>{title}</title>
 
-    // 3. Update Description
-    if (description) {
-      updateMetaTag('description', description);
-      updateOgTag('og:description', description);
-      updateOgTag('twitter:description', description);
-    }
+      {/* Meta Description (120-155 chars) */}
+      <meta name="description" content={description} />
+      {keywords && <meta name="keywords" content={keywords} />}
 
-    // 4. Update Keywords
-    if (keywords) {
-      updateMetaTag('keywords', keywords);
-    }
+      {/* CRITICAL: Self-Referencing Canonical Tag */}
+      <link rel="canonical" href={canonicalUrl} />
 
-    // 5. Update Canonical URL
-    // Auto-derive from current pathname if not explicitly provided.
-    // Strips any SPA redirect query strings (e.g. ?/path) from the URL.
-    const resolvedCanonical = canonicalUrl
-      ? canonicalUrl
-      : `${BASE_URL}${window.location.pathname.replace(/\/$/, '') || '/'}`;
+      {/* Open Graph Tags */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Reliability Tools" />
+      <meta property="og:image" content={`${BASE_URL}/social-preview.png`} />
 
-    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!link) {
-      link = document.createElement('link') as HTMLLinkElement;
-      link.setAttribute('rel', 'canonical');
-      document.head.appendChild(link);
-    }
-    link.setAttribute('href', resolvedCanonical);
-    updateOgTag('og:url', resolvedCanonical);
+      {/* Twitter Card Tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={`${BASE_URL}/social-preview.png`} />
 
-    // 6. Update OG Title
-    if (title) {
-      updateOgTag('og:title', title);
-      updateOgTag('twitter:title', title);
-    }
-
-    // 7. Update Social Image
-    const socialImage = image || 'https://reliabilitytools.co.in/social-preview.png';
-    updateOgTag('og:image', socialImage);
-    updateOgTag('twitter:image', socialImage);
-    updateOgTag('twitter:card', 'summary_large_image');
-
-    // 8. Inject Schema
-    if (schema) {
-      const script = document.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schema);
-      script.setAttribute('data-schema-type', 'dynamic-jsonld');
-      document.head.appendChild(script);
-
-      return () => {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-      };
-    }
-  }, [title, description, keywords, canonicalUrl, schema, image]);
-
-  return null;
+      {/* JSON-LD Structured Data Schema */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
+    </Helmet>
+  );
 };
 
 export default SEO;

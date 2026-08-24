@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp, Share2 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import ContextGlossaryPanel from './ContextGlossaryPanel';
+import SEO from './SEO';
+import { getSeoMetadata } from '../utils/seoConfig';
 
 interface FAQItem {
     question: string;
@@ -27,19 +29,22 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
     content,
     faqs,
     keywords,
-    canonicalUrl,
+    canonicalUrl: customCanonicalUrl,
     schema
 }) => {
     const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
     const location = useLocation();
+    const defaultSeo = getSeoMetadata(location.pathname);
 
-    const toolId = location.pathname.split('/').pop() || '';
+    const toolId = location.pathname.split('/').filter(Boolean).pop() || '';
 
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
     const cleanDescription = description.replace(/<[^>]*>?/gm, '');
+
+    const canonicalUrl = customCanonicalUrl || defaultSeo.canonical;
 
     const faqSchema = {
         '@context': 'https://schema.org',
@@ -54,17 +59,11 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
         }))
     };
 
-    const seoTitle = title.includes('ReliabilityTools.co.in')
-        ? title
-        : title.toLowerCase().includes('calculator')
-            ? `${title.replace(/\s*-\s*Free.*$/i, '').trim()} - Free Online Reliability Tool | ReliabilityTools.co.in`
-            : `${title} Calculator - Free Online Reliability Tool | ReliabilityTools.co.in`;
-
     const toolWebAppSchema = {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
         name: title,
-        url: canonicalUrl || `https://reliabilitytools.co.in/tools/${toolId}`,
+        url: canonicalUrl,
         description: cleanDescription,
         applicationCategory: 'Engineering',
         operatingSystem: 'Any',
@@ -89,19 +88,9 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <SEO keywords={keywords} />
+
             <Helmet>
-                <title>{seoTitle}</title>
-                <meta name="description" content={cleanDescription} />
-                {keywords && <meta name="keywords" content={keywords} />}
-                {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-                <meta property="og:title" content={seoTitle} />
-                <meta property="og:description" content={cleanDescription} />
-                {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-                <meta property="og:type" content="website" />
-                <meta property="og:site_name" content="Reliability Tools India" />
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:title" content={seoTitle} />
-                <meta property="twitter:description" content={cleanDescription} />
                 <script type="application/ld+json">
                     {JSON.stringify(schema ? { ...toolWebAppSchema, ...schema } : toolWebAppSchema)}
                 </script>

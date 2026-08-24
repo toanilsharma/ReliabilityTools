@@ -28,6 +28,7 @@ export interface LearningArticle {
   content: string; // In a real app, this might be Markdown
   date: string;
   author: string;
+  image?: string;
 }
 
 export interface WeibullDataPoint {

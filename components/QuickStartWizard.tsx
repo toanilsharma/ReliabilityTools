@@ -28,7 +28,7 @@ interface GoalOption {
   shortDesc: string;
   icon: React.ElementType;
   badge: string;
-  colorTheme: 'cyan' | 'blue' | 'purple' | 'rose' | 'emerald' | 'amber' | 'indigo';
+  colorTheme: 'cyan' | 'blue' | 'purple' | 'rose' | 'emerald' | 'amber' | 'indigo' | 'teal';
   route: string;
 }
 
@@ -40,7 +40,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: Activity,
     badge: 'Popular',
     colorTheme: 'cyan',
-    route: '/tools/mtbf-calculator'
+    route: '/tools/mtbf/'
   },
   {
     id: 'availability',
@@ -49,7 +49,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: CheckCircle,
     badge: 'High Value',
     colorTheme: 'teal',
-    route: '/tools/availability-calculator'
+    route: '/tools/availability/'
   },
   {
     id: 'weibull',
@@ -58,7 +58,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: TrendingUp,
     badge: 'Statistical',
     colorTheme: 'purple',
-    route: '/tools/weibull-calculator'
+    route: '/tools/weibull/'
   },
   {
     id: 'fmea',
@@ -67,7 +67,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: AlertTriangle,
     badge: 'ISO Standard',
     colorTheme: 'rose',
-    route: '/fmea-tool'
+    route: '/tools/fmea/'
   },
   {
     id: 'oee',
@@ -76,7 +76,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: Gauge,
     badge: 'TPM Key KPI',
     colorTheme: 'emerald',
-    route: '/oee-calculator'
+    route: '/tools/oee/'
   },
   {
     id: 'k-out-of-n',
@@ -85,7 +85,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: Layers,
     badge: 'Safety Systems',
     colorTheme: 'blue',
-    route: '/tools/k-out-of-n'
+    route: '/tools/k-out-of-n/'
   },
   {
     id: 'pm-replacement',
@@ -94,7 +94,7 @@ const GOAL_OPTIONS: GoalOption[] = [
     icon: Clock,
     badge: 'Cost Saver',
     colorTheme: 'amber',
-    route: '/tools/pm-optimization'
+    route: '/tools/optimal-replacement/'
   }
 ];
 

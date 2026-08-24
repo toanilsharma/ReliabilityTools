@@ -334,14 +334,14 @@ const Layout: React.FC = () => {
           <div className="border-t border-slate-800 pt-12 flex flex-col items-center">
             {/* SEO Keyword Links */}
             <div className="mb-10 text-center text-xs text-slate-500 flex flex-wrap justify-center gap-2 max-w-4xl mx-auto leading-loose items-center">
-              <Link to="/mtbf-calculator" className="hover:text-cyan-400 transition-colors font-medium">MTBF Calculator</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/tools/mttr" className="hover:text-cyan-400 transition-colors font-medium">MTTR Calculator</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/weibull-analysis" className="hover:text-cyan-400 transition-colors font-medium">Weibull Analysis Tool</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/fmea-tool" className="hover:text-cyan-400 transition-colors font-medium">FMEA Template</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/oee-calculator" className="hover:text-cyan-400 transition-colors font-medium">OEE Calculator</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/tools/lcc" className="hover:text-cyan-400 transition-colors font-medium">Life Cycle Cost Calculator</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/tools" className="hover:text-cyan-400 transition-colors font-medium">Reliability Engineering Tools</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/tools/pm" className="hover:text-cyan-400 transition-colors font-medium">Preventive Maintenance Calculator</Link>
+              <Link to="/tools/mtbf/" className="hover:text-cyan-400 transition-colors font-medium">MTBF Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/mttr/" className="hover:text-cyan-400 transition-colors font-medium">MTTR Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/weibull/" className="hover:text-cyan-400 transition-colors font-medium">Weibull Analysis Tool</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/fmea/" className="hover:text-cyan-400 transition-colors font-medium">FMEA Template</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/oee/" className="hover:text-cyan-400 transition-colors font-medium">OEE Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/lcc/" className="hover:text-cyan-400 transition-colors font-medium">Life Cycle Cost Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/" className="hover:text-cyan-400 transition-colors font-medium">Reliability Engineering Tools</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/tools/pm/" className="hover:text-cyan-400 transition-colors font-medium">Preventive Maintenance Calculator</Link>
             </div>
 
             {/* Disclaimer Box */}
