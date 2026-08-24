@@ -41,12 +41,18 @@ import WarrantyPrediction from './pages/Tools/WarrantyPrediction';
 import CostRiskOptimization from './pages/Tools/CostRiskOptimization';
 import GearboxReliability from './pages/Tools/GearboxReliability';
 import LubricantLifeOptimizer from './pages/Tools/LubricantLifeOptimizer';
+import DowntimeCostCalculator from './pages/Tools/DowntimeCostCalculator';
+import BearingLifeCalculator from './pages/Tools/BearingLifeCalculator';
 
 // Content & Legal
 import LearningCenter from './pages/LearningCenter';
 import KnowledgeHub from './pages/KnowledgeHub';
 import InteractiveHub from './pages/InteractiveHub';
 import ArticleView from './pages/ArticleView';
+import IndustriesHub from './pages/IndustriesHub';
+import IndustryView from './pages/IndustryView';
+import ProfessorsToolkit from './pages/ProfessorsToolkit';
+import PressKit from './pages/PressKit';
 import Faq from './pages/Faq';
 import Glossary from './pages/Glossary';
 import Methodology from './pages/Methodology';
@@ -109,6 +115,8 @@ const App: React.FC = () => {
               <Route path="tools/cost-risk" element={<CostRiskOptimization />} />
               <Route path="tools/gearbox" element={<GearboxReliability />} />
               <Route path="tools/lubricant-life" element={<LubricantLifeOptimizer />} />
+              <Route path="tools/downtime-cost" element={<DowntimeCostCalculator />} />
+              <Route path="tools/bearing-life" element={<BearingLifeCalculator />} />
 
               {/* Content & Articles */}
               <Route path="learning" element={<LearningCenter />} />
@@ -116,6 +124,10 @@ const App: React.FC = () => {
               <Route path="blog" element={<LearningCenter />} />
               <Route path="knowledge-hub" element={<KnowledgeHub />} />
               <Route path="interactive-hub" element={<InteractiveHub />} />
+              <Route path="industries" element={<IndustriesHub />} />
+              <Route path="industries/:industrySlug" element={<IndustryView />} />
+              <Route path="professors" element={<ProfessorsToolkit />} />
+              <Route path="press" element={<PressKit />} />
               <Route path="learning/:articleId" element={<ArticleView />} />
               <Route path="articles/:articleId" element={<ArticleView />} />
               <Route path="blog/:articleId" element={<ArticleView />} />

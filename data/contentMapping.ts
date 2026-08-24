@@ -130,6 +130,24 @@ export const CONTENT_MAPPINGS: ContentPair[] = [
     articlePath: '/learning/fmea-india-guide/',
     articleTitle: 'FMEA in Indian Manufacturing: Practical Step-by-Step Guide',
     articleSummary: 'Combine Ishikawa Fishbone diagrams with FMEA to conduct thorough root cause analysis.'
+  },
+  {
+    toolSlug: 'downtime-cost',
+    toolPath: '/tools/downtime-cost/',
+    toolName: 'Downtime Cost Calculator',
+    articleId: 'preventive-vs-predictive-maintenance',
+    articlePath: '/learning/preventive-vs-predictive-maintenance/',
+    articleTitle: 'Preventive vs Predictive Maintenance: Which Strategy Is Right?',
+    articleSummary: 'A practical comparison of Preventive Maintenance and Predictive Maintenance strategies to minimize downtime cost.'
+  },
+  {
+    toolSlug: 'bearing-life',
+    toolPath: '/tools/bearing-life/',
+    toolName: 'L10 Bearing Life Calculator',
+    articleId: 'weibull-analysis-explained',
+    articlePath: '/learning/weibull-analysis-explained/',
+    articleTitle: 'Weibull Analysis Explained: Step-by-Step with Examples',
+    articleSummary: 'A deep dive into fatigue life data analysis, Weibull parameters, and bearing life modeling.'
   }
 ];
 

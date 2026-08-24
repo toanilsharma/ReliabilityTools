@@ -41,6 +41,8 @@ const CANONICAL_URLS = [
   { url: `${BASE_URL}/tools/cost-risk/`, changefreq: 'monthly', priority: '0.8' },
   { url: `${BASE_URL}/tools/gearbox/`, changefreq: 'monthly', priority: '0.8' },
   { url: `${BASE_URL}/tools/lubricant-life/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/downtime-cost/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/bearing-life/`, changefreq: 'monthly', priority: '0.8' },
 
   // Content & Hub Pages (Weekly changefreq for content hubs)
   { url: `${BASE_URL}/learning/`, changefreq: 'weekly', priority: '0.8' },
@@ -48,6 +50,19 @@ const CANONICAL_URLS = [
   { url: `${BASE_URL}/interactive-hub/`, changefreq: 'monthly', priority: '0.7' },
   { url: `${BASE_URL}/downloads/`, changefreq: 'monthly', priority: '0.7' },
   { url: `${BASE_URL}/reliability-engineering-glossary/`, changefreq: 'monthly', priority: '0.7' },
+
+  // Link Magnets & Resource Hubs (0.8 Priority)
+  { url: `${BASE_URL}/professors/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/press/`, changefreq: 'monthly', priority: '0.7' },
+
+  // Programmatic SEO Industry Pages (0.8 Priority)
+  { url: `${BASE_URL}/industries/`, changefreq: 'weekly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/cement/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/steel/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/automotive/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/pharmaceuticals/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/fmcg/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/industries/power-generation/`, changefreq: 'monthly', priority: '0.8' },
 
   // Learning Articles (Weekly changefreq)
   { url: `${BASE_URL}/learning/mtbf-guide/`, changefreq: 'weekly', priority: '0.8' },

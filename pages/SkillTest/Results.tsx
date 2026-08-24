@@ -18,17 +18,17 @@ const Results: React.FC = () => {
   let performanceComment = '';
   let colorClass = '';
   
-  if (score >= 18) {
-    performanceComment = 'World-Class Reliability Expert';
+  if (percentage >= 90) {
+    performanceComment = 'Master Certified Reliability Engineer (CRE)';
     colorClass = 'text-emerald-600 dark:text-emerald-400';
-  } else if (score >= 14) {
-    performanceComment = 'Advanced Reliability Professional';
+  } else if (percentage >= 75) {
+    performanceComment = 'Senior Reliability Specialist';
     colorClass = 'text-blue-600 dark:text-blue-400';
-  } else if (score >= 10) {
-    performanceComment = 'Intermediate Reliability Engineer';
+  } else if (percentage >= 60) {
+    performanceComment = 'Competent Reliability Engineer';
     colorClass = 'text-amber-600 dark:text-amber-400';
   } else {
-    performanceComment = 'Novice Reliability Enthusiast';
+    performanceComment = 'Reliability Practitioner';
     colorClass = 'text-slate-600 dark:text-slate-400';
   }
 
@@ -69,8 +69,8 @@ const Results: React.FC = () => {
     }
   };
 
-  const shareUrl = `https://reliabilitytools.co.in/skill-test`;
-  const shareText = `I just scored ${score}/${total} on the Global Reliability Engineering Skill Assessment at ReliabilityTools.co.in and achieved the rank of "${performanceComment}"! Test your skills and earn a professional certificate.`;
+  const shareUrl = `https://reliabilitytools.co.in/skill-test/`;
+  const shareText = `I just scored ${Math.round(percentage)}% (${performanceComment}) on the Reliability Tools Engineering Certification Quiz! Can you beat my score? Take the free test here: ${shareUrl}`;
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedText = encodeURIComponent(shareText);
 

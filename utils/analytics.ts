@@ -67,3 +67,15 @@ export function trackSkillTestStart() {
     timestamp: new Date().toISOString()
   });
 }
+
+/**
+ * Custom Conversion Event 4: Skill Test Complete
+ * Fires when a user finishes the reliability certification quiz with their final score and title.
+ */
+export function trackSkillTestComplete(scorePercent: number, certificationTitle: string) {
+  trackEvent('skill_test_completed', {
+    score_percent: scorePercent,
+    certification_title: certificationTitle,
+    timestamp: new Date().toISOString()
+  });
+}

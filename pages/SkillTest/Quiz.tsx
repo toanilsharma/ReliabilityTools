@@ -4,6 +4,7 @@ import { CheckCircle2, XCircle, AlertCircle, ArrowRight, Clock, ShieldAlert } fr
 import { quizQuestions } from '../../data/quizQuestions';
 import { QuizQuestion } from '../../types';
 import SEO from '../../components/SEO';
+import { trackSkillTestComplete } from '../../utils/analytics';
 
 // Fisher-Yates shuffle
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -133,8 +134,17 @@ const Quiz: React.FC = () => {
 
   const handleNext = () => {
     if (isLastQuestion) {
+      const finalScore = score + (selectedOption === currentQ.correctAnswer ? 1 : 0);
+      const percent = Math.round((finalScore / (questions.length || 1)) * 100);
+      let title = 'Reliability Practitioner';
+      if (percent >= 90) title = 'Master Certified Reliability Engineer (CRE)';
+      else if (percent >= 75) title = 'Senior Reliability Specialist';
+      else if (percent >= 60) title = 'Competent Reliability Engineer';
+
+      trackSkillTestComplete(percent, title);
+
       navigate('/skill-test/results', { 
-        state: { name, score: score + (selectedOption === currentQ.correctAnswer ? 1 : 0), total: questions.length } 
+        state: { name, score: finalScore, total: questions.length } 
       });
     } else {
       setSelectedOption(null);

@@ -59,6 +59,96 @@ export const SEO_CONFIG: Record<string, PageSeoConfig> = {
     description: 'Download free reliability engineering templates, Excel spreadsheets, whitepapers, and asset maintenance planning files.',
     canonical: `${BASE_URL}/downloads/`
   },
+  '/professors': {
+    title: 'Free Reliability Engineering Teaching Resources | Reliability Tools',
+    description: 'Free university syllabus integration guide, downloadable formula cheat sheets, and LMS Canvas/Blackboard embed snippets for engineering educators.',
+    canonical: `${BASE_URL}/professors/`
+  },
+  '/professors/': {
+    title: 'Free Reliability Engineering Teaching Resources | Reliability Tools',
+    description: 'Free university syllabus integration guide, downloadable formula cheat sheets, and LMS Canvas/Blackboard embed snippets for engineering educators.',
+    canonical: `${BASE_URL}/professors/`
+  },
+  '/press': {
+    title: 'Media & Press Kit - Reliability Tools | Reliability Tools',
+    description: 'Official media assets, press backgrounder, platform statistics, brand guidelines, and press contact form for Reliability Tools.',
+    canonical: `${BASE_URL}/press/`
+  },
+  '/press/': {
+    title: 'Media & Press Kit - Reliability Tools | Reliability Tools',
+    description: 'Official media assets, press backgrounder, platform statistics, brand guidelines, and press contact form for Reliability Tools.',
+    canonical: `${BASE_URL}/press/`
+  },
+  '/industries': {
+    title: 'Industry-Specific Reliability Engineering Tools | Reliability Tools',
+    description: 'Explore targeted maintenance calculators and reliability tools tailored for Cement, Steel, Automotive, Pharma, FMCG, and Power Generation.',
+    canonical: `${BASE_URL}/industries/`
+  },
+  '/industries/': {
+    title: 'Industry-Specific Reliability Engineering Tools | Reliability Tools',
+    description: 'Explore targeted maintenance calculators and reliability tools tailored for Cement, Steel, Automotive, Pharma, FMCG, and Power Generation.',
+    canonical: `${BASE_URL}/industries/`
+  },
+  '/industries/cement': {
+    title: 'Reliability Engineering for Cement & Building Materials | Reliability Tools',
+    description: 'Calculators and maintenance tools for cement plants: L10 bearing life, clinker dust abrasion, kiln downtime cost, and gearbox reliability.',
+    canonical: `${BASE_URL}/industries/cement/`
+  },
+  '/industries/cement/': {
+    title: 'Reliability Engineering for Cement & Building Materials | Reliability Tools',
+    description: 'Calculators and maintenance tools for cement plants: L10 bearing life, clinker dust abrasion, kiln downtime cost, and gearbox reliability.',
+    canonical: `${BASE_URL}/industries/cement/`
+  },
+  '/industries/steel': {
+    title: 'Reliability Engineering for Steel & Primary Metals | Reliability Tools',
+    description: 'Calculators for steel plants: continuous caster bearing fatigue, hot strip mill downtime cost, hydraulic contamination, and OEE.',
+    canonical: `${BASE_URL}/industries/steel/`
+  },
+  '/industries/steel/': {
+    title: 'Reliability Engineering for Steel & Primary Metals | Reliability Tools',
+    description: 'Calculators for steel plants: continuous caster bearing fatigue, hot strip mill downtime cost, hydraulic contamination, and OEE.',
+    canonical: `${BASE_URL}/industries/steel/`
+  },
+  '/industries/automotive': {
+    title: 'Reliability Engineering for Automotive OEMs | Reliability Tools',
+    description: 'Automotive manufacturing tools: IATF 16949 FMEA worksheets, body shop line OEE, robotic cell MTTR, and downtime cost optimization.',
+    canonical: `${BASE_URL}/industries/automotive/`
+  },
+  '/industries/automotive/': {
+    title: 'Reliability Engineering for Automotive OEMs | Reliability Tools',
+    description: 'Automotive manufacturing tools: IATF 16949 FMEA worksheets, body shop line OEE, robotic cell MTTR, and downtime cost optimization.',
+    canonical: `${BASE_URL}/industries/automotive/`
+  },
+  '/industries/pharmaceuticals': {
+    title: 'Reliability Engineering for Pharmaceuticals & Life Sciences | Reliability Tools',
+    description: 'Pharma manufacturing tools: 21 CFR compliance, SIL verification, cleanroom HVAC uptime, lyophilizer PM scheduling, and FMEA.',
+    canonical: `${BASE_URL}/industries/pharmaceuticals/`
+  },
+  '/industries/pharmaceuticals/': {
+    title: 'Reliability Engineering for Pharmaceuticals & Life Sciences | Reliability Tools',
+    description: 'Pharma manufacturing tools: 21 CFR compliance, SIL verification, cleanroom HVAC uptime, lyophilizer PM scheduling, and FMEA.',
+    canonical: `${BASE_URL}/industries/pharmaceuticals/`
+  },
+  '/industries/fmcg': {
+    title: 'Reliability Engineering for FMCG Packaging | Reliability Tools',
+    description: 'FMCG packaging line tools: micro-stoppage OEE, MRO spares EOQ, changeover setup downtime, and optimal component replacement.',
+    canonical: `${BASE_URL}/industries/fmcg/`
+  },
+  '/industries/fmcg/': {
+    title: 'Reliability Engineering for FMCG Packaging | Reliability Tools',
+    description: 'FMCG packaging line tools: micro-stoppage OEE, MRO spares EOQ, changeover setup downtime, and optimal component replacement.',
+    canonical: `${BASE_URL}/industries/fmcg/`
+  },
+  '/industries/power-generation': {
+    title: 'Reliability Engineering for Power Generation & Utilities | Reliability Tools',
+    description: 'Power generation tools: base-load grid availability, IEC 61511 SIL verification, turbine bearing L10 life, and K-out-of-N redundancy.',
+    canonical: `${BASE_URL}/industries/power-generation/`
+  },
+  '/industries/power-generation/': {
+    title: 'Reliability Engineering for Power Generation & Utilities | Reliability Tools',
+    description: 'Power generation tools: base-load grid availability, IEC 61511 SIL verification, turbine bearing L10 life, and K-out-of-N redundancy.',
+    canonical: `${BASE_URL}/industries/power-generation/`
+  },
   '/learning': {
     title: 'Reliability Engineering Guides & Articles | Reliability Tools',
     description: 'Comprehensive reliability engineering guides, tutorials, and case studies on Weibull analysis, MTBF, FMEA, and spare parts.',
@@ -420,6 +510,26 @@ export const SEO_CONFIG: Record<string, PageSeoConfig> = {
     title: 'Cost-Risk Maintenance Optimization Tool | Reliability Tools',
     description: 'Find the economic optimum for maintenance intervals by balancing preventive maintenance expenditure against unreliability risk.',
     canonical: `${BASE_URL}/tools/cost-risk/`
+  },
+  '/tools/downtime-cost': {
+    title: 'Downtime Cost & Financial Impact Calculator | Reliability Tools',
+    description: 'Calculate total financial impact of equipment downtime including lost margin, unabsorbed labor overhead, and payback recovery period.',
+    canonical: `${BASE_URL}/tools/downtime-cost/`
+  },
+  '/tools/downtime-cost/': {
+    title: 'Downtime Cost & Financial Impact Calculator | Reliability Tools',
+    description: 'Calculate total financial impact of equipment downtime including lost margin, unabsorbed labor overhead, and payback recovery period.',
+    canonical: `${BASE_URL}/tools/downtime-cost/`
+  },
+  '/tools/bearing-life': {
+    title: 'L10 Bearing Life Calculator ISO 281 | Reliability Tools',
+    description: 'Calculate ISO 281 Basic Rating Life (L10 in revolutions and L10h in hours) for ball and roller bearings under dynamic loading.',
+    canonical: `${BASE_URL}/tools/bearing-life/`
+  },
+  '/tools/bearing-life/': {
+    title: 'L10 Bearing Life Calculator ISO 281 | Reliability Tools',
+    description: 'Calculate ISO 281 Basic Rating Life (L10 in revolutions and L10h in hours) for ball and roller bearings under dynamic loading.',
+    canonical: `${BASE_URL}/tools/bearing-life/`
   },
   '/tools/gearbox': {
     title: 'Gearbox Reliability Calculator AGMA 2001 | Reliability Tools',

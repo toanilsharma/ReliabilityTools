@@ -267,6 +267,24 @@ export const TOOLS: ToolDefinition[] = [
     category: 'Planning',
     iconName: 'Banknote',
     colorTheme: 'amber'
+  },
+  {
+    id: 'downtime-cost',
+    name: 'Downtime Cost Calculator',
+    description: 'Calculate the total financial impact of equipment breakdowns including lost margin and labor overhead.',
+    path: '/tools/downtime-cost/',
+    category: 'Planning',
+    iconName: 'Banknote',
+    colorTheme: 'rose'
+  },
+  {
+    id: 'bearing-life',
+    name: 'L10 Bearing Life Calculator (ISO 281)',
+    description: 'Calculate Basic Rating Life (L10 in revolutions and hours) for ball and roller bearings per ISO 281.',
+    path: '/tools/bearing-life/',
+    category: 'Calculator',
+    iconName: 'Settings',
+    colorTheme: 'cyan'
   }
 ];
 
