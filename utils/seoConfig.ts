@@ -531,6 +531,66 @@ export const SEO_CONFIG: Record<string, PageSeoConfig> = {
     description: 'Calculate ISO 281 Basic Rating Life (L10 in revolutions and L10h in hours) for ball and roller bearings under dynamic loading.',
     canonical: `${BASE_URL}/tools/bearing-life/`
   },
+  '/tools/vibration-severity': {
+    title: 'Vibration Severity Checker ISO 20816 | Reliability Tools',
+    description: 'Evaluate machinery vibration severity (RMS mm/s) per ISO 20816-1 / ISO 10816 standards with Zone A/B/C/D classification.',
+    canonical: `${BASE_URL}/tools/vibration-severity/`
+  },
+  '/tools/vibration-severity/': {
+    title: 'Vibration Severity Checker ISO 20816 | Reliability Tools',
+    description: 'Evaluate machinery vibration severity (RMS mm/s) per ISO 20816-1 / ISO 10816 standards with Zone A/B/C/D classification.',
+    canonical: `${BASE_URL}/tools/vibration-severity/`
+  },
+  '/tools/5-why': {
+    title: '5-Why Root Cause Analysis Builder | Reliability Tools',
+    description: 'Build structured 5-Why root cause analysis causal chains with countermeasures and export formatted RCA reports.',
+    canonical: `${BASE_URL}/tools/5-why/`
+  },
+  '/tools/5-why/': {
+    title: '5-Why Root Cause Analysis Builder | Reliability Tools',
+    description: 'Build structured 5-Why root cause analysis causal chains with countermeasures and export formatted RCA reports.',
+    canonical: `${BASE_URL}/tools/5-why/`
+  },
+  '/tools/pareto': {
+    title: 'Pareto Chart Tool 80/20 Failure Analysis | Reliability Tools',
+    description: 'Perform Pareto 80/20 analysis on failure modes and downtime events with dual-axis bar and cumulative percentage charts.',
+    canonical: `${BASE_URL}/tools/pareto/`
+  },
+  '/tools/pareto/': {
+    title: 'Pareto Chart Tool 80/20 Failure Analysis | Reliability Tools',
+    description: 'Perform Pareto 80/20 analysis on failure modes and downtime events with dual-axis bar and cumulative percentage charts.',
+    canonical: `${BASE_URL}/tools/pareto/`
+  },
+  '/tools/reliability-allocation': {
+    title: 'Reliability Allocation Calculator | Reliability Tools',
+    description: 'Apportion top-level system reliability targets and failure rate budgets to individual subsystems using Equal Apportionment and AGREE methods.',
+    canonical: `${BASE_URL}/tools/reliability-allocation/`
+  },
+  '/tools/reliability-allocation/': {
+    title: 'Reliability Allocation Calculator | Reliability Tools',
+    description: 'Apportion top-level system reliability targets and failure rate budgets to individual subsystems using Equal Apportionment and AGREE methods.',
+    canonical: `${BASE_URL}/tools/reliability-allocation/`
+  },
+  '/tools/spc': {
+    title: 'SPC & Process Capability Calculator Cpk | Reliability Tools',
+    description: 'Calculate X-bar control chart limits (UCL, CL, LCL) and process capability indices (Cp, Cpk) with visual control charts.',
+    canonical: `${BASE_URL}/tools/spc/`
+  },
+  '/tools/spc/': {
+    title: 'SPC & Process Capability Calculator Cpk | Reliability Tools',
+    description: 'Calculate X-bar control chart limits (UCL, CL, LCL) and process capability indices (Cp, Cpk) with visual control charts.',
+    canonical: `${BASE_URL}/tools/spc/`
+  },
+  '/tools/rcm-decision': {
+    title: 'RCM Decision Wizard SAE JA1011 | Reliability Tools',
+    description: 'Interactive 7-question Reliability-Centered Maintenance decision wizard to select optimal maintenance strategies per SAE JA1011.',
+    canonical: `${BASE_URL}/tools/rcm-decision/`
+  },
+  '/tools/rcm-decision/': {
+    title: 'RCM Decision Wizard SAE JA1011 | Reliability Tools',
+    description: 'Interactive 7-question Reliability-Centered Maintenance decision wizard to select optimal maintenance strategies per SAE JA1011.',
+    canonical: `${BASE_URL}/tools/rcm-decision/`
+  },
   '/tools/gearbox': {
     title: 'Gearbox Reliability Calculator AGMA 2001 | Reliability Tools',
     description: 'Calculate gear reliability factors, contact stress limits, and failure probability based on ANSI/AGMA 2001-D04 design standards.',

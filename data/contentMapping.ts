@@ -148,6 +148,60 @@ export const CONTENT_MAPPINGS: ContentPair[] = [
     articlePath: '/learning/weibull-analysis-explained/',
     articleTitle: 'Weibull Analysis Explained: Step-by-Step with Examples',
     articleSummary: 'A deep dive into fatigue life data analysis, Weibull parameters, and bearing life modeling.'
+  },
+  {
+    toolSlug: 'vibration-severity',
+    toolPath: '/tools/vibration-severity/',
+    toolName: 'Vibration Severity Checker',
+    articleId: 'preventive-vs-predictive-maintenance',
+    articlePath: '/learning/preventive-vs-predictive-maintenance/',
+    articleTitle: 'Preventive vs Predictive Maintenance: Which Strategy Is Right?',
+    articleSummary: 'Learn how vibration analysis forms the cornerstone of predictive maintenance (PdM) programs.'
+  },
+  {
+    toolSlug: '5-why',
+    toolPath: '/tools/5-why/',
+    toolName: '5-Why RCA Builder',
+    articleId: 'fmea-india-guide',
+    articlePath: '/learning/fmea-india-guide/',
+    articleTitle: 'FMEA in Indian Manufacturing: Practical Step-by-Step Guide',
+    articleSummary: 'Combine 5-Why root cause analysis with FMEA risk priorities to eliminate recurring equipment defects.'
+  },
+  {
+    toolSlug: 'pareto',
+    toolPath: '/tools/pareto/',
+    toolName: 'Pareto Chart Tool',
+    articleId: 'spare-parts-optimization-guide',
+    articlePath: '/learning/spare-parts-optimization-guide/',
+    articleTitle: 'Spare Parts Inventory Optimization: A Complete Guide',
+    articleSummary: 'Use 80/20 Pareto principles to prioritize critical equipment spare parts and inventory investment.'
+  },
+  {
+    toolSlug: 'reliability-allocation',
+    toolPath: '/tools/reliability-allocation/',
+    toolName: 'Reliability Allocation Calculator',
+    articleId: 'weibull-analysis-explained',
+    articlePath: '/learning/weibull-analysis-explained/',
+    articleTitle: 'Weibull Analysis Explained: Step-by-Step with Examples',
+    articleSummary: 'Understand system reliability budgeting, apportionment models, and target failure rate allocations.'
+  },
+  {
+    toolSlug: 'spc',
+    toolPath: '/tools/spc/',
+    toolName: 'SPC & Process Capability Calculator',
+    articleId: 'fmea-india-guide',
+    articlePath: '/learning/fmea-india-guide/',
+    articleTitle: 'FMEA in Indian Manufacturing: Practical Step-by-Step Guide',
+    articleSummary: 'Integrate Statistical Process Control (SPC) and Cpk capability analysis with FMEA process controls.'
+  },
+  {
+    toolSlug: 'rcm-decision',
+    toolPath: '/tools/rcm-decision/',
+    toolName: 'RCM Decision Wizard',
+    articleId: 'rcm-complete-guide',
+    articlePath: '/learning/rcm-complete-guide/',
+    articleTitle: 'Reliability Centered Maintenance (RCM): Complete Step-by-Step Implementation Guide',
+    articleSummary: 'Master SAE JA1011 RCM decision logic trees, task selection, and PM program optimization.'
   }
 ];
 

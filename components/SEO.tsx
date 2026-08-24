@@ -9,6 +9,7 @@ interface SEOProps {
   canonicalUrl?: string;
   keywords?: string;
   schema?: any;
+  noIndex?: boolean;
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -16,7 +17,8 @@ const SEO: React.FC<SEOProps> = ({
   description: customDescription,
   canonicalUrl: customCanonicalUrl,
   keywords,
-  schema
+  schema,
+  noIndex = false
 }) => {
   const location = useLocation();
   const defaultSeo = getSeoMetadata(location.pathname);
@@ -33,6 +35,13 @@ const SEO: React.FC<SEOProps> = ({
       {/* Meta Description (120-155 chars) */}
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
+
+      {/* Robots meta tag (noindex, follow for embeds/internal pages) */}
+      {noIndex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <meta name="robots" content="index, follow" />
+      )}
 
       {/* CRITICAL: Self-Referencing Canonical Tag */}
       <link rel="canonical" href={canonicalUrl} />

@@ -83,6 +83,12 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     >
                         <Share2 className="w-5 h-5" /> Share
                     </button>
+                    <Link
+                        to="/embed"
+                        className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold py-3 px-6 rounded-full hover:opacity-90 transition-opacity"
+                    >
+                        Embed This Calculator
+                    </Link>
                 </div>
             </div>
 

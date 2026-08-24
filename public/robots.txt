@@ -1,12 +1,11 @@
 # ============================================================
 # robots.txt — reliabilitytools.co.in
-# Updated: 2026-07-13
+# Updated: 2026-08-24
 # ============================================================
 
 # --- Google Bots ---
 User-agent: Googlebot
 Allow: /
-Disallow: /embed/
 
 User-agent: Google-Extended
 Allow: /
@@ -14,7 +13,6 @@ Allow: /
 # --- Bing / Microsoft ---
 User-agent: Bingbot
 Allow: /
-Disallow: /embed/
 
 # --- Apple ---
 User-agent: Applebot
@@ -45,7 +43,6 @@ Allow: /
 # --- All Other Bots ---
 User-agent: *
 Allow: /
-Disallow: /embed/
 Crawl-delay: 2
 
 # ============================================================

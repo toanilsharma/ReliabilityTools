@@ -285,6 +285,60 @@ export const TOOLS: ToolDefinition[] = [
     category: 'Calculator',
     iconName: 'Settings',
     colorTheme: 'cyan'
+  },
+  {
+    id: 'vibration-severity',
+    name: 'Vibration Severity Checker (ISO 20816)',
+    description: 'Evaluate machinery vibration severity (RMS mm/s) per ISO 20816-1 / ISO 10816 standards with Zone A/B/C/D classification.',
+    path: '/tools/vibration-severity/',
+    category: 'Calculator',
+    iconName: 'Activity',
+    colorTheme: 'rose'
+  },
+  {
+    id: '5-why',
+    name: '5-Why Root Cause Analysis Builder',
+    description: 'Build structured 5-Why root cause analysis causal chains with countermeasures and export formatted RCA reports.',
+    path: '/tools/5-why/',
+    category: 'Analysis',
+    iconName: 'HelpCircle',
+    colorTheme: 'amber'
+  },
+  {
+    id: 'pareto',
+    name: 'Pareto Chart Tool (80/20 Analysis)',
+    description: 'Perform Pareto 80/20 analysis on failure modes and downtime events with dual-axis bar and cumulative percentage charts.',
+    path: '/tools/pareto/',
+    category: 'Analysis',
+    iconName: 'BarChart2',
+    colorTheme: 'indigo'
+  },
+  {
+    id: 'reliability-allocation',
+    name: 'Reliability Allocation Calculator',
+    description: 'Apportion top-level system reliability targets and failure rate budgets to individual subsystems using Equal Apportionment and AGREE methods.',
+    path: '/tools/reliability-allocation/',
+    category: 'Calculator',
+    iconName: 'Layers',
+    colorTheme: 'cyan'
+  },
+  {
+    id: 'spc',
+    name: 'SPC & Process Capability Calculator (Cpk)',
+    description: 'Calculate X-bar control chart limits (UCL, CL, LCL) and process capability indices (Cp, Cpk) with visual control charts.',
+    path: '/tools/spc/',
+    category: 'Analysis',
+    iconName: 'Activity',
+    colorTheme: 'emerald'
+  },
+  {
+    id: 'rcm-decision',
+    name: 'RCM Decision Wizard (SAE JA1011)',
+    description: 'Interactive 7-question Reliability-Centered Maintenance decision wizard to select optimal maintenance strategies.',
+    path: '/tools/rcm-decision/',
+    category: 'Planning',
+    iconName: 'HelpCircle',
+    colorTheme: 'purple'
   }
 ];
 

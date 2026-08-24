@@ -43,6 +43,12 @@ const CANONICAL_URLS = [
   { url: `${BASE_URL}/tools/lubricant-life/`, changefreq: 'monthly', priority: '0.8' },
   { url: `${BASE_URL}/tools/downtime-cost/`, changefreq: 'monthly', priority: '0.8' },
   { url: `${BASE_URL}/tools/bearing-life/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/vibration-severity/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/5-why/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/pareto/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/reliability-allocation/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/spc/`, changefreq: 'monthly', priority: '0.8' },
+  { url: `${BASE_URL}/tools/rcm-decision/`, changefreq: 'monthly', priority: '0.8' },
 
   // Content & Hub Pages (Weekly changefreq for content hubs)
   { url: `${BASE_URL}/learning/`, changefreq: 'weekly', priority: '0.8' },

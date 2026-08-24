@@ -43,6 +43,12 @@ import GearboxReliability from './pages/Tools/GearboxReliability';
 import LubricantLifeOptimizer from './pages/Tools/LubricantLifeOptimizer';
 import DowntimeCostCalculator from './pages/Tools/DowntimeCostCalculator';
 import BearingLifeCalculator from './pages/Tools/BearingLifeCalculator';
+import VibrationSeverityChecker from './pages/Tools/VibrationSeverityChecker';
+import FiveWhyTool from './pages/Tools/FiveWhyTool';
+import ParetoChartTool from './pages/Tools/ParetoChartTool';
+import ReliabilityAllocationCalculator from './pages/Tools/ReliabilityAllocationCalculator';
+import SpcCalculator from './pages/Tools/SpcCalculator';
+import RcmDecisionWizard from './pages/Tools/RcmDecisionWizard';
 
 // Content & Legal
 import LearningCenter from './pages/LearningCenter';
@@ -53,6 +59,7 @@ import IndustriesHub from './pages/IndustriesHub';
 import IndustryView from './pages/IndustryView';
 import ProfessorsToolkit from './pages/ProfessorsToolkit';
 import PressKit from './pages/PressKit';
+import WidgetBuilder from './pages/WidgetBuilder';
 import Faq from './pages/Faq';
 import Glossary from './pages/Glossary';
 import Methodology from './pages/Methodology';
@@ -117,6 +124,12 @@ const App: React.FC = () => {
               <Route path="tools/lubricant-life" element={<LubricantLifeOptimizer />} />
               <Route path="tools/downtime-cost" element={<DowntimeCostCalculator />} />
               <Route path="tools/bearing-life" element={<BearingLifeCalculator />} />
+              <Route path="tools/vibration-severity" element={<VibrationSeverityChecker />} />
+              <Route path="tools/5-why" element={<FiveWhyTool />} />
+              <Route path="tools/pareto" element={<ParetoChartTool />} />
+              <Route path="tools/reliability-allocation" element={<ReliabilityAllocationCalculator />} />
+              <Route path="tools/spc" element={<SpcCalculator />} />
+              <Route path="tools/rcm-decision" element={<RcmDecisionWizard />} />
 
               {/* Content & Articles */}
               <Route path="learning" element={<LearningCenter />} />
@@ -128,6 +141,7 @@ const App: React.FC = () => {
               <Route path="industries/:industrySlug" element={<IndustryView />} />
               <Route path="professors" element={<ProfessorsToolkit />} />
               <Route path="press" element={<PressKit />} />
+              <Route path="embed" element={<WidgetBuilder />} />
               <Route path="learning/:articleId" element={<ArticleView />} />
               <Route path="articles/:articleId" element={<ArticleView />} />
               <Route path="blog/:articleId" element={<ArticleView />} />
