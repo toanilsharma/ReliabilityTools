@@ -125,7 +125,7 @@ const RbdTool: React.FC = () => {
     addRecentTool({
       id: 'rbd',
       name: 'RBD Builder',
-      path: '/tools/rbd'
+      path: '/tools/rbd/'
     });
   }, []);
 

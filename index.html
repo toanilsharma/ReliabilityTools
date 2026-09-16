@@ -26,12 +26,8 @@
   <meta name="keywords"
     content="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator online, RCM reliability centered maintenance, OEE calculator free, availability calculator, predictive maintenance India, MTTR calculator, reliability block diagram, spare part estimator, life cycle cost calculator, hazard rate, SIL verification, fault tree analysis" />
   <meta name="geo.region" content="IN" />
-  <meta name="geo.placename" content="India" />
   <meta name="author" content="Anil Sharma" />
-  <link rel="canonical" href="https://reliabilitytools.co.in/" />
 
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#0891b2" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ReliabilityTools" />
@@ -43,16 +39,30 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
   <link rel="manifest" href="/favicons/site.webmanifest" />
 
-  <!-- Font resource hints: preconnect + dns-prefetch for fastest possible font resolution -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <!-- Self-Hosted Inter Font: Eliminates external DNS + connection overhead (Core Web Vitals: LCP & CLS fix) -->
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-  <!-- Preload Inter font woff2 for LCP improvement (Core Web Vitals: LCP fix) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" fetchpriority="high" />
+  <style>
+    /* Inter Variable Font - Latin subset (weights 400-800) */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url('/fonts/inter-latin.woff2') format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    /* Inter Variable Font - Latin Extended subset */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+  </style>
 
   <!-- Google Analytics (GA4) Placeholder -->
   <!-- Google Analytics (GA4) -->
@@ -67,9 +77,25 @@
     gtag("config", "G-95EY3EDXMR");
   </script>
 
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6734659962945791"
-    crossorigin="anonymous"></script>
+  <!-- Google AdSense (Deferred for Core Web Vitals) -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var loadAdSense = function() {
+        if (window.__adsenseLoaded) return;
+        window.__adsenseLoaded = true;
+        var s = document.createElement('script');
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6734659962945791';
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        document.head.appendChild(s);
+      };
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAdSense, { timeout: 3000 });
+      } else {
+        setTimeout(loadAdSense, 2000);
+      }
+    });
+  </script>
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />

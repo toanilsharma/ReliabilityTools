@@ -42,7 +42,7 @@ const ArticleView: React.FC = () => {
   const [copiedLink, setCopiedLink] = useState(false);
 
   if (!article) {
-    return <Navigate to="/learning" replace />;
+    return <Navigate to="/learning/" replace />;
   }
 
   const handlePrint = () => {
@@ -285,7 +285,7 @@ const ArticleView: React.FC = () => {
       {/* Top Header Navigation */}
       <div className="flex justify-between items-center mb-8 no-print">
         <Link
-          to="/learning"
+          to="/learning/"
           className="flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors font-bold text-sm group"
         >
           <ChevronRight className="w-4 h-4 rotate-180 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Learning Hub

@@ -124,17 +124,17 @@ const Layout: React.FC = () => {
                         </Link>
                       ))}
                       <div className="border-t border-slate-200 dark:border-slate-700 mt-1 pt-1">
-                        <Link to="/tools" className="block px-4 py-2 text-sm text-cyan-600 dark:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700">View All Tools</Link>
+                        <Link to="/tools/" className="block px-4 py-2 text-sm text-cyan-600 dark:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-700">View All Tools</Link>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <Link to="/knowledge-hub" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Knowledge Hub</Link>
-                <Link to="/downloads" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Templates</Link>
-                <Link to="/interactive-hub" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulators & Games</Link>
-                <Link to="/learning" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</Link>
-                <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
+                <Link to="/knowledge-hub/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Knowledge Hub</Link>
+                <Link to="/downloads/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Templates</Link>
+                <Link to="/interactive-hub/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulators & Games</Link>
+                <Link to="/learning/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</Link>
+                <Link to="/about/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
               </div>
 
               {/* Search Toggle */}
@@ -197,13 +197,13 @@ const Layout: React.FC = () => {
                 </Link>
               ))}
 
-              <Link to="/knowledge-hub" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Knowledge Hub</Link>
-              <Link to="/downloads" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Templates</Link>
-              <Link to="/interactive-hub" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Simulators & Games</Link>
-              <Link to="/learning" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Articles</Link>
-              <Link to="/reliability-engineering-glossary" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Glossary</Link>
-              <Link to="/about" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">About</Link>
-              <Link to="/contact" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Contact</Link>
+              <Link to="/knowledge-hub/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Knowledge Hub</Link>
+              <Link to="/downloads/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Templates</Link>
+              <Link to="/interactive-hub/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Simulators & Games</Link>
+              <Link to="/learning/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Articles</Link>
+              <Link to="/reliability-engineering-glossary/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Glossary</Link>
+              <Link to="/about/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">About</Link>
+              <Link to="/contact/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Contact</Link>
             </div>
           </nav>
         )}
@@ -288,20 +288,20 @@ const Layout: React.FC = () => {
             <div>
               <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6">Quick Links</h3>
               <ul className="space-y-3 text-sm text-slate-400">
-                <li><Link to="/tools" className="hover:text-cyan-400 transition-colors">All Tools</Link></li>
-                <li><Link to="/downloads" className="hover:text-cyan-400 transition-colors">Templates & Downloads</Link></li>
-                <li><Link to="/interactive-hub" className="hover:text-cyan-400 transition-colors">Simulators & Games</Link></li>
-                <li><Link to="/knowledge-hub" className="hover:text-cyan-400 transition-colors">Knowledge Hub</Link></li>
-                <li><Link to="/reliability-engineering-glossary" className="hover:text-cyan-400 transition-colors">Glossary</Link></li>
-                <li><Link to="/contact" className="hover:text-cyan-400 transition-colors">Contact Us</Link></li>
+                <li><Link to="/tools/" className="hover:text-cyan-400 transition-colors">All Tools</Link></li>
+                <li><Link to="/downloads/" className="hover:text-cyan-400 transition-colors">Templates & Downloads</Link></li>
+                <li><Link to="/interactive-hub/" className="hover:text-cyan-400 transition-colors">Simulators & Games</Link></li>
+                <li><Link to="/knowledge-hub/" className="hover:text-cyan-400 transition-colors">Knowledge Hub</Link></li>
+                <li><Link to="/reliability-engineering-glossary/" className="hover:text-cyan-400 transition-colors">Glossary</Link></li>
+                <li><Link to="/contact/" className="hover:text-cyan-400 transition-colors">Contact Us</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6">Legal</h3>
               <ul className="space-y-3 text-sm text-slate-400">
-                <li><Link to="/legal/privacy" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/legal/terms" className="hover:text-cyan-400 transition-colors">Terms of Service</Link></li>
-                <li><Link to="/legal/cookies" className="hover:text-cyan-400 transition-colors">Cookie Policy</Link></li>
+                <li><Link to="/legal/privacy/" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/legal/terms/" className="hover:text-cyan-400 transition-colors">Terms of Service</Link></li>
+                <li><Link to="/legal/cookies/" className="hover:text-cyan-400 transition-colors">Cookie Policy</Link></li>
               </ul>
             </div>
             <div>

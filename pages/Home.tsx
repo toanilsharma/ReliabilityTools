@@ -228,14 +228,14 @@ const Home: React.FC = () => {
               Quick Start Wizard (3 Steps)
             </button>
             <Link
-              to="/mtbf-calculator"
+              to="/tools/mtbf/"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-white font-bold shadow-md transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Rocket className="w-5 h-5" />
               MTBF Calculator
             </Link>
             <Link
-              to="/interactive-hub"
+              to="/interactive-hub/"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 transition-all hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <Gamepad2 className="w-5 h-5 text-amber-500" />
@@ -246,7 +246,7 @@ const Home: React.FC = () => {
           {/* BIG Show All Tools Button */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
             <Link
-              to="/tools"
+              to="/tools/"
               id="show-all-tools-btn"
               className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg text-white overflow-hidden shadow-2xl shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-cyan-500/50 w-full sm:w-auto"
               style={{
@@ -264,7 +264,7 @@ const Home: React.FC = () => {
             </Link>
 
             <Link
-              to="/skill-test"
+              to="/skill-test/"
               className="group relative inline-flex items-center justify-center gap-3 px-12 py-5 rounded-2xl font-extrabold text-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 overflow-hidden shadow-2xl transition-all duration-300 transform hover:-translate-y-2 w-full sm:w-auto border border-slate-700 dark:border-slate-200"
             >
               <Award className="w-6 h-6 flex-shrink-0 text-amber-500" />
@@ -321,7 +321,7 @@ const Home: React.FC = () => {
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" /> Present reliability KPIs to management with confidence</li>
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" /> Ace reliability engineering interviews</li>
               </ul>
-              <Link to="/mtbf-calculator" className="mt-4 text-blue-600 dark:text-blue-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with MTBF <ArrowRight className="w-3 h-3" /></Link>
+              <Link to="/tools/mtbf/" className="mt-4 text-blue-600 dark:text-blue-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with MTBF <ArrowRight className="w-3 h-3" /></Link>
             </div>
 
             {/* Reliability Engineers */}
@@ -336,7 +336,7 @@ const Home: React.FC = () => {
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-cyan-500 mt-0.5 shrink-0" /> Win data-driven arguments for CapEx requests</li>
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-cyan-500 mt-0.5 shrink-0" /> Stand out in CRE / SRE certifications</li>
               </ul>
-              <Link to="/weibull-analysis" className="mt-4 text-cyan-600 dark:text-cyan-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with Weibull <ArrowRight className="w-3 h-3" /></Link>
+              <Link to="/tools/weibull/" className="mt-4 text-cyan-600 dark:text-cyan-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with Weibull <ArrowRight className="w-3 h-3" /></Link>
             </div>
 
             {/* Plant Managers */}
@@ -351,7 +351,7 @@ const Home: React.FC = () => {
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" /> Optimize spare parts inventory & reduce capital lock-in</li>
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" /> Lead TPM/RCM transformation with hard data</li>
               </ul>
-              <Link to="/oee-calculator" className="mt-4 text-purple-600 dark:text-purple-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with OEE <ArrowRight className="w-3 h-3" /></Link>
+              <Link to="/tools/oee/" className="mt-4 text-purple-600 dark:text-purple-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start with OEE <ArrowRight className="w-3 h-3" /></Link>
             </div>
 
             {/* Engineering Students */}
@@ -366,7 +366,7 @@ const Home: React.FC = () => {
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> Learn formulas interactively (not from textbooks)</li>
                 <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> Stand out in campus placement interviews</li>
               </ul>
-              <Link to="/learning" className="mt-4 text-emerald-600 dark:text-emerald-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start Learning <ArrowRight className="w-3 h-3" /></Link>
+              <Link to="/learning/" className="mt-4 text-emerald-600 dark:text-emerald-400 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">Start Learning <ArrowRight className="w-3 h-3" /></Link>
             </div>
 
           </div>
@@ -469,7 +469,7 @@ const Home: React.FC = () => {
                 <AvailabilityChartWidget />
               </Suspense>
             </div>
-            <Link to="/tools/availability" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+            <Link to="/tools/availability/" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
               <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Launch Full Availability Tool</span>
               <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
                 <ArrowRight className="w-4 h-4" />
@@ -487,7 +487,7 @@ const Home: React.FC = () => {
                 <FailureModeIdentifier />
               </Suspense>
             </div>
-            <Link to="/learning" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+            <Link to="/learning/" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
               <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Open Knowledge Base</span>
               <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
                 <ArrowRight className="w-4 h-4" />
@@ -505,7 +505,7 @@ const Home: React.FC = () => {
                 <SparesForecastWidget />
               </Suspense>
             </div>
-            <Link to="/tools/spares" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
+            <Link to="/tools/spares/" className="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 p-4 flex items-center justify-between group/link hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors">
               <span className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover/link:text-cyan-700 dark:group-hover/link:text-cyan-400">Complete Spares Estimator</span>
               <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-cyan-400 group-hover/link:scale-110 transition-all">
                 <ArrowRight className="w-4 h-4" />
@@ -601,13 +601,13 @@ const Home: React.FC = () => {
                   </div>
 
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    By accurately measuring MTBF, plant managers can optimize preventive maintenance schedules, minimize unexpected downtime, and forecast spare parts inventory. World-class organizations seeking maximum <Link to="/tools/availability" className="text-cyan-600 dark:text-cyan-400 hover:underline font-bold">system availability</Link> focus on increasing MTBF while lowering MTTR.
+                    By accurately measuring MTBF, plant managers can optimize preventive maintenance schedules, minimize unexpected downtime, and forecast spare parts inventory. World-class organizations seeking maximum <Link to="/tools/availability/" className="text-cyan-600 dark:text-cyan-400 hover:underline font-bold">system availability</Link> focus on increasing MTBF while lowering MTTR.
                   </p>
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Expert Knowledge Block</span>
-                  <Link to="/learning/mtbf-guide" className="text-sm font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1 hover:gap-2 transition-all">
+                  <Link to="/learning/mtbf-guide/" className="text-sm font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1 hover:gap-2 transition-all">
                     Deep Dive <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -646,13 +646,13 @@ const Home: React.FC = () => {
                   </div>
 
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Using a Weibull probability plot, engineers determine exactly where a component is on the <Link to="/learning" className="text-cyan-600 dark:text-cyan-400 hover:underline font-bold">Bathtub Curve</Link>. It reveals whether a product is experiencing infant mortality, random mid-life failures, or end-of-life wear-out.
+                    Using a Weibull probability plot, engineers determine exactly where a component is on the <Link to="/learning/" className="text-cyan-600 dark:text-cyan-400 hover:underline font-bold">Bathtub Curve</Link>. It reveals whether a product is experiencing infant mortality, random mid-life failures, or end-of-life wear-out.
                   </p>
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Statistical Insight</span>
-                  <Link to="/learning/weibull-analysis-explained" className="text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 hover:gap-2 transition-all">
+                  <Link to="/learning/weibull-analysis-explained/" className="text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 hover:gap-2 transition-all">
                     Master Weibull <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -695,7 +695,7 @@ const Home: React.FC = () => {
                   <p className="text-xs text-slate-400">Optimize inventory levels</p>
                 </div>
               </div>
-              <Link to="/downloads" className="inline-flex items-center px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-cyan-500/30">
+              <Link to="/downloads/" className="inline-flex items-center px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-cyan-500/30">
                 Browse Templates <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </div>
@@ -733,7 +733,7 @@ const Home: React.FC = () => {
             <p className="text-slate-500 dark:text-slate-400 mt-1">28 professional-grade tools. Free. No signup required.</p>
           </div>
           <Link
-            to="/tools"
+            to="/tools/"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-md transition-all hover:-translate-y-0.5"
           >
             <Calculator className="w-4 h-4" />
@@ -783,11 +783,11 @@ const Home: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Latest from Learning Hub</h2>
-          <Link to="/learning" className="text-cyan-600 dark:text-cyan-400 hover:underline text-sm font-semibold">View all articles</Link>
+          <Link to="/learning/" className="text-cyan-600 dark:text-cyan-400 hover:underline text-sm font-semibold">View all articles</Link>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {ARTICLES.slice(0, 3).map((article) => (
-            <Link key={article.id} to="/learning" className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow">
+            <Link key={article.id} to="/learning/" className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow">
               <div className="text-xs text-slate-500 dark:text-slate-500 mb-2">{article.date}</div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2">{article.title}</h3>
               <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-3 mb-4">
@@ -823,7 +823,7 @@ const Home: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solution</span>
-                  <p className="text-slate-300 text-sm mt-1">Used <Link to="/weibull-analysis" className="text-cyan-400 hover:underline">Weibull Analysis</Link> to determine failure mode was 'wear-out' (Beta {'>'} 2.5), not random.</p>
+                  <p className="text-slate-300 text-sm mt-1">Used <Link to="/tools/weibull/" className="text-cyan-400 hover:underline">Weibull Analysis</Link> to determine failure mode was 'wear-out' (Beta {'>'} 2.5), not random.</p>
                 </div>
                 <div className="pt-4 border-t border-slate-700">
                   <div className="flex items-center gap-2 text-green-400 font-bold">
@@ -849,7 +849,7 @@ const Home: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solution</span>
-                  <p className="text-slate-300 text-sm mt-1">Applied the <Link to="/tools/spares" className="text-blue-400 hover:underline">Spare Part Estimator</Link> to calculate optimal stock for 95% service level.</p>
+                  <p className="text-slate-300 text-sm mt-1">Applied the <Link to="/tools/spares/" className="text-blue-400 hover:underline">Spare Part Estimator</Link> to calculate optimal stock for 95% service level.</p>
                 </div>
                 <div className="pt-4 border-t border-slate-700">
                   <div className="flex items-center gap-2 text-green-400 font-bold">
@@ -875,7 +875,7 @@ const Home: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solution</span>
-                  <p className="text-slate-300 text-sm mt-1">Modeled redundancy options in the <Link to="/tools/rbd" className="text-purple-400 hover:underline">RBD Builder</Link> to justify a standby unit.</p>
+                  <p className="text-slate-300 text-sm mt-1">Modeled redundancy options in the <Link to="/tools/rbd/" className="text-purple-400 hover:underline">RBD Builder</Link> to justify a standby unit.</p>
                 </div>
                 <div className="pt-4 border-t border-slate-700">
                   <div className="flex items-center gap-2 text-green-400 font-bold">

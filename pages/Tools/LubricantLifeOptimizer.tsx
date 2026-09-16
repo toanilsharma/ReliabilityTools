@@ -299,7 +299,7 @@ const LubricantLifeOptimizer: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Lubricant Life Optimization</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Predict remaining useful life (RUL) of industrial oils. For total lifetime cost calculations including lubrication cycles, utilize the <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Predict remaining useful life (RUL) of industrial oils. For total lifetime cost calculations including lubrication cycles, utilize the <Link to="/tools/lcc/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Activity,
   Calculator,
+  FileSpreadsheet,
 } from "lucide-react";
 import HelpTooltip from "../../components/HelpTooltip";
 import { ASSET_BENCHMARKS } from "../../constants";
@@ -62,7 +63,7 @@ const MtbfCalculator: React.FC = () => {
     addRecentTool({
         id: 'mtbf',
         name: 'MTBF Calculator',
-        path: '/mtbf-calculator'
+        path: '/tools/mtbf/'
     });
 
     // Parse legacy URL params for sharing (if any)
@@ -124,6 +125,30 @@ const MtbfCalculator: React.FC = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleDownloadTemplate = () => {
+    const csvContent = [
+      '# MTBF / MTTF Calculation & Equipment Failure Log Template (ISO 14224 Compliant)',
+      '# Generated from https://reliabilitytools.co.in/tools/mtbf/',
+      '',
+      'Asset Tag,Asset Name,Operating Hours,Failures Count,MTBF (Hours),Failure Rate (Failures/Hr),Annual Failures,Standard Reference',
+      `TAG-001,Main Plant Equipment,${totalHours || 8760},${failures || 2},${result ? result.toFixed(1) : 4380},${result ? (1/result).toExponential(4) : (2/8760).toExponential(4)},${result ? (8760/result).toFixed(2) : '2.00'},ISO 14224`,
+      '',
+      '# Failure Incident Log Sheet',
+      'Incident ID,Date,Failure Mode,Component Affected,Operating Hours at Failure,Repair Duration (MTTR hrs),Root Cause,Action Taken',
+      'INC-001,2026-01-15,Bearing Overheat,Drive End Bearing,4200,3.5,Lubrication breakdown,Replaced bearing & replenished grease',
+      'INC-002,2026-06-20,Seal Leakage,Mechanical Seal,7850,2.0,Face wear,Replaced mechanical seal face'
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `MTBF_Calculation_Log_${mode}_Template.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
 
@@ -306,6 +331,18 @@ const MtbfCalculator: React.FC = () => {
                     {(1000000 / result).toLocaleString(undefined, { maximumFractionDigits: 1 })}
                   </div>
                 </div>
+              </div>
+
+              {/* Excel / CSV Template Download for High-Intent Search */}
+              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+                <button
+                  type="button"
+                  onClick={handleDownloadTemplate}
+                  className="w-full py-2.5 px-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-700 dark:text-emerald-300 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-emerald-500/10"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  Download Free MTBF Excel / CSV Template (.csv)
+                </button>
               </div>
             </AnimatedContainer>
           </div>
@@ -513,7 +550,7 @@ const MtbfCalculator: React.FC = () => {
           <div className="p-5 bg-gradient-to-b from-amber-500/5 to-transparent border border-amber-500/20 dark:border-amber-500/30 rounded-2xl shadow-sm">
             <h4 className="font-bold text-amber-600 dark:text-amber-455 mb-2">3. Wear-Out Phase</h4>
             <p className="text-sm">
-              Characterized by a rapidly increasing failure rate (β &gt; 1) as components reach their mechanical limits due to friction, fatigue, or corrosion. Engineers must track this to compute the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link>.
+              Characterized by a rapidly increasing failure rate (β &gt; 1) as components reach their mechanical limits due to friction, fatigue, or corrosion. Engineers must track this to compute the <Link to="/tools/optimal-replacement/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link>.
             </p>
           </div>
         </div>
@@ -532,10 +569,10 @@ const MtbfCalculator: React.FC = () => {
           <AvailabilityTimeline />
         </div>
         <p>
-          To calculate the exact financial cost of downtime and simulate various reliability scenarios, engineers can navigate to our specialized <Link to="/tools/availability" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Availability Calculator</Link> and <Link to="/tools/mttr" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link>.
+          To calculate the exact financial cost of downtime and simulate various reliability scenarios, engineers can navigate to our specialized <Link to="/tools/availability/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Availability Calculator</Link> and <Link to="/tools/mttr/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link>.
         </p>
         <p>
-          By extending MTBF (e.g., through precision alignment or component upgrades) or drastically reducing MTTR (e.g., through standardized repair kits and stocking critical spares in local inventory via the <Link to="/tools/spares" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Spare Part Estimator</Link>), organizations can drive their availability toward the coveted "five-nines" (99.999% uptime) benchmark.
+          By extending MTBF (e.g., through precision alignment or component upgrades) or drastically reducing MTTR (e.g., through standardized repair kits and stocking critical spares in local inventory via the <Link to="/tools/spares/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Spare Part Estimator</Link>), organizations can drive their availability toward the coveted "five-nines" (99.999% uptime) benchmark.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">

@@ -222,7 +222,7 @@ const PmScheduler: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Preventive Maintenance Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Preventive Maintenance (PM) is a proactive strategy. Optimize PM intervals based on component wear characteristics using the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link>.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Preventive Maintenance (PM) is a proactive strategy. Optimize PM intervals based on component wear characteristics using the <Link to="/tools/optimal-replacement/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

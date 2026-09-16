@@ -1,128 +1,99 @@
 # Netlify 301 Redirect Rules for Reliability Tools Canonicalization
+# Note: Do NOT add self-referencing /tools/<slug> -> /tools/<slug>/ rules here,
+# as Netlify URL normalization will cause infinite 301 redirect loops.
 
 # MTBF
-/mtbf                      /tools/mtbf/               301!
-/mtbf-calculator           /tools/mtbf/               301!
-/tools/mtbf                /tools/mtbf/               301!
-/tools/mtbf-calculator     /tools/mtbf/               301!
-/tools/mtbf-calculator/    /tools/mtbf/               301!
-/tools/reliability-calculator /tools/mtbf/            301!
-/tools/reliability-calculator/ /tools/mtbf/           301!
+/mtbf                          /tools/mtbf/               301
+/mtbf-calculator               /tools/mtbf/               301
+/tools/mtbf-calculator         /tools/mtbf/               301
+/tools/mtbf-calculator/        /tools/mtbf/               301
+/tools/reliability-calculator  /tools/mtbf/               301
+/tools/reliability-calculator/ /tools/mtbf/               301
 
 # MTTR
-/mttr                      /tools/mttr/               301!
-/mttr-calculator           /tools/mttr/               301!
-/tools/mttr                /tools/mttr/               301!
-/tools/mttr-calculator     /tools/mttr/               301!
-/tools/mttr-calculator/    /tools/mttr/               301!
+/mttr                          /tools/mttr/               301
+/mttr-calculator               /tools/mttr/               301
+/tools/mttr-calculator         /tools/mttr/               301
+/tools/mttr-calculator/        /tools/mttr/               301
 
 # RBD
-/rbd                       /tools/rbd/                301!
-/tools/rbd                 /tools/rbd/                301!
+/rbd                           /tools/rbd/                301
 
-# PM
-/pm                        /tools/pm/                 301!
-/pm-optimization           /tools/pm/                 301!
-/tools/pm                  /tools/pm/                 301!
-/tools/pm-optimization     /tools/pm/                 301!
-/tools/pm-optimization/    /tools/pm/                 301!
+# PM Scheduler
+/pm                            /tools/pm/                 301
+/pm-optimization               /tools/pm/                 301
+/tools/pm-optimization         /tools/pm/                 301
+/tools/pm-optimization/        /tools/pm/                 301
 
 # OEE
-/oee                       /tools/oee/                301!
-/oee-calculator            /tools/oee/                301!
-/tools/oee                 /tools/oee/                301!
-/tools/oee-calculator      /tools/oee/                301!
-/tools/oee-calculator/     /tools/oee/                301!
+/oee                           /tools/oee/                301
+/oee-calculator                /tools/oee/                301
+/tools/oee-calculator          /tools/oee/                301
+/tools/oee-calculator/         /tools/oee/                301
 
 # Availability
-/availability              /tools/availability/       301!
-/tools/availability        /tools/availability/       301!
-/tools/availability-calculator /tools/availability/   301!
-/tools/availability-calculator/ /tools/availability/  301!
+/availability                  /tools/availability/       301
+/tools/availability-calculator /tools/availability/       301
+/tools/availability-calculator/ /tools/availability/      301
 
 # FMEA
-/fmea                      /tools/fmea/               301!
-/fmea-tool                 /tools/fmea/               301!
-/tools/fmea                /tools/fmea/               301!
-/tools/fmea-calculator     /tools/fmea/               301!
-/tools/fmea-calculator/    /tools/fmea/               301!
+/fmea                          /tools/fmea/               301
+/fmea-tool                     /tools/fmea/               301
+/tools/fmea-calculator         /tools/fmea/               301
+/tools/fmea-calculator/        /tools/fmea/               301
 
 # Weibull
-/weibull                   /tools/weibull/            301!
-/weibull-analysis          /tools/weibull/            301!
-/tools/weibull             /tools/weibull/            301!
-/tools/weibull-calculator  /tools/weibull/            301!
-/tools/weibull-calculator/ /tools/weibull/            301!
+/weibull                       /tools/weibull/            301
+/weibull-analysis              /tools/weibull/            301
+/tools/weibull-calculator      /tools/weibull/            301
+/tools/weibull-calculator/     /tools/weibull/            301
 
-# Other Root-Level & Non-Slashed Tool Slugs
-/spares                    /tools/spares/             301!
-/tools/spares              /tools/spares/             301!
+# Other Legacy Aliases & Shortcuts
+/spares                        /tools/spares/             301
+/lcc                           /tools/lcc/                301
+/eoq                           /tools/eoq/                301
+/sil                           /tools/sil/                301
+/converter                     /tools/converter/          301
+/test-planner                  /tools/test-planner/       301
+/sample-size                   /tools/test-planner/       301
+/tools/sample-size             /tools/test-planner/       301
+/tools/sample-size/            /tools/test-planner/       301
+/assessment                    /tools/assessment/         301
+/confidence-interval           /tools/confidence-interval/ 301
+/k-out-of-n                    /tools/k-out-of-n/         301
+/hazard-rate                   /tools/hazard-rate/        301
+/failure-rate-calculator       /tools/hazard-rate/        301
+/tools/failure-rate-calculator /tools/hazard-rate/        301
+/tools/failure-rate-calculator/ /tools/hazard-rate/       301
+/validator                     /tools/validator/          301
+/system-reliability            /tools/validator/          301
+/tools/system-reliability      /tools/validator/          301
+/tools/system-reliability/     /tools/validator/          301
+/fishbone                      /tools/fishbone/           301
+/fta                           /tools/fta/                301
+/markov                        /tools/markov/             301
+/growth                        /tools/growth/             301
+/warranty                      /tools/warranty/           301
+/cost-risk                     /tools/cost-risk/          301
+/gearbox                       /tools/gearbox/            301
+/lubricant-life                /tools/lubricant-life/     301
+/optimal-replacement           /tools/optimal-replacement/ 301
+/rcm                           /tools/rcm-decision/       301
+/tools/rcm                     /tools/rcm-decision/       301
+/downtime-cost                 /tools/downtime-cost/      301
+/bearing-life                  /tools/bearing-life/       301
+/vibration-severity            /tools/vibration-severity/ 301
+/5-why                         /tools/5-why/              301
+/five-why                      /tools/5-why/              301
+/pareto                        /tools/pareto/             301
+/reliability-allocation        /tools/reliability-allocation/ 301
+/spc                           /tools/spc/                301
 
-/lcc                       /tools/lcc/                301!
-/tools/lcc                 /tools/lcc/                301!
+# Content shortcuts
+/articles                      /learning/                 301
+/articles/                     /learning/                 301
+/blog                          /learning/                 301
+/blog/                         /learning/                 301
 
-/eoq                       /tools/eoq/                301!
-/tools/eoq                 /tools/eoq/                301!
-
-/sil                       /tools/sil/                301!
-/tools/sil                 /tools/sil/                301!
-
-/converter                 /tools/converter/          301!
-/tools/converter           /tools/converter/          301!
-
-/test-planner              /tools/test-planner/       301!
-/sample-size               /tools/test-planner/       301!
-/tools/test-planner        /tools/test-planner/       301!
-/tools/sample-size         /tools/test-planner/       301!
-/tools/sample-size/        /tools/test-planner/       301!
-
-/assessment                 /tools/assessment/        301!
-/tools/assessment           /tools/assessment/        301!
-
-/confidence-interval       /tools/confidence-interval/ 301!
-/tools/confidence-interval /tools/confidence-interval/ 301!
-
-/k-out-of-n                /tools/k-out-of-n/         301!
-/tools/k-out-of-n          /tools/k-out-of-n/         301!
-
-/hazard-rate               /tools/hazard-rate/        301!
-/failure-rate-calculator   /tools/hazard-rate/        301!
-/tools/hazard-rate         /tools/hazard-rate/        301!
-/tools/failure-rate-calculator /tools/hazard-rate/   301!
-/tools/failure-rate-calculator/ /tools/hazard-rate/  301!
-
-/validator                 /tools/validator/          301!
-/system-reliability        /tools/validator/          301!
-/tools/validator           /tools/validator/          301!
-/tools/system-reliability  /tools/validator/          301!
-/tools/system-reliability/ /tools/validator/         301!
-
-/fishbone                  /tools/fishbone/           301!
-/tools/fishbone            /tools/fishbone/           301!
-
-/fta                       /tools/fta/                301!
-/tools/fta                 /tools/fta/                301!
-
-/markov                    /tools/markov/             301!
-/tools/markov              /tools/markov/             301!
-
-/growth                    /tools/growth/             301!
-/tools/growth              /tools/growth/             301!
-
-/warranty                  /tools/warranty/           301!
-/tools/warranty            /tools/warranty/           301!
-
-/cost-risk                 /tools/cost-risk/          301!
-/tools/cost-risk           /tools/cost-risk/          301!
-
-/gearbox                   /tools/gearbox/            301!
-/tools/gearbox             /tools/gearbox/            301!
-
-/lubricant-life            /tools/lubricant-life/     301!
-/tools/lubricant-life      /tools/lubricant-life/     301!
-
-/optimal-replacement       /tools/optimal-replacement/ 301!
-/tools/optimal-replacement /tools/optimal-replacement/ 301!
-
-# Fallback SPA routing
-/*                         /index.html                200
+# Fallback SPA routing (must be last)
+/*                             /index.html                200

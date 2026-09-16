@@ -168,10 +168,10 @@ const KnowledgeHub: React.FC = () => {
                     <span className="block my-3 font-mono bg-slate-100 dark:bg-slate-900 p-3 rounded text-center text-blue-700 dark:text-blue-400">
                       R<sub>system</sub> = R<sub>1</sub> × R<sub>2</sub> × ... × R<sub>n</sub>
                     </span>
-                    The reliability of a series system is the <em>product</em> of its component reliabilities. You can model this using our <Link to="/tools/rbd" className="text-blue-600 hover:underline font-bold">RBD Calculator</Link>.
+                    The reliability of a series system is the <em>product</em> of its component reliabilities. You can model this using our <Link to="/tools/rbd/" className="text-blue-600 hover:underline font-bold">RBD Calculator</Link>.
                   </p>
                   <div className="mt-6">
-                    <Link to="/tools/rbd" className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-md">
+                    <Link to="/tools/rbd/" className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors shadow-md">
                       Calculate System Reliability Now <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>

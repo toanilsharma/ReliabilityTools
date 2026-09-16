@@ -409,7 +409,7 @@ const AvailabilityCalculator: React.FC = () => {
           <AvailabilityTimeline />
         </div>
         <p>
-          This calculation assumes that spare parts are immediately available, technicians are standing by, and no administrative delays exist. It is the core metric modeled by our calculator. For deep-dive repair time calculations, you can use our dedicated <Link to="/tools/mttr" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link> to analyze active repair actions.
+          This calculation assumes that spare parts are immediately available, technicians are standing by, and no administrative delays exist. It is the core metric modeled by our calculator. For deep-dive repair time calculations, you can use our dedicated <Link to="/tools/mttr/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTTR Calculator</Link> to analyze active repair actions.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -445,14 +445,14 @@ const AvailabilityCalculator: React.FC = () => {
           A fraction of a percentage point in availability can translate to millions of dollars in revenue. For instance, in a continuous-process chemical plant, an availability of 95% means the plant is down for 438 hours per year. If the hourly revenue risk is $10,000, this equates to a loss of $4.38 million. Improving availability to 98% reduces downtime by 263 hours, reclaiming $2.63 million in lost revenue.
         </p>
         <p>
-          To justify the cost of purchasing higher-quality components or installing redundant backup systems, engineers should model the Total Cost of Ownership (TCO) using our <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
+          To justify the cost of purchasing higher-quality components or installing redundant backup systems, engineers should model the Total Cost of Ownership (TCO) using our <Link to="/tools/lcc/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Availability and Overall Equipment Effectiveness (OEE)
         </h3>
         <p>
-          Availability is also the first and most critical pillar of Overall Equipment Effectiveness (OEE). OEE combines Availability, Performance (operating speed vs. design capacity), and Quality (good units produced vs. total units) into a single metric representing plant efficiency. If you are calculating total manufacturing throughput, you can input your availability directly into our <Link to="/oee-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">OEE Calculator</Link> to derive your total process efficiency.
+          Availability is also the first and most critical pillar of Overall Equipment Effectiveness (OEE). OEE combines Availability, Performance (operating speed vs. design capacity), and Quality (good units produced vs. total units) into a single metric representing plant efficiency. If you are calculating total manufacturing throughput, you can input your availability directly into our <Link to="/tools/oee/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">OEE Calculator</Link> to derive your total process efficiency.
         </p>
 
         <h2 id="standards" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
@@ -463,7 +463,7 @@ const AvailabilityCalculator: React.FC = () => {
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Extend Uptime (Maximize MTBF):</strong> Use high-quality components, implement predictive monitoring to intervene before failure occurs, and design system redundancies. If you are designing parallel or standby configuration systems, you can calculate joint probabilities using our <Link to="/tools/k-out-of-n" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">K-out-of-N Redundancy Calculator</Link>.
+            <strong>Extend Uptime (Maximize MTBF):</strong> Use high-quality components, implement predictive monitoring to intervene before failure occurs, and design system redundancies. If you are designing parallel or standby configuration systems, you can calculate joint probabilities using our <Link to="/tools/k-out-of-n/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">K-out-of-N Redundancy Calculator</Link>.
           </li>
           <li>
             <strong>Minimize Repair Time (Minimize MTTR):</strong> Ensure replacement parts are stocked locally, standard operating procedures are drafted, and modular "plug-and-play" components are installed to speed up swap-out times.

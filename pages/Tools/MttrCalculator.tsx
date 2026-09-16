@@ -131,7 +131,7 @@ const MttrCalculator: React.FC = () => {
     addRecentTool({
       id: 'mttr',
       name: 'MTTR Calculator',
-      path: '/tools/mttr'
+      path: '/tools/mttr/'
     });
   }, []);
 
@@ -956,7 +956,7 @@ const MttrCalculator: React.FC = () => {
           </li>
         </ul>
         <p>
-          By tracking both metrics, managers can calculate the <strong>Wrench Time Efficiency</strong>. If MTTR is 2 hours, but MDT is 10 hours, the efficiency is only 20%. This reveals that 80% of downtime is waste caused by logistics rather than technical complexity. To estimate optimal stocking levels and prevent such delays, engineers can utilize our <Link to="/tools/spares" className="text-orange-500 hover:underline font-bold">Spare Part Estimator</Link>.
+          By tracking both metrics, managers can calculate the <strong>Wrench Time Efficiency</strong>. If MTTR is 2 hours, but MDT is 10 hours, the efficiency is only 20%. This reveals that 80% of downtime is waste caused by logistics rather than technical complexity. To estimate optimal stocking levels and prevent such delays, engineers can utilize our <Link to="/tools/spares/" className="text-orange-500 hover:underline font-bold">Spare Part Estimator</Link>.
         </p>
 
         <h2 id="math" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">

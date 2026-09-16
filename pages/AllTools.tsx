@@ -174,7 +174,7 @@ const AllTools: React.FC = () => {
               We are constantly expanding our library. If you need a specific reliability calculator or engineering template, let us know and we'll build it for you.
             </p>
             <Link 
-              to="/contact" 
+              to="/contact/" 
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-cyan-900 font-bold rounded-2xl hover:bg-cyan-50 transition-colors shadow-lg"
             >
               Request a Calculator <ArrowRight className="w-5 h-5" />

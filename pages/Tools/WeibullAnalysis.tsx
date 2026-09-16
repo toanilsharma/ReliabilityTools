@@ -70,7 +70,7 @@ const WeibullAnalysis: React.FC = () => {
     addRecentTool({
       id: 'weibull',
       name: 'Weibull Analysis',
-      path: '/weibull-analysis'
+      path: '/tools/weibull/'
     });
 
     const searchParams = new URLSearchParams(location.search);
@@ -680,10 +680,10 @@ const WeibullAnalysis: React.FC = () => {
             <strong>β &lt; 1 (Decreasing Failure Rate - Infant Mortality):</strong> Components are highly likely to fail early in their life cycle. These "burn-in" failures are usually caused by manufacturing defects, poor installation, or transport damage. 
           </li>
           <li>
-            <strong>β = 1 (Constant Failure Rate - Random Failures):</strong> The failure rate is independent of time. This indicates random events (such as power surges, foreign object damage, or operator errors). Under this condition, the Weibull distribution simplifies to the Exponential distribution, which is the baseline model used in our standard <Link to="/mtbf-calculator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link> (or <strong>MTBF calculator free</strong> online tool).
+            <strong>β = 1 (Constant Failure Rate - Random Failures):</strong> The failure rate is independent of time. This indicates random events (such as power surges, foreign object damage, or operator errors). Under this condition, the Weibull distribution simplifies to the Exponential distribution, which is the baseline model used in our standard <Link to="/tools/mtbf/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Calculator</Link> (or <strong>MTBF calculator free</strong> online tool).
           </li>
           <li>
-            <strong>β &gt; 1 (Increasing Failure Rate - Wear-Out Phase):</strong> The failure rate increases as time goes on. This is characteristic of assets subjected to physical degradation, fatigue, corrosion, or friction. Typical wear-out wear parameters fall between β = 1.5 and 4.0 (e.g., bearings, valves, motor brushes). In this phase, reactive maintenance becomes expensive, and engineers must calculate the <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link> to swap parts before they fail.
+            <strong>β &gt; 1 (Increasing Failure Rate - Wear-Out Phase):</strong> The failure rate increases as time goes on. This is characteristic of assets subjected to physical degradation, fatigue, corrosion, or friction. Typical wear-out wear parameters fall between β = 1.5 and 4.0 (e.g., bearings, valves, motor brushes). In this phase, reactive maintenance becomes expensive, and engineers must calculate the <Link to="/tools/optimal-replacement/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age</Link> to swap parts before they fail.
           </li>
         </ul>
 
@@ -731,7 +731,7 @@ const WeibullAnalysis: React.FC = () => {
           <BlockMath math="F(t_i) \approx \frac{i - 0.3}{N + 0.4}" />
         </div>
         <p>
-          Where <InlineMath math="i" /> is the sorted rank of the failure, and <InlineMath math="N" /> is the total number of data points. For small sample sizes, computing the confidence interval of these rankings is critical to understanding uncertainty. You can calculate statistical ranges using our <Link to="/tools/confidence-interval" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Confidence Interval Calculator</Link>.
+          Where <InlineMath math="i" /> is the sorted rank of the failure, and <InlineMath math="N" /> is the total number of data points. For small sample sizes, computing the confidence interval of these rankings is critical to understanding uncertainty. You can calculate statistical ranges using our <Link to="/tools/confidence-interval/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">MTBF Confidence Interval Calculator</Link>.
         </p>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
@@ -799,13 +799,13 @@ const WeibullAnalysis: React.FC = () => {
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
             <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">Age-Based Maintenance (β &gt; 1.5)</h4>
             <p className="text-sm">
-              If Beta is high, components degrade predictably. Preventive replacements make sense. Calculate the optimal swap interval using our <Link to="/tools/optimal-replacement" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link> and schedule them in the <Link to="/tools/pm" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.
+              If Beta is high, components degrade predictably. Preventive replacements make sense. Calculate the optimal swap interval using our <Link to="/tools/optimal-replacement/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Optimal Replacement Age Tool</Link> and schedule them in the <Link to="/tools/pm/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">PM Scheduler</Link>.
             </p>
           </div>
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
             <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">Condition-Based Monitoring (β ≈ 1.0)</h4>
             <p className="text-sm">
-              For random failures, calendar replacements are useless. Instead, implement vibration analysis, oil analysis, or thermal imaging to catch failures. Compare costs over the lifecycle via our <Link to="/tools/lcc" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
+              For random failures, calendar replacements are useless. Instead, implement vibration analysis, oil analysis, or thermal imaging to catch failures. Compare costs over the lifecycle via our <Link to="/tools/lcc/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
             </p>
           </div>
         </div>

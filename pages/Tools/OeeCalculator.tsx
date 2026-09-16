@@ -167,7 +167,7 @@ const OeeCalculator: React.FC = () => {
     addRecentTool({
         id: 'oee-calculator',
         name: 'OEE Calculator',
-        path: '/oee-calculator'
+        path: '/tools/oee/'
     });
 
     const searchParams = new URLSearchParams(location.search);

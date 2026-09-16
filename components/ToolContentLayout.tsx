@@ -7,6 +7,7 @@ import { getSeoMetadata } from '../utils/seoConfig';
 import { createToolSchema, createFaqSchema } from '../utils/schemaGenerator';
 
 import ToolToArticleBanner from './ToolToArticleBanner';
+import CalculationPipeline from './CalculationPipeline';
 
 interface FAQItem {
     question: string;
@@ -109,6 +110,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 
                     <ToolToArticleBanner />
 
+                    <CalculationPipeline />
+
                     <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>
                         <div className="space-y-4">
@@ -150,7 +153,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                         <div className="bg-gradient-to-br from-cyan-900 to-slate-900 rounded-xl p-6 text-white shadow-lg">
                             <h3 className="font-bold text-lg mb-2">Need Help?</h3>
                             <p className="text-cyan-100 text-sm mb-4">Get professional reliability consulting for your facility.</p>
-                            <Link to="/contact" className="block w-full bg-white text-cyan-900 text-center font-bold py-2 rounded-lg hover:bg-cyan-50 transition-colors">
+                            <Link to="/contact/" className="block w-full bg-white text-cyan-900 text-center font-bold py-2 rounded-lg hover:bg-cyan-50 transition-colors">
                                 Contact Us
                             </Link>
                         </div>

@@ -258,7 +258,7 @@ const LccCalculator: React.FC = () => {
     addRecentTool({
       id: 'lcc',
       name: 'Life Cycle Cost (LCC)',
-      path: '/tools/lcc'
+      path: '/tools/lcc/'
     });
   }, []);
 

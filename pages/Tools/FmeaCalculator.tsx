@@ -335,7 +335,7 @@ const FmeaCalculator: React.FC = () => {
           </li>
         </ul>
         <p>
-          To systematically validate your design changes against standard checklists, you can run our <Link to="/tools/validator" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Reliability Validator</Link> to ensure full engineering standard compliance.
+          To systematically validate your design changes against standard checklists, you can run our <Link to="/tools/validator/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">System Reliability Validator</Link> to ensure full engineering standard compliance.
         </p>
 
         <h2 id="how-to" className="text-3xl font-extrabold text-slate-900 dark:text-white mt-12 mb-6">
@@ -453,13 +453,13 @@ const FmeaCalculator: React.FC = () => {
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
             <h4 className="font-bold text-rose-600 dark:text-rose-455 mb-2">Fault Tree Analysis (FTA)</h4>
             <p className="text-sm">
-               Use a top-down deductive model to identify the combination of component failures, software bugs, and human errors that could lead to a defined "Top Event" hazard. Analyze logical relationships using our interactive <Link to="/tools/fta" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fault Tree Analysis Tool</Link>.
+               Use a top-down deductive model to identify the combination of component failures, software bugs, and human errors that could lead to a defined "Top Event" hazard. Analyze logical relationships using our interactive <Link to="/tools/fta/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fault Tree Analysis Tool</Link>.
             </p>
           </div>
           <div className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
             <h4 className="font-bold text-rose-600 dark:text-rose-455 mb-2">Fishbone Diagram Generator</h4>
             <p className="text-sm">
-              Brainstorm and map all potential causes contributing to a failure mode across the "6 Ms" (Man, Machine, Material, Method, Measurement, Mother Nature). Visualize root causality in our <Link to="/tools/fishbone" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fishbone Diagram Tool</Link>.
+              Brainstorm and map all potential causes contributing to a failure mode across the "6 Ms" (Man, Machine, Material, Method, Measurement, Mother Nature). Visualize root causality in our <Link to="/tools/fishbone/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Fishbone Diagram Tool</Link>.
             </p>
           </div>
         </div>

@@ -127,6 +127,18 @@ export const REDIRECT_MAP: Record<string, string> = {
 
   '/optimal-replacement': '/tools/optimal-replacement/',
   '/tools/optimal-replacement': '/tools/optimal-replacement/',
+
+  '/rcm': '/tools/rcm-decision/',
+  '/tools/rcm': '/tools/rcm-decision/',
+
+  '/downtime-cost': '/tools/downtime-cost/',
+  '/bearing-life': '/tools/bearing-life/',
+  '/vibration-severity': '/tools/vibration-severity/',
+  '/5-why': '/tools/5-why/',
+  '/five-why': '/tools/5-why/',
+  '/pareto': '/tools/pareto/',
+  '/reliability-allocation': '/tools/reliability-allocation/',
+  '/spc': '/tools/spc/',
 };
 
 /**

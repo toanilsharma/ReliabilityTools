@@ -219,7 +219,7 @@ const ReliabilityGrowth: React.FC = () => {
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
       <div className="text-center mb-10">
         <h2 id="overview" className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Crow-AMSAA Theory</h2>
-        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Crow-AMSAA model tracks the effectiveness of TAAF (Test-Analyze-And-Fix) programs. For static system reliability block diagram analysis, use our <Link to="/tools/rbd" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD) Tool</Link>.</p>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">The Crow-AMSAA model tracks the effectiveness of TAAF (Test-Analyze-And-Fix) programs. For static system reliability block diagram analysis, use our <Link to="/tools/rbd/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Reliability Block Diagram (RBD) Tool</Link>.</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
