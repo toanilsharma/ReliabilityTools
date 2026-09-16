@@ -383,33 +383,28 @@ function generateStaticHtml(route, templateHtml) {
       </div>`;
   }
 
-  const semanticBody = `
-  <div id="root">
-    <header style="background: #0f172a; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
-      <a href="/" style="color: #38bdf8; font-size: 1.25rem; font-weight: 800; text-decoration: none;">ReliabilityTools.co.in</a>
-      <nav>
-        <a href="/tools/" style="color: #cbd5e1; margin-left: 1.5rem; text-decoration: none; font-weight: 600;">Tools</a>
-        <a href="/learning/" style="color: #cbd5e1; margin-left: 1.5rem; text-decoration: none; font-weight: 600;">Learning</a>
-        <a href="/downloads/" style="color: #cbd5e1; margin-left: 1.5rem; text-decoration: none; font-weight: 600;">Downloads</a>
-      </nav>
-    </header>
-    <main style="max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b;">
+  if (route !== '/') {
+    const semanticNoscript = `
+  <noscript>
+    <div style="max-width: 1100px; margin: 2rem auto; padding: 2rem; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #0f172a; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
       <nav aria-label="Breadcrumb" style="font-size: 0.875rem; color: #64748b; margin-bottom: 1.5rem;">
         <a href="/" style="color: #0284c7; text-decoration: none;">Home</a> &gt; 
         ${segments.length > 1 ? `<a href="/${segments[0]}/" style="color: #0284c7; text-decoration: none;">${segments[0].toUpperCase()}</a> &gt; ` : ''}
         <span>${escapeHtml(readableName)}</span>
       </nav>
-      <h1 style="font-size: 2.5rem; font-weight: 900; line-height: 1.2; color: #0f172a; margin-bottom: 1rem;">
+      <h1 style="font-size: 2.25rem; font-weight: 800; line-height: 1.2; color: #0f172a; margin-bottom: 1rem;">
         ${escapeHtml(seo.title.split('|')[0].trim())}
       </h1>
-      <p style="font-size: 1.25rem; line-height: 1.6; color: #475569; margin-bottom: 2rem;">
+      <p style="font-size: 1.15rem; line-height: 1.6; color: #475569; margin-bottom: 2rem;">
         ${escapeHtml(seo.description)}
       </p>
       ${enrichmentHtml}
-    </main>
-  </div>`;
+    </div>
+  </noscript>`;
 
-  html = html.replace(/<div id="root">[\s\S]*?<\/div>/i, semanticBody);
+    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, semanticNoscript);
+  }
+
   return html;
 }
 
