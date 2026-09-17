@@ -862,7 +862,7 @@ const LccCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="life cycle cost calculator, LCC calculator, total cost of ownership, NPV calculator capex opex, break even payback year, finance reliability engineering, asset lifecycle cost ISO 15663"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/lcc"
+      canonicalUrl="https://reliabilitytools.co.in/tools/lcc/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

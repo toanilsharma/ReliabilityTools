@@ -497,7 +497,7 @@ const OeeCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="OEE calculator free, overall equipment effectiveness, OEE formula, manufacturing efficiency, TPM India, six big losses, availability performance quality, TEEP vs OEE"
-      canonicalUrl="https://reliabilitytools.co.in/#/oee-calculator"
+      canonicalUrl="https://reliabilitytools.co.in/tools/oee/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

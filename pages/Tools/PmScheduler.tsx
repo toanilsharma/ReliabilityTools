@@ -275,7 +275,7 @@ const PmScheduler: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="preventive maintenance scheduler, PM calendar planner, PM interval calculator, maintenance scheduling tool, PM task optimization, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/pm"
+      canonicalUrl="https://reliabilitytools.co.in/tools/pm/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

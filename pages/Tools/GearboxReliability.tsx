@@ -352,7 +352,7 @@ const GearboxReliability: React.FC = () => {
         }
       ]}
       keywords="gearbox reliability, AGMA safety factor, gear contact stress, gear bending stress, gearbox design life, AGMA 2001-D04, gear reliability factor, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/gearbox"
+      canonicalUrl="https://reliabilitytools.co.in/tools/gearbox/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

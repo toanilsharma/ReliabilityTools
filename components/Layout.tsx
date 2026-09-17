@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { Menu, X, ShieldCheck, ChevronDown, Sun, Moon, AlertTriangle, ExternalLink, Calculator, Zap, Linkedin, Instagram, Facebook, Twitter, Mail, Search } from 'lucide-react';
-import { TOOLS, AUTHOR_NAME, ARTICLES } from '../constants';
+import { TOOLS, AUTHOR_NAME, AUTHOR_LINKEDIN, ARTICLES } from '../constants';
 import CookieConsent from './CookieConsent';
 import CommandPalette from './CommandPalette';
 import { useTheme } from '../context/ThemeContext';
@@ -358,7 +358,7 @@ const Layout: React.FC = () => {
             {/* Copyright */}
             <div className="text-center">
               <p className="text-sm text-slate-400">
-                &copy; {new Date().getFullYear()} Reliability Tools. Created by: <span className="text-white font-medium">{AUTHOR_NAME}</span>. All rights reserved.
+                &copy; {new Date().getFullYear()} Reliability Tools. Created by: <a href={AUTHOR_LINKEDIN} target="_blank" rel="noopener noreferrer" className="text-white hover:text-cyan-400 font-medium underline decoration-cyan-500/50 transition-colors inline-flex items-center gap-1">{AUTHOR_NAME} <Linkedin className="w-3.5 h-3.5 inline text-cyan-400" /></a>. All rights reserved.
               </p>
             </div>
           </div>

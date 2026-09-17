@@ -210,7 +210,7 @@ const WarrantyPrediction: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="warranty prediction model, warranty cost estimator, Weibull warranty calculator, product return forecasting, claims projection calculator, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/warranty"
+      canonicalUrl="https://reliabilitytools.co.in/tools/warranty/"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Warranty Forecaster', applicationCategory: 'BusinessApplication' }}
     />
   );

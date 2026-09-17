@@ -279,7 +279,7 @@ const ReliabilityGrowth: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="reliability growth tracking, Duane model, Crow-AMSAA calculator, reliability growth curve, Duane parameter estimation, failure rate progression, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/growth"
+      canonicalUrl="https://reliabilitytools.co.in/tools/growth/"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Reliability Growth Model', applicationCategory: 'BusinessApplication' }}
     />
   );

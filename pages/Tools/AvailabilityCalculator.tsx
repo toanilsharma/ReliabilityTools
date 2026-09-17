@@ -515,7 +515,7 @@ const AvailabilityCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="availability calculator, system availability, MTBF MTTR availability, inherent availability, operational availability India, five nines, uptime calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/availability"
+      canonicalUrl="https://reliabilitytools.co.in/tools/availability/"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

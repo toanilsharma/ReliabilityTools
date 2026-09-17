@@ -318,7 +318,12 @@ function generateStaticHtml(route, templateHtml) {
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web Browser",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "author": { "@type": "Person", "name": "Anil Sharma" },
+      "author": { 
+        "@type": "Person", 
+        "name": "Anil Sharma",
+        "url": "https://www.linkedin.com/in/toanilsharma/",
+        "sameAs": ["https://www.linkedin.com/in/toanilsharma/"]
+      },
       "publisher": { "@type": "Organization", "name": "Reliability Tools", "url": BASE_URL }
     });
 

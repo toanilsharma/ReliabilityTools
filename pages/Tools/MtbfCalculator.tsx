@@ -208,6 +208,42 @@ const MtbfCalculator: React.FC = () => {
           </button>
         </div>
 
+        {/* Equipment Benchmark Presets */}
+        <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+              <Zap className="w-3.5 h-3.5" /> Equipment Benchmark Presets
+            </span>
+            <span className="text-[10px] text-slate-400 font-normal">Click to test real-world defaults</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { name: "Centrifugal Pump", hours: "8760", failures: "3", desc: "~2,920 hrs" },
+              { name: "Electric Motor 45kW", hours: "43800", failures: "1", desc: "~43,800 hrs" },
+              { name: "Screw Compressor", hours: "24000", failures: "2", desc: "~12,000 hrs" },
+              { name: "CNC Spindle", hours: "8500", failures: "1", desc: "~8,500 hrs" },
+            ].map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => {
+                  setState(s => ({
+                    ...s,
+                    totalHours: p.hours,
+                    failures: p.failures,
+                    result: calculateMTBF(parseFloat(p.hours), parseFloat(p.failures))
+                  }));
+                  setErrors({});
+                }}
+                className="px-2.5 py-2 rounded-lg text-left text-xs bg-white dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700 hover:border-cyan-500/40 transition-all flex flex-col justify-center"
+              >
+                <span className="font-bold truncate">{p.name}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{p.desc}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <form onSubmit={handleCalculate} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
@@ -637,7 +673,7 @@ const MtbfCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="free MTBF calculator, MTBF calculator online, mean time between failures, MTTF calculator, reliability calculator India, MTBF formula, failure rate calculator, MTBF calculation example"
-      canonicalUrl="https://reliabilitytools.co.in/#/mtbf-calculator"
+      canonicalUrl="https://reliabilitytools.co.in/tools/mtbf/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

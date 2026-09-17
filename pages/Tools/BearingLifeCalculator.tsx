@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { Settings, Clock, Activity, Shield, Info, CheckCircle2, Copy, Check, Share2, TrendingUp, RotateCcw } from 'lucide-react';
+import { Settings, Clock, Activity, Shield, Info, CheckCircle2, Copy, Check, Share2, TrendingUp, RotateCcw, FileSpreadsheet, Zap } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import RelatedTools from '../../components/RelatedTools';
@@ -101,6 +101,45 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/bearing-l
     setTimeout(() => setCopiedSnippet(false), 2000);
   };
 
+  const BEARING_PRESETS = [
+    { name: "Motor DE (6309)", type: 'ball' as const, c: "55.3", p: "4.2", rpm: "1450", desc: "Ball, L10h ~26k hrs" },
+    { name: "Pump DE (6312)", type: 'ball' as const, c: "85.2", p: "8.5", rpm: "2950", desc: "Ball, L10h ~5.6k hrs" },
+    { name: "Conveyor (22216)", type: 'roller' as const, c: "245.0", p: "32.0", rpm: "120", desc: "Roller, L10h ~120k hrs" },
+    { name: "Gearbox (NU 210)", type: 'roller' as const, c: "68.0", p: "12.0", rpm: "1800", desc: "Roller, L10h ~3k hrs" },
+  ];
+
+  const applyBearingPreset = (p: typeof BEARING_PRESETS[0]) => {
+    setState(s => ({
+      ...s,
+      bearingType: p.type,
+      dynamicLoadC: p.c,
+      equivalentLoadP: p.p,
+      speedRpm: p.rpm
+    }));
+    setErrors({});
+  };
+
+  const handleDownloadBearingTemplate = () => {
+    const csv = [
+      '# ISO 281 Bearing Life Calculation & Asset Register Template',
+      '# Generated from https://reliabilitytools.co.in/tools/bearing-life/',
+      '',
+      'Asset Tag,Machine Name,Bearing Position,Bearing Designation,Bearing Type,Dynamic Load Rating C (kN),Equivalent Dynamic Load P (kN),Speed (RPM),Calculated L10 (Million Revs),Calculated L10h (Hours),ISO 281 Status',
+      'PUMP-101,Main Feed Pump,Drive End,6312,Ball,85.2,8.5,2950,1000.0,5649,Design Conforming',
+      'MTR-204,45kW Primary Motor,Drive End,6309,Ball,55.3,4.2,1450,2290.4,26326,Design Conforming',
+      'CV-001,Primary Belt Conveyor,Head Pulley,22216,Spherical Roller,245.0,32.0,120,892.4,123944,Design Conforming'
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'ISO_281_Bearing_Life_Template.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const faqs = [
     {
       question: 'What is ISO 281 Basic Rating Life (L10)?',
@@ -123,9 +162,42 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/bearing-l
         {/* Input Panel */}
         <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-1 space-y-6">
           <form onSubmit={handleCalculate} className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-              <Settings className="w-4 h-4 text-cyan-500" /> Bearing Parameters
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
+                <Settings className="w-4 h-4 text-cyan-500" /> Bearing Parameters
+              </h3>
+              <button
+                type="button"
+                onClick={handleDownloadBearingTemplate}
+                className="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-bold"
+                title="Download ISO 281 Bearing Life Template (.csv)"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5" /> Excel Template
+              </button>
+            </div>
+
+            {/* Application Benchmark Presets */}
+            <div className="bg-white dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+                  <Zap className="w-3.5 h-3.5" /> Equipment Presets
+                </span>
+                <span className="text-[10px] text-slate-400 font-normal">Click to load</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {BEARING_PRESETS.map((p) => (
+                  <button
+                    key={p.name}
+                    type="button"
+                    onClick={() => applyBearingPreset(p)}
+                    className="px-2 py-1.5 rounded-lg text-left text-xs bg-slate-50 dark:bg-slate-900/60 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700/60 hover:border-cyan-500/40 transition-all flex flex-col justify-center"
+                  >
+                    <span className="font-bold truncate text-[11px]">{p.name}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">{p.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">

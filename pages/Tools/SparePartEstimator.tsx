@@ -287,7 +287,7 @@ const SparePartEstimator: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="spare part estimator, spare parts forecasting, Poisson spares calculator, inventory service level, critical spares calculator, maintenance inventory, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/spares"
+      canonicalUrl="https://reliabilitytools.co.in/tools/spares/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

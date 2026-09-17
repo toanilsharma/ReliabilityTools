@@ -482,7 +482,7 @@ const SilVerification: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="SIL verification calculator, safety integrity level, PFDavg calculator, IEC 61508, safety instrumented system, SIL 1 SIL 2 SIL 3 SIL 4, voting logic PFD, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/sil"
+      canonicalUrl="https://reliabilitytools.co.in/tools/sil/"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

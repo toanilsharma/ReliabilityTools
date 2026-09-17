@@ -280,7 +280,7 @@ const TestPlanner: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="reliability test planner, ALT test planner, accelerated life testing, sample size calculator reliability, test duration calculator, success run testing, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/test-planner"
+      canonicalUrl="https://reliabilitytools.co.in/tools/test-planner/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

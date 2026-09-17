@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Share2, 
-  FileText, // For CSV & PDF
+  FileText, // For PDF
+  FileSpreadsheet, // For Excel / CSV
   FileImage, // For Image
   Copy, 
   Check,
@@ -198,8 +199,8 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
                 className="flex flex-col items-center justify-center p-3 gap-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all group text-slate-700 dark:text-slate-300"
                 title="Download CSV for Excel"
               >
-                <FileText className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 transition-colors" />
-                <span className="text-xs font-semibold">Data (CSV)</span>
+                <FileSpreadsheet className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 transition-colors" />
+                <span className="text-xs font-semibold">Excel (CSV)</span>
               </button>
             )}
 

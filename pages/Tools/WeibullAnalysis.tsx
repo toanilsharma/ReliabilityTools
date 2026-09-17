@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { calculateWeibull, generateWeibullCurves, calculate3ParameterWeibull, generateContourPlotData } from '../../services/reliabilityMath';
 import { WeibullResult } from '../../types';
-import { Activity, Upload, AlertTriangle, CheckCircle2, Download, RotateCcw, Save, Loader2, BookOpen, TrendingUp, BarChart2 } from 'lucide-react';
+import { Activity, Upload, AlertTriangle, CheckCircle2, Download, RotateCcw, Save, Loader2, BookOpen, TrendingUp, BarChart2, FileSpreadsheet, Zap } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import 'katex/dist/katex.min.css';
 import { BlockMath, InlineMath } from 'react-katex';
@@ -243,6 +243,60 @@ const WeibullAnalysis: React.FC = () => {
     });
   };
 
+  const WEIBULL_PRESETS = [
+    {
+      name: "Bearings Wear-Out (β ~ 2.8)",
+      desc: "Mechanical wear failures",
+      data: "1250\n1800\n2200\n2600\n2900\n3100\n3500\n3800+\n4200+"
+    },
+    {
+      name: "Electronics Random (β ~ 1.0)",
+      desc: "Constant failure rate",
+      data: "450\n1120\n2300\n3800\n5100\n7200\n8900+\n12000+"
+    },
+    {
+      name: "Infant Mortality (β ~ 0.6)",
+      desc: "Early defects / burn-in",
+      data: "15\n42\n95\n180\n350\n620\n1400+\n2500+"
+    }
+  ];
+
+  const handleApplyPreset = (preset: typeof WEIBULL_PRESETS[0]) => {
+    setInputData(preset.data);
+    const dataPts = parseRawData(preset.data);
+    if (dataPts.filter(d => !d.suspended).length >= 2) {
+      setResult(calculateWeibull(dataPts));
+    }
+  };
+
+  const handleDownloadWeibullTemplate = () => {
+    const csv = [
+      '# Weibull Life Data Analysis Template (ISO 14224 / IEC 61649 Compliant)',
+      '# Enter failure hours. Append "+" to suspended/censored units that did not fail.',
+      '# Generated from https://reliabilitytools.co.in/tools/weibull/',
+      '',
+      'Time to Failure or Suspension,Status,Asset Tag,Component',
+      '1250,Failed,PUMP-101,Bearing DE',
+      '1800,Failed,PUMP-102,Bearing DE',
+      '2200,Failed,PUMP-103,Bearing DE',
+      '2600,Failed,PUMP-104,Bearing DE',
+      '2900,Failed,PUMP-105,Bearing DE',
+      '3100,Failed,PUMP-106,Bearing DE',
+      '3500,Failed,PUMP-107,Bearing DE',
+      '3800+,Suspended (Still Running),PUMP-108,Bearing DE',
+      '4200+,Suspended (Still Running),PUMP-109,Bearing DE'
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Weibull_Analysis_Data_Template.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const chartColors = {
     grid: theme === 'dark' ? '#334155' : '#e2e8f0',
     axis: theme === 'dark' ? '#94a3b8' : '#64748b',
@@ -347,6 +401,29 @@ const WeibullAnalysis: React.FC = () => {
     <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6" ref={toolWrapperRef}>
       <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-1 space-y-6">
         <div className="space-y-4">
+          {/* Distribution Presets */}
+          <div className="bg-slate-50 dark:bg-slate-900/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+                <Zap className="w-3.5 h-3.5" /> Distribution Benchmark Presets
+              </span>
+              <span className="text-[10px] text-slate-400 font-normal">Click to load</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {WEIBULL_PRESETS.map((p) => (
+                <button
+                  key={p.name}
+                  type="button"
+                  onClick={() => handleApplyPreset(p)}
+                  className="px-2.5 py-1.5 rounded-lg text-left text-xs bg-white dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700 hover:border-cyan-500/40 transition-all"
+                >
+                  <div className="font-bold truncate text-[11px]">{p.name}</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">{p.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-between items-center">
             <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center">
               Failures & Suspensions
@@ -356,12 +433,22 @@ const WeibullAnalysis: React.FC = () => {
                 formula="F(t) = 1 - e^{-(t/\eta)^\beta}"
               />
             </label>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="text-xs flex items-center gap-1 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300"
-            >
-              <Upload className="w-3 h-3" /> Import CSV
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleDownloadWeibullTemplate}
+                className="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold"
+                title="Download Excel / CSV Data Template"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5" /> Excel Template
+              </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="text-xs flex items-center gap-1 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 font-semibold"
+              >
+                <Upload className="w-3 h-3" /> Import CSV
+              </button>
+            </div>
             <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".csv,.txt" className="hidden" />
           </div>
 
@@ -852,7 +939,7 @@ const WeibullAnalysis: React.FC = () => {
       }
       faqs={faqs}
       keywords="Weibull analysis tool, free Weibull calculator, Weibull distribution, beta eta parameters, reliability analysis India, life data analysis, B10 life, characteristic life"
-      canonicalUrl="https://reliabilitytools.co.in/#/weibull-analysis"
+      canonicalUrl="https://reliabilitytools.co.in/tools/weibull/"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

@@ -226,7 +226,7 @@ const CostRiskOptimization: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="cost risk optimization, maintenance cost optimization, optimal PM interval, PM cost vs CM cost, cost risk balance, maintenance cost calculator, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/cost-risk"
+      canonicalUrl="https://reliabilitytools.co.in/tools/cost-risk/"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Cost Risk Optimizer', applicationCategory: 'BusinessApplication' }}
     />
   );

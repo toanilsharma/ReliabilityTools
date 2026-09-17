@@ -43,7 +43,11 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
         setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
-    const canonicalUrl = customCanonicalUrl || defaultSeo.canonical;
+    // Enforce clean canonical URL: ignore legacy hash URLs (#) and prioritize canonical trailing slash from seoConfig
+    const cleanCustomCanonical = customCanonicalUrl && !customCanonicalUrl.includes('#')
+        ? (customCanonicalUrl.endsWith('/') ? customCanonicalUrl : `${customCanonicalUrl}/`)
+        : null;
+    const canonicalUrl = cleanCustomCanonical || defaultSeo.canonical;
 
     // Structured JSON-LD Schemas
     const toolWebAppSchema = createToolSchema(title, description, canonicalUrl, customSchema);
@@ -51,7 +55,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <SEO keywords={keywords} schema={[toolWebAppSchema, faqSchema]} />
+            <SEO canonicalUrl={canonicalUrl} keywords={keywords} schema={[toolWebAppSchema, faqSchema]} />
 
             <div className="mb-10 text-center max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">

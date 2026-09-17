@@ -434,7 +434,7 @@ const ConfidenceInterval: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="MTBF confidence interval, confidence bounds, chi-square reliability, MTBF interval calculator, reliability confidence bounds, error margins MTBF, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/confidence-interval"
+      canonicalUrl="https://reliabilitytools.co.in/tools/confidence-interval/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

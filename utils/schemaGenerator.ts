@@ -54,7 +54,20 @@ export function createToolSchema(
     },
     author: {
       '@type': 'Person',
-      name: 'Anil Sharma'
+      name: 'Anil Sharma',
+      url: 'https://www.linkedin.com/in/toanilsharma/',
+      sameAs: [
+        'https://www.linkedin.com/in/toanilsharma/'
+      ],
+      jobTitle: 'Reliability & Asset Management Engineer',
+      knowsAbout: [
+        'Reliability Engineering',
+        'Weibull Analysis',
+        'MTBF / MTTF Modeling',
+        'FMEA / FMECA',
+        'Predictive Maintenance',
+        'Asset Lifecycle Management'
+      ]
     },
     publisher: {
       '@type': 'Organization',
@@ -103,7 +116,11 @@ export function createArticleSchema(article: ArticleSchemaProps, url: string) {
     dateModified: article.date,
     author: {
       '@type': 'Person',
-      name: article.author || 'Anil Sharma'
+      name: article.author || 'Anil Sharma',
+      url: 'https://www.linkedin.com/in/toanilsharma/',
+      sameAs: [
+        'https://www.linkedin.com/in/toanilsharma/'
+      ]
     },
     publisher: {
       '@type': 'Organization',

@@ -214,7 +214,7 @@ const FishboneDiagramGenerator: React.FC = () => {
             content={Content}
             faqs={faqs}
             keywords="fishbone diagram generator, ishikawa diagram, cause and effect diagram, root cause analysis, 6Ms diagram tool, free RCA tool online, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/fishbone"
+      canonicalUrl="https://reliabilitytools.co.in/tools/fishbone/"
       schema={{
                 "@context": "https://schema.org",
                 "@type": "SoftwareApplication",

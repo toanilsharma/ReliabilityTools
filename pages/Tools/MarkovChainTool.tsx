@@ -352,7 +352,7 @@ const MarkovChainTool: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="Markov chain modeler, state transition diagram, reliability Markov model, steady state probability, Markov availability, transition matrix calculator, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/markov"
+      canonicalUrl="https://reliabilitytools.co.in/tools/markov/"
       schema={{ "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Markov Modeler", "applicationCategory": "BusinessApplication" }}
     />
   );

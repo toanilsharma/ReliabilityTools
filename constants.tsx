@@ -4,7 +4,8 @@ import { NavigationItem, ToolDefinition, FAQItem, LearningArticle } from './type
 import { ARTICLES as dataArticles } from './data/articles';
 
 export const AUTHOR_NAME = "Anil Sharma";
-export const AUTHOR_BIO = "Technical professional with over 25 years of experience in improving system reliability, predictive maintenance and lifecycle analysis for industrial applications.";
+export const AUTHOR_LINKEDIN = "https://www.linkedin.com/in/toanilsharma/";
+export const AUTHOR_BIO = "Technical professional with over 25 years of experience in improving system reliability, predictive maintenance, and lifecycle analysis for continuous process industries (cement, steel, and industrial manufacturing).";
 export const CONTACT_EMAIL = "info.onesharma@gmail.com";
 
 export const SERVICE_LEVELS = [

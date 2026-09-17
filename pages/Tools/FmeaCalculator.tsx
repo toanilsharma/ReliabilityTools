@@ -506,7 +506,7 @@ const FmeaCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="FMEA calculator, RPN calculator online, failure mode effects analysis, FMEA tool free, risk priority number, FMEA India, FMEA worksheet, IEC 60812, DFMEA PFMEA"
-      canonicalUrl="https://reliabilitytools.co.in/#/fmea-tool"
+      canonicalUrl="https://reliabilitytools.co.in/tools/fmea/"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

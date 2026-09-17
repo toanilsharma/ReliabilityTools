@@ -545,7 +545,7 @@ const RbdTool: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="reliability block diagram calculator, RBD builder, series parallel reliability, common cause failures beta, Monte Carlo system simulation reliability, safety loops redundancy"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/rbd"
+      canonicalUrl="https://reliabilitytools.co.in/tools/rbd/"
       schema={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',

@@ -497,7 +497,7 @@ const UnitConverter: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="engineering unit converter, failure rate converter, FITs to FPMH, MTBF to failure rate, reliability unit conversions, engineering converter, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/converter"
+      canonicalUrl="https://reliabilitytools.co.in/tools/converter/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

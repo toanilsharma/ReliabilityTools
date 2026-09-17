@@ -337,7 +337,7 @@ const OptimalReplacement: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="optimal replacement age, group replacement policy, block replacement, Weibull replacement age, wear out replacement, maintenance replacement interval, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/optimal-replacement"
+      canonicalUrl="https://reliabilitytools.co.in/tools/optimal-replacement/"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Optimal Replacement Age Calculator', applicationCategory: 'BusinessApplication' }}
     />
   );

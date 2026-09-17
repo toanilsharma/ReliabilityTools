@@ -186,7 +186,7 @@ const HazardRateCalculator: React.FC = () => {
       content={Content}
       faqs={faqs}
       keywords="hazard rate calculator, failure rate lambda, conditional failure probability, constant hazard rate, hazard rate formula, reliability rate, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/hazard-rate"
+      canonicalUrl="https://reliabilitytools.co.in/tools/hazard-rate/"
       schema={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Hazard Rate Calculator', applicationCategory: 'UtilitiesApplication' }}
     />
   );

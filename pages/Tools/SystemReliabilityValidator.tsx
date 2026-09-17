@@ -195,7 +195,7 @@ const SystemReliabilityValidator: React.FC = () => {
             content={Content}
             faqs={faqs}
             keywords="system reliability validator, engineering compliance checklist, reliability audit tool, validation check tool, design compliance verification, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/validator"
+      canonicalUrl="https://reliabilitytools.co.in/tools/validator/"
       schema={{
                 "@context": "https://schema.org",
                 "@type": "SoftwareApplication",

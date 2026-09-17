@@ -1072,7 +1072,7 @@ const MttrCalculator: React.FC = () => {
       }
       faqs={faqs}
       keywords="MTTR calculator, mean time to repair calculator, MDT calculator, mean downtime, wrench time efficiency, reliability engineering calculators, plant uptime calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/mttr"
+      canonicalUrl="https://reliabilitytools.co.in/tools/mttr/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

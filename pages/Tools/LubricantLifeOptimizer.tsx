@@ -334,7 +334,7 @@ const LubricantLifeOptimizer: React.FC = () => {
         }
       ]}
       keywords="lubricant life optimizer, grease oil life calculator, Arrhenius rate 10 degree, oil contamination factor, ISO 4406 lubricant, bearing grease life, reliability engineering calculator"
-      canonicalUrl="https://reliabilitytools.co.in/#/tools/lubricant-life"
+      canonicalUrl="https://reliabilitytools.co.in/tools/lubricant-life/"
       schema={{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
