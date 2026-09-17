@@ -318,7 +318,7 @@ const Layout: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="https://electrosafe.homes" target="_blank" rel="noopener noreferrer" className="group block hover:bg-slate-800/50 -mx-3 p-3 rounded-lg transition-all">
+                  <a href="https://electrosafe.netlify.app" target="_blank" rel="noopener noreferrer" className="group block hover:bg-slate-800/50 -mx-3 p-3 rounded-lg transition-all">
                     <div className="flex items-center gap-2 font-bold text-slate-200 group-hover:text-cyan-400 mb-1">
                       <Zap className="w-4 h-4" />
                       ElectroSafe Homes
