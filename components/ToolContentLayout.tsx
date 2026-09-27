@@ -7,6 +7,7 @@ import { getSeoMetadata } from '../utils/seoConfig';
 import { createToolSchema, createFaqSchema } from '../utils/schemaGenerator';
 
 import ToolToArticleBanner from './ToolToArticleBanner';
+import LearnByPlayingCard from './LearnByPlayingCard';
 import CalculationPipeline from './CalculationPipeline';
 import { trackResultShared } from '../utils/analytics';
 
@@ -113,6 +114,8 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     <article className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-a:text-cyan-600 dark:prose-a:text-cyan-400 hover:prose-a:text-cyan-500">
                         {content}
                     </article>
+
+                    <LearnByPlayingCard />
 
                     <ToolToArticleBanner />
 

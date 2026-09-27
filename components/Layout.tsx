@@ -186,7 +186,7 @@ const Layout: React.FC = () => {
       {/* Footer */}
       <footer role="contentinfo" className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-900 pt-16 pb-12 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <ShieldCheck className="h-6 w-6 text-cyan-400" />
@@ -229,6 +229,20 @@ const Layout: React.FC = () => {
                 <li><Link to="/knowledge-hub/" className="hover:text-cyan-400 transition-colors">Knowledge Hub</Link></li>
                 <li><Link to="/reliability-engineering-glossary/" className="hover:text-cyan-400 transition-colors">Glossary</Link></li>
                 <li><Link to="/contact/" className="hover:text-cyan-400 transition-colors">Contact Us</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6 flex items-center gap-1.5">
+                <span className="text-amber-400">🎮</span> Play & Learn
+              </h3>
+              <ul className="space-y-3 text-sm text-slate-400">
+                <li><Link to="/play/" className="hover:text-cyan-400 transition-colors font-semibold text-slate-300">Play Hub Overview</Link></li>
+                <li><Link to="/play/uptime-tycoon/" className="hover:text-cyan-400 transition-colors">Uptime Tycoon</Link></li>
+                <li><Link to="/play/termle/" className="hover:text-cyan-400 transition-colors">Termle Daily</Link></li>
+                <li><Link to="/play/guess-the-beta/" className="hover:text-cyan-400 transition-colors">Guess the Beta</Link></li>
+                <li><Link to="/play/rca-detective/" className="hover:text-cyan-400 transition-colors">RCA Detective</Link></li>
+                <li><Link to="/play/flashcards/" className="hover:text-cyan-400 transition-colors">Glossary Flashcards</Link></li>
+                <li><Link to="/skill-test/" className="hover:text-cyan-400 transition-colors">Mock Certification Exam</Link></li>
               </ul>
             </div>
             <div>

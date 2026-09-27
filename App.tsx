@@ -81,6 +81,7 @@ const GuessTheBeta = lazy(() => import('./pages/Play/GuessTheBeta'));
 const Flashcards = lazy(() => import('./pages/Play/Flashcards'));
 const Leaderboard = lazy(() => import('./pages/Play/Leaderboard'));
 const UptimeTycoon = lazy(() => import('./pages/Play/UptimeTycoon'));
+const RcaDetective = lazy(() => import('./pages/Play/RcaDetective'));
 
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 import ContextGlossary from './components/ContextGlossary';
@@ -151,6 +152,7 @@ const App: React.FC = () => {
               <Route path="play/uptime-tycoon" element={<UptimeTycoon />} />
               <Route path="play/termle" element={<Termle />} />
               <Route path="play/guess-the-beta" element={<GuessTheBeta />} />
+              <Route path="play/rca-detective" element={<RcaDetective />} />
               <Route path="play/flashcards" element={<Flashcards />} />
               <Route path="play/leaderboard" element={<Leaderboard />} />
 

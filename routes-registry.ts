@@ -745,6 +745,7 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
   },
 
   // ==========================================
+  // ==========================================
   // 3. GAMES & PUZZLES (type: game)
   // ==========================================
   {
@@ -753,12 +754,12 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.9,
     changefreq: 'weekly',
-    schemaTypes: ['CollectionPage', 'BreadcrumbList'],
-    titleTemplate: 'Play Hub - Reliability Engineering Games & Puzzles | Reliability Tools',
+    schemaTypes: ['ItemList', 'CollectionPage', 'BreadcrumbList'],
+    titleTemplate: 'Play Hub – Reliability Engineering Games & Puzzles | Reliability Tools',
     descriptionTemplate: 'Master reliability physics, failure distributions, and terminology through daily puzzles, Weibull histogram estimation, and spaced repetition flashcards.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' }
+      { name: 'Play', path: '/play/' }
     ]
   },
   {
@@ -767,12 +768,12 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.9,
     changefreq: 'weekly',
-    schemaTypes: ['SoftwareApplication', 'BreadcrumbList'],
-    titleTemplate: 'Uptime Tycoon - Plant Reliability Simulation Game | Reliability Tools',
+    schemaTypes: ['Game', 'VideoGame', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Uptime Tycoon – Free Plant Reliability Simulation Game | Reliability Tools',
     descriptionTemplate: 'Command a 10-asset manufacturing plant across 24 simulated months. Master Weibull failure physics, solve P-F warnings, and maximize cumulative profit.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' },
+      { name: 'Play', path: '/play/' },
       { name: 'Uptime Tycoon', path: '/play/uptime-tycoon/' }
     ]
   },
@@ -782,12 +783,12 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.8,
     changefreq: 'daily',
-    schemaTypes: ['SoftwareApplication', 'BreadcrumbList'],
-    titleTemplate: 'Termle - Daily Reliability Word Guesser | Reliability Tools',
+    schemaTypes: ['Game', 'VideoGame', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Termle – Daily Reliability Engineering Word Guesser | Reliability Tools',
     descriptionTemplate: 'Test your reliability engineering vocabulary daily. Guess the 4-to-7 letter reliability engineering term in 6 attempts with glossary clues.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' },
+      { name: 'Play', path: '/play/' },
       { name: 'Termle', path: '/play/termle/' }
     ]
   },
@@ -797,13 +798,28 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.8,
     changefreq: 'weekly',
-    schemaTypes: ['SoftwareApplication', 'BreadcrumbList'],
-    titleTemplate: 'Guess the Beta - Weibull Histogram Estimation Game | Reliability Tools',
+    schemaTypes: ['Game', 'VideoGame', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Guess the Beta – Weibull Distribution Estimation Game | Reliability Tools',
     descriptionTemplate: 'Estimate Weibull shape (β) and scale (η) parameters across 5 rounds of simulated equipment failure histograms with failure physics explanations.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' },
+      { name: 'Play', path: '/play/' },
       { name: 'Guess the Beta', path: '/play/guess-the-beta/' }
+    ]
+  },
+  {
+    path: '/play/rca-detective/',
+    type: 'game',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Game', 'VideoGame', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'RCA Detective – Root Cause Failure Investigation Game | Reliability Tools',
+    descriptionTemplate: 'Solve industrial equipment breakdown mysteries. Inspect SCADA trends, oil lab reports, and fractography to deduce physical and latent root causes.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Play', path: '/play/' },
+      { name: 'RCA Detective', path: '/play/rca-detective/' }
     ]
   },
   {
@@ -812,13 +828,13 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.8,
     changefreq: 'weekly',
-    schemaTypes: ['SoftwareApplication', 'BreadcrumbList'],
-    titleTemplate: 'Reliability Glossary Flashcards - Spaced Repetition | Reliability Tools',
+    schemaTypes: ['Game', 'VideoGame', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Reliability Glossary Flashcards – Spaced Repetition Game | Reliability Tools',
     descriptionTemplate: 'Master 50+ industrial reliability engineering terms with SuperMemo SM-2 spaced repetition flashcards and daily study streaks.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' },
-      { name: 'Flashcards', path: '/play/flashcards/' }
+      { name: 'Play', path: '/play/' },
+      { name: 'Glossary Flashcards', path: '/play/flashcards/' }
     ]
   },
   {
@@ -828,11 +844,11 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     sitemapPriority: 0.0,
     changefreq: 'weekly',
     schemaTypes: ['WebPage', 'BreadcrumbList'],
-    titleTemplate: 'Play Hub Leaderboard - Personal Best Records | Reliability Tools',
-    descriptionTemplate: 'Personal best scores, streaks, and achievements across Termle, Guess the Beta, and Flashcards.',
+    titleTemplate: 'Play Hub Leaderboard & High Scores (Local) | Reliability Tools',
+    descriptionTemplate: 'Personal best scores, streaks, and achievements across Termle, Guess the Beta, RCA Detective, and Flashcards.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Play Hub', path: '/play/' },
+      { name: 'Play', path: '/play/' },
       { name: 'Leaderboard', path: '/play/leaderboard/' }
     ]
   },
@@ -1105,12 +1121,12 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     indexable: true,
     sitemapPriority: 0.5,
     changefreq: 'monthly',
-    schemaTypes: ['Quiz', 'BreadcrumbList'],
-    titleTemplate: 'Reliability Engineer Skill Assessment Test | Reliability Tools',
+    schemaTypes: ['Quiz', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Reliability Engineer Mock Exam & Certification Quiz | Reliability Tools',
     descriptionTemplate: 'Test your reliability engineering knowledge across Weibull analysis, MTBF calculations, FMEA, RBD, and maintenance strategy.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Skill Test', path: '/skill-test/' }
+      { name: 'Mock Exam', path: '/skill-test/' }
     ]
   },
   {
@@ -1120,11 +1136,11 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     sitemapPriority: 0.0,
     changefreq: 'monthly',
     schemaTypes: ['Quiz', 'BreadcrumbList'],
-    titleTemplate: 'Interactive Reliability Exam In Progress | Reliability Tools',
+    titleTemplate: 'Reliability Engineering Mock Exam in Progress | Reliability Tools',
     descriptionTemplate: 'Take the interactive 20-question reliability engineering certification quiz and evaluate your diagnostic competence.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Skill Test', path: '/skill-test/' },
+      { name: 'Mock Exam', path: '/skill-test/' },
       { name: 'Quiz', path: '/skill-test/quiz/' }
     ]
   },
@@ -1135,11 +1151,11 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
     sitemapPriority: 0.0,
     changefreq: 'monthly',
     schemaTypes: ['Quiz', 'BreadcrumbList'],
-    titleTemplate: 'Reliability Engineer Exam Results & Scorecard | Reliability Tools',
+    titleTemplate: 'Reliability Engineering Mock Exam Results Scorecard | Reliability Tools',
     descriptionTemplate: 'View your reliability engineering quiz score, detailed answers breakdown, and personalized learning recommendations.',
     breadcrumbs: [
       { name: 'Home', path: '/' },
-      { name: 'Skill Test', path: '/skill-test/' },
+      { name: 'Mock Exam', path: '/skill-test/' },
       { name: 'Results', path: '/skill-test/results/' }
     ]
   },

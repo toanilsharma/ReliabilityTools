@@ -76,18 +76,31 @@ function generateStaticHtml(route, templateHtml) {
   html = html.replace(/<meta\s+property=["']twitter:[^"']*["'][^>]*>/gi, '');
   html = html.replace(/<meta\s+name=["']twitter:[^"']*["'][^>]*>/gi, '');
 
+  const GAME_OG_IMAGES = {
+    '/play/': `${BASE_URL}/og/play-hub.png`,
+    '/play/uptime-tycoon/': `${BASE_URL}/og/uptime-tycoon.png`,
+    '/play/termle/': `${BASE_URL}/og/termle.png`,
+    '/play/guess-the-beta/': `${BASE_URL}/og/guess-the-beta.png`,
+    '/play/rca-detective/': `${BASE_URL}/og/rca-detective.png`,
+    '/play/flashcards/': `${BASE_URL}/og/flashcards.png`,
+    '/skill-test/': `${BASE_URL}/og/skill-test.png`
+  };
+
+  const ogImageUrl = GAME_OG_IMAGES[normalizedRoute] || `${BASE_URL}/social-preview.png`;
+  const isGameRoute = normalizedRoute.startsWith('/play/') && normalizedRoute !== '/play/';
+
   const socialMeta = `
   <!-- SEO & Social Sharing (Pre-rendered) -->
   <meta property="og:title" content="${escapeHtml(seo.title)}" data-rh="true" />
   <meta property="og:description" content="${escapeHtml(seo.description)}" data-rh="true" />
   <meta property="og:url" content="${seo.canonical}" data-rh="true" />
-  <meta property="og:type" content="website" data-rh="true" />
+  <meta property="og:type" content="${isGameRoute ? 'game' : 'website'}" data-rh="true" />
   <meta property="og:site_name" content="Reliability Tools" data-rh="true" />
-  <meta property="og:image" content="${BASE_URL}/social-preview.png" data-rh="true" />
+  <meta property="og:image" content="${ogImageUrl}" data-rh="true" />
   <meta name="twitter:card" content="summary_large_image" data-rh="true" />
   <meta name="twitter:title" content="${escapeHtml(seo.title)}" data-rh="true" />
   <meta name="twitter:description" content="${escapeHtml(seo.description)}" data-rh="true" />
-  <meta name="twitter:image" content="${BASE_URL}/social-preview.png" data-rh="true" />
+  <meta name="twitter:image" content="${ogImageUrl}" data-rh="true" />
   <meta name="robots" content="${seo.indexable === false ? 'noindex, follow' : 'index, follow'}" data-rh="true" />`;
 
   html = html.replace('</head>', `${socialMeta}\n</head>`);
@@ -109,6 +122,113 @@ function generateStaticHtml(route, templateHtml) {
   };
 
   let schemas = [breadcrumbSchema];
+
+  // Per-game enrichment data for unique pre-rendered landing shells & FAQPage schemas
+  const GAME_ENRICHMENT = {
+    '/play/': {
+      category: 'Interactive Suite',
+      howToPlay: [
+        'Select from 5 interactive educational games: plant management simulation, daily vocabulary guessing, Weibull estimation, failure forensics, or spaced repetition flashcards.',
+        'Play directly in your browser with zero registration or downloads. All scores, streaks, and simulation states save automatically in local storage.',
+        'Track your high scores, extend daily study streaks, and benchmark your engineering competence.'
+      ],
+      whatYouLearn: 'Asset degradation physics, Weibull parameter intuition, Root Cause Analysis (RCA), maintenance optimization trade-offs, and standard ISO 14224 terminology.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, the Reliability Engineering Play Hub and all included games are 100% free with no sign-up, subscriptions, or paywalls.' },
+        { q: 'Do I need to create an account?', a: 'No account required. All scores, streaks, and saved states are preserved privately in your browser local storage.' },
+        { q: 'What will I learn from the Play Hub?', a: 'You will master asset failure dynamics, Weibull distribution physics, Root Cause Analysis (RCA), preventive maintenance trade-offs, and ISO 14224 terminology.' }
+      ]
+    },
+    '/play/uptime-tycoon/': {
+      category: 'Plant Reliability Simulation Game',
+      howToPlay: [
+        'Take command as Plant Reliability Director over a 10-asset manufacturing fleet (Crushers, Pumps, Kilns, Compressors, etc.) across 24 simulated operating months.',
+        'Assign maintenance strategies per asset: Run-to-Failure (RTF), Time-Based PM, Condition-Based PdM (IoT sensor monitoring), or Capital Redesign.',
+        'Respond to P-F curve degradation warnings before catastrophic secondary damage occurs.',
+        'Maximize cumulative plant profit, maintain high availability and OEE, and receive an end-of-game strategy debrief certificate.'
+      ],
+      whatYouLearn: 'Asset degradation curves, Weibull shape (beta) and scale (eta) dynamics, economic trade-offs of preventive vs corrective repairs, sensor ROI, and overall plant availability modeling.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, Uptime Tycoon is 100% free with no subscription or hidden charges. Built for maintenance professionals and engineering students.' },
+        { q: 'Do I need to create an account?', a: 'No account or login is required. All plant states, monthly turns, and certificate cards save locally in your browser.' },
+        { q: 'What will I learn from Uptime Tycoon?', a: 'You will learn asset degradation dynamics, Weibull distribution physics (beta and eta), P-F curve detection intervals, preventive maintenance scheduling, predictive sensor ROI, and balance sheet plant profit optimization across 24 operating months.' }
+      ]
+    },
+    '/play/termle/': {
+      category: 'Daily Word Guesser',
+      howToPlay: [
+        'Guess the hidden 4-to-7 letter reliability engineering term in 6 attempts.',
+        'Colored tile feedback guides your next guess: Green (correct letter & position), Yellow (letter in word, wrong position), Gray (letter not in word).',
+        'Unlock progressive category clues and glossary definitions if you get stuck.',
+        'Extend your daily streak flame 🔥 and generate an emoji result grid to share with colleagues.'
+      ],
+      whatYouLearn: 'Standard reliability engineering taxonomy, ISO 14224 definitions, statistical failure metrics (MTBF, MTTF, MTTR), functional safety terminology, and RCM concepts.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, Termle is completely free with a new puzzle released every day at midnight.' },
+        { q: 'Do I need to create an account?', a: 'No account or login is required. Your streak, guess distribution, and win percentage save locally in your browser.' },
+        { q: 'What will I learn from Termle?', a: 'You will master standard ISO 14224 and IEEE reliability engineering terminology, MTBF definitions, failure rate metrics, and maintenance concepts through daily word puzzles.' }
+      ]
+    },
+    '/play/guess-the-beta/': {
+      category: 'Weibull Histogram Challenge',
+      howToPlay: [
+        'Analyze 70 simulated time-to-failure data points plotted on an equipment failure frequency histogram.',
+        'Estimate the Weibull Shape Parameter (β): choose whether the asset exhibits infant mortality (β < 1), random failures (β ≈ 1), or wear-out (β > 1).',
+        'Estimate the Characteristic Scale Life (η): predict the 63.2% cumulative failure time.',
+        'Score up to 1,000 points per round (5,000 max) and read the physics explanation of the failure mode.'
+      ],
+      whatYouLearn: 'Visual and mathematical intuition for Weibull distribution shapes, the bathtub curve phases, characteristic life determination, and real-world failure mode identification.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, Guess the Beta is completely free with unlimited replays.' },
+        { q: 'Do I need to create an account?', a: 'No account required. Your personal best scores and accuracy ratings are preserved in local browser storage.' },
+        { q: 'What will I learn from Guess the Beta?', a: 'You will train your visual and statistical intuition for estimating Weibull shape parameters (infant mortality beta < 1, random failure beta = 1, wear-out beta > 1) and characteristic scale life from equipment breakdown histograms.' }
+      ]
+    },
+    '/play/rca-detective/': {
+      category: 'Forensic Failure Mystery Game',
+      howToPlay: [
+        'Review the breakdown case dossier, equipment nameplate, and failure chronology.',
+        'Inspect forensic evidence files: vibration FFT spectra, lubricating oil spectrometry, operator interviews, and SEM fractography micrographs.',
+        'Construct the 5-Why deduction cascade connecting symptoms to physical mechanism, human action, and latent organizational root causes.',
+        'Submit your findings to receive an investigative competency grade and corrective action summary.'
+      ],
+      whatYouLearn: 'Root Cause Analysis (RCA) methodology, distinguishing physical vs human vs latent systemic causes, oil analysis interpretation, vibration signature analysis, and the 5-Why problem solving framework.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, RCA Detective is 100% free with full forensic case files accessible.' },
+        { q: 'Do I need to create an account?', a: 'No registration required. Case completion badges, detective grades, and scores save in your browser.' },
+        { q: 'What will I learn from RCA Detective?', a: 'You will master Root Cause Analysis (RCA) methodology, distinguishing physical failure causes, human actions, and latent organizational root causes through interactive 5-Why analysis and real-world failure dossiers.' }
+      ]
+    },
+    '/play/flashcards/': {
+      category: 'Spaced Repetition Retention Engine',
+      howToPlay: [
+        'Read the prompt card face and actively recall the reliability formula or definition.',
+        'Flip the 3D card (Spacebar or click) to check the verified answer and mathematical formula.',
+        'Rate your recall ease (Again, Hard, Good, Easy) to schedule optimal future review intervals via the SuperMemo SM-2 algorithm.',
+        'Study daily to keep your study streak flame 🔥 alive and transfer knowledge to permanent long-term memory.'
+      ],
+      whatYouLearn: 'Formulas and definitions for MTBF, MTTF, MTTR, Availability, PFDavg, SIL, RPN, Weibull parameters, RCM decision logic, and ISO standards.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, 100% free with full access to all 50+ reliability flashcards.' },
+        { q: 'Do I need to create an account?', a: 'No login required. SM-2 review intervals, ease factors, and study streaks are stored locally.' },
+        { q: 'What will I learn from Flashcards?', a: 'You will retain 50+ critical reliability formulas and definitions through the SuperMemo SM-2 spaced repetition memory algorithm with active recall.' }
+      ]
+    },
+    '/skill-test/': {
+      category: 'Certification Mock Exam & Quiz',
+      howToPlay: [
+        'Click Start Mock Exam to launch the 20-question timed practice assessment.',
+        'Answer questions covering Weibull modeling, MTBF calculations, FMEA RPN, RBD redundancy, and maintenance strategies.',
+        'Receive immediate answer rationales, reference formulas, and a personalized competency score report.'
+      ],
+      whatYouLearn: 'Benchmark readiness for CRE, CMRP, and industrial maintenance certifications with rigorous quantitative and conceptual questions.',
+      faqs: [
+        { q: 'Is it free to play?', a: 'Yes, the mock exam and certification assessment is 100% free.' },
+        { q: 'Do I need to create an account?', a: 'No account required. Quiz results and printable certificates are generated directly in your browser.' },
+        { q: 'What will I learn from this mock exam?', a: 'You will benchmark your professional reliability engineering competency across Weibull modeling, FMEA, RBD redundancy, and maintenance strategies against global engineering standards.' }
+      ]
+    }
+  };
 
   // Per-tool enrichment data for unique pre-rendered content
   const TOOL_ENRICHMENT = {
@@ -199,8 +319,10 @@ function generateStaticHtml(route, templateHtml) {
   };
 
   const toolSlug = route.startsWith('/tools/') && route !== '/tools/' ? route.split('/').filter(Boolean)[1] : null;
-  const enrichment = toolSlug ? TOOL_ENRICHMENT[toolSlug] : null;
+  const toolEnrichment = toolSlug ? TOOL_ENRICHMENT[toolSlug] : null;
+  const gameEnrichment = GAME_ENRICHMENT[normalizedRoute] || null;
 
+  // WebApplication Schema for Tools
   if (route.startsWith('/tools/') && route !== '/tools/') {
     schemas.push({
       "@context": "https://schema.org",
@@ -220,12 +342,11 @@ function generateStaticHtml(route, templateHtml) {
       "publisher": { "@type": "Organization", "name": "Reliability Tools", "url": BASE_URL }
     });
 
-    // FAQPage Schema for rich snippets
-    if (enrichment && enrichment.faqs && enrichment.faqs.length > 0) {
+    if (toolEnrichment && toolEnrichment.faqs && toolEnrichment.faqs.length > 0) {
       schemas.push({
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": enrichment.faqs.map(faq => ({
+        "mainEntity": toolEnrichment.faqs.map(faq => ({
           "@type": "Question",
           "name": faq.q,
           "acceptedAnswer": {
@@ -237,24 +358,125 @@ function generateStaticHtml(route, templateHtml) {
     }
   }
 
+  // ItemList Schema for /play/ Hub
+  if (normalizedRoute === '/play/' || (seo.schemaTypes && seo.schemaTypes.includes('ItemList'))) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Reliability Engineering Games & Simulation Suite",
+      "description": "Interactive educational games and diagnostic simulation puzzles for maintenance and reliability engineers.",
+      "numberOfItems": 5,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Uptime Tycoon", "url": `${BASE_URL}/play/uptime-tycoon/`, "description": "24-month plant reliability and maintenance strategy simulator." },
+        { "@type": "ListItem", "position": 2, "name": "Termle", "url": `${BASE_URL}/play/termle/`, "description": "Daily 6-attempt reliability terminology word challenge." },
+        { "@type": "ListItem", "position": 3, "name": "Guess the Beta", "url": `${BASE_URL}/play/guess-the-beta/`, "description": "Weibull failure distribution histogram parameter estimation game." },
+        { "@type": "ListItem", "position": 4, "name": "RCA Detective", "url": `${BASE_URL}/play/rca-detective/`, "description": "Root cause failure mystery investigation with forensic evidence dossiers." },
+        { "@type": "ListItem", "position": 5, "name": "Glossary Flashcards", "url": `${BASE_URL}/play/flashcards/`, "description": "SuperMemo SM-2 spaced-repetition glossary review system." }
+      ]
+    });
+  }
+
+  // Game & VideoGame Schema for Game Pages
+  if (seo.schemaTypes && (seo.schemaTypes.includes('Game') || seo.schemaTypes.includes('VideoGame'))) {
+    const cleanGameName = seo.title.split('–')[0].split('|')[0].trim();
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": ["Game", "VideoGame", "SoftwareApplication"],
+      "name": cleanGameName,
+      "headline": seo.title.replace(/\s*\|\s*Reliability Tools$/, ''),
+      "description": seo.description,
+      "url": seo.canonical,
+      "genre": ["Simulation", "Educational", "Engineering Strategy"],
+      "gamePlatform": ["Web Browser", "Desktop", "Mobile"],
+      "applicationCategory": "Game",
+      "operatingSystem": "Web Browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "publisher": { "@type": "Organization", "name": "Reliability Tools", "url": BASE_URL, "logo": `${BASE_URL}/social-preview.png` }
+    });
+  }
+
+  // Quiz Schema for Mock Exam
+  if (seo.schemaTypes && seo.schemaTypes.includes('Quiz')) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "Quiz",
+      "name": seo.title.replace(/\s*\|\s*Reliability Tools$/, ''),
+      "description": seo.description,
+      "url": seo.canonical,
+      "educationalLevel": "Professional / Engineering",
+      "about": { "@type": "Thing", "name": "Industrial Reliability Engineering Certification" },
+      "provider": { "@type": "Organization", "name": "Reliability Tools", "url": BASE_URL }
+    });
+  }
+
+  // FAQPage Schema for Games and Mock Exams
+  if (gameEnrichment && gameEnrichment.faqs && gameEnrichment.faqs.length > 0) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": gameEnrichment.faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.a
+        }
+      }))
+    });
+  }
+
   const schemaTags = schemas.map(s => `  <script type="application/ld+json" data-rh="true">${JSON.stringify(s)}</script>`).join('\n');
   html = html.replace('</head>', `${schemaTags}\n</head>`);
 
-  // 6. Inject Semantic Body Content inside #root for Search Engine Indexing
-  // Generate tool-specific enrichment HTML
-  let enrichmentHtml = '';
-  if (enrichment) {
-    const standardsList = enrichment.standards.map(s => `<li style="margin-bottom: 0.25rem;"><strong>${escapeHtml(s.split('(')[0].trim())}</strong>${s.includes('(') ? ' — ' + escapeHtml(s.split('(')[1].replace(')', '')) : ''}</li>`).join('\n          ');
-    const faqHtml = enrichment.faqs.map(faq => `
-        <details style="border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+  // 6. Generate Semantic Body Content inside Landing Shell
+  let landingShellHtml = '';
+  if (gameEnrichment) {
+    const howToPlayList = gameEnrichment.howToPlay.map((step, idx) => `
+      <li style="margin-bottom: 0.75rem; line-height: 1.6; display: flex; align-items: flex-start; gap: 0.75rem;">
+        <span style="background: #0284c7; color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0; margin-top: 2px;">${idx + 1}</span>
+        <span>${escapeHtml(step)}</span>
+      </li>
+    `).join('\n');
+
+    const faqAccordion = gameEnrichment.faqs.map(faq => `
+      <details style="border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 0.5rem; background: #ffffff;">
+        <summary style="padding: 0.85rem 1rem; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 0.95rem;">${escapeHtml(faq.q)}</summary>
+        <div style="padding: 0 1rem 0.85rem 1rem; color: #475569; line-height: 1.6; font-size: 0.9rem;">${escapeHtml(faq.a)}</div>
+      </details>
+    `).join('\n');
+
+    landingShellHtml = `
+      <section style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+        <div style="display: inline-block; padding: 4px 12px; background: #e0f2fe; color: #0369a1; border-radius: 9999px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">
+          ${escapeHtml(gameEnrichment.category)}
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">How to Play</h2>
+        <ol style="list-style: none; padding: 0; margin: 0 0 1.5rem 0;">
+          ${howToPlayList}
+        </ol>
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">What You Will Learn</h3>
+        <p style="color: #334155; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+          ${escapeHtml(gameEnrichment.whatYouLearn)}
+        </p>
+      </section>
+
+      <section style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Frequently Asked Questions</h2>
+        ${faqAccordion}
+      </section>
+    `;
+  } else if (toolEnrichment) {
+    const standardsList = toolEnrichment.standards.map(s => `<li style="margin-bottom: 0.25rem;"><strong>${escapeHtml(s.split('(')[0].trim())}</strong>${s.includes('(') ? ' — ' + escapeHtml(s.split('(')[1].replace(')', '')) : ''}</li>`).join('\n          ');
+    const faqHtml = toolEnrichment.faqs.map(faq => `
+        <details style="border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 0.5rem; background: #ffffff;">
           <summary style="padding: 0.75rem 1rem; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 0.95rem;">${escapeHtml(faq.q)}</summary>
           <div style="padding: 0 1rem 0.75rem 1rem; color: #475569; line-height: 1.6; font-size: 0.9rem;">${escapeHtml(faq.a)}</div>
         </details>`).join('\n');
 
-    enrichmentHtml = `
+    landingShellHtml = `
       <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem;">
         <h2 style="font-size: 1.15rem; font-weight: 700; color: #0c4a6e; margin-bottom: 0.75rem;">Core Formula</h2>
-        <p style="font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 600; color: #0369a1; background: #fff; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid #bae6fd;">${escapeHtml(enrichment.formula)}</p>
+        <p style="font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 600; color: #0369a1; background: #fff; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid #bae6fd;">${escapeHtml(toolEnrichment.formula)}</p>
       </div>
       <div style="margin-bottom: 2rem;">
         <h2 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">Governing Standards</h2>
@@ -267,13 +489,13 @@ function generateStaticHtml(route, templateHtml) {
         ${faqHtml}
       </div>`;
   } else {
-    enrichmentHtml = `
+    landingShellHtml = `
       <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
         <h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">
           Engineering Tool Overview & Calculation Engine
         </h2>
         <p style="color: #334155; line-height: 1.6; margin-bottom: 1rem;">
-          This industrial reliability tool enables reliability engineers, maintenance managers, and plant analysts to model component lifespan, calculate failure probability, and optimize preventive maintenance intervals.
+          This industrial reliability resource enables reliability engineers, maintenance managers, and plant analysts to model component lifespan, calculate failure probability, and optimize preventive maintenance intervals.
         </p>
         <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
           Compliant with international standards: <strong>ISO 14224</strong> (Taxonomy & Failure Collection), <strong>IEC 61508</strong> (Functional Safety), and <strong>AIAG &amp; VDA FMEA</strong>.
@@ -281,26 +503,46 @@ function generateStaticHtml(route, templateHtml) {
       </div>`;
   }
 
+  // 7. Inject Semantic Content into <noscript> and #root
   if (route !== '/') {
-    const semanticNoscript = `
-  <noscript>
-    <div style="max-width: 1100px; margin: 2rem auto; padding: 2rem; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #0f172a; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    const breadcrumbHtml = `
       <nav aria-label="Breadcrumb" style="font-size: 0.875rem; color: #64748b; margin-bottom: 1.5rem;">
-        <a href="/" style="color: #0284c7; text-decoration: none;">Home</a> &gt; 
-        ${segments.length > 1 ? `<a href="/${segments[0]}/" style="color: #0284c7; text-decoration: none;">${segments[0].toUpperCase()}</a> &gt; ` : ''}
-        <span>${escapeHtml(readableName)}</span>
+        ${breadcrumbItems.map((c, idx) => {
+          const isLast = idx === breadcrumbItems.length - 1;
+          if (isLast) return `<span>${escapeHtml(c.name)}</span>`;
+          return `<a href="${c.path === '/' ? '/' : c.path}" style="color: #0284c7; text-decoration: none;">${escapeHtml(c.name)}</a> &gt; `;
+        }).join('')}
       </nav>
-      <h1 style="font-size: 2.25rem; font-weight: 800; line-height: 1.2; color: #0f172a; margin-bottom: 1rem;">
-        ${escapeHtml(seo.title.split('|')[0].trim())}
-      </h1>
-      <p style="font-size: 1.15rem; line-height: 1.6; color: #475569; margin-bottom: 2rem;">
-        ${escapeHtml(seo.description)}
-      </p>
-      ${enrichmentHtml}
-    </div>
-  </noscript>`;
+    `;
 
+    const fullLandingHtml = `
+      <div class="landing-shell-container" style="max-width: 1100px; margin: 1.5rem auto; padding: 2rem; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #0f172a; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+        ${breadcrumbHtml}
+        <h1 style="font-size: 2.25rem; font-weight: 800; line-height: 1.2; color: #0f172a; margin-bottom: 1rem;">
+          ${escapeHtml(seo.title.split('|')[0].trim())}
+        </h1>
+        <p style="font-size: 1.15rem; line-height: 1.6; color: #475569; margin-bottom: 2rem;">
+          ${escapeHtml(seo.description)}
+        </p>
+        ${landingShellHtml}
+      </div>
+    `;
+
+    // Replace noscript
+    const semanticNoscript = `<noscript>${fullLandingHtml}</noscript>`;
     html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, semanticNoscript);
+
+    // If game or play route, also inject the landing shell inside #root alongside hidden loader
+    // This allows crawlers reading the DOM before JS executes to index full H1, how-to-play, FAQs!
+    // React replaces #root cleanly upon client hydration/mount.
+    if (isGameRoute || normalizedRoute === '/play/' || normalizedRoute === '/skill-test/') {
+      const rootShell = `
+  <div id="root">
+    <div class="initial-loader" style="display:none;" aria-hidden="true"></div>
+    ${fullLandingHtml}
+  </div>`;
+      html = html.replace(/<div id="root">[\s\S]*?<\/div>/i, rootShell);
+    }
   }
 
   return html;
