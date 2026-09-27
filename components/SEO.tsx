@@ -26,6 +26,7 @@ const SEO: React.FC<SEOProps> = ({
   const title = customTitle || defaultSeo.title;
   const description = customDescription || defaultSeo.description;
   const canonicalUrl = customCanonicalUrl || defaultSeo.canonical;
+  const shouldNoIndex = noIndex || defaultSeo.indexable === false;
 
   return (
     <Helmet>
@@ -37,7 +38,7 @@ const SEO: React.FC<SEOProps> = ({
       {keywords && <meta name="keywords" content={keywords} />}
 
       {/* Robots meta tag (noindex, follow for embeds/internal pages) */}
-      {noIndex ? (
+      {shouldNoIndex ? (
         <meta name="robots" content="noindex, follow" />
       ) : (
         <meta name="robots" content="index, follow" />

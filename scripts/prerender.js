@@ -2,78 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
+const { ROUTES_REGISTRY, BASE_URL, getRouteByPath } = require('../routes-registry.js');
 const DIST_DIR = path.resolve(__dirname, '../dist');
-const BASE_URL = 'https://reliabilitytools.co.in';
 
-const ROUTES = [
-  '/',
-  '/about/',
-  '/contact/',
-  '/downloads/',
-  '/tools/',
-  '/tools/mtbf/',
-  '/tools/weibull/',
-  '/tools/rbd/',
-  '/tools/availability/',
-  '/tools/mttr/',
-  '/tools/pm/',
-  '/tools/spares/',
-  '/tools/lcc/',
-  '/tools/oee/',
-  '/tools/test-planner/',
-  '/tools/assessment/',
-  '/tools/converter/',
-  '/tools/optimal-replacement/',
-  '/tools/eoq/',
-  '/tools/sil/',
-  '/tools/fmea/',
-  '/tools/confidence-interval/',
-  '/tools/k-out-of-n/',
-  '/tools/hazard-rate/',
-  '/tools/validator/',
-  '/tools/fishbone/',
-  '/tools/fta/',
-  '/tools/markov/',
-  '/tools/growth/',
-  '/tools/warranty/',
-  '/tools/cost-risk/',
-  '/tools/gearbox/',
-  '/tools/lubricant-life/',
-  '/tools/downtime-cost/',
-  '/tools/bearing-life/',
-  '/tools/vibration-severity/',
-  '/tools/5-why/',
-  '/tools/pareto/',
-  '/tools/reliability-allocation/',
-  '/tools/spc/',
-  '/tools/rcm-decision/',
-  '/industries/',
-  '/industries/cement/',
-  '/industries/steel/',
-  '/industries/automotive/',
-  '/industries/pharmaceuticals/',
-  '/industries/fmcg/',
-  '/industries/power-generation/',
-  '/professors/',
-  '/press/',
-  '/learning/',
-  '/learning/spare-parts-optimization-guide/',
-  '/learning/mtbf-vs-mttf-vs-mttr-guide/',
-  '/learning/weibull-analysis-spinning-machines-case-study/',
-  '/learning/mtbf-guide/',
-  '/learning/weibull-guide/',
-  '/learning/fmea-guide/',
-  '/learning/oee-guide/',
-  '/knowledge-hub/',
-  '/interactive-hub/',
-  '/faq/',
-  '/reliability-engineering-glossary/',
-  '/methodology/',
-  '/skill-test/',
-  '/legal/privacy/',
-  '/legal/terms/',
-  '/legal/cookies/'
-];
+// Derive all routes directly from single source of truth
+const ROUTES = ROUTES_REGISTRY.map(r => r.path);
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -85,56 +18,27 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-/**
- * Parses SEO metadata directly from seoConfig.ts
- */
-function loadSeoMetadata() {
-  const seoPath = path.resolve(__dirname, '../utils/seoConfig.ts');
-  const metadata = {};
-
-  try {
-    const content = fs.readFileSync(seoPath, 'utf8');
-    const regex = /'(\/[^']*)':\s*\{[\s\S]*?title:\s*'([^']+)'[\s\S]*?description:\s*'([^']+)'/g;
-    let match;
-    while ((match = regex.exec(content)) !== null) {
-      const rawRoute = match[1];
-      const title = match[2];
-      const description = match[3];
-      const normalizedRoute = rawRoute.endsWith('/') ? rawRoute : `${rawRoute}/`;
-      const canonical = `${BASE_URL}${normalizedRoute}`;
-
-      metadata[normalizedRoute] = { title, description, canonical };
-      if (!rawRoute.endsWith('/')) {
-        metadata[rawRoute] = { title, description, canonical };
-      }
-    }
-  } catch (err) {
-    console.warn('Warning: Could not parse seoConfig.ts, using fallback metadata:', err.message);
+function getSeoForRoute(route) {
+  const regEntry = getRouteByPath(route);
+  if (regEntry) {
+    return {
+      title: regEntry.titleTemplate,
+      description: regEntry.descriptionTemplate,
+      canonical: `${BASE_URL}${regEntry.path}`,
+      indexable: regEntry.indexable,
+      schemaTypes: regEntry.schemaTypes,
+      breadcrumbs: regEntry.breadcrumbs
+    };
   }
 
-  return metadata;
-}
-
-const SEO_METADATA = loadSeoMetadata();
-
-function getSeoForRoute(route) {
   const normalized = route.endsWith('/') ? route : `${route}/`;
-  if (SEO_METADATA[normalized]) return SEO_METADATA[normalized];
-  if (SEO_METADATA[route]) return SEO_METADATA[route];
-
-  // Dynamic fallback
-  const segments = route.split('/').filter(Boolean);
-  const lastSegment = segments[segments.length - 1] || 'Home';
-  const formattedName = lastSegment
-    .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-
-  const title = `${formattedName} | Reliability Engineering Tools`;
-  const description = `Free industrial reliability engineering tool for ${formattedName}. Access calculators, formulas, and benchmarks.`;
-  const canonical = `${BASE_URL}${normalized}`;
-
-  return { title, description, canonical };
+  return {
+    title: 'Industrial Reliability Engineering Tools | Reliability Tools',
+    description: 'Free industrial reliability engineering calculators for MTBF, Weibull analysis, FMEA, OEE, Availability, RBD, and PM optimization.',
+    canonical: `${BASE_URL}${normalized}`,
+    indexable: true,
+    breadcrumbs: [{ name: 'Home', path: '/' }]
+  };
 }
 
 /**
@@ -184,36 +88,25 @@ function generateStaticHtml(route, templateHtml) {
   <meta name="twitter:title" content="${escapeHtml(seo.title)}" data-rh="true" />
   <meta name="twitter:description" content="${escapeHtml(seo.description)}" data-rh="true" />
   <meta name="twitter:image" content="${BASE_URL}/social-preview.png" data-rh="true" />
-  <meta name="robots" content="index, follow" data-rh="true" />`;
+  <meta name="robots" content="${seo.indexable === false ? 'noindex, follow' : 'index, follow'}" data-rh="true" />`;
 
   html = html.replace('</head>', `${socialMeta}\n</head>`);
 
-  // 5. Inject Structured Data JSON-LD Schemas
+  // 5. Inject Structured Data JSON-LD Schemas from route registry
+  const breadcrumbItems = (seo.breadcrumbs && seo.breadcrumbs.length > 0)
+    ? seo.breadcrumbs
+    : [{ name: 'Home', path: '/' }];
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": `${BASE_URL}/` }
-    ]
+    "itemListElement": breadcrumbItems.map((c, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": c.name,
+      "item": `${BASE_URL}${c.path === '/' ? '' : c.path}`
+    }))
   };
-
-  if (segments.length > 0) {
-    if (segments[0] === 'tools' && segments.length > 1) {
-      breadcrumbSchema.itemListElement.push(
-        { "@type": "ListItem", "position": 2, "name": "Tools", "item": `${BASE_URL}/tools/` },
-        { "@type": "ListItem", "position": 3, "name": readableName, "item": seo.canonical }
-      );
-    } else if (segments[0] === 'learning' && segments.length > 1) {
-      breadcrumbSchema.itemListElement.push(
-        { "@type": "ListItem", "position": 2, "name": "Learning", "item": `${BASE_URL}/learning/` },
-        { "@type": "ListItem", "position": 3, "name": readableName, "item": seo.canonical }
-      );
-    } else {
-      breadcrumbSchema.itemListElement.push(
-        { "@type": "ListItem", "position": 2, "name": readableName, "item": seo.canonical }
-      );
-    }
-  }
 
   let schemas = [breadcrumbSchema];
 

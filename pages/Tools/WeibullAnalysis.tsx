@@ -703,7 +703,9 @@ const WeibullAnalysis: React.FC = () => {
                 "B10 Life": activeModel.b10.toFixed(2),
                 "R-Squared (Fit)": activeModel.rSquared.toFixed(4),
                 "Failure Mode": getBetaInterpretation(activeModel.beta).title
-              }
+              },
+              formula: `R(t) = exp(-((t - ${activeModel.t0?.toFixed(1) || '0'}) / ${activeModel.eta.toFixed(1)})^${activeModel.beta.toFixed(2)})`,
+              interpretation: `${getBetaInterpretation(activeModel.beta).title}: ${getBetaInterpretation(activeModel.beta).desc} Characteristic life (\u03B7) is ${activeModel.eta.toFixed(1)} operating hours, with B10 reliability life at ${activeModel.b10.toFixed(1)} hours.`
             }}
             exportData={[
               { Parameter: "Shape Parameter (\u03B2)", Value: activeModel.beta },

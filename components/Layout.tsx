@@ -6,6 +6,8 @@ import CookieConsent from './CookieConsent';
 import CommandPalette from './CommandPalette';
 import { useTheme } from '../context/ThemeContext';
 import SEO from './SEO';
+import JsonLd from './JsonLd';
+import Breadcrumbs from './Breadcrumbs';
 import BackToTop from './BackToTop';
 
 
@@ -35,58 +37,10 @@ const Layout: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Generate Dynamic Breadcrumb Schema
-  const generateBreadcrumbSchema = () => {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
-    const baseUrl = 'https://reliabilitytools.co.in';
-
-    const items = [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": baseUrl
-      }
-    ];
-
-    let currentPath = '';
-    pathSegments.forEach((segment, index) => {
-      currentPath += `/${segment}`;
-
-      let name = segment.charAt(0).toUpperCase() + segment.slice(1);
-
-      // Check for tools
-      const tool = TOOLS.find(t => t.path === currentPath);
-      if (tool) name = tool.name;
-
-      // Check for articles (if we are in a learning route)
-      if (pathSegments[0] === 'learning' && index === 1) {
-        const article = ARTICLES.find(a => a.id === segment);
-        if (article) name = article.title;
-      }
-
-      if (segment === 'tools' && index === 0) name = 'Tools';
-      if (segment === 'learning' && index === 0) name = 'Learning Center';
-      if (segment === 'knowledge-hub') name = 'Knowledge Hub';
-
-      items.push({
-        "@type": "ListItem",
-        "position": index + 2,
-        "name": name,
-        "item": `${baseUrl}${currentPath}`
-      });
-    });
-
-    return {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": items
-    };
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-200 font-sans transition-colors duration-300">
-      <SEO schema={generateBreadcrumbSchema()} />
+      <SEO />
+      <JsonLd />
 
       {/* Navigation */}
       <header role="banner" className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
@@ -132,7 +86,8 @@ const Layout: React.FC = () => {
 
                 <Link to="/knowledge-hub/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Knowledge Hub</Link>
                 <Link to="/downloads/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Templates</Link>
-                <Link to="/interactive-hub/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulators & Games</Link>
+                <Link to="/play/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1"><span className="text-xs">🎮</span> Play Hub</Link>
+                <Link to="/interactive-hub/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Simulators</Link>
                 <Link to="/learning/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Articles</Link>
                 <Link to="/about/" className="hover:text-cyan-600 dark:hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
               </div>
@@ -199,7 +154,8 @@ const Layout: React.FC = () => {
 
               <Link to="/knowledge-hub/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Knowledge Hub</Link>
               <Link to="/downloads/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Templates</Link>
-              <Link to="/interactive-hub/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Simulators & Games</Link>
+              <Link to="/play/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">🎮 Play Hub (Games & Streaks)</Link>
+              <Link to="/interactive-hub/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Simulators</Link>
               <Link to="/learning/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Articles</Link>
               <Link to="/reliability-engineering-glossary/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">Glossary</Link>
               <Link to="/about/" onClick={closeMenu} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-cyan-600 dark:hover:text-white">About</Link>
@@ -212,29 +168,8 @@ const Layout: React.FC = () => {
       {/* Main Content */}
       <main id="main-content" role="main" className="flex-grow transition-colors duration-300">
         {location.pathname !== '/' && location.pathname !== '/interactive-hub' && (
-          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6">
-            <nav aria-label="breadcrumb">
-              <ol itemScope itemType="https://schema.org/BreadcrumbList" className="flex flex-wrap items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
-                {generateBreadcrumbSchema().itemListElement.map((item: any, idx: number, arr: any[]) => (
-                  <li key={idx} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="flex items-center">
-                    {idx < arr.length - 1 ? (
-                      <>
-                        <Link itemProp="item" to={item.item.replace('https://reliabilitytools.co.in', '') || '/'} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
-                          <span itemProp="name">{item.name}</span>
-                        </Link>
-                        <meta itemProp="position" content={String(item.position)} />
-                        <span className="mx-2 text-slate-300 dark:text-slate-600">/</span>
-                      </>
-                    ) : (
-                      <>
-                        <span itemProp="name" className="text-slate-700 dark:text-slate-300 font-medium">{item.name}</span>
-                        <meta itemProp="position" content={String(item.position)} />
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </nav>
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-2">
+            <Breadcrumbs />
           </div>
         )}
         <div className={`max-w-7xl mx-auto px-3 md:px-6 lg:px-8 ${location.pathname !== '/' ? 'py-4 md:py-6' : 'py-8 md:py-12'}`}>

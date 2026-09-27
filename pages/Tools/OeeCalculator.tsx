@@ -351,7 +351,26 @@ const OeeCalculator: React.FC = () => {
             toolName="OEE Calculator"
             shareUrl={shareUrl}
             chartRef={toolRef}
-            resultSummary={`${(result.oee * 100).toFixed(1)}%`}
+            pdfData={{
+              inputs: {
+                "Shift Length": `${shiftLength} min`,
+                "Planned Breaks": `${breaks} min`,
+                "Unplanned Downtime": `${downtime} min`,
+                "Ideal Cycle Time": `${idealCycle} sec/part`,
+                "Total Count Produced": `${totalCount} units`,
+                "Defective Rejects": `${rejects} units`
+              },
+              results: {
+                "Availability": formatPct(result.availability),
+                "Performance": formatPct(result.performance),
+                "Quality": formatPct(result.quality),
+                "Overall Equipment Effectiveness (OEE)": formatPct(result.oee)
+              },
+              formula: `OEE = Availability × Performance × Quality = ${formatPct(result.availability)} × ${formatPct(result.performance)} × ${formatPct(result.quality)} = ${formatPct(result.oee)}`,
+              interpretation: (result.oee >= 0.85)
+                ? `Exceptional World-Class OEE performance (${formatPct(result.oee)} >= 85%). Maintain current TPM autonomous maintenance and quick changeover (SMED) practices.`
+                : `OEE of ${formatPct(result.oee)} indicates substantial capacity recovery opportunity. Primary loss driver is ${result.availability <= result.performance && result.availability <= result.quality ? 'Availability (unplanned downtime)' : result.performance <= result.quality ? 'Performance (speed throttling / minor stops)' : 'Quality (scrap and rework)'}.`
+            }}
             exportData={[
               { Parameter: "Shift Length (min)", Value: shiftLength },
               { Parameter: "Breaks (min)", Value: breaks },

@@ -361,7 +361,9 @@ const AvailabilityCalculator: React.FC = () => {
               "Annual Downtime Hours": `${downtimeHoursPerYear.toFixed(1)} hrs`,
               "Projected Revenue Risk": `$${yearlyLoss.toLocaleString()}`,
               "Reliability Risk Level": riskLevel
-            }
+            },
+            formula: `A_o = MTBF / (MTBF + MTTR) = ${mtbf} / (${mtbf} + ${mttr}) = ${(availability * 100).toFixed(4)}%`,
+            interpretation: `Calculated operational readiness is ${(availability * 100).toFixed(4)}% with projected annual downtime of ${downtimeHoursPerYear.toFixed(1)} hours. Risk level assessed as ${riskLevel}. Target 'three-nines' (99.9%) by reducing MTTR through pre-staged spares and standard operating repair procedures.`
           }}
         />
       </div>

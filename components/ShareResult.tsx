@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Share2, Copy, CheckCircle, Linkedin, Twitter } from 'lucide-react';
+import { Share2, Copy, CheckCircle, Linkedin, Twitter, MessageCircle } from 'lucide-react';
+import { trackResultShared } from '../utils/analytics';
 
 interface ShareResultProps {
     title: string;
@@ -25,12 +26,17 @@ const ShareResult: React.FC<ShareResultProps> = ({ title, params }) => {
     const handleCopy = () => {
         navigator.clipboard.writeText(shareUrl);
         setCopied(true);
+        trackResultShared('copy_link', title);
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const waText = `🛠️ *${title} Calculation Results*\n` +
+        `Check out this verified engineering result on Reliability Tools:\n` +
+        `👉 ${shareUrl}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+
     const encodedTitle = encodeURIComponent(`Check out my calculated ${title} result on Reliability Tools!`);
     const encodedUrl = encodeURIComponent(shareUrl);
-
     const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
 
@@ -50,9 +56,20 @@ const ShareResult: React.FC<ShareResultProps> = ({ title, params }) => {
                     {copied ? 'Copied!' : 'Copy Link'}
                 </button>
                 <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackResultShared('whatsapp', title)}
+                    className="p-2 border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors"
+                    aria-label="Share on WhatsApp"
+                >
+                    <MessageCircle className="w-4 h-4" />
+                </a>
+                <a
                     href={linkedInUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackResultShared('linkedin', title)}
                     className="p-2 border border-blue-200 dark:border-blue-900/50 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-lg transition-colors"
                     aria-label="Share on LinkedIn"
                 >
@@ -62,6 +79,7 @@ const ShareResult: React.FC<ShareResultProps> = ({ title, params }) => {
                     href={twitterUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackResultShared('twitter', title)}
                     className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
                     aria-label="Share on Twitter"
                 >

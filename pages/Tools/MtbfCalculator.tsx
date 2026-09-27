@@ -16,6 +16,7 @@ import {
   Activity,
   Calculator,
   FileSpreadsheet,
+  Zap,
 } from "lucide-react";
 import HelpTooltip from "../../components/HelpTooltip";
 import { ASSET_BENCHMARKS } from "../../constants";
@@ -467,7 +468,11 @@ const MtbfCalculator: React.FC = () => {
               [`Mean Time (${mode})`]: `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours`,
               "Failure Rate (\u03BB)": `${(1 / result).toFixed(8)} failures/hour`,
               "Reliability Profile": mode === 'MTBF' ? 'Repairable System' : 'Disposable Asset'
-            }
+            },
+            formula: `${mode} = Total Operational Time / Failures = ${totalHours} hrs / ${failures} events`,
+            interpretation: mode === 'MTBF'
+              ? `Estimated mean operating uptime of ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} hours between unscheduled breakdowns. For continuous production facilities, benchmark this performance against IEEE 493 and OREDA asset failure rates.`
+              : `Expected non-repairable component operational lifetime of ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} hours before failure and disposal.`
           } : undefined}
           exportData={result !== null ? [
             { Parameter: "Calculation Mode", Value: mode },

@@ -79,3 +79,51 @@ export function trackSkillTestComplete(scorePercent: number, certificationTitle:
     timestamp: new Date().toISOString()
   });
 }
+
+/**
+ * Custom Conversion Event 5: Result Shared
+ * Fires when a user shares calculation results via any channel (e.g. 'linkedin', 'whatsapp', 'copy_link', 'download_card')
+ */
+export function trackResultShared(channel: string, toolName?: string) {
+  trackEvent('result_shared', {
+    channel,
+    tool: toolName || 'general',
+    timestamp: new Date().toISOString()
+  });
+}
+
+/**
+ * Custom Conversion Event 6: Report Downloaded
+ * Fires when a user downloads the branded PDF calculation report for a tool
+ */
+export function trackReportDownloaded(toolName: string) {
+  trackEvent('report_downloaded', {
+    tool: toolName,
+    timestamp: new Date().toISOString()
+  });
+}
+
+/**
+ * Custom Conversion Event 7: Game Completed
+ * Fires when a player finishes a game (e.g. 'termle', 'guess_the_beta', 'flashcards')
+ */
+export function trackGameCompleted(game: string, score: number, details?: Record<string, any>) {
+  trackEvent('game_completed', {
+    game,
+    score,
+    ...(details || {}),
+    timestamp: new Date().toISOString()
+  });
+}
+
+/**
+ * Custom Conversion Event 8: Streak Extended
+ * Fires when a player extends their streak
+ */
+export function trackStreakExtended(days: number, game?: string) {
+  trackEvent('streak_extended', {
+    days,
+    game: game || 'general',
+    timestamp: new Date().toISOString()
+  });
+}

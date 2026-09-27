@@ -74,6 +74,14 @@ const SkillTestLanding = lazy(() => import('./pages/SkillTest/Landing'));
 const SkillTestQuiz = lazy(() => import('./pages/SkillTest/Quiz'));
 const SkillTestResults = lazy(() => import('./pages/SkillTest/Results'));
 
+// Play Hub & Games
+const PlayHub = lazy(() => import('./pages/Play/PlayHub'));
+const Termle = lazy(() => import('./pages/Play/Termle'));
+const GuessTheBeta = lazy(() => import('./pages/Play/GuessTheBeta'));
+const Flashcards = lazy(() => import('./pages/Play/Flashcards'));
+const Leaderboard = lazy(() => import('./pages/Play/Leaderboard'));
+const UptimeTycoon = lazy(() => import('./pages/Play/UptimeTycoon'));
+
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 import ContextGlossary from './components/ContextGlossary';
 import RedirectHandler from './components/RedirectHandler';
@@ -137,6 +145,15 @@ const App: React.FC = () => {
               <Route path="blog" element={<LearningCenter />} />
               <Route path="knowledge-hub" element={<KnowledgeHub />} />
               <Route path="interactive-hub" element={<InteractiveHub />} />
+              
+              {/* Play Hub & Games */}
+              <Route path="play" element={<PlayHub />} />
+              <Route path="play/uptime-tycoon" element={<UptimeTycoon />} />
+              <Route path="play/termle" element={<Termle />} />
+              <Route path="play/guess-the-beta" element={<GuessTheBeta />} />
+              <Route path="play/flashcards" element={<Flashcards />} />
+              <Route path="play/leaderboard" element={<Leaderboard />} />
+
               <Route path="industries" element={<IndustriesHub />} />
               <Route path="industries/:industrySlug" element={<IndustryView />} />
               <Route path="professors" element={<ProfessorsToolkit />} />

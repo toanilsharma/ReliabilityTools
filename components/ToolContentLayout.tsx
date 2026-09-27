@@ -8,6 +8,7 @@ import { createToolSchema, createFaqSchema } from '../utils/schemaGenerator';
 
 import ToolToArticleBanner from './ToolToArticleBanner';
 import CalculationPipeline from './CalculationPipeline';
+import { trackResultShared } from '../utils/analytics';
 
 interface FAQItem {
     question: string;
@@ -73,6 +74,7 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                     </button>
                     <button
                         onClick={() => {
+                            trackResultShared('header_share', title);
                             if (navigator.share) {
                                 navigator.share({
                                     title: title,
