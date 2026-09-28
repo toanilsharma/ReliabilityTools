@@ -202,6 +202,96 @@ export const CONTENT_MAPPINGS: ContentPair[] = [
     articlePath: '/learning/rcm-complete-guide/',
     articleTitle: 'Reliability Centered Maintenance (RCM): Complete Step-by-Step Implementation Guide',
     articleSummary: 'Master SAE JA1011 RCM decision logic trees, task selection, and PM program optimization.'
+  },
+  {
+    toolSlug: 'duval-triangle',
+    toolPath: '/tools/duval-triangle/',
+    toolName: 'Duval Triangle Calculator',
+    articleId: 'duval-triangle-guide',
+    articlePath: '/learning/duval-triangle-guide/',
+    articleTitle: 'Duval Triangle DGA Guide: Interpreting Transformer Dissolved Gases',
+    articleSummary: 'Classify power transformer thermal, discharge, and arcing faults using the IEC 60599 and IEEE C57.104 Duval Triangle 1 method.'
+  },
+  {
+    toolSlug: 'lopa',
+    toolPath: '/tools/lopa/',
+    toolName: 'LOPA & SIL Calculator',
+    articleId: 'lopa-sil-determination-guide',
+    articlePath: '/learning/lopa-sil-determination-guide/',
+    articleTitle: 'Layer of Protection Analysis (LOPA): Complete Engineering Guide',
+    articleSummary: 'Perform semi-quantitative process risk assessments and determine target SIL safety integrity levels per IEC 61511 and CCPS.'
+  },
+  {
+    toolSlug: 'miners-rule',
+    toolPath: '/tools/miners-rule/',
+    toolName: "Miner's Rule Fatigue Calculator",
+    articleId: 'miners-rule-fatigue-guide',
+    articlePath: '/learning/miners-rule-fatigue-guide/',
+    articleTitle: "Palmgren-Miner's Rule Guide: Cumulative Fatigue Damage Modeling",
+    articleSummary: 'Calculate cumulative structural fatigue damage, stress cycles, and consumed endurance life per ISO 12107 and ASTM E1049.'
+  },
+  {
+    toolSlug: 'error-budget',
+    toolPath: '/tools/error-budget/',
+    toolName: 'Error Budget SLO Calculator',
+    articleId: 'error-budget-slo-guide',
+    articlePath: '/learning/error-budget-slo-guide/',
+    articleTitle: 'Error Budgets and SLOs: Site Reliability Engineering Guide',
+    articleSummary: 'Master SRE reliability budgets, multi-window burn rate alerts, and allowable downtime limits per ISO 25010 and IEEE 730.'
+  },
+  {
+    toolSlug: 'api-570-remaining-life',
+    toolPath: '/tools/api-570-remaining-life/',
+    toolName: 'API 570 UT Remaining Life',
+    articleId: 'api-570-pipe-inspection-guide',
+    articlePath: '/learning/api-570-pipe-inspection-guide/',
+    articleTitle: 'API 570 Piping Inspection Guide: UT Thickness & Corrosion Rates',
+    articleSummary: 'Evaluate process piping ultrasonic thickness inspections, corrosion rates, remaining life, and half-life intervals per API 570.'
+  },
+  {
+    toolSlug: 'npsh-cavitation',
+    toolPath: '/tools/npsh-cavitation/',
+    toolName: 'NPSH Cavitation Calculator',
+    articleId: 'npsh-pump-cavitation-guide',
+    articlePath: '/learning/npsh-pump-cavitation-guide/',
+    articleTitle: 'NPSH and Cavitation Prevention Guide for Centrifugal Pumps',
+    articleSummary: 'Calculate Net Positive Suction Head available (NPSHa) and enforce ANSI/HI 9.6.1 and API 610 cavitation safety margins.'
+  },
+  {
+    toolSlug: 'parts-count-mtbf',
+    toolPath: '/tools/parts-count-mtbf/',
+    toolName: 'Parts-Count MTBF (MIL-217)',
+    articleId: 'mil-hdbk-217-parts-count-guide',
+    articlePath: '/learning/mil-hdbk-217-parts-count-guide/',
+    articleTitle: 'MIL-HDBK-217F Parts-Count Reliability Prediction Guide',
+    articleSummary: 'Predict electronic component failure rates, FITs, and hardware assembly MTBF using MIL-HDBK-217F and Telcordia SR-332.'
+  },
+  {
+    toolSlug: 'eafor',
+    toolPath: '/tools/eafor/',
+    toolName: 'EAF & EFOR Availability',
+    articleId: 'ieee-762-eaf-efor-guide',
+    articlePath: '/learning/ieee-762-eaf-efor-guide/',
+    articleTitle: 'IEEE 762 & NERC GADS Guide: Power Plant EAF and EFOR Metrics',
+    articleSummary: 'Master electric utility generation metrics: Equivalent Availability Factor, Equivalent Forced Outage Rate, and derated hours.'
+  },
+  {
+    toolSlug: 'pf-interval-optimizer',
+    toolPath: '/tools/pf-interval-optimizer/',
+    toolName: 'P-F Interval Optimizer',
+    articleId: 'pf-interval-optimization-guide',
+    articlePath: '/learning/pf-interval-optimization-guide/',
+    articleTitle: 'P-F Interval Optimization Guide: Condition Monitoring Frequencies',
+    articleSummary: 'Determine optimal predictive maintenance inspection frequencies along the P-F curve per SAE JA1011, JA1012, and ISO 55000.'
+  },
+  {
+    toolSlug: 'cpm-turnaround',
+    toolPath: '/tools/cpm-turnaround/',
+    toolName: 'CPM Turnaround Scheduler',
+    articleId: 'cpm-turnaround-scheduling-guide',
+    articlePath: '/learning/cpm-turnaround-scheduling-guide/',
+    articleTitle: 'Critical Path Method (CPM) Guide for Plant Overhauls & Turnarounds',
+    articleSummary: 'Optimize shutdown network logic, total float, and critical path activities for industrial maintenance turnarounds per ISO 21500.'
   }
 ];
 

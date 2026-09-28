@@ -890,6 +890,114 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Community & Industrial Data Surfaces Showcase */}
+      <section className="py-20 bg-slate-800/40 dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-4 border border-cyan-500/30">
+              <Sparkles className="w-4 h-4" /> Open Engineering Ecosystem
+            </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Community &amp; Industrial Data Surfaces
+            </h2>
+            <p className="mt-4 text-base text-slate-600 dark:text-slate-300">
+              Explore our curated forensic disaster case studies, empirical sector benchmarks, 
+              global engineering events, and programmatic REST calculation APIs.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1: Failure Museum */}
+            <Link
+              to="/failure-museum/"
+              className="group flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 shadow-md hover:shadow-2xl hover:border-rose-500/50 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                  🏛️
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-rose-500 transition-colors">
+                  Failure Museum
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  14+ deep forensic case studies of historic industrial disasters detailing root causes, standards breached, and reliability lessons.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-semibold text-rose-500">
+                <span>Explore Dossiers</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 2: Industry Benchmarks */}
+            <Link
+              to="/benchmarks/"
+              className="group flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 shadow-md hover:shadow-2xl hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                  📊
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors">
+                  Industry Benchmarks
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Verified ISO 14224 quartile metrics across 7 sectors for availability, downtime, MTBF, MTTR, and maintenance cost % of RAV.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-semibold text-emerald-500">
+                <span>Compare Quartiles</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 3: Events & Jobs Digest */}
+            <Link
+              to="/events/"
+              className="group flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 shadow-md hover:shadow-2xl hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                  📅
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-500 transition-colors">
+                  Events &amp; Jobs Hub
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Major global reliability conferences (RAMS, SMRP, EuroMaintenance), free webinar passes, and curated monthly engineering vacancies.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-semibold text-cyan-500">
+                <span>View Gatherings</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Card 4: Developer REST API */}
+            <Link
+              to="/api/docs/"
+              className="group flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 shadow-md hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                  ⚡
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-400 transition-colors">
+                  Developer REST API
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Programmatic endpoints for MTBF, Weibull probability modeling, OEE metrics, and benchmarks with interactive test consoles.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-semibold text-indigo-400">
+                <span>API Reference</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ / SEO Accordion Section */}
       <section className="max-w-4xl mx-auto px-4 pb-20">
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">

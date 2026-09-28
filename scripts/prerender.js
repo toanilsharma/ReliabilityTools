@@ -27,7 +27,9 @@ function getSeoForRoute(route) {
       canonical: `${BASE_URL}${regEntry.path}`,
       indexable: regEntry.indexable,
       schemaTypes: regEntry.schemaTypes,
-      breadcrumbs: regEntry.breadcrumbs
+      breadcrumbs: regEntry.breadcrumbs,
+      type: regEntry.type,
+      path: regEntry.path
     };
   }
 
@@ -37,7 +39,9 @@ function getSeoForRoute(route) {
     description: 'Free industrial reliability engineering calculators for MTBF, Weibull analysis, FMEA, OEE, Availability, RBD, and PM optimization.',
     canonical: `${BASE_URL}${normalized}`,
     indexable: true,
-    breadcrumbs: [{ name: 'Home', path: '/' }]
+    breadcrumbs: [{ name: 'Home', path: '/' }],
+    type: 'utility',
+    path: normalized
   };
 }
 
@@ -63,12 +67,15 @@ function generateStaticHtml(route, templateHtml) {
     html = html.replace('</head>', `  <meta name="description" content="${escapeHtml(seo.description)}" data-rh="true" />\n</head>`);
   }
 
-  // 3. Inject Canonical Tag
-  const canonicalTag = `<link rel="canonical" href="${seo.canonical}" data-rh="true" />`;
+  // 3. Inject Canonical Tag and hreflang alternates
+  html = html.replace(/<link\s+rel="alternate"\s+href=".*?"\s+hreflang=".*?"\s*\/?>/gi, '');
+  const canonicalAndHreflang = `<link rel="canonical" href="${seo.canonical}" data-rh="true" />
+  <link rel="alternate" href="${seo.canonical}" hreflang="en" data-rh="true" />
+  <link rel="alternate" href="${seo.canonical}" hreflang="x-default" data-rh="true" />`;
   if (html.includes('<link rel="canonical"')) {
-    html = html.replace(/<link\s+rel="canonical"\s+href=".*?"\s*\/?>/i, canonicalTag);
+    html = html.replace(/<link\s+rel="canonical"\s+href=".*?"\s*\/?>/i, canonicalAndHreflang);
   } else {
-    html = html.replace('</head>', `  ${canonicalTag}\n</head>`);
+    html = html.replace('</head>', `  ${canonicalAndHreflang}\n</head>`);
   }
 
   // 4. Remove default OG and Twitter meta tags from template to avoid duplicates
@@ -76,25 +83,54 @@ function generateStaticHtml(route, templateHtml) {
   html = html.replace(/<meta\s+property=["']twitter:[^"']*["'][^>]*>/gi, '');
   html = html.replace(/<meta\s+name=["']twitter:[^"']*["'][^>]*>/gi, '');
 
-  const GAME_OG_IMAGES = {
+  const isGameRoute = seo.type === 'game' || (normalizedRoute.startsWith('/play/') && normalizedRoute !== '/play/');
+
+  const DYNAMIC_OG_PATHS = {
     '/play/': `${BASE_URL}/og/play-hub.png`,
     '/play/uptime-tycoon/': `${BASE_URL}/og/uptime-tycoon.png`,
     '/play/termle/': `${BASE_URL}/og/termle.png`,
     '/play/guess-the-beta/': `${BASE_URL}/og/guess-the-beta.png`,
     '/play/rca-detective/': `${BASE_URL}/og/rca-detective.png`,
     '/play/flashcards/': `${BASE_URL}/og/flashcards.png`,
-    '/skill-test/': `${BASE_URL}/og/skill-test.png`
+    '/skill-test/': `${BASE_URL}/og/skill-test.png`,
+    '/tools/duval-triangle/': `${BASE_URL}/og/duval-triangle.png`,
+    '/tools/lopa/': `${BASE_URL}/og/lopa.png`,
+    '/tools/miners-rule/': `${BASE_URL}/og/miners-rule.png`,
+    '/tools/error-budget/': `${BASE_URL}/og/error-budget.png`,
+    '/tools/api-570/': `${BASE_URL}/og/api-570.png`,
+    '/tools/npsh/': `${BASE_URL}/og/npsh.png`,
+    '/tools/parts-count-mtbf/': `${BASE_URL}/og/parts-count-mtbf.png`,
+    '/tools/eafor/': `${BASE_URL}/og/eafor.png`,
+    '/tools/pf-optimizer/': `${BASE_URL}/og/pf-optimizer.png`,
+    '/tools/cpm-turnaround/': `${BASE_URL}/og/cpm-turnaround.png`,
+    '/failure-museum/': `${BASE_URL}/og/failure-museum.png`,
+    '/events/': `${BASE_URL}/og/events.png`,
+    '/benchmarks/': `${BASE_URL}/og/benchmarks.png`,
+    '/api/': `${BASE_URL}/og/api-docs.png`
   };
 
-  const ogImageUrl = GAME_OG_IMAGES[normalizedRoute] || `${BASE_URL}/social-preview.png`;
-  const isGameRoute = normalizedRoute.startsWith('/play/') && normalizedRoute !== '/play/';
+  const BRANDED_FALLBACKS = {
+    tool: `${BASE_URL}/og/tool-fallback.png`,
+    article: `${BASE_URL}/og/article-fallback.png`,
+    industry: `${BASE_URL}/og/industry-fallback.png`,
+    ugc: `${BASE_URL}/og/failure-museum.png`,
+    event: `${BASE_URL}/og/events.png`,
+    game: `${BASE_URL}/og/play-hub.png`,
+    utility: `${BASE_URL}/og/default-fallback.png`,
+    legal: `${BASE_URL}/og/default-fallback.png`
+  };
+
+  const ogImageUrl = DYNAMIC_OG_PATHS[normalizedRoute] || BRANDED_FALLBACKS[seo.type] || `${BASE_URL}/og/default-fallback.png`;
+  const ogType = (seo.type === 'article' || seo.type === 'ugc') ? 'article'
+    : (seo.type === 'game' || normalizedRoute.startsWith('/play/')) ? 'game'
+    : 'website';
 
   const socialMeta = `
   <!-- SEO & Social Sharing (Pre-rendered) -->
   <meta property="og:title" content="${escapeHtml(seo.title)}" data-rh="true" />
   <meta property="og:description" content="${escapeHtml(seo.description)}" data-rh="true" />
   <meta property="og:url" content="${seo.canonical}" data-rh="true" />
-  <meta property="og:type" content="${isGameRoute ? 'game' : 'website'}" data-rh="true" />
+  <meta property="og:type" content="${ogType}" data-rh="true" />
   <meta property="og:site_name" content="Reliability Tools" data-rh="true" />
   <meta property="og:image" content="${ogImageUrl}" data-rh="true" />
   <meta name="twitter:card" content="summary_large_image" data-rh="true" />
@@ -553,7 +589,10 @@ function generateStaticHtml(route, templateHtml) {
  */
 function runStaticGenerator() {
   console.log('Running Universal Static HTML Pre-renderer...');
-  const templateHtml = fs.readFileSync(path.join(DIST_DIR, 'index.html'), 'utf8');
+  let templateHtml = fs.readFileSync(path.join(DIST_DIR, 'index.html'), 'utf8');
+  // Strip any existing pre-rendered SEO & Schema blocks so multiple runs don't stack
+  templateHtml = templateHtml.replace(/<!-- SEO & Social Sharing \(Pre-rendered\) -->[\s\S]*?(?=<script|<link|<\/head>)/gi, '');
+  templateHtml = templateHtml.replace(/<script type="application\/ld\+json" data-rh="true">[\s\S]*?<\/script>/gi, '');
 
   let generatedCount = 0;
   for (const route of ROUTES) {

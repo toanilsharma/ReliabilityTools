@@ -22,7 +22,9 @@ const Layout: React.FC = () => {
   const [shareUrl, setShareUrl] = useState('');
 
   React.useEffect(() => {
-    setShareUrl(window.location.href);
+    // Rule 3: Always share canonical URL without query parameters
+    const cleanCanonical = window.location.href.split('?')[0].split('#')[0];
+    setShareUrl(cleanCanonical);
   }, [location]);
 
   // Global keyboard shortcut for Search (Ctrl+K or Cmd+K)
@@ -186,7 +188,7 @@ const Layout: React.FC = () => {
       {/* Footer */}
       <footer role="contentinfo" className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-900 pt-16 pb-12 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 md:gap-8 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <ShieldCheck className="h-6 w-6 text-cyan-400" />
@@ -246,6 +248,18 @@ const Layout: React.FC = () => {
               </ul>
             </div>
             <div>
+              <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6 flex items-center gap-1.5">
+                <span className="text-rose-400">🏛️</span> Community &amp; Data
+              </h3>
+              <ul className="space-y-3 text-sm text-slate-400">
+                <li><Link to="/failure-museum/" className="hover:text-cyan-400 transition-colors font-semibold text-slate-300">Failure Museum</Link></li>
+                <li><Link to="/benchmarks/" className="hover:text-cyan-400 transition-colors">Industry Benchmarks</Link></li>
+                <li><Link to="/events/" className="hover:text-cyan-400 transition-colors">Events &amp; Webinars</Link></li>
+                <li><Link to="/events/jobs-digest/" className="hover:text-cyan-400 transition-colors">Jobs Digest</Link></li>
+                <li><Link to="/api/docs/" className="hover:text-cyan-400 transition-colors font-mono text-xs">Developer API Docs</Link></li>
+              </ul>
+            </div>
+            <div>
               <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6">Legal</h3>
               <ul className="space-y-3 text-sm text-slate-400">
                 <li><Link to="/legal/privacy/" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link></li>
@@ -290,7 +304,11 @@ const Layout: React.FC = () => {
               <Link to="/tools/oee/" className="hover:text-cyan-400 transition-colors font-medium">OEE Calculator</Link> <span className="text-slate-700 px-1">·</span>
               <Link to="/tools/lcc/" className="hover:text-cyan-400 transition-colors font-medium">Life Cycle Cost Calculator</Link> <span className="text-slate-700 px-1">·</span>
               <Link to="/tools/" className="hover:text-cyan-400 transition-colors font-medium">Reliability Engineering Tools</Link> <span className="text-slate-700 px-1">·</span>
-              <Link to="/tools/pm/" className="hover:text-cyan-400 transition-colors font-medium">Preventive Maintenance Calculator</Link>
+              <Link to="/tools/pm/" className="hover:text-cyan-400 transition-colors font-medium">Preventive Maintenance Calculator</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/failure-museum/" className="hover:text-cyan-400 transition-colors font-medium">Failure Museum</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/benchmarks/" className="hover:text-cyan-400 transition-colors font-medium">Industry Benchmarks</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/events/" className="hover:text-cyan-400 transition-colors font-medium">Reliability Events</Link> <span className="text-slate-700 px-1">·</span>
+              <Link to="/api/docs/" className="hover:text-cyan-400 transition-colors font-medium">Developer API</Link>
             </div>
 
             {/* Disclaimer Box */}

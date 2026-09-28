@@ -1401,6 +1401,205 @@ Within 30 days of implementing the $B_{10}$-based replacement schedule:
 ### Action Item for Reliability Engineers:
 Do you have recurring component failures on your plant floor? Gather 5 to 10 failure timestamps and run them through our **[Weibull Analysis Tool](/weibull-analysis)** today to calculate your exact $B_{10}$ life.
     `
+  },
+  {
+    id: 'duval-triangle-guide',
+    title: 'Duval Triangle DGA Guide: Interpreting Transformer Dissolved Gases',
+    summary: 'Master IEC 60599 and IEEE C57.104 Duval Triangle 1 dissolved gas analysis (DGA) to classify transformer thermal, arcing, and discharge faults.',
+    date: 'March 15, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Introduction to Duval Triangle DGA
+
+Dissolved Gas Analysis (DGA) is the most critical non-destructive condition monitoring technique for oil-immersed power transformers. Under thermal and electrical stress, mineral insulating oil decomposes into hydrocarbon gases: Methane ($CH_4$), Ethylene ($C_2H_4$), and Acetylene ($C_2H_2$).
+
+Standardized under **IEC 60599** and **IEEE C57.104**, the **Duval Triangle 1** graphical method normalizes these three gas concentrations to 100% and plots them in a ternary coordinate system.
+
+### The 7 Fault Classifications
+1. **PD (Partial Discharge):** Cold discharges in gas voids ($CH_4 \\ge 98\\%$).
+2. **D1 (Low Energy Discharges):** Sparking and pinhole punctures in paper.
+3. **D2 (High Energy Discharges):** Catastrophic arcing and power flashovers ($C_2H_2 \\ge 29\\%$).
+4. **T1 (Thermal Fault < 300°C):** Overloaded conductors or restricted oil ducts.
+5. **T2 (Thermal Fault 300°C - 700°C):** Carbonization of paper insulation.
+6. **T3 (Thermal Fault > 700°C):** Heavy core overheating and metal melting ($C_2H_4 \\ge 50\\%$).
+7. **DT (Thermal & Electrical Mix):** Combined arcing and localized overheating.
+
+Calculate and visualize your transformer test samples instantly with our free **[Duval Triangle Calculator](/tools/duval-triangle/)**.
+    `
+  },
+  {
+    id: 'lopa-sil-determination-guide',
+    title: 'Layer of Protection Analysis (LOPA): Complete Engineering Guide',
+    summary: 'Learn how to perform semi-quantitative LOPA risk assessments and allocate target SIL levels per IEC 61511 and CCPS functional safety rules.',
+    date: 'March 16, 2026',
+    author: 'Anil Sharma',
+    content: `
+## What is Layer of Protection Analysis (LOPA)?
+
+**Layer of Protection Analysis (LOPA)** is an objective, semi-quantitative risk assessment method developed by the Center for Chemical Process Safety (CCPS) and formalized in **IEC 61511**. It evaluates whether existing safeguards adequately mitigate process risks to acceptable corporate limits (ALARP) or whether an instrumented Safety Instrumented System (SIS) is required.
+
+### Key Mathematical Steps
+1. **Unmitigated Frequency:** $F_u = f_{\\text{init}} \\times P_{\\text{ign}} \\times P_{\\text{occ}}$
+2. **Independent Protection Layers (IPLs):** Multiplying verified PFD values: $F_m = F_u \\times \\prod \\text{PFD}_i$
+3. **Target SIL Determination:** If $F_m > F_{\\text{tolerable}}$, the required Risk Reduction Factor (RRF) dictates SIL 1, SIL 2, or SIL 3.
+
+Model your process overpressure and overfill scenarios using our interactive **[LOPA Calculator](/tools/lopa/)**.
+    `
+  },
+  {
+    id: 'miners-rule-fatigue-guide',
+    title: "Palmgren-Miner's Rule Guide: Cumulative Fatigue Damage Modeling",
+    summary: 'A complete guide to cumulative fatigue damage, S-N curve cycle summation, and remaining structural life calculations per ISO 12107 and ASTM E1049.',
+    date: 'March 17, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Understanding Palmgren-Miner's Rule
+
+Under variable amplitude cyclical loads, structural components such as crane girders, shafts, and continuous casters accumulate progressive fatigue microcracks. The **Palmgren-Miner Linear Damage Hypothesis** states that each applied stress cycle consumes a fraction of total fatigue endurance:
+
+$$D = \\sum_{i=1}^{k} \\frac{n_i}{N_i}$$
+
+Where $n_i$ is the number of applied cycles at stress amplitude $\\Delta \\sigma_i$, and $N_i$ is the allowable fatigue endurance capacity derived from the material S-N curve per **ISO 12107** and **ASTM E1049**.
+
+Evaluate multi-bin stress spectra and compute remaining structural life with our online **[Miner's Rule Fatigue Calculator](/tools/miners-rule/)**.
+    `
+  },
+  {
+    id: 'error-budget-slo-guide',
+    title: 'Error Budgets and SLOs: Site Reliability Engineering Guide',
+    summary: 'Master SRE error budgets, multi-window burn rate alerts, and allowable downtime limits per ISO 25010 and IEEE 730 software reliability standards.',
+    date: 'March 18, 2026',
+    author: 'Anil Sharma',
+    content: `
+## The Philosophy of Error Budgets in SRE
+
+In modern industrial automation, SCADA networks, and cloud software infrastructure, demanding 100% uptime halts innovation and causes exponential architectural costs. **Site Reliability Engineering (SRE)** balances feature release speed with system stability using **Error Budgets**.
+
+Governed by **ISO 25010** and **IEEE 730**, an error budget is the allowable margin of unreliability:
+
+$$\\text{Error Budget} = 100\\% - \\text{SLO}\\%$$
+
+### Multi-Window Burn Rate Alerting
+Rather than alerting on transient spikes, SRE monitors multi-window burn rates (e.g. 14.4x over 1 hour to trigger pager alerts, 6x over 6 hours for ticket alerts).
+
+Calculate downtime budgets and exhaustion times with our **[Error Budget SLO Calculator](/tools/error-budget/)**.
+    `
+  },
+  {
+    id: 'api-570-pipe-inspection-guide',
+    title: 'API 570 Piping Inspection Guide: UT Thickness & Corrosion Rates',
+    summary: 'Learn how to calculate process piping corrosion rates, remaining life, and half-life inspection intervals using ultrasonic thickness data per API 570.',
+    date: 'March 19, 2026',
+    author: 'Anil Sharma',
+    content: `
+## In-Service Piping Inspection per API 570
+
+Process piping in hydrocarbon and chemical processing plants experiences internal thinning from acidic corrosion and erosion. **API 570** (Piping Inspection Code) establishes the quantitative evaluation standards for Ultrasonic Thickness (UT) gauging.
+
+### Core Calculations
+- **Short-Term Corrosion Rate:** $CR_{\\text{ST}} = (t_{\\text{prev}} - t_{\\text{actual}}) / \\Delta \\text{Years}$
+- **Long-Term Corrosion Rate:** $CR_{\\text{LT}} = (t_{\\text{initial}} - t_{\\text{actual}}) / \\text{Total Years}$
+- **Remaining Life:** $RL = (t_{\\text{actual}} - t_{\\text{min}}) / CR_{\\text{governing}}$
+- **Half-Life Rule:** Subsequent inspection interval $\\le \\min(RL / 2, \\text{Class Limit})$.
+
+Calculate your piping inspection intervals and retirement dates with our **[API 570 UT Remaining Life Calculator](/tools/api-570-remaining-life/)**.
+    `
+  },
+  {
+    id: 'npsh-pump-cavitation-guide',
+    title: 'NPSH and Cavitation Prevention Guide for Centrifugal Pumps',
+    summary: 'Comprehensive guide to calculating Net Positive Suction Head available (NPSHa) and maintaining ANSI/HI 9.6.1 and API 610 cavitation margins.',
+    date: 'March 20, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Centrifugal Pump Cavitation and NPSH
+
+Cavitation occurs when local static pressure inside a centrifugal pump drops below the liquid vapor pressure, creating vapor bubbles that implode violently against impeller vanes. This causes severe pitting erosion, seal failure, and high vibration.
+
+Under **ANSI/HI 9.6.1**, **ISO 9906**, and **API 610**, Net Positive Suction Head Available (NPSHa) must exceed manufacturer-published NPSHr (NPSH3) by a defined safety margin ratio:
+
+$$\\text{NPSHa} = h_{\\text{abs}} - h_{\\text{vap}} + Z_s - h_f$$
+
+$$\\text{Margin Ratio} = \\frac{\\text{NPSHa}}{\\text{NPSHr}} \\ge 1.15 \\text{ to } 1.80$$
+
+Check your pump suction conditions and cavitation risk with our **[NPSH Cavitation Calculator](/tools/npsh-cavitation/)**.
+    `
+  },
+  {
+    id: 'mil-hdbk-217-parts-count-guide',
+    title: 'MIL-HDBK-217F Parts-Count Reliability Prediction Guide',
+    summary: 'Predict electronic hardware failure rates, FITs, and MTBF using MIL-HDBK-217F and Telcordia SR-332 parts-count reliability models.',
+    date: 'March 21, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Early-Stage Reliability Prediction: Parts-Count Method
+
+During preliminary hardware architecture design, detailed electrical component stresses are unknown. The **Parts-Count Method** formalized in **MIL-HDBK-217F** and **Telcordia SR-332** provides the industry standard framework for estimating assembly failure rates:
+
+$$\\lambda_{\\text{EQUIP}} = \\sum_{i=1}^{n} N_i \\times (\\lambda_{b,i} \\times \\pi_{Q,i} \\times \\pi_E)$$
+
+Once total system failure rate $\\lambda_{\\text{sys}}$ is calculated, parts-count MTBF is determined as $10^6 / \\lambda_{\\text{sys}}$ hours.
+
+Generate instant parts-count reliability estimates with our **[Parts-Count MTBF Calculator](/tools/parts-count-mtbf/)**.
+    `
+  },
+  {
+    id: 'ieee-762-eaf-efor-guide',
+    title: 'IEEE 762 & NERC GADS Guide: Power Plant EAF and EFOR Metrics',
+    summary: 'Master power generation utility availability metrics: Equivalent Availability Factor (EAF), Equivalent Forced Outage Rate (EFOR), and derated hours per IEEE 762.',
+    date: 'March 22, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Electric Generating Unit Availability Accounting
+
+Traditional industrial uptime metrics fail to account for electric power plant operating reality, where units frequently suffer partial megawatt de-ratings or sit idle in economic reserve shutdown. **IEEE Std 762** and **NERC GADS** formalize utility reliability accounting:
+
+### Core IEEE 762 Formulas
+- **Equivalent Availability Factor (EAF):** Deducts Equivalent Forced Derated Hours (EFDH) and Planned Derated Hours (EPDH):
+$$\\text{EAF} = \\frac{\\text{AH} - (\\text{EFDH} + \\text{EPDH})}{\\text{PH}} \\times 100\\%$$
+- **Equivalent Forced Outage Rate (EFOR):** Measures failure probability during active operating exposure:
+$$\\text{EFOR} = \\frac{\\text{FOH} + \\text{EFDH}}{\\text{FOH} + \\text{SH} + \\text{EFDH}} \\times 100\\%$$
+
+Calculate your power unit EAF and EFOR benchmarks with our **[EAF EFOR Calculator](/tools/eafor/)**.
+    `
+  },
+  {
+    id: 'pf-interval-optimization-guide',
+    title: 'P-F Interval Optimization Guide: Condition Monitoring Frequencies',
+    summary: 'Learn how to determine optimal predictive maintenance inspection intervals along the P-F curve per SAE JA1011, SAE JA1012, and ISO 55000.',
+    date: 'March 23, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Reliability-Centered Maintenance: The P-F Curve
+
+The **P-F Curve** (SAE JA1011 / SAE JA1012) describes the progression of equipment failure from earliest detectable symptom ($P$) to functional failure ($F$). The time between $P$ and $F$ is the P-F Interval.
+
+### The Half-Interval Rule
+To guarantee at least one inspection occurs between initial detection and failure, the task frequency must satisfy:
+$$T_{\\text{insp}} \\le \\frac{P-F}{2}$$
+For safety-critical assets, a divisor of 3 or 4 is applied, guaranteeing a sufficient administrative lead time to schedule corrective repairs.
+
+Optimize your predictive maintenance inspection frequencies with our **[P-F Interval Optimizer](/tools/pf-interval-optimizer/)**.
+    `
+  },
+  {
+    id: 'cpm-turnaround-scheduling-guide',
+    title: 'Critical Path Method (CPM) Guide for Plant Overhauls & Turnarounds',
+    summary: 'Optimize shutdown schedule logic, calculate total float, and identify critical path bottlenecks for plant turnarounds per ISO 21500 and PMI PMBOK.',
+    date: 'March 24, 2026',
+    author: 'Anil Sharma',
+    content: `
+## Critical Path Scheduling for Industrial Turnarounds
+
+Major plant turnarounds and shutdown outages (STOs) incur daily production losses exceeding $50,000 to $200,000. Under **ISO 21500** and the **PMI PMBOK Guide**, the **Critical Path Method (CPM)** identifies the sequence of dependent activities that directly dictates total turnaround duration.
+
+### Mathematical Network Analysis
+- **Forward Pass:** $ES = \\max(EF_{\\text{pred}}), \\quad EF = ES + \\text{Duration}$
+- **Backward Pass:** $LF = \\min(LS_{\\text{succ}}), \\quad LS = LF - \\text{Duration}$
+- **Total Float:** $\\text{Float} = LF - EF$. Activities with $\\text{Float} = 0$ constitute the **Critical Path**.
+
+Solve your turnaround activity network and find the critical path with our **[CPM Turnaround Calculator](/tools/cpm-turnaround/)**.
+    `
   }
 ];
 

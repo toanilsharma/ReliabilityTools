@@ -41,6 +41,40 @@
     Cache-Control = "public, max-age=31536000, immutable"
     Access-Control-Allow-Origin = "*"
 
+# PDF, Report, and Export Endpoints: send X-Robots-Tag noindex header
+[[headers]]
+  for = "/pdf/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/*.pdf"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/reports/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/export/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/*.csv"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# API Endpoints: send X-Robots-Tag noindex header and allow CORS
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+    Access-Control-Allow-Origin = "*"
+    Content-Type = "application/json; charset=utf-8"
+
 # Global Security & Performance Headers
 [[headers]]
   for = "/*"

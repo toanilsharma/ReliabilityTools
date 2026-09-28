@@ -1,48 +1,132 @@
 # ============================================================
 # robots.txt — reliabilitytools.co.in
-# Updated: 2026-08-24
+# Updated: 2026-09-28
 # ============================================================
 
 # --- Google Bots ---
 User-agent: Googlebot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: Google-Extended
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 # --- Bing / Microsoft ---
 User-agent: Bingbot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 # --- Apple ---
 User-agent: Applebot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 # --- AI / LLM Crawlers ---
 User-agent: GPTBot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: ChatGPT-User
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: anthropic-ai
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: ClaudeBot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: PerplexityBot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: YouBot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 User-agent: CCBot
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 
 # --- All Other Bots ---
 User-agent: *
 Allow: /
+Allow: /play/
+Allow: /failure-museum/
+Allow: /events/
+Allow: /embed/
+Disallow: /api/
+Disallow: /growth
+Disallow: /workspace
 Crawl-delay: 2
 
 # ============================================================

@@ -36,7 +36,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'Heavy shock loads on drive gearboxes require strict AGMA safety factor verification and continuous oil contamination monitoring.'
       }
     ],
-    recommended_tool_slugs: ['bearing-life', 'downtime-cost', 'lubricant-life', 'gearbox', 'weibull', 'mtbf']
+    recommended_tool_slugs: ['bearing-life', 'downtime-cost', 'lubricant-life', 'gearbox', 'weibull', 'mtbf', 'miners-rule', 'api-570-remaining-life', 'pf-interval-optimizer', 'cpm-turnaround']
   },
   {
     slug: 'steel',
@@ -57,7 +57,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'Particulate contamination in high-pressure hydraulic roll-gap systems causes servo valve binding and strip gauge defects.'
       }
     ],
-    recommended_tool_slugs: ['bearing-life', 'downtime-cost', 'availability', 'oee', 'weibull', 'lubricant-life']
+    recommended_tool_slugs: ['bearing-life', 'downtime-cost', 'availability', 'oee', 'weibull', 'lubricant-life', 'miners-rule', 'api-570-remaining-life', 'cpm-turnaround', 'pf-interval-optimizer']
   },
   {
     slug: 'automotive',
@@ -78,7 +78,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'Automotive OEMs require documented DFMEA and PFMEA worksheets with Action Priority (AP) tracking for all safety-critical components.'
       }
     ],
-    recommended_tool_slugs: ['fmea', 'oee', 'downtime-cost', 'mttr', 'optimal-replacement', 'spares']
+    recommended_tool_slugs: ['fmea', 'oee', 'downtime-cost', 'mttr', 'optimal-replacement', 'spares', 'error-budget', 'parts-count-mtbf', 'pf-interval-optimizer']
   },
   {
     slug: 'pharmaceuticals',
@@ -99,7 +99,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'US FDA and EU GMP standards require strict, checklist-driven preventive maintenance and calibration for all critical equipment.'
       }
     ],
-    recommended_tool_slugs: ['sil', 'availability', 'pm', 'downtime-cost', 'confidence-interval', 'fmea']
+    recommended_tool_slugs: ['sil', 'availability', 'pm', 'downtime-cost', 'confidence-interval', 'fmea', 'lopa', 'npsh-cavitation', 'error-budget']
   },
   {
     slug: 'fmcg',
@@ -120,7 +120,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'Lacking critical photo-eyes, suction cups, or heating elements delays changeovers and halts production lines.'
       }
     ],
-    recommended_tool_slugs: ['oee', 'eoq', 'spares', 'downtime-cost', 'mttr', 'optimal-replacement']
+    recommended_tool_slugs: ['oee', 'eoq', 'spares', 'downtime-cost', 'mttr', 'optimal-replacement', 'npsh-cavitation', 'pf-interval-optimizer', 'cpm-turnaround']
   },
   {
     slug: 'power-generation',
@@ -141,7 +141,7 @@ export const INDUSTRIES: IndustryData[] = [
         description: 'Long lead-time turbine journal bearings and boiler feed pump seals require precise ROP and safety stock optimization.'
       }
     ],
-    recommended_tool_slugs: ['sil', 'availability', 'bearing-life', 'k-out-of-n', 'downtime-cost', 'hazard-rate']
+    recommended_tool_slugs: ['sil', 'availability', 'bearing-life', 'k-out-of-n', 'downtime-cost', 'hazard-rate', 'duval-triangle', 'eafor', 'lopa', 'npsh-cavitation']
   }
 ];
 

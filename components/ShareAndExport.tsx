@@ -58,8 +58,9 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
   const [previewCardUrl, setPreviewCardUrl] = useState<string | null>(null);
   const [copiedImage, setCopiedImage] = useState(false);
 
-  // Determine current active URL
+  // Determine current active URL and clean canonical URL (stripped of query parameters)
   const currentUrl = customShareUrl || (typeof window !== 'undefined' ? window.location.href : 'https://reliabilitytools.co.in');
+  const canonicalUrl = currentUrl.split('?')[0].split('#')[0];
 
   // Resolves structured inputs & results even if tool only provided exportData or resultSummary
   const resolvedData = React.useMemo(() => {
@@ -111,7 +112,7 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
     };
   }, [pdfData, exportData, toolName, resultSummary]);
 
-  // Construct text for WhatsApp (wa.me) & social channels
+  // Construct text for WhatsApp (wa.me) & social channels using canonical URL (Rule 3)
   const formattedResultsText = Object.entries(resolvedData.results)
     .slice(0, 3)
     .map(([k, v]) => `• ${k}: *${v}*`)
@@ -119,13 +120,14 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
 
   const waMessage = `🛠️ *${toolName} Analysis Results*\n` +
     (formattedResultsText ? `${formattedResultsText}\n\n` : (resultSummary ? `📊 Result: *${resultSummary}*\n\n` : '')) +
-    `👉 View live calculation & report: ${currentUrl}\n` +
+    `👉 View calculation & report: ${canonicalUrl}\n` +
     `Calculated on ReliabilityTools.co.in`;
 
+  // WhatsApp & LinkedIn MUST always share canonical URLs, never parameterized result URLs
   const waShareUrl = `https://wa.me/?text=${encodeURIComponent(waMessage)}`;
-  const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`;
-  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Calculated ${toolName} results on @ReliabilityTools:`)}&url=${encodeURIComponent(currentUrl)}`;
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+  const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalUrl)}`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Calculated ${toolName} results on @ReliabilityTools:`)}&url=${encodeURIComponent(canonicalUrl)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`;
 
   // --- Actions ---
 
@@ -290,7 +292,7 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
       <Helmet>
         <meta property="og:title" content={`${toolName} Calculation Results | Reliability Tools`} />
         <meta property="og:description" content={ogDescription} />
-        <meta property="og:url" content={currentUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta name="twitter:title" content={`${toolName} Results | Reliability Tools`} />
         <meta name="twitter:description" content={ogDescription} />
       </Helmet>

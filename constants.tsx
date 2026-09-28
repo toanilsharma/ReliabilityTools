@@ -340,6 +340,96 @@ export const TOOLS: ToolDefinition[] = [
     category: 'Planning',
     iconName: 'HelpCircle',
     colorTheme: 'purple'
+  },
+  {
+    id: 'duval-triangle',
+    name: 'Duval Triangle Calculator',
+    description: 'Classify transformer DGA oil faults per IEC 60599 and IEEE C57.104 using Duval Triangle 1 coordinates.',
+    path: '/tools/duval-triangle/',
+    category: 'Analysis',
+    iconName: 'Zap',
+    colorTheme: 'cyan'
+  },
+  {
+    id: 'lopa',
+    name: 'LOPA & SIL Calculator',
+    description: 'Perform Layer of Protection Analysis per IEC 61511 and CCPS to allocate target Safety Integrity Levels.',
+    path: '/tools/lopa/',
+    category: 'Analysis',
+    iconName: 'ShieldAlert',
+    colorTheme: 'emerald'
+  },
+  {
+    id: 'miners-rule',
+    name: "Miner's Rule Fatigue Calculator",
+    description: 'Calculate cumulative structural fatigue damage and consumed life per ISO 12107 and ASTM E1049 cycle sums.',
+    path: '/tools/miners-rule/',
+    category: 'Analysis',
+    iconName: 'Layers',
+    colorTheme: 'indigo'
+  },
+  {
+    id: 'error-budget',
+    name: 'Error Budget SLO Calculator',
+    description: 'Calculate SRE error budgets, allowable downtime, and multi-window burn rates per ISO 25010 and IEEE 730.',
+    path: '/tools/error-budget/',
+    category: 'Planning',
+    iconName: 'Server',
+    colorTheme: 'amber'
+  },
+  {
+    id: 'api-570-remaining-life',
+    name: 'API 570 UT Remaining Life',
+    description: 'Determine process piping corrosion rates, remaining life, and half-life inspection intervals per API 570.',
+    path: '/tools/api-570-remaining-life/',
+    category: 'Calculator',
+    iconName: 'Wrench',
+    colorTheme: 'blue'
+  },
+  {
+    id: 'npsh-cavitation',
+    name: 'NPSH Cavitation Calculator',
+    description: 'Calculate NPSHa and cavitation margin ratios for centrifugal pumps per ANSI/HI 9.6.1, ISO 9906, and API 610.',
+    path: '/tools/npsh-cavitation/',
+    category: 'Calculator',
+    iconName: 'Droplets',
+    colorTheme: 'cyan'
+  },
+  {
+    id: 'parts-count-mtbf',
+    name: 'Parts-Count MTBF (MIL-217)',
+    description: 'Predict electronic hardware failure rates, FITs, and MTBF using MIL-HDBK-217F and Telcordia SR-332.',
+    path: '/tools/parts-count-mtbf/',
+    category: 'Calculator',
+    iconName: 'Cpu',
+    colorTheme: 'purple'
+  },
+  {
+    id: 'eafor',
+    name: 'EAF & EFOR Availability',
+    description: 'Calculate Equivalent Availability Factor and Equivalent Forced Outage Rate for utilities per IEEE 762.',
+    path: '/tools/eafor/',
+    category: 'Analysis',
+    iconName: 'Gauge',
+    colorTheme: 'emerald'
+  },
+  {
+    id: 'pf-interval-optimizer',
+    name: 'P-F Interval Optimizer',
+    description: 'Optimize condition monitoring inspection frequencies along the P-F curve per SAE JA1011 and ISO 55000.',
+    path: '/tools/pf-interval-optimizer/',
+    category: 'Planning',
+    iconName: 'TrendingDown',
+    colorTheme: 'amber'
+  },
+  {
+    id: 'cpm-turnaround',
+    name: 'CPM Turnaround Scheduler',
+    description: 'Calculate Critical Path, total float, and plant shutdown outage durations per ISO 21500 and PMI standards.',
+    path: '/tools/cpm-turnaround/',
+    category: 'Planning',
+    iconName: 'GitCommit',
+    colorTheme: 'rose'
   }
 ];
 

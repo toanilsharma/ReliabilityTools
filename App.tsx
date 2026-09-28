@@ -49,6 +49,17 @@ const ParetoChartTool = lazy(() => import('./pages/Tools/ParetoChartTool'));
 const ReliabilityAllocationCalculator = lazy(() => import('./pages/Tools/ReliabilityAllocationCalculator'));
 const SpcCalculator = lazy(() => import('./pages/Tools/SpcCalculator'));
 const RcmDecisionWizard = lazy(() => import('./pages/Tools/RcmDecisionWizard'));
+// 10 Discipline Tools
+const DuvalTriangle = lazy(() => import('./pages/Tools/DuvalTriangle'));
+const LopaCalculator = lazy(() => import('./pages/Tools/LopaCalculator'));
+const MinersRule = lazy(() => import('./pages/Tools/MinersRule'));
+const ErrorBudgetCalculator = lazy(() => import('./pages/Tools/ErrorBudgetCalculator'));
+const Api570Calculator = lazy(() => import('./pages/Tools/Api570Calculator'));
+const NpshCalculator = lazy(() => import('./pages/Tools/NpshCalculator'));
+const PartsCountMtbf = lazy(() => import('./pages/Tools/PartsCountMtbf'));
+const EaforCalculator = lazy(() => import('./pages/Tools/EaforCalculator'));
+const PfOptimizer = lazy(() => import('./pages/Tools/PfOptimizer'));
+const CpmTurnaround = lazy(() => import('./pages/Tools/CpmTurnaround'));
 
 // Content & Legal
 const LearningCenter = lazy(() => import('./pages/LearningCenter'));
@@ -82,6 +93,14 @@ const Flashcards = lazy(() => import('./pages/Play/Flashcards'));
 const Leaderboard = lazy(() => import('./pages/Play/Leaderboard'));
 const UptimeTycoon = lazy(() => import('./pages/Play/UptimeTycoon'));
 const RcaDetective = lazy(() => import('./pages/Play/RcaDetective'));
+
+// Community & Data Surfaces
+const FailureMuseumHub = lazy(() => import('./pages/FailureMuseum/FailureMuseumHub'));
+const FailureCaseDetail = lazy(() => import('./pages/FailureMuseum/FailureCaseDetail'));
+const EventsHub = lazy(() => import('./pages/Events/EventsHub'));
+const BenchmarksHub = lazy(() => import('./pages/Benchmarks/BenchmarksHub'));
+const ApiDocs = lazy(() => import('./pages/Api/ApiDocs'));
+const ApiEndpointHandler = lazy(() => import('./pages/Api/ApiEndpointHandler'));
 
 import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 import ContextGlossary from './components/ContextGlossary';
@@ -139,6 +158,16 @@ const App: React.FC = () => {
               <Route path="tools/reliability-allocation" element={<ReliabilityAllocationCalculator />} />
               <Route path="tools/spc" element={<SpcCalculator />} />
               <Route path="tools/rcm-decision" element={<RcmDecisionWizard />} />
+              <Route path="tools/duval-triangle" element={<DuvalTriangle />} />
+              <Route path="tools/lopa" element={<LopaCalculator />} />
+              <Route path="tools/miners-rule" element={<MinersRule />} />
+              <Route path="tools/error-budget" element={<ErrorBudgetCalculator />} />
+              <Route path="tools/api-570-remaining-life" element={<Api570Calculator />} />
+              <Route path="tools/npsh-cavitation" element={<NpshCalculator />} />
+              <Route path="tools/parts-count-mtbf" element={<PartsCountMtbf />} />
+              <Route path="tools/eafor" element={<EaforCalculator />} />
+              <Route path="tools/pf-interval-optimizer" element={<PfOptimizer />} />
+              <Route path="tools/cpm-turnaround" element={<CpmTurnaround />} />
 
               {/* Content & Articles */}
               <Route path="learning" element={<LearningCenter />} />
@@ -177,6 +206,16 @@ const App: React.FC = () => {
               <Route path="skill-test" element={<SkillTestLanding />} />
               <Route path="skill-test/quiz" element={<SkillTestQuiz />} />
               <Route path="skill-test/results" element={<SkillTestResults />} />
+
+              {/* Community & Data Surfaces */}
+              <Route path="failure-museum" element={<FailureMuseumHub />} />
+              <Route path="failure-museum/:slug" element={<FailureCaseDetail />} />
+              <Route path="events" element={<EventsHub />} />
+              <Route path="events/jobs-digest" element={<EventsHub />} />
+              <Route path="benchmarks" element={<BenchmarksHub />} />
+              <Route path="api/docs" element={<ApiDocs />} />
+              <Route path="api" element={<ApiDocs />} />
+              <Route path="api/*" element={<ApiEndpointHandler />} />
             </Route>
 
             {/* Standalone Route for Embeds */}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import { getSeoMetadata, BASE_URL } from '../utils/seoConfig';
+import { getSeoMetadata, getRouteByPath, BASE_URL } from '../utils/seoConfig';
 
 interface SEOProps {
   title?: string;
@@ -36,11 +36,38 @@ const SEO: React.FC<SEOProps> = ({
   const hasStateQueryParams = !!location.search && location.search.length > 1;
   const shouldNoIndex = noIndex || defaultSeo.indexable === false || hasStateQueryParams;
 
-  // Determine OG type (game vs website)
-  const isGamePage = location.pathname.startsWith('/play/') && location.pathname !== '/play/';
+  // Determine route and page type from routes registry
+  const route = defaultSeo ? getRouteByPath(location.pathname) : undefined;
+  const routeType = route?.type;
 
-  // Dynamic OG image card per game
-  const GAME_OG_IMAGES: Record<string, string> = {
+  // Determine OG type (article vs game vs website)
+  const isArticleLike = routeType === 'article' || 
+    routeType === 'ugc' || 
+    location.pathname.startsWith('/learning/') || 
+    location.pathname.startsWith('/failure-museum/');
+
+  const isGameLike = routeType === 'game' || location.pathname.startsWith('/play/');
+
+  const ogType = isArticleLike ? 'article' : isGameLike ? 'game' : 'website';
+
+  // Branded fallback OG image card based on page type
+  let typeFallbackImage = `${BASE_URL}/og/default-fallback.png`;
+  if (routeType === 'tool' || location.pathname.startsWith('/tools/')) {
+    typeFallbackImage = `${BASE_URL}/og/tool-fallback.png`;
+  } else if (routeType === 'article' || location.pathname.startsWith('/learning/') || location.pathname.startsWith('/knowledge-hub')) {
+    typeFallbackImage = `${BASE_URL}/og/article-fallback.png`;
+  } else if (routeType === 'industry' || location.pathname.startsWith('/industries/')) {
+    typeFallbackImage = `${BASE_URL}/og/industry-fallback.png`;
+  } else if (routeType === 'ugc' || location.pathname.startsWith('/failure-museum')) {
+    typeFallbackImage = `${BASE_URL}/og/failure-museum.png`;
+  } else if (routeType === 'event' || location.pathname.startsWith('/events')) {
+    typeFallbackImage = `${BASE_URL}/og/events.png`;
+  } else if (routeType === 'game' || location.pathname.startsWith('/play/')) {
+    typeFallbackImage = `${BASE_URL}/og/play-hub.png`;
+  }
+
+  // Dynamic OG image card per route/game/tool
+  const ROUTE_OG_IMAGES: Record<string, string> = {
     '/play': `${BASE_URL}/og/play-hub.png`,
     '/play/': `${BASE_URL}/og/play-hub.png`,
     '/play/uptime-tycoon': `${BASE_URL}/og/uptime-tycoon.png`,
@@ -54,10 +81,40 @@ const SEO: React.FC<SEOProps> = ({
     '/play/flashcards': `${BASE_URL}/og/flashcards.png`,
     '/play/flashcards/': `${BASE_URL}/og/flashcards.png`,
     '/skill-test': `${BASE_URL}/og/skill-test.png`,
-    '/skill-test/': `${BASE_URL}/og/skill-test.png`
+    '/skill-test/': `${BASE_URL}/og/skill-test.png`,
+    '/tools/duval-triangle': `${BASE_URL}/og/duval-triangle.png`,
+    '/tools/duval-triangle/': `${BASE_URL}/og/duval-triangle.png`,
+    '/tools/lopa': `${BASE_URL}/og/lopa.png`,
+    '/tools/lopa/': `${BASE_URL}/og/lopa.png`,
+    '/tools/miners-rule': `${BASE_URL}/og/miners-rule.png`,
+    '/tools/miners-rule/': `${BASE_URL}/og/miners-rule.png`,
+    '/tools/error-budget': `${BASE_URL}/og/error-budget.png`,
+    '/tools/error-budget/': `${BASE_URL}/og/error-budget.png`,
+    '/tools/api-570-remaining-life': `${BASE_URL}/og/api-570-remaining-life.png`,
+    '/tools/api-570-remaining-life/': `${BASE_URL}/og/api-570-remaining-life.png`,
+    '/tools/npsh-cavitation': `${BASE_URL}/og/npsh-cavitation.png`,
+    '/tools/npsh-cavitation/': `${BASE_URL}/og/npsh-cavitation.png`,
+    '/tools/parts-count-mtbf': `${BASE_URL}/og/parts-count-mtbf.png`,
+    '/tools/parts-count-mtbf/': `${BASE_URL}/og/parts-count-mtbf.png`,
+    '/tools/eafor': `${BASE_URL}/og/eafor.png`,
+    '/tools/eafor/': `${BASE_URL}/og/eafor.png`,
+    '/tools/pf-interval-optimizer': `${BASE_URL}/og/pf-interval-optimizer.png`,
+    '/tools/pf-interval-optimizer/': `${BASE_URL}/og/pf-interval-optimizer.png`,
+    '/tools/cpm-turnaround': `${BASE_URL}/og/cpm-turnaround.png`,
+    '/tools/cpm-turnaround/': `${BASE_URL}/og/cpm-turnaround.png`,
+    '/failure-museum': `${BASE_URL}/og/failure-museum.png`,
+    '/failure-museum/': `${BASE_URL}/og/failure-museum.png`,
+    '/benchmarks': `${BASE_URL}/og/benchmarks.png`,
+    '/benchmarks/': `${BASE_URL}/og/benchmarks.png`,
+    '/events': `${BASE_URL}/og/events.png`,
+    '/events/': `${BASE_URL}/og/events.png`,
+    '/events/jobs-digest': `${BASE_URL}/og/events.png`,
+    '/events/jobs-digest/': `${BASE_URL}/og/events.png`,
+    '/api/docs': `${BASE_URL}/og/api-docs.png`,
+    '/api/docs/': `${BASE_URL}/og/api-docs.png`
   };
 
-  const ogImageUrl = customOgImage || GAME_OG_IMAGES[location.pathname] || `${BASE_URL}/social-preview.png`;
+  const ogImageUrl = customOgImage || ROUTE_OG_IMAGES[location.pathname] || typeFallbackImage;
 
   return (
     <Helmet>
@@ -78,11 +135,15 @@ const SEO: React.FC<SEOProps> = ({
       {/* CRITICAL: Self-Referencing Clean Canonical Tag */}
       <link rel="canonical" href={canonicalUrl} />
 
+      {/* Internationalization / hreflang alternates */}
+      <link rel="alternate" href={canonicalUrl} hrefLang="en" />
+      <link rel="alternate" href={canonicalUrl} hrefLang="x-default" />
+
       {/* Open Graph Tags */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:type" content={isGamePage ? 'game' : 'website'} />
+      <meta property="og:type" content={ogType} />
       <meta property="og:site_name" content="Reliability Tools" />
       <meta property="og:image" content={ogImageUrl} />
 

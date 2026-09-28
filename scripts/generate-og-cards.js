@@ -81,6 +81,204 @@ const CARDS = [
     url: 'reliabilitytools.co.in/skill-test/',
     accentGrad: 'linear-gradient(135deg, #f472b6 0%, #db2777 100%)',
     icon: '🎯'
+  },
+  {
+    fileName: 'duval-triangle.png',
+    badge: 'IEC 60599 / IEEE C57.104 DGA',
+    badgeColor: '#06b6d4',
+    title: 'Duval Triangle Calculator',
+    subtitle: 'Dissolved Gas Analysis (DGA) Transformer Fault Classification',
+    pills: ['% CH4 / C2H4 / C2H2', 'Ternary SVG Plot', 'Thermal Overheating', 'Arcing & PD Detection'],
+    url: 'reliabilitytools.co.in/tools/duval-triangle/',
+    accentGrad: 'linear-gradient(135deg, #06b6d4 0%, #0284c7 100%)',
+    icon: '⚡'
+  },
+  {
+    fileName: 'lopa.png',
+    badge: 'IEC 61511 / CCPS FUNCTIONAL SAFETY',
+    badgeColor: '#10b981',
+    title: 'LOPA & SIL Determination Calculator',
+    subtitle: 'Layer of Protection Analysis and Target Safety Integrity Level (SIL)',
+    pills: ['Initiating Frequencies', 'Independent Layers (IPL)', 'Mitigated Event Freq', 'Target SIL Allocation'],
+    url: 'reliabilitytools.co.in/tools/lopa/',
+    accentGrad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    icon: '🛡️'
+  },
+  {
+    fileName: 'miners-rule.png',
+    badge: 'ISO 12107 / ASTM E1049 FATIGUE',
+    badgeColor: '#6366f1',
+    title: "Miner's Rule Fatigue Calculator",
+    subtitle: 'Palmgren-Miner Linear Cumulative Structural Damage Modeling',
+    pills: ['Variable Stress Bins', 'S-N Curve Endurance', 'Damage Summation (D)', 'Remaining Life Factor'],
+    url: 'reliabilitytools.co.in/tools/miners-rule/',
+    accentGrad: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
+    icon: '🏗️'
+  },
+  {
+    fileName: 'error-budget.png',
+    badge: 'ISO 25010 / IEEE 730 SRE METRICS',
+    badgeColor: '#f59e0b',
+    title: 'Error Budget SLO Calculator',
+    subtitle: 'Site Reliability Engineering Downtime Budgets & Multi-Window Burn Rates',
+    pills: ['SLO & Uptime Targets', 'Allowable Outage Min', '14.4x Pager Burn Alerts', 'Feature Freeze Trigger'],
+    url: 'reliabilitytools.co.in/tools/error-budget/',
+    accentGrad: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    icon: '⏱️'
+  },
+  {
+    fileName: 'api-570-remaining-life.png',
+    badge: 'API 570 / API 510 PIPING INTEGRITY',
+    badgeColor: '#3b82f6',
+    title: 'API 570 UT Remaining Life Calculator',
+    subtitle: 'Process Piping Ultrasonic Thickness & Half-Life Inspection Intervals',
+    pills: ['Short/Long Corrosion Rates', 'Corrosion Allowance', 'Remaining Life Years', 'Half-Life Rule Intervals'],
+    url: 'reliabilitytools.co.in/tools/api-570-remaining-life/',
+    accentGrad: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+    icon: '🔧'
+  },
+  {
+    fileName: 'npsh-cavitation.png',
+    badge: 'ANSI/HI 9.6.1 / API 610 HYDRAULICS',
+    badgeColor: '#0ea5e9',
+    title: 'NPSH Cavitation Calculator',
+    subtitle: 'Centrifugal Pump Suction Head & Cavitation Safety Margin Analysis',
+    pills: ['NPSHa Available Head', 'Vapor Pressure Correction', 'Cavitation Margin Ratio', 'Erosion Prevention'],
+    url: 'reliabilitytools.co.in/tools/npsh-cavitation/',
+    accentGrad: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+    icon: '💧'
+  },
+  {
+    fileName: 'parts-count-mtbf.png',
+    badge: 'MIL-HDBK-217F / TELCORDIA SR-332',
+    badgeColor: '#a855f7',
+    title: 'Parts-Count MTBF Calculator',
+    subtitle: 'Electronic Assembly Reliability & Failure Rate Prediction',
+    pills: ['Interactive BOM Input', 'Environmental Factors (πE)', 'Quality Grades (πQ)', 'FITs & MTBF Hours'],
+    url: 'reliabilitytools.co.in/tools/parts-count-mtbf/',
+    accentGrad: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
+    icon: '💻'
+  },
+  {
+    fileName: 'eafor.png',
+    badge: 'IEEE 762 / NERC GADS UTILITY METRICS',
+    badgeColor: '#10b981',
+    title: 'EAF & EFOR Availability Calculator',
+    subtitle: 'Power Generation Equivalent Availability Factor & Forced Outage Rate',
+    pills: ['Equivalent Availability (EAF)', 'Eq. Forced Outages (EFOR)', 'Capacity Derated Hours', 'NERC GADS Benchmarks'],
+    url: 'reliabilitytools.co.in/tools/eafor/',
+    accentGrad: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+    icon: '⚡'
+  },
+  {
+    fileName: 'pf-interval-optimizer.png',
+    badge: 'SAE JA1011 / ISO 55000 RCM STANDARDS',
+    badgeColor: '#f97316',
+    title: 'P-F Interval Optimizer Calculator',
+    subtitle: 'Condition Monitoring Inspection Frequencies Along the P-F Curve',
+    pills: ['(P-F) / 2 Half-Interval Rule', 'Degradation Warning Time', 'Avoided Breakdown Savings', 'PdM ROI Analysis'],
+    url: 'reliabilitytools.co.in/tools/pf-interval-optimizer/',
+    accentGrad: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
+    icon: '📉'
+  },
+  {
+    fileName: 'cpm-turnaround.png',
+    badge: 'ISO 21500 / PMI PMBOK TURNAROUND',
+    badgeColor: '#ef4444',
+    title: 'CPM Turnaround Calculator',
+    subtitle: 'Critical Path Method & Shutdown Outage Schedule Optimizer',
+    pills: ['Forward/Backward Pass', 'Total Float & Slack', 'Critical Path Detection', 'Schedule Crashing Savings'],
+    url: 'reliabilitytools.co.in/tools/cpm-turnaround/',
+    accentGrad: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+    icon: '📅'
+  },
+  {
+    fileName: 'failure-museum.png',
+    badge: 'FORENSIC DISASTER ARCHIVE',
+    badgeColor: '#f43f5e',
+    title: 'The Industrial Failure Museum',
+    subtitle: 'Forensic Case Studies of Historic Industrial Catastrophes & Lessons',
+    pills: ['Root Cause 5-Why', 'Standards Breached', '14+ Case Dossiers', 'UGC Submission Sandbox'],
+    url: 'reliabilitytools.co.in/failure-museum/',
+    accentGrad: 'linear-gradient(135deg, #f43f5e 0%, #ea580c 100%)',
+    icon: '🏛️'
+  },
+  {
+    fileName: 'benchmarks.png',
+    badge: 'EMPIRICAL ASSET BENCHMARKS',
+    badgeColor: '#10b981',
+    title: 'Industrial Reliability Benchmarks',
+    subtitle: 'ISO 14224 Quartile Metrics Across 7 Global Manufacturing Sectors',
+    pills: ['Availability Quartiles', 'Unplanned Downtime', 'Cost % of RAV', 'Interactive Ranker'],
+    url: 'reliabilitytools.co.in/benchmarks/',
+    accentGrad: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+    icon: '📊'
+  },
+  {
+    fileName: 'events.png',
+    badge: 'CONFERENCES & JOBS DIGEST',
+    badgeColor: '#6366f1',
+    title: 'Reliability Events & Jobs Hub',
+    subtitle: 'IEEE RAMS, SMRP Conferences, Free Webinars & Verified Vacancies',
+    pills: ['Global Conferences', 'Free Pass Offers', 'Monthly Jobs Digest', 'Asset Management Roles'],
+    url: 'reliabilitytools.co.in/events/',
+    accentGrad: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
+    icon: '📅'
+  },
+  {
+    fileName: 'api-docs.png',
+    badge: 'REST CALCULATION API',
+    badgeColor: '#8b5cf6',
+    title: 'Reliability Calculation REST API',
+    subtitle: 'Programmatic High-Speed Endpoints for MTBF, Weibull & Benchmarks',
+    pills: ['MTBF & Hazard Rate', 'Weibull R(t) & h(t)', 'OEE Calculator', 'cURL / Node / Python'],
+    url: 'reliabilitytools.co.in/api/docs/',
+    accentGrad: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
+    icon: '⚡'
+  },
+  {
+    fileName: 'tool-fallback.png',
+    badge: 'INDUSTRIAL RELIABILITY CALCULATOR',
+    badgeColor: '#06b6d4',
+    title: 'Reliability Engineering Calculator Suite',
+    subtitle: 'Free ISO / IEEE / API Certified Calculators for Plant Engineers',
+    pills: ['MTBF & Availability', 'Weibull Analysis', 'FMEA & LOPA', 'Interactive Diagnostics'],
+    url: 'reliabilitytools.co.in/tools/',
+    accentGrad: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+    icon: '⚙️'
+  },
+  {
+    fileName: 'article-fallback.png',
+    badge: 'KNOWLEDGE HUB & TECHNICAL GUIDE',
+    badgeColor: '#3b82f6',
+    title: 'Reliability Engineering Knowledge Base',
+    subtitle: 'Expert Peer-Reviewed Methodology, Formulas & Worked Examples',
+    pills: ['ISO 14224 Standards', 'Weibull Physics', 'RCM Methodology', 'Worked Case Studies'],
+    url: 'reliabilitytools.co.in/learning/',
+    accentGrad: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)',
+    icon: '📚'
+  },
+  {
+    fileName: 'industry-fallback.png',
+    badge: 'VERTICAL INDUSTRY PLAYBOOK',
+    badgeColor: '#10b981',
+    title: 'Industrial Sector Reliability Guides',
+    subtitle: 'Tailored Asset Management Strategies & Recommended Calculation Suites',
+    pills: ['Sector KPIs', 'Dominant Failure Modes', 'Recommended Tools', 'SMRP Quartiles'],
+    url: 'reliabilitytools.co.in/industries/',
+    accentGrad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    icon: '🏭'
+  },
+  {
+    fileName: 'default-fallback.png',
+    badge: 'OPEN RELIABILITY PLATFORM',
+    badgeColor: '#06b6d4',
+    title: 'Reliability Tools Platform',
+    subtitle: 'The Open-Source Grade Suite for Industrial Maintenance & Reliability',
+    pills: ['47+ Calculators', 'Simulation Games', 'Empirical Benchmarks', 'Developer API'],
+    url: 'reliabilitytools.co.in',
+    accentGrad: 'linear-gradient(135deg, #06b6d4 0%, #6366f1 100%)',
+    icon: '🛡️'
   }
 ];
 

@@ -743,6 +743,156 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
       { name: 'RCM Decision Wizard', path: '/tools/rcm-decision/' }
     ]
   },
+  {
+    path: '/tools/duval-triangle/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Duval Triangle Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Diagnose transformer DGA oil faults using the IEC 60599 and IEEE C57.104 Duval Triangle 1 method. Accurately classify thermal, arcing, and discharge faults.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'Duval Triangle Calculator', path: '/tools/duval-triangle/' }
+    ]
+  },
+  {
+    path: '/tools/lopa/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'LOPA Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Perform Layer of Protection Analysis per IEC 61511 and CCPS guidelines. Quantify independent protection layers (IPLs) and determine target SIL requirements.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'LOPA Calculator', path: '/tools/lopa/' }
+    ]
+  },
+  {
+    path: '/tools/miners-rule/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: "Miner's Rule Fatigue Calculator – Free Online | Reliability Tools",
+    descriptionTemplate: 'Calculate cumulative fatigue damage and consumed structural life per ISO 12107 and ASTM E1049 using Palmgren-Miner linear damage accumulation cycle sums.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: "Miner's Rule Fatigue Calculator", path: '/tools/miners-rule/' }
+    ]
+  },
+  {
+    path: '/tools/error-budget/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Error Budget SLO Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Calculate software reliability error budgets, burn rates, and allowable downtime per ISO 25010 and IEEE 730 site reliability engineering SLO benchmarks.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'Error Budget SLO Calculator', path: '/tools/error-budget/' }
+    ]
+  },
+  {
+    path: '/tools/api-570-remaining-life/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'API 570 UT Remaining Life Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Calculate process piping corrosion rates, remaining life, and inspection intervals per API 570 and API 510 ultrasonic wall thickness UT inspection data.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'API 570 UT Remaining Life Calculator', path: '/tools/api-570-remaining-life/' }
+    ]
+  },
+  {
+    path: '/tools/npsh-cavitation/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'NPSH Cavitation Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Calculate Net Positive Suction Head available (NPSHa) and cavitation safety margins for centrifugal pumps per ANSI/HI 9.6.1, ISO 9906, and API 610 standards.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'NPSH Cavitation Calculator', path: '/tools/npsh-cavitation/' }
+    ]
+  },
+  {
+    path: '/tools/parts-count-mtbf/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'Parts-Count MTBF Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Predict electronic assembly reliability and failure rates using the MIL-HDBK-217F and Telcordia SR-332 parts-count method for early hardware system design.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'Parts-Count MTBF Calculator', path: '/tools/parts-count-mtbf/' }
+    ]
+  },
+  {
+    path: '/tools/eafor/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'EAF EFOR Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Calculate Equivalent Availability Factor (EAF) and Equivalent Forced Outage Rate (EFOR) for power generation units per IEEE 762 and NERC GADS standards.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'EAF EFOR Calculator', path: '/tools/eafor/' }
+    ]
+  },
+  {
+    path: '/tools/pf-interval-optimizer/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'P-F Interval Optimizer Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Determine optimal condition monitoring inspection frequencies along the P-F interval curve per SAE JA1011, SAE JA1012, and ISO 55000 asset management rules.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'P-F Interval Optimizer Calculator', path: '/tools/pf-interval-optimizer/' }
+    ]
+  },
+  {
+    path: '/tools/cpm-turnaround/',
+    type: 'tool',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebApplication', 'SoftwareApplication', 'BreadcrumbList', 'FAQPage'],
+    titleTemplate: 'CPM Turnaround Calculator – Free Online | Reliability Tools',
+    descriptionTemplate: 'Calculate the critical path, total float, and plant shutdown schedule duration for industrial maintenance turnarounds per ISO 21500 and PMI methodologies.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Tools', path: '/tools/' },
+      { name: 'CPM Turnaround Calculator', path: '/tools/cpm-turnaround/' }
+    ]
+  },
 
   // ==========================================
   // ==========================================
@@ -1003,6 +1153,156 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
       { name: 'Spinning Machines Case Study', path: '/learning/weibull-analysis-spinning-machines-case-study/' }
     ]
   },
+  {
+    path: '/learning/duval-triangle-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'Duval Triangle DGA Guide: Interpreting Transformer Gases | Reliability Tools',
+    descriptionTemplate: 'Master IEC 60599 and IEEE C57.104 Duval Triangle 1 dissolved gas analysis (DGA) to classify transformer thermal, arcing, and discharge faults.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'Duval Triangle DGA Guide', path: '/learning/duval-triangle-guide/' }
+    ]
+  },
+  {
+    path: '/learning/lopa-sil-determination-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'Layer of Protection Analysis (LOPA) Guide | Reliability Tools',
+    descriptionTemplate: 'Learn how to perform semi-quantitative LOPA risk assessments and allocate target SIL levels per IEC 61511 and CCPS functional safety rules.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'LOPA & SIL Determination Guide', path: '/learning/lopa-sil-determination-guide/' }
+    ]
+  },
+  {
+    path: '/learning/miners-rule-fatigue-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: "Palmgren-Miner's Rule Cumulative Fatigue Guide | Reliability Tools",
+    descriptionTemplate: 'A complete guide to cumulative fatigue damage, S-N curve cycle summation, and remaining structural life calculations per ISO 12107 and ASTM E1049.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: "Miner's Rule Fatigue Guide", path: '/learning/miners-rule-fatigue-guide/' }
+    ]
+  },
+  {
+    path: '/learning/error-budget-slo-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'Error Budgets and SLOs: SRE Guide | Reliability Tools',
+    descriptionTemplate: 'Master SRE error budgets, multi-window burn rate alerts, and allowable downtime limits per ISO 25010 and IEEE 730 software reliability standards.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'Error Budget & SLO Guide', path: '/learning/error-budget-slo-guide/' }
+    ]
+  },
+  {
+    path: '/learning/api-570-pipe-inspection-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'API 570 Piping Inspection & UT Thickness Guide | Reliability Tools',
+    descriptionTemplate: 'Learn how to calculate process piping corrosion rates, remaining life, and half-life inspection intervals using ultrasonic thickness data per API 570.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'API 570 Piping Inspection Guide', path: '/learning/api-570-pipe-inspection-guide/' }
+    ]
+  },
+  {
+    path: '/learning/npsh-pump-cavitation-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'NPSH & Pump Cavitation Prevention Guide | Reliability Tools',
+    descriptionTemplate: 'Comprehensive guide to calculating Net Positive Suction Head available (NPSHa) and maintaining ANSI/HI 9.6.1 and API 610 cavitation margins.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'NPSH & Cavitation Guide', path: '/learning/npsh-pump-cavitation-guide/' }
+    ]
+  },
+  {
+    path: '/learning/mil-hdbk-217-parts-count-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'MIL-HDBK-217F Parts-Count Reliability Guide | Reliability Tools',
+    descriptionTemplate: 'Predict electronic hardware failure rates, FITs, and MTBF using MIL-HDBK-217F and Telcordia SR-332 parts-count reliability models.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'Parts-Count Reliability Guide', path: '/learning/mil-hdbk-217-parts-count-guide/' }
+    ]
+  },
+  {
+    path: '/learning/ieee-762-eaf-efor-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'IEEE 762 & NERC GADS EAF and EFOR Guide | Reliability Tools',
+    descriptionTemplate: 'Master power generation utility availability metrics: Equivalent Availability Factor (EAF), Equivalent Forced Outage Rate (EFOR), and derated hours per IEEE 762.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'IEEE 762 Power Metrics Guide', path: '/learning/ieee-762-eaf-efor-guide/' }
+    ]
+  },
+  {
+    path: '/learning/pf-interval-optimization-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'P-F Interval Optimization & PdM Guide | Reliability Tools',
+    descriptionTemplate: 'Learn how to determine optimal predictive maintenance inspection intervals along the P-F curve per SAE JA1011, SAE JA1012, and ISO 55000.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'P-F Interval Optimization Guide', path: '/learning/pf-interval-optimization-guide/' }
+    ]
+  },
+  {
+    path: '/learning/cpm-turnaround-scheduling-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'BreadcrumbList'],
+    titleTemplate: 'Critical Path Method (CPM) Turnaround Guide | Reliability Tools',
+    descriptionTemplate: 'Optimize shutdown schedule logic, calculate total float, and identify critical path bottlenecks for plant turnarounds per ISO 21500 and PMI PMBOK.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'CPM Turnaround Scheduling Guide', path: '/learning/cpm-turnaround-scheduling-guide/' }
+    ]
+  },
 
   // ==========================================
   // 5. INDUSTRY LANDING PAGES (type: industry)
@@ -1206,6 +1506,291 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
       { name: 'Home', path: '/' },
       { name: 'Legal', path: '/legal/cookies/' },
       { name: 'Cookie Policy', path: '/legal/cookies/' }
+    ]
+  },
+
+  // ==========================================
+  // 7. COMMUNITY & DATA SURFACES
+  // ==========================================
+  {
+    path: '/failure-museum/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['ItemList', 'CollectionPage'],
+    titleTemplate: 'Industrial Failure Museum – Forensic Case Studies | Reliability Tools',
+    descriptionTemplate: 'Explore forensic engineering case studies of historic industrial catastrophes, root causes, standards violated, and reliability lessons learned.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' }
+    ]
+  },
+  {
+    path: '/failure-museum/space-shuttle-challenger-o-ring/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Space Shuttle Challenger STS-51-L Case Study | Reliability Tools',
+    descriptionTemplate: 'Forensic engineering investigation of the 1986 Space Shuttle Challenger SRB O-ring blow-by disaster, low-temperature elastomer glass transition, and NASA safety culture.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Challenger STS-51-L', path: '/failure-museum/space-shuttle-challenger-o-ring/' }
+    ]
+  },
+  {
+    path: '/failure-museum/chernobyl-reactor-4-runaway/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Chernobyl Unit 4 Nuclear Disaster Case Study | Reliability Tools',
+    descriptionTemplate: 'Technical analysis of the 1986 Chernobyl Unit 4 disaster, positive void coefficient, RBMK control rod graphite displacer defects, and thermal steam explosion.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Chernobyl Unit 4', path: '/failure-museum/chernobyl-reactor-4-runaway/' }
+    ]
+  },
+  {
+    path: '/failure-museum/deepwater-horizon-macondo-blowout/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Deepwater Horizon Well Blowout Case Study | Reliability Tools',
+    descriptionTemplate: 'Forensic review of the 2010 Deepwater Horizon Macondo blowout, subsea blind shear ram drill pipe buckling, primary cement seal failure, and API 53 barrier integrity.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Deepwater Horizon', path: '/failure-museum/deepwater-horizon-macondo-blowout/' }
+    ]
+  },
+  {
+    path: '/failure-museum/texas-city-refinery-isom-explosion/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'BP Texas City Refinery Explosion Case Study | Reliability Tools',
+    descriptionTemplate: 'Engineering root cause analysis of the 2005 BP Texas City raffinate splitter overfill, level transmitter false readings, atmospheric blowdown stack, and API 521.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'BP Texas City', path: '/failure-museum/texas-city-refinery-isom-explosion/' }
+    ]
+  },
+  {
+    path: '/failure-museum/hyatt-regency-walkway-collapse/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Hyatt Regency Walkway Collapse Case Study | Reliability Tools',
+    descriptionTemplate: 'Forensic structural analysis of the 1981 Kansas City Hyatt Regency walkway collapse, connection detail redesign doubling shear load on box beams, and AISC codes.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Hyatt Regency Walkway', path: '/failure-museum/hyatt-regency-walkway-collapse/' }
+    ]
+  },
+  {
+    path: '/failure-museum/bhopal-gas-tragedy-mic-release/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Bhopal Union Carbide Gas Tragedy Case Study | Reliability Tools',
+    descriptionTemplate: 'Process safety analysis of the 1984 Bhopal Methyl Isocyanate release, runaway exothermic trimerization, decommissioned chillers, and CCPS inherently safer design.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Bhopal Gas Tragedy', path: '/failure-museum/bhopal-gas-tragedy-mic-release/' }
+    ]
+  },
+  {
+    path: '/failure-museum/aloha-airlines-flight-243-decompression/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Aloha Airlines Flight 243 Decompression Case Study | Reliability Tools',
+    descriptionTemplate: 'Investigation of Aloha Airlines Flight 243 explosive decompression, multi-site fatigue cracking (MSD), lap joint epoxy disbonding, and FAA damage tolerance.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Aloha Airlines 243', path: '/failure-museum/aloha-airlines-flight-243-decompression/' }
+    ]
+  },
+  {
+    path: '/failure-museum/piper-alpha-platform-disaster/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Piper Alpha Offshore Platform Disaster Case Study | Reliability Tools',
+    descriptionTemplate: 'Safety investigation of the 1988 North Sea Piper Alpha platform disaster, condensate pump safety valve removal, permit-to-work failures, and firewall collapse.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Piper Alpha Platform', path: '/failure-museum/piper-alpha-platform-disaster/' }
+    ]
+  },
+  {
+    path: '/failure-museum/fukushima-daiichi-station-blackout/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Fukushima Daiichi Station Blackout Case Study | Reliability Tools',
+    descriptionTemplate: 'Nuclear engineering analysis of the 2011 Fukushima Daiichi total station blackout (SBO), seawall overtopping, emergency diesel flooding, and hydrogen explosions.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Fukushima Daiichi', path: '/failure-museum/fukushima-daiichi-station-blackout/' }
+    ]
+  },
+  {
+    path: '/failure-museum/flixborough-chemical-explosion/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Flixborough Chemical Plant Explosion Case Study | Reliability Tools',
+    descriptionTemplate: 'Forensic investigation of the 1974 Flixborough Nypro disaster, temporary 20-inch bellows bypass pipe installation without calculations, squirm shear, and MOC.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Flixborough Explosion', path: '/failure-museum/flixborough-chemical-explosion/' }
+    ]
+  },
+  {
+    path: '/failure-museum/point-pleasant-silver-bridge-collapse/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Point Pleasant Silver Bridge Collapse Case Study | Reliability Tools',
+    descriptionTemplate: 'Metallurgical failure analysis of the 1967 Point Pleasant Silver Bridge collapse, non-redundant eyebar stress-corrosion cracking, cleavage fracture, and NBIS.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Silver Bridge Collapse', path: '/failure-museum/point-pleasant-silver-bridge-collapse/' }
+    ]
+  },
+  {
+    path: '/failure-museum/ariane-5-flight-501-overflow/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Ariane 5 Flight 501 Software Overflow Case Study | Reliability Tools',
+    descriptionTemplate: 'Software reliability review of the 1996 Ariane 501 launch failure, 64-bit to 16-bit integer conversion overflow in inertial reference system (SRI), and DO-178B.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Ariane 5 Flight 501', path: '/failure-museum/ariane-5-flight-501-overflow/' }
+    ]
+  },
+  {
+    path: '/failure-museum/northeast-blackout-2003-alarm-stall/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: '2003 Northeast Blackout Cascading Grid Trip Case Study | Reliability Tools',
+    descriptionTemplate: 'Grid reliability analysis of the 2003 Northeast blackout, energy management software alarm race condition freeze, transmission line thermal tree contact, and NERC.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: '2003 Northeast Blackout', path: '/failure-museum/northeast-blackout-2003-alarm-stall/' }
+    ]
+  },
+  {
+    path: '/failure-museum/buncefield-oil-depot-explosion/',
+    type: 'ugc',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Article'],
+    titleTemplate: 'Buncefield Oil Storage Terminal Explosion Case Study | Reliability Tools',
+    descriptionTemplate: 'Forensic analysis of the 2005 Buncefield oil storage tank overfill, jammed servo gauge, high-level switch test pin defeat, vapor cloud explosion, and API 2350.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Failure Museum', path: '/failure-museum/' },
+      { name: 'Buncefield Depot Fire', path: '/failure-museum/buncefield-oil-depot-explosion/' }
+    ]
+  },
+  {
+    path: '/events/',
+    type: 'event',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'weekly',
+    schemaTypes: ['Event', 'CollectionPage'],
+    titleTemplate: 'Reliability Engineering Events & Conferences | Reliability Tools',
+    descriptionTemplate: 'Global industrial reliability conferences, RAMS symposiums, SMRP expos, and free condition monitoring webinars with complimentary virtual access.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Events', path: '/events/' }
+    ]
+  },
+  {
+    path: '/events/jobs-digest/',
+    type: 'event',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['CollectionPage'],
+    titleTemplate: 'Reliability Engineering Jobs Digest | Reliability Tools',
+    descriptionTemplate: 'Curated monthly industrial reliability, asset integrity, and maintenance engineering career opportunities from top energy and manufacturing companies.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Events', path: '/events/' },
+      { name: 'Jobs Digest', path: '/events/jobs-digest/' }
+    ]
+  },
+  {
+    path: '/benchmarks/',
+    type: 'utility',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['Dataset'],
+    titleTemplate: 'Industrial Reliability Benchmarks & Quartiles | Reliability Tools',
+    descriptionTemplate: 'Empirical maintenance and equipment reliability quartile benchmarks across 7 manufacturing sectors covering availability, MTBF, MTTR, and cost as % RAV.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Benchmarks', path: '/benchmarks/' }
+    ]
+  },
+  {
+    path: '/api/docs/',
+    type: 'utility',
+    indexable: true,
+    sitemapPriority: 0.8,
+    changefreq: 'monthly',
+    schemaTypes: ['WebAPI', 'APIReference'],
+    titleTemplate: 'Developer Calculation REST API Reference | Reliability Tools',
+    descriptionTemplate: 'Programmatic REST API reference for industrial reliability calculations, Weibull probability distributions, MTBF computations, and quartile benchmarks.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Developer API', path: '/api/docs/' }
     ]
   }
 ];
