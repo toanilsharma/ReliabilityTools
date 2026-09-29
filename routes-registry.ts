@@ -1303,6 +1303,21 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
       { name: 'CPM Turnaround Scheduling Guide', path: '/learning/cpm-turnaround-scheduling-guide/' }
     ]
   },
+  {
+    path: '/learning/what-is-reliability-engineering-guide/',
+    type: 'article',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['Article', 'FAQPage', 'BreadcrumbList'],
+    titleTemplate: 'What is Reliability Engineering? Standards & Formulas | Reliability Tools',
+    descriptionTemplate: 'Master reliability engineering: definition under IEC 60050-192 and ISO 14224, exponential & Weibull formulas, and 5-step equipment reliability calculation.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Learning Center', path: '/learning/' },
+      { name: 'What is Reliability Guide', path: '/learning/what-is-reliability-engineering-guide/' }
+    ]
+  },
 
   // ==========================================
   // 5. INDUSTRY LANDING PAGES (type: industry)

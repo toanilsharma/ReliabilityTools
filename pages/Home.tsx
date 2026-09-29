@@ -52,6 +52,7 @@ import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { useCounterAnimation } from '../hooks/useCounterAnimation';
 import RecentTools from '../components/RecentTools';
 import QuickStartWizard from '../components/QuickStartWizard';
+import ReliabilityFundamentals from '../components/ReliabilityFundamentals';
 
 // Lazy load widgets to avoid loading Recharts library on initial page load
 const AvailabilityChartWidget = React.lazy(() => import('../components/widgets/AvailabilityChart'));
@@ -563,6 +564,9 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Comprehensive Reliability Engineering Fundamentals & Standards */}
+      <ReliabilityFundamentals />
 
       {/* SEO Content: What is MTBF & Weibull Analysis */}
       <section className="relative py-24 overflow-hidden bg-white dark:bg-slate-950">

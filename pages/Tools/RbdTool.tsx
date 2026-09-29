@@ -521,11 +521,11 @@ const RbdTool: React.FC = () => {
     },
     {
       question: 'How do I draw custom connectors?',
-      answer: 'Enable the **Manual Connector Lines** toggle. Once active, drag from the source handle (Right side of a block) to the target handle (Left side of another block) to create custom routing paths.'
+      answer: 'Enable the <strong>Manual Connector Lines</strong> toggle. Once active, drag from the source handle (Right side of a block) to the target handle (Left side of another block) to create custom routing paths.'
     },
     {
       question: 'What is the Common Cause Failure (CCF) Beta factor?',
-      answer: 'The Beta factor ($\\beta$) represents the proportion of failures that affect multiple redundant components simultaneously. Adding a Beta factor penalizes parallel system reliability to prevent overly optimistic estimates.'
+      answer: 'The Beta factor (&beta;) represents the proportion of failures that affect multiple redundant components simultaneously. Adding a Beta factor penalizes parallel system reliability to prevent overly optimistic estimates.'
     },
     {
       question: 'How does the Monte Carlo simulation handle complex RBDs?',

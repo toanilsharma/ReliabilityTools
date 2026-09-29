@@ -145,7 +145,12 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
                                             }`}
                                     >
                                         <div className="px-6 pb-6 text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700/50 pt-4 mt-2">
-                                            <div dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                                            <div dangerouslySetInnerHTML={{
+                                                __html: faq.answer
+                                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                                    .replace(/\(\$\\beta\$\)/g, '(&beta;)')
+                                                    .replace(/\$\\beta\$/g, '&beta;')
+                                            }} />
                                         </div>
                                     </div>
                                 </div>

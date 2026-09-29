@@ -19,6 +19,8 @@ import SEO from '../components/SEO';
 import { createArticleSchema, createBreadcrumbSchema, BASE_URL } from '../utils/schemaGenerator';
 import ArticleToToolCTA from '../components/ArticleToToolCTA';
 import TableOfContents, { slugifyHeading } from '../components/TableOfContents';
+import 'katex/dist/katex.min.css';
+import { BlockMath, InlineMath } from 'react-katex';
 
 const MtbfCalculator = lazy(() => import('./Tools/MtbfCalculator'));
 const WeibullAnalysis = lazy(() => import('./Tools/WeibullAnalysis'));
@@ -73,83 +75,112 @@ const ArticleView: React.FC = () => {
     { name: article.title, url: articleUrl }
   ]);
 
-  // Helper to render Math expressions with basic LaTeX formatting
-  const renderMathContent = (latex: string) => {
-    const parts = latex.split(/(\^\{.*?\}|\^.)/g);
+  interface InlineToken {
+    type: 'text' | 'bold' | 'italic' | 'link' | 'math';
+    value?: string;
+    url?: string;
+    children?: InlineToken[];
+  }
 
-    return parts.map((part, i) => {
-      if (part.startsWith('^')) {
-        let content = part.startsWith('^{') ? part.slice(2, -1) : part.slice(1);
-        return <sup key={i} className="text-xs">{content}</sup>;
+  // Tokenizer regex matching from left to right:
+  // Math: \$[^$\n]+?\$
+  // Bold: \*\*(?:[^*]|\*(?!\*))+?\*\*
+  // Link: \[[^\]]+?\]\([^)]+?\)
+  // Italic: (?<!\*)\*(?:[^*]|\*\*[^*]+?\*\*)+?\*(?!\*)
+  const TOKEN_REGEX = /(\$[^$\n]+?\$|\*\*(?:[^*]|\*(?!\*))+?\*\*|\[[^\]]+?\]\([^)]+?\)|\*(?:[^*]|\*\*[^*]+?\*\*)+?\*)/;
+
+  const parseInlineTokens = (text: string): InlineToken[] => {
+    const result: InlineToken[] = [];
+    let remaining = text;
+
+    while (remaining.length > 0) {
+      const match = remaining.match(TOKEN_REGEX);
+      if (!match) {
+        result.push({ type: 'text', value: remaining });
+        break;
       }
 
-      let text = part
-        .replace(/\\approx/g, '≈')
-        .replace(/\\lambda/g, 'λ')
-        .replace(/\\beta/g, 'β')
-        .replace(/\\eta/g, 'η')
-        .replace(/\\times/g, '×')
-        .replace(/\\le/g, '≤')
-        .replace(/\\ge/g, '≥')
-        .replace(/\\infty/g, '∞')
-        .replace(/[{}]/g, '');
+      if (match.index && match.index > 0) {
+        result.push({ type: 'text', value: remaining.slice(0, match.index) });
+      }
 
-      return <span key={i}>{text}</span>;
+      const matchedStr = match[0];
+      if (matchedStr.startsWith('$') && matchedStr.endsWith('$')) {
+        result.push({ type: 'math', value: matchedStr.slice(1, -1) });
+      } else if (matchedStr.startsWith('**') && matchedStr.endsWith('**')) {
+        result.push({ type: 'bold', children: parseInlineTokens(matchedStr.slice(2, -2)) });
+      } else if (matchedStr.startsWith('[') && matchedStr.endsWith(')')) {
+        const linkMatch = matchedStr.match(/^\[(.*?)\]\((.*?)\)$/);
+        if (linkMatch) {
+          result.push({
+            type: 'link',
+            url: linkMatch[2],
+            children: parseInlineTokens(linkMatch[1])
+          });
+        } else {
+          result.push({ type: 'text', value: matchedStr });
+        }
+      } else if (matchedStr.startsWith('*') && matchedStr.endsWith('*')) {
+        result.push({ type: 'italic', children: parseInlineTokens(matchedStr.slice(1, -1)) });
+      } else {
+        result.push({ type: 'text', value: matchedStr });
+      }
+
+      remaining = remaining.slice((match.index || 0) + matchedStr.length);
+    }
+
+    return result;
+  };
+
+  const renderInlineTokens = (tokens: InlineToken[], keyPrefix = 'tok'): React.ReactNode[] => {
+    return tokens.map((token, i) => {
+      const key = `${keyPrefix}-${i}`;
+      switch (token.type) {
+        case 'text':
+          return <React.Fragment key={key}>{token.value}</React.Fragment>;
+        case 'bold':
+          return (
+            <strong key={key} className="font-bold text-slate-900 dark:text-white">
+              {renderInlineTokens(token.children || [], `${key}-b`)}
+            </strong>
+          );
+        case 'italic':
+          return (
+            <em key={key} className="italic text-slate-700 dark:text-slate-300">
+              {renderInlineTokens(token.children || [], `${key}-i`)}
+            </em>
+          );
+        case 'link':
+          return (
+            <Link
+              key={key}
+              to={token.url || '#'}
+              className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline decoration-2 underline-offset-2"
+            >
+              {renderInlineTokens(token.children || [], `${key}-l`)}
+            </Link>
+          );
+        case 'math':
+          return (
+            <span key={key} className="inline-block mx-0.5 align-baseline">
+              <InlineMath
+                math={token.value || ''}
+                renderError={() => (
+                  <span className="font-serif italic text-slate-800 dark:text-slate-200">
+                    {token.value}
+                  </span>
+                )}
+              />
+            </span>
+          );
+        default:
+          return null;
+      }
     });
   };
 
-  // Process text for Italics (*...*)
-  const processItalics = (text: string) => {
-    const parts = text.split(/(\*[^*]+?\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('*') && part.endsWith('*')) {
-        return <em key={i} className="italic text-slate-700 dark:text-slate-300">{part.slice(1, -1)}</em>;
-      }
-      return part;
-    });
-  };
-
-  // Process text for Bold (**...**)
-  const processBold = (text: string) => {
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="font-bold text-slate-900 dark:text-white">{processItalics(part.slice(2, -2))}</strong>;
-      }
-      return <React.Fragment key={i}>{processItalics(part)}</React.Fragment>;
-    });
-  };
-
-  // Process text for Math ($...$)
-  const processMath = (text: string) => {
-    const parts = text.split(/(\$.*?\$)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('$') && part.endsWith('$')) {
-        return (
-          <span key={i} className="font-serif italic text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded mx-0.5 inline-block text-[0.95em]">
-            {renderMathContent(part.slice(1, -1))}
-          </span>
-        );
-      }
-      return <React.Fragment key={i}>{processBold(part)}</React.Fragment>;
-    });
-  };
-
-  // Top Level Parser: Handles Links first
-  const parseText = (text: string) => {
-    const parts = text.split(/(\[.*?\]\(.*?\))/g);
-
-    return parts.map((part, i) => {
-      const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
-      if (linkMatch) {
-        return (
-          <Link key={i} to={linkMatch[2]} className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline decoration-2 underline-offset-2">
-            {linkMatch[1]}
-          </Link>
-        );
-      }
-      return <React.Fragment key={i}>{processMath(part)}</React.Fragment>;
-    });
+  const parseText = (text: string, keyPrefix = 'txt'): React.ReactNode => {
+    return <>{renderInlineTokens(parseInlineTokens(text), keyPrefix)}</>;
   };
 
   const renderContent = (content: string) => {
@@ -161,8 +192,9 @@ const ArticleView: React.FC = () => {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      const trimmed = line.trim();
 
-      if (line.trim().startsWith('|')) {
+      if (trimmed.startsWith('|')) {
         inTable = true;
         tableBuffer.push(line);
         continue;
@@ -172,60 +204,94 @@ const ArticleView: React.FC = () => {
         inTable = false;
       }
 
+      // Check for Block Math: e.g. $$ ... $$ or > $$ ... $$ or indented $$ ... $$
+      const blockMathMatch = trimmed.match(/^(?:>\s*)?\$\$(.+?)\$\$\s*$/);
+      if (blockMathMatch) {
+        const mathContent = blockMathMatch[1].trim();
+        elements.push(
+          <div
+            key={i}
+            className="my-8 overflow-x-auto py-4 px-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm flex justify-center text-slate-900 dark:text-white"
+          >
+            <BlockMath
+              math={mathContent}
+              renderError={() => (
+                <pre className="font-mono text-xs text-amber-600 dark:text-amber-400 overflow-x-auto">
+                  {mathContent}
+                </pre>
+              )}
+            />
+          </div>
+        );
+        continue;
+      }
+
       // Headers with Slugified ID for Table of Contents & Scroll-Spy
       if (line.startsWith('## ')) {
         const rawText = line.replace('## ', '').trim();
         const headingId = slugifyHeading(rawText);
         elements.push(
-          <h2 id={headingId} key={i} className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 border-l-4 border-cyan-500 pl-4 scroll-mt-24">
-            {rawText}
+          <h2
+            id={headingId}
+            key={i}
+            className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 border-l-4 border-cyan-500 pl-4 scroll-mt-24"
+          >
+            {parseText(rawText, `h2-${i}`)}
           </h2>
         );
       } else if (line.startsWith('### ')) {
         const rawText = line.replace('### ', '').trim();
         const headingId = slugifyHeading(rawText);
         elements.push(
-          <h3 id={headingId} key={i} className="text-xl font-bold text-slate-800 dark:text-slate-200 mt-8 mb-4 scroll-mt-24">
-            {rawText}
+          <h3
+            id={headingId}
+            key={i}
+            className="text-xl font-bold text-slate-800 dark:text-slate-200 mt-8 mb-4 scroll-mt-24"
+          >
+            {parseText(rawText, `h3-${i}`)}
           </h3>
         );
-      }
-      else if (line.startsWith('• ') || line.startsWith('- ')) {
+      } else if (line.startsWith('• ') || line.startsWith('- ')) {
         elements.push(
           <div key={i} className="flex items-start gap-3 mb-3 ml-2">
             <CheckCircle2 className="w-5 h-5 text-cyan-600 dark:text-cyan-400 mt-1 shrink-0" />
             <span className="text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg">
-              {parseText(line.replace(/^[-•] /, ''))}
+              {parseText(line.replace(/^[-•] /, ''), `li-${i}`)}
             </span>
           </div>
         );
-      }
-      else if (line.startsWith('> ')) {
+      } else if (line.startsWith('> ')) {
         elements.push(
-          <div key={i} className="bg-slate-50 dark:bg-slate-800/80 border-l-4 border-cyan-500 p-6 my-8 rounded-r-2xl shadow-sm">
+          <div
+            key={i}
+            className="bg-slate-50 dark:bg-slate-800/80 border-l-4 border-cyan-500 p-6 my-8 rounded-r-2xl shadow-sm"
+          >
             <div className="text-slate-700 dark:text-slate-300 italic leading-relaxed text-lg font-serif">
-              {parseText(line.replace('> ', ''))}
+              {parseText(line.replace(/^>\s*/, ''), `quote-${i}`)}
             </div>
           </div>
         );
-      }
-      else if (line.trim().startsWith('{{CALCULATOR:') && line.trim().endsWith('}}')) {
-        const id = line.trim().replace('{{CALCULATOR:', '').replace('}}', '');
+      } else if (trimmed.startsWith('{{CALCULATOR:') && trimmed.endsWith('}}')) {
+        const id = trimmed.replace('{{CALCULATOR:', '').replace('}}', '');
         elements.push(
-          <div key={i} className="my-12 p-1 pt-6 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl relative bg-white dark:bg-slate-900 border-t-4 border-t-cyan-500">
-             <div className="absolute top-0 right-8 bg-cyan-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg z-10">Interactive Tool</div>
-             <Suspense fallback={<div className="p-12 text-center text-slate-500">Loading Calculator...</div>}>
-               {renderCalculator(id)}
-             </Suspense>
+          <div
+            key={i}
+            className="my-12 p-1 pt-6 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl relative bg-white dark:bg-slate-900 border-t-4 border-t-cyan-500"
+          >
+            <div className="absolute top-0 right-8 bg-cyan-500 text-white text-xs font-bold px-4 py-1 rounded-b-lg z-10">
+              Interactive Tool
+            </div>
+            <Suspense fallback={<div className="p-12 text-center text-slate-500">Loading Calculator...</div>}>
+              {renderCalculator(id)}
+            </Suspense>
           </div>
         );
-      }
-      else if (line.trim() === '') {
+      } else if (trimmed === '') {
         elements.push(<div key={i} className="h-4" />);
       } else {
         elements.push(
           <p key={i} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg mb-6">
-            {parseText(line)}
+            {parseText(line, `p-${i}`)}
           </p>
         );
       }

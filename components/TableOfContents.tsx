@@ -7,6 +7,20 @@ export interface TocItem {
   level: 2 | 3;
 }
 
+export function cleanHeadingText(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\$([^\$]+)\$/g, '$1')
+    .replace(/\\lambda/g, 'λ')
+    .replace(/\\beta/g, 'β')
+    .replace(/\\eta/g, 'η')
+    .replace(/\\mu/g, 'μ')
+    .replace(/\\times/g, '×')
+    .replace(/\\approx/g, '≈')
+    .replace(/\\text\{([^}]+)\}/g, '$1')
+    .trim();
+}
+
 export function extractTocHeadings(content: string): TocItem[] {
   const lines = content.split('\n');
   const toc: TocItem[] = [];
@@ -14,12 +28,14 @@ export function extractTocHeadings(content: string): TocItem[] {
   lines.forEach((line) => {
     const trimmed = line.trim();
     if (trimmed.startsWith('## ')) {
-      const text = trimmed.replace('## ', '').trim();
-      const id = slugifyHeading(text);
+      const rawText = trimmed.replace('## ', '').trim();
+      const id = slugifyHeading(rawText);
+      const text = cleanHeadingText(rawText);
       if (id && text) toc.push({ id, text, level: 2 });
     } else if (trimmed.startsWith('### ')) {
-      const text = trimmed.replace('### ', '').trim();
-      const id = slugifyHeading(text);
+      const rawText = trimmed.replace('### ', '').trim();
+      const id = slugifyHeading(rawText);
+      const text = cleanHeadingText(rawText);
       if (id && text) toc.push({ id, text, level: 3 });
     }
   });
