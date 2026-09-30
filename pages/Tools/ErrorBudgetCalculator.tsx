@@ -45,16 +45,14 @@ const ErrorBudgetCalculator: React.FC = () => {
     obsDowntimeMinutes 
   } = state;
 
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'error-budget',
-        name: 'Error Budget SLO Calculator',
-        path: '/tools/error-budget/'
-      });
-    }
+    addRecentTool({
+      id: 'error-budget',
+      name: 'Error Budget SLO Calculator',
+      path: '/tools/error-budget/'
+    });
   }, []);
 
   const numSlo = Math.min(99.999, Math.max(90, parseFloat(sloTarget) || 99.9));
@@ -273,7 +271,8 @@ const ErrorBudgetCalculator: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="Error Budget & SLO Calculator"
+        toolName="Error Budget & SLO Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/error-budget/"
         inputs={{
           "Service Name": serviceName,
           "Target SLO": `${sloTarget}%`,

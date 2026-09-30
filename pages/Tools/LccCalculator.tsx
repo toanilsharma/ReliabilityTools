@@ -28,6 +28,8 @@ import TheoryBlock from '../../components/TheoryBlock';
 import RelatedTools from '../../components/RelatedTools';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import ShareAndExport from '../../components/ShareAndExport';
+import AnimatedNumber from '../../components/AnimatedNumber';
+import CalculationProofDrawer from '../../components/CalculationProofDrawer';
 import { useRecentTools } from '../../hooks/useRecentTools';
 import { useShareableState } from '../../hooks/useShareableState';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -545,7 +547,9 @@ const LccCalculator: React.FC = () => {
 
             <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs font-bold text-slate-505">
               <span>Standard NPV:</span>
-              <span className="text-lg font-black text-slate-900 dark:text-slate-200">{curSymbol}{Math.round(analysisA.npv).toLocaleString()}</span>
+              <span className="text-lg font-black text-slate-900 dark:text-slate-200">
+                <AnimatedNumber value={Math.round(analysisA.npv)} prefix={curSymbol} />
+              </span>
             </div>
           </div>
         </AnimatedContainer>
@@ -628,7 +632,9 @@ const LccCalculator: React.FC = () => {
 
             <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs font-bold text-cyan-600 dark:text-cyan-400">
               <span>Premium NPV:</span>
-              <span className="text-lg font-black">{curSymbol}{Math.round(analysisB.npv).toLocaleString()}</span>
+              <span className="text-lg font-black">
+                <AnimatedNumber value={Math.round(analysisB.npv)} prefix={curSymbol} />
+              </span>
             </div>
           </div>
         </AnimatedContainer>
@@ -647,7 +653,7 @@ const LccCalculator: React.FC = () => {
               {isBBetter ? "Option B (Premium) is the recommended investment" : "Option A (Standard) is the recommended investment"}
             </h4>
             <p className="text-sm text-slate-505 dark:text-slate-400">
-              By selecting the recommended option, you will save <strong className="text-emerald-600 dark:text-emerald-450">{curSymbol}{Math.round(Math.abs(diff)).toLocaleString()}</strong> in present value dollars over the {lifespan} year evaluation period.
+              By selecting the recommended option, you will save <strong className="text-emerald-600 dark:text-emerald-450"><AnimatedNumber value={Math.round(Math.abs(diff))} prefix={curSymbol} /></strong> in present value dollars over the {lifespan} year evaluation period.
             </p>
           </div>
 
@@ -655,7 +661,7 @@ const LccCalculator: React.FC = () => {
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">NPV Savings</span>
               <span className="text-2xl font-black text-emerald-505 block mt-1">
-                {savingsPercent.toFixed(1)}%
+                <AnimatedNumber value={savingsPercent} decimals={1} suffix="%" />
               </span>
             </div>
 
@@ -724,6 +730,64 @@ const LccCalculator: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Glass-Box Step-by-Step Mathematical Derivation */}
+      {(() => {
+        const katexCur = curSymbol === '$' ? '\\$' : `\\text{${curSymbol}}`;
+        return (
+          <CalculationProofDrawer
+            title="Life Cycle Cost (LCC) & Discounted Net Present Value Proof"
+            standard="ISO 15663 & IEC 60300-3-3"
+            standardClause="Life Cycle Costing for Petroleum, Natural Gas & Industrial Systems"
+            steps={[
+              {
+                name: "1. Total Initial Acquisition Outlay (CapEx)",
+                formula: "C_{\\text{initial}} = C_{\\text{purchase}} + C_{\\text{install}}",
+                substitution: `C_{\\text{initial, B}} = \\$${costB.toLocaleString()} + \\$${installationB.toLocaleString()} = \\$${(costB + installationB).toLocaleString()}`,
+                result: `C_{\\text{initial}} = ${katexCur}${(costB + installationB).toLocaleString()}`,
+                dimensionalAnalysis: "[\\text{upfront capital expenditure}]",
+                interpretation: "Initial capital barrier before commencing operational commissioning."
+              },
+              {
+                name: "2. Annual Recurring Operational Cash Flow (OpEx)",
+                formula: "C_{\\text{annual}} = C_{\\text{energy}} + C_{\\text{maint}} + (T_{\\text{downtime}} \\times C_{\\text{hourly}})",
+                substitution: `C_{\\text{annual, B}} = \\$${energyB.toLocaleString()} + \\$${maintB.toLocaleString()} + (${downtimeB}\\text{h} \\times \\$${downtimeCost}) = \\$${(energyB + maintB + downtimeB * downtimeCost).toLocaleString()}/\\text{yr}`,
+                result: `C_{\\text{annual}} = ${katexCur}${(energyB + maintB + downtimeB * downtimeCost).toLocaleString()}/\\text{yr}`,
+                dimensionalAnalysis: "\\frac{[\\text{operational currency}]}{[\\text{operating year}]}",
+                interpretation: "Annual burden comprising utility power consumption, preventive technician labor, and production outage loss."
+              },
+              {
+                name: `3. Discounted Net Present Value (r = ${discountRate}%, i = ${inflationRate}%)`,
+                formula: "\\text{NPV} = C_{\\text{initial}} + \\sum_{t=1}^{N} \\frac{C_{\\text{annual}}(t)}{(1 + r - i)^t} - \\frac{S}{(1 + r - i)^N}",
+                substitution: `\\text{NPV}_B = \\$${(costB + installationB).toLocaleString()} + \\text{DCF}_{1..${lifespan}} - \\text{Salvage} = \\$${Math.round(analysisB.npv).toLocaleString()}`,
+                result: `\\text{NPV}_B = ${katexCur}${Math.round(analysisB.npv).toLocaleString()}`,
+                dimensionalAnalysis: "[\\text{constant purchasing power currency}]",
+                interpretation: `Discounted cumulative present value over ${lifespan} operating years.`
+              },
+              {
+                name: "4. Net Life Cycle Present Value Economic Advantage",
+                formula: "\\Delta \\text{NPV} = \\text{NPV}_A - \\text{NPV}_B",
+                substitution: `\\Delta \\text{NPV} = \\$${Math.round(analysisA.npv).toLocaleString()} - \\$${Math.round(analysisB.npv).toLocaleString()} = \\$${Math.round(Math.abs(diff)).toLocaleString()}`,
+                result: `\\text{Net Savings} = ${katexCur}${Math.round(Math.abs(diff)).toLocaleString()}`,
+                dimensionalAnalysis: "[\\text{avoided life cycle expenditure}]",
+                interpretation: isBBetter
+                  ? `Option B higher initial CapEx is paid back in full by Year ${breakevenYear}, saving ${savingsPercent.toFixed(1)}% total LCC.`
+                  : "Option A baseline remains the economically optimal choice under specified discount rates."
+              }
+            ]}
+        assumptions={[
+          `Constant real discount rate of ${discountRate}% applied across ${lifespan}-year evaluation horizon.`,
+          "Energy and maintenance inflation assumed stationary over evaluated asset life.",
+          "Downtime hourly revenue loss reflects true contribution margin rather than full absorbed cost."
+        ]}
+        auditChecklist={[
+          "ISO 15663 Clause 6.2 compliance: Full boundary scope (CapEx, Energy, Maint, Downtime, Salvage) included.",
+          "Break-even payback year verified against corporate investment hurdle limits.",
+          "Salvage / decommissioning liability discounted to end-of-life horizon."
+        ]}
+      />
+    );
+  })()}
 
       {/* Share and Export */}
       <div className="mt-4">

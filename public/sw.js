@@ -1,7 +1,7 @@
 // Service Worker for ReliabilityTools PWA
-const CACHE_VERSION = 'rt-cache-v1';
-const STATIC_CACHE = 'rt-static-v1';
-const RUNTIME_CACHE = 'rt-runtime-v1';
+const CACHE_VERSION = 'rt-cache-v2';
+const STATIC_CACHE = 'rt-static-v2';
+const RUNTIME_CACHE = 'rt-runtime-v2';
 
 // Static assets to precache on install
 const PRECACHE_URLS = [

@@ -9,6 +9,7 @@ import SEO from './SEO';
 import JsonLd from './JsonLd';
 import Breadcrumbs from './Breadcrumbs';
 import BackToTop from './BackToTop';
+import ErrorBoundary from './ErrorBoundary';
 
 
 const Layout: React.FC = () => {
@@ -175,7 +176,9 @@ const Layout: React.FC = () => {
           </div>
         )}
         <div className={`max-w-7xl mx-auto px-3 md:px-6 lg:px-8 ${location.pathname !== '/' ? 'py-4 md:py-6' : 'py-8 md:py-12'}`}>
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </main>
 

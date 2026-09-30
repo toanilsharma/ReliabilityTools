@@ -65,16 +65,14 @@ const PartsCountMtbf: React.FC = () => {
   });
 
   const { assemblyName, environment, quality, missionHours, parts } = state;
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'parts-count-mtbf',
-        name: 'Parts-Count MTBF Calculator',
-        path: '/tools/parts-count-mtbf/'
-      });
-    }
+    addRecentTool({
+      id: 'parts-count-mtbf',
+      name: 'Parts-Count MTBF (MIL-217)',
+      path: '/tools/parts-count-mtbf/'
+    });
   }, []);
 
   const piE = ENV_FACTORS[environment]?.factor || 2.0;
@@ -322,7 +320,8 @@ const PartsCountMtbf: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="Parts-Count MTBF Reliability Prediction"
+        toolName="Parts-Count MTBF Reliability Prediction"
+        shareUrl="https://reliabilitytools.co.in/tools/parts-count-mtbf/"
         inputs={{
           "Assembly": assemblyName,
           "Environment": `${environment} (πE = ${piE})`,

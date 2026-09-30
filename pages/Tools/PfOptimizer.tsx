@@ -12,6 +12,9 @@ import {
 import ToolContentLayout from '../../components/ToolContentLayout';
 import RelatedTools from '../../components/RelatedTools';
 import ShareAndExport from '../../components/ShareAndExport';
+import AnimatedNumber from '../../components/AnimatedNumber';
+import CalculationProofDrawer from '../../components/CalculationProofDrawer';
+import DegradationTimelineVisualizer from '../../components/DegradationTimelineVisualizer';
 import { useRecentTools } from '../../hooks/useRecentTools';
 import { useShareableState } from '../../hooks/useShareableState';
 import 'katex/dist/katex.min.css';
@@ -27,9 +30,167 @@ interface PfState {
   safetyCritical: boolean; // High criticality requires P-F / 3 or P-F / 4
 }
 
+export interface CbmPreset {
+  id: string;
+  label: string;
+  failureMode: string;
+  technology: string;
+  sensorLocation: string;
+  pfDays: number;
+  cadence: string;
+  inspectionCost: number;
+  plannedCost: number;
+  unplannedCost: number;
+  mtbfYears: number;
+  isoStandard: string;
+  pPoint: string;
+  fPoint: string;
+  leadTimeBenefit: string;
+}
+
+export const CBM_PRESETS: CbmPreset[] = [
+  {
+    id: 'bearing-ultrasonic',
+    label: 'Bearing Micro-Fatigue (Ultrasonic)',
+    failureMode: 'Rolling Element Bearing Subsurface Micro-Cracking',
+    technology: 'High-Frequency Acoustic Emission & PeakVue Stress Wave',
+    sensorLocation: 'Radial on bearing housing load zone (rigid stud mount)',
+    pfDays: 180,
+    cadence: 'Monthly route (every 30 days)',
+    inspectionCost: 120,
+    plannedCost: 2800,
+    unplannedCost: 38000,
+    mtbfYears: 4.0,
+    isoStandard: 'ISO 18436-8 (Condition Monitoring: Ultrasound)',
+    pPoint: 'High-frequency stress wave energy spike (> 15 g-sE) with zero velocity increase',
+    fPoint: 'Severe spalling, temperature trip (> 95°C), and shaft damage',
+    leadTimeBenefit: 'Detects microscopic subsurface shear stress 4–6 months before standard vibration velocity'
+  },
+  {
+    id: 'bearing-vibration',
+    label: 'Bearing Surface Spalling (Vibration)',
+    failureMode: 'Bearing Outer/Inner Race Spalling & Flaking',
+    technology: 'Vibration Velocity Spectrum (FFT) & Envelope Demodulation (HFE)',
+    sensorLocation: 'Horizontal, Vertical & Axial on bearing cap',
+    pfDays: 60,
+    cadence: 'Bi-weekly (every 14-20 days)',
+    inspectionCost: 150,
+    plannedCost: 3500,
+    unplannedCost: 35000,
+    mtbfYears: 3.5,
+    isoStandard: 'ISO 20816-1 / ISO 10816-3 (Mechanical Vibration Criteria)',
+    pPoint: 'BPFO / BPFI bearing defect harmonics with sidebands; overall velocity > 4.5 mm/s',
+    fPoint: 'Cage breakup, roller lockup, catastrophic motor rotor-to-stator rub',
+    leadTimeBenefit: 'Provides 60-day window to stage replacement bearing and execute during scheduled PM'
+  },
+  {
+    id: 'unbalance-misalignment',
+    label: 'Rotor Unbalance / Misalignment',
+    failureMode: 'Shaft Dynamic Unbalance & Angular/Offset Misalignment',
+    technology: '1X & 2X Harmonics Phase Analysis & Laser Optical Alignment',
+    sensorLocation: 'Coupling adjacent radial and axial bearing points',
+    pfDays: 120,
+    cadence: 'Monthly (every 30 days)',
+    inspectionCost: 180,
+    plannedCost: 1200,
+    unplannedCost: 24000,
+    mtbfYears: 2.5,
+    isoStandard: 'ISO 1940-1 (Balance Quality) / ANSI/ASA S2.75',
+    pPoint: '1X phase stability shift > 30° or 2X axial vibration > 2.8 mm/s',
+    fPoint: 'Coupling elastomer shredding, bearing housing fatigue crack, shaft shear',
+    leadTimeBenefit: 'Enables quick cold/hot alignment trim without requiring machine overhaul'
+  },
+  {
+    id: 'gearbox-oil',
+    label: 'Gearbox Tooth Wear (Oil Analysis)',
+    failureMode: 'Gear Tooth Surface Pitting, Micropitting & Scuffing',
+    technology: 'Lube Oil Wear Debris Ferrography & Particle Count (ISO 4406)',
+    sensorLocation: 'Sump oil drain valve sample port upstream of filter',
+    pfDays: 90,
+    cadence: 'Monthly (every 30 days)',
+    inspectionCost: 220,
+    plannedCost: 6500,
+    unplannedCost: 85000,
+    mtbfYears: 5.0,
+    isoStandard: 'ISO 4406 Cleanliness Code / ASTM D7684 Ferrography',
+    pPoint: 'Ferrous wear index > 150 ppm; large cutting wear particles > 50 µm',
+    fPoint: 'Broken gear teeth, gearbox seizure, full production train shutdown',
+    leadTimeBenefit: 'Identifies abrasive particulate wear months before metal chips enter gearbox filters'
+  },
+  {
+    id: 'motor-mcsa',
+    label: 'Motor Stator Insulation (MCSA)',
+    failureMode: 'Motor Stator Winding Insulation Breakdown & Broken Rotor Bars',
+    technology: 'Motor Current Signature Analysis (MCSA) & Offline Tan-Delta',
+    sensorLocation: 'MCC starter cabinet CT/PT secondary current clamps',
+    pfDays: 45,
+    cadence: 'Bi-weekly (every 14-20 days)',
+    inspectionCost: 160,
+    plannedCost: 4500,
+    unplannedCost: 48000,
+    mtbfYears: 4.5,
+    isoStandard: 'IEEE 522 / IEEE 43 Insulation Resistance Standard',
+    pPoint: 'Sideband current peaks around line frequency [f_L(1 ± 2s)] exceed -45 dB',
+    fPoint: 'Phase-to-ground flashover, breaker trip, rewind required',
+    leadTimeBenefit: 'Prevents motor burn-out by identifying degraded varnish insulation early'
+  },
+  {
+    id: 'pump-seal',
+    label: 'Mechanical Seal Leak (Pressure/AE)',
+    failureMode: 'Centrifugal Pump Mechanical Seal Face Degradation & Dry Running',
+    technology: 'Buffer Fluid Barrier Pressure Differential & Airborne Ultrasound',
+    sensorLocation: 'Seal gland barrier fluid pot & atmospheric drain vent',
+    pfDays: 21,
+    cadence: 'Weekly (every 7 days)',
+    inspectionCost: 90,
+    plannedCost: 2200,
+    unplannedCost: 26000,
+    mtbfYears: 2.0,
+    isoStandard: 'API 682 (Pumps - Shaft Sealing Systems)',
+    pPoint: 'Barrier pot pressure loss > 0.5 bar/day or ultrasonic hissing at gland',
+    fPoint: 'Toxic/flammable chemical leakage, environmental reportable incident',
+    leadTimeBenefit: 'Prevents hazardous fluid release and expensive shaft sleeve gouging'
+  },
+  {
+    id: 'electrical-ir',
+    label: 'Switchgear Busbar (Infrared IR)',
+    failureMode: 'High-Resistance Loose Bolted Connection & Phase Imbalance',
+    technology: 'Radiometric Thermal Imaging (Infrared Route at >40% load)',
+    sensorLocation: 'Open cabinet inspection window (IR viewport camera)',
+    pfDays: 60,
+    cadence: 'Bi-monthly (every 60 days)',
+    inspectionCost: 250,
+    plannedCost: 800,
+    unplannedCost: 55000,
+    mtbfYears: 6.0,
+    isoStandard: 'NFPA 70B / ASTM E1934 Thermal Inspection Standard',
+    pPoint: 'Connection temperature rise ΔT > 10°C above adjacent phases',
+    fPoint: 'Arc-flash incident, busbar melting, substation catastrophic fire',
+    leadTimeBenefit: 'Enables 15-minute torquing correction during plant turnaround, eliminating fire risk'
+  },
+  {
+    id: 'valve-passing',
+    label: 'Control Valve Passing (Acoustic)',
+    failureMode: 'Control Valve Seat Erosion, Cavitation & Internal Leakage',
+    technology: 'Acoustic Emission Leak Detection & Smart Positioner Travel Diagnostics',
+    sensorLocation: 'Valve body neck downstream of trim seat',
+    pfDays: 75,
+    cadence: 'Monthly (every 30 days)',
+    inspectionCost: 110,
+    plannedCost: 1800,
+    unplannedCost: 32000,
+    mtbfYears: 3.0,
+    isoStandard: 'IEC 60534-4 (Industrial-Process Control Valves)',
+    pPoint: 'Ultrasonic decibel level > 35 dBµV with valve in closed position',
+    fPoint: 'Process contamination, runaway reaction, pressure relief valve lifting',
+    leadTimeBenefit: 'Identifies internal seat passing without unbolting or process line isolation'
+  }
+];
+
 const PfOptimizer: React.FC = () => {
+  const [selectedPresetId, setSelectedPresetId] = useState<string>('bearing-vibration');
   const [state, setState] = useShareableState<PfState>({
-    failureMode: 'Centrifugal Pump Bearing Spalling & Wear',
+    failureMode: 'Bearing Outer/Inner Race Spalling & Flaking',
     pfDurationDays: '60', // 2 months
     inspectionCost: '150', // $150 vibration route cost
     unplannedCost: '35000', // $35,000 catastrophic failure + downtime
@@ -48,16 +209,29 @@ const PfOptimizer: React.FC = () => {
     safetyCritical 
   } = state;
 
-  const { addRecentTools } = useRecentTools() as any;
+  const activePreset = CBM_PRESETS.find(p => p.id === selectedPresetId) || CBM_PRESETS[1];
+
+  const handleApplyPreset = (preset: CbmPreset) => {
+    setSelectedPresetId(preset.id);
+    setState({
+      failureMode: preset.failureMode,
+      pfDurationDays: String(preset.pfDays),
+      inspectionCost: String(preset.inspectionCost),
+      unplannedCost: String(preset.unplannedCost),
+      proactiveCost: String(preset.plannedCost),
+      mtbfYears: String(preset.mtbfYears),
+      safetyCritical: preset.id === 'pump-seal' || preset.id === 'electrical-ir'
+    });
+  };
+
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'pf-interval-optimizer',
-        name: 'P-F Interval Optimizer Calculator',
-        path: '/tools/pf-interval-optimizer/'
-      });
-    }
+    addRecentTool({
+      id: 'pf-interval-optimizer',
+      name: 'P-F Interval Optimizer',
+      path: '/tools/pf-interval-optimizer/'
+    });
   }, []);
 
   const pfDays = Math.max(1, parseFloat(pfDurationDays) || 60);
@@ -88,6 +262,40 @@ const PfOptimizer: React.FC = () => {
 
   const ToolComponent = (
     <div className="space-y-8">
+      {/* Failure Mechanism Presets Selector */}
+      <div className="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <span className="text-xs uppercase font-bold text-cyan-600 dark:text-cyan-400 tracking-wider">
+            Industrial Failure Mechanism & Technology Presets
+          </span>
+          <span className="text-xs text-slate-500">
+            Click to auto-populate established ISO / RCM values
+          </span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {CBM_PRESETS.map((preset) => {
+            const isSelected = selectedPresetId === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => handleApplyPreset(preset)}
+                className={`p-2.5 rounded-xl border text-left transition-all text-xs flex flex-col justify-between ${
+                  isSelected
+                    ? 'bg-cyan-500/10 border-cyan-500 text-cyan-700 dark:text-cyan-300 font-semibold shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-400'
+                }`}
+              >
+                <div className="font-bold truncate">{preset.label}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                  P-F: {preset.pfDays}d &bull; {preset.cadence}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Parameter Inputs */}
       <div className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200 dark:border-slate-800">
@@ -191,40 +399,40 @@ const PfOptimizer: React.FC = () => {
 
       {/* KPI Dashboard */}
       <div className="grid md:grid-cols-4 gap-4">
-        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-500 block">Recommended Task Interval</span>
           <span className="text-2xl font-black font-mono text-cyan-600 dark:text-cyan-400 mt-1 block">
-            Every {optimalIntervalDays} Days
+            Every <AnimatedNumber value={optimalIntervalDays} /> Days
           </span>
           <span className="text-[11px] text-slate-400">
             {safetyCritical ? 'Rule: (P-F) / 3' : 'Rule: (P-F) / 2'}
           </span>
         </div>
 
-        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-500 block">Minimum Warning Lead Time</span>
           <span className="text-2xl font-black font-mono text-slate-900 dark:text-white mt-1 block">
-            {leadTimeDays} Days
+            <AnimatedNumber value={leadTimeDays} /> Days
           </span>
           <span className="text-[11px] text-slate-400">
             Guaranteed planning window
           </span>
         </div>
 
-        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-500 block">Net Annual Savings</span>
           <span className="text-2xl font-black font-mono text-emerald-500 mt-1 block">
-            ${Math.round(netAnnualSavings).toLocaleString()}
+            <AnimatedNumber value={Math.round(netAnnualSavings)} prefix="$" />
           </span>
           <span className="text-[11px] text-slate-400">
             Avoided breakdown downtime
           </span>
         </div>
 
-        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <div className="p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-500 block">Condition Monitoring ROI</span>
           <span className="text-2xl font-black font-mono text-slate-900 dark:text-white mt-1 block">
-            {Math.round(roiPct).toLocaleString()}%
+            <AnimatedNumber value={Math.round(roiPct)} suffix="%" />
           </span>
           <span className="text-[11px] text-slate-400">
             Annual insp cost: ${Math.round(annualInspectionCost).toLocaleString()}
@@ -232,25 +440,165 @@ const PfOptimizer: React.FC = () => {
         </div>
       </div>
 
+      {/* Interactive Physics-Informed Degradation Digital Twin Simulator */}
+      <DegradationTimelineVisualizer
+        pfIntervalHours={pfDays * 24}
+        inspectionIntervalHours={optimalIntervalDays * 24}
+        technologyName={activePreset.technology}
+        leadTimeHours={leadTimeDays * 24}
+      />
+
+      {/* CBM Technology & Sensor Placement Protocol Card */}
+      <div className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <span className="text-xs uppercase font-bold text-cyan-600 dark:text-cyan-400 tracking-wider">
+              Diagnostic Protocol & Standards Matrix
+            </span>
+            <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              {activePreset.technology}
+            </h4>
+          </div>
+          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-700">
+            {activePreset.isoStandard}
+          </span>
+        </div>
+
+        {/* Visual Timeline Bar */}
+        <div>
+          <div className="flex justify-between text-xs text-slate-500 mb-1.5 font-medium">
+            <span>Point P: Detectable Defect</span>
+            <span>Task Interval: {optimalIntervalDays}d</span>
+            <span>Intervention Window: {leadTimeDays}d</span>
+            <span>Point F: Functional Failure</span>
+          </div>
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex">
+            <div 
+              style={{ width: `${(optimalIntervalDays / pfDays) * 100}%` }} 
+              className="bg-cyan-500 h-full flex items-center justify-center text-[10px] text-white font-bold"
+              title={`Max Inspection Gap: ${optimalIntervalDays} Days`}
+            >
+              Inspection Interval
+            </div>
+            <div 
+              style={{ width: `${(leadTimeDays / pfDays) * 100}%` }} 
+              className="bg-emerald-500 h-full flex items-center justify-center text-[10px] text-white font-bold"
+              title={`Protected Lead Time: ${leadTimeDays} Days`}
+            >
+              Guaranteed Lead Time
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="p-3.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+            <span className="font-bold text-slate-900 dark:text-white block">
+              Sensor Mounting Point & Technique:
+            </span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              {activePreset.sensorLocation}
+            </p>
+          </div>
+          <div className="p-3.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+            <span className="font-bold text-emerald-600 dark:text-emerald-400 block">
+              Lead Time Operational Advantage:
+            </span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              {activePreset.leadTimeBenefit}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="p-3.5 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800/50 space-y-1">
+            <span className="font-bold text-amber-800 dark:text-amber-300 block">
+              Point P Alarm Threshold (Potential Failure):
+            </span>
+            <p className="text-slate-700 dark:text-slate-300">
+              {activePreset.pPoint}
+            </p>
+          </div>
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/20 rounded-xl border border-rose-200 dark:border-rose-800/50 space-y-1">
+            <span className="font-bold text-rose-800 dark:text-rose-300 block">
+              Point F Consequence (Functional Failure):
+            </span>
+            <p className="text-slate-700 dark:text-slate-300">
+              {activePreset.fPoint}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Glass-Box Step-by-Step Mathematical Derivation & Standards Proof */}
+      <CalculationProofDrawer
+        title="P-F Interval & Inspection Cadence Proof"
+        standard="SAE JA1011 / JA1012 & ISO 17359"
+        standardClause="SAE JA1011 §5.5 (On-Condition Tasks)"
+        steps={[
+          {
+            name: "1. Optimal Inspection Cadence (Nyquist Condition Sampling)",
+            formula: "T_{\\text{insp}} \\le \\frac{P-F}{k} \\quad (k = 2 \\text{ standard}, k = 3 \\text{ critical})",
+            substitution: `T_{\\text{insp}} = \\frac{${pfDays}\\text{ days}}{${divisor}} = ${optimalIntervalDays}\\text{ days}`,
+            result: `T_{\\text{insp}} = ${optimalIntervalDays}\\text{ days}`,
+            dimensionalAnalysis: "\\frac{[\\text{calendar days}]}{[\\text{inspection frequency}]}",
+            interpretation: "Guarantees at least 1-2 inspections occur within the P-F degradation window before functional breakdown."
+          },
+          {
+            name: "2. Actionable Lead-Time Buffer (Planning Window)",
+            formula: "T_{\\text{lead}} = (P-F) - T_{\\text{insp}}",
+            substitution: `T_{\\text{lead}} = ${pfDays}\\text{ days} - ${optimalIntervalDays}\\text{ days} = ${leadTimeDays}\\text{ days}`,
+            result: `T_{\\text{lead}} = ${leadTimeDays}\\text{ days}`,
+            dimensionalAnalysis: "[\\text{days of advance notice}]",
+            interpretation: "Maintenance planners have this guaranteed buffer to kit parts, stage scaffolding, and plan scheduled outage."
+          },
+          {
+            name: "3. Annual Net Cost Avoidance & PdM ROI",
+            formula: "\\Delta C = \\left( \\frac{C_{\\text{unplanned}}}{\\text{MTBF}} \\right) - \\left[ \\left( \\frac{C_{\\text{planned}}}{\\text{MTBF}} \\right) + C_{\\text{insp}} \\cdot \\left( \\frac{365}{T_{\\text{insp}}} \\right) \\right]",
+            substitution: `\\Delta C = \\left(\\frac{\\$${costUnplanned}}{${numMtbfYears}}\\right) - \\left[\\left(\\frac{\\$${costProactive}}{${numMtbfYears}}\\right) + \\$${costInsp} \\cdot ${Math.round(annualInspections)}\\right] = \\$${Math.round(netAnnualSavings).toLocaleString()}`,
+            result: `\\text{Net Savings} = \\$${Math.round(netAnnualSavings).toLocaleString()}/\\text{yr}`,
+            dimensionalAnalysis: "\\frac{[\\text{currency}]}{[\\text{operating year}]}",
+            interpretation: `Generating a ${Math.round(roiPct)}% return on condition monitoring investment.`
+          }
+        ]}
+        assumptions={[
+          "Failure mode degradation follows a monotonic P-F curve without abrupt stress-induced rupture.",
+          `Detection technology (${activePreset.technology}) has demonstrated probability of detection (PoD > 95%) at Point P.`,
+          "Repairs conducted before Point F prevent secondary damage to impellers, casings, and drive trains."
+        ]}
+        auditChecklist={[
+          "SAE JA1011 §5.5.1: Clear potential failure condition (Point P) physically defined.",
+          "SAE JA1011 §5.5.2: P-F interval is consistent and predictable under continuous operating conditions.",
+          "SAE JA1011 §5.5.3: Task interval is less than P-F interval with sufficient lead time to take preventative action."
+        ]}
+      />
+
       <ShareAndExport
-        toolTitle="P-F Interval Optimization Calculator"
-        inputs={{
-          "Asset / Failure Mode": failureMode,
-          "P-F Interval": `${pfDurationDays} Days`,
-          "Inspection Cost": `$${inspectionCost}`,
-          "Planned Repair Cost": `$${proactiveCost}`,
-          "Unplanned Failure Cost": `$${unplannedCost}`,
-          "Baseline MTBF": `${mtbfYears} Years`,
-          "High Criticality": safetyCritical ? "Yes (P-F / 3)" : "No (P-F / 2)"
-        }}
-        results={{
-          "Optimal Inspection Interval": `Every ${optimalIntervalDays} Days`,
-          "Minimum Lead Time": `${leadTimeDays} Days`,
-          "Net Annual Savings": `$${Math.round(netAnnualSavings).toLocaleString()}/yr`,
-          "PdM Program ROI": `${Math.round(roiPct)}%`
+        toolName="P-F Interval Optimization Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/pf-interval-optimizer/"
+        resultSummary={`Optimal Interval: Every ${optimalIntervalDays} Days | Net Savings: $${Math.round(netAnnualSavings).toLocaleString()}/yr`}
+        pdfData={{
+          inputs: {
+            "Asset / Failure Mode": failureMode,
+            "CBM Technology": activePreset.technology,
+            "Applicable Standard": activePreset.isoStandard,
+            "P-F Interval": `${pfDurationDays} Days`,
+            "Inspection Cost": `$${inspectionCost}`,
+            "Planned Repair Cost": `$${proactiveCost}`,
+            "Unplanned Failure Cost": `$${unplannedCost}`,
+            "Baseline MTBF": `${mtbfYears} Years`,
+            "High Criticality": safetyCritical ? "Yes (P-F / 3)" : "No (P-F / 2)"
+          },
+          results: {
+            "Optimal Inspection Interval": `Every ${optimalIntervalDays} Days`,
+            "Minimum Lead Time": `${leadTimeDays} Days`,
+            "Net Annual Savings": `$${Math.round(netAnnualSavings).toLocaleString()}/yr`,
+            "PdM Program ROI": `${Math.round(roiPct)}%`
+          }
         }}
         exportData={[
           { Parameter: "Failure Mode", Value: failureMode },
+          { Parameter: "Technology", Value: activePreset.technology },
+          { Parameter: "Governing Standard", Value: activePreset.isoStandard },
           { Parameter: "P-F Days", Value: pfDays },
           { Parameter: "Optimal Task Interval (Days)", Value: optimalIntervalDays },
           { Parameter: "Intervention Window (Days)", Value: leadTimeDays },

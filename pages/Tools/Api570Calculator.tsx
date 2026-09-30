@@ -54,16 +54,14 @@ const Api570Calculator: React.FC = () => {
     pipingClass 
   } = state;
 
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'api-570-remaining-life',
-        name: 'API 570 UT Remaining Life Calculator',
-        path: '/tools/api-570-remaining-life/'
-      });
-    }
+    addRecentTool({
+      id: 'api-570-remaining-life',
+      name: 'API 570 UT Remaining Life Calculator',
+      path: '/tools/api-570-remaining-life/'
+    });
   }, []);
 
   const tInit = Math.max(0, parseFloat(initialThickness) || 0);
@@ -291,7 +289,8 @@ const Api570Calculator: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="API 570 UT Remaining Life Calculator"
+        toolName="API 570 UT Remaining Life Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/api-570-remaining-life/"
         inputs={{
           "Circuit Tag": circuitId,
           "Initial Thickness": `${initialThickness} mm (${initialYear})`,

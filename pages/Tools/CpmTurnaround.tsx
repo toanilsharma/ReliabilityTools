@@ -133,16 +133,14 @@ const CpmTurnaround: React.FC = () => {
   });
 
   const { turnaroundName, dailyDowntimeCost, activities } = state;
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'cpm-turnaround',
-        name: 'CPM Turnaround Calculator',
-        path: '/tools/cpm-turnaround/'
-      });
-    }
+    addRecentTool({
+      id: 'cpm-turnaround',
+      name: 'CPM Turnaround Scheduler',
+      path: '/tools/cpm-turnaround/'
+    });
   }, []);
 
   const downtimePerDay = Math.max(0, parseFloat(dailyDowntimeCost) || 0);
@@ -356,7 +354,8 @@ const CpmTurnaround: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="CPM Turnaround & Shutdown Calculator"
+        toolName="CPM Turnaround & Shutdown Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/cpm-turnaround/"
         inputs={{
           "Turnaround Event": turnaroundName,
           "Daily Downtime Cost": `$${dailyDowntimeCost}/day`,

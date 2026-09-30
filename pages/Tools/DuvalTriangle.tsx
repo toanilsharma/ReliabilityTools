@@ -349,7 +349,8 @@ const DuvalTriangle: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="Duval Triangle DGA Calculator"
+        toolName="Duval Triangle DGA Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/duval-triangle/"
         inputs={{
           "Asset ID": transformerId,
           "Methane (CH4)": `${ch4} ppm`,

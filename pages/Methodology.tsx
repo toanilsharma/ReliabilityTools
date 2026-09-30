@@ -129,13 +129,13 @@ const Methodology: React.FC = () => {
             <Activity className="w-5 h-5 text-cyan-600" /> Exponential Reliability (Constant Failure Rate)
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            During the useful operating life of repairable equipment, the failure rate is constant ($\lambda = 1 / \text{MTBF}$). Reliability follows an exponential decay:
+            During the useful operating life of repairable equipment, the failure rate is constant (&lambda; = 1 / MTBF). Reliability follows an exponential decay:
           </p>
           <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl text-center font-mono text-cyan-600 dark:text-cyan-400 font-bold text-xl mb-4 border border-slate-200 dark:border-slate-700">
             R(t) = e^{"^{-\\lambda t}"} = e^{"^{-(t / MTBF)}"}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            <strong>Key Insight:</strong> When operating time equals MTBF ($t = \text{MTBF}$), $R(t) = e^{-1} \approx 36.8\%$. Over 63.2% of assets fail before reaching their MTBF!
+            <strong>Key Insight:</strong> When operating time equals MTBF (t = MTBF), R(t) = e⁻¹ &asymp; 36.8%. Over 63.2% of assets fail before reaching their MTBF!
           </p>
         </div>
 
@@ -150,7 +150,7 @@ const Methodology: React.FC = () => {
             R(t) = e^{"^{-(t / \\eta)^\\beta}"}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Our Weibull tool employs Median Rank Regression (MRR) via Benard's Approximation: $\text{MR} = (i - 0.3) / (N + 0.4)$.
+            Our Weibull tool employs Median Rank Regression (MRR) via Benard's Approximation: MR = (i - 0.3) / (N + 0.4).
           </p>
         </div>
 

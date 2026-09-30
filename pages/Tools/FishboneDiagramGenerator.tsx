@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { GitBranch, Plus, X, Download, HelpCircle, ZoomIn } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -7,18 +7,65 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
 import { Settings, Users, Hammer, Ruler, Waves, Microscope } from 'lucide-react';
 import ShareAndExport from '../../components/ShareAndExport';
-import { useRef } from 'react';
-
+import RcaCapaMatrix, { CapaItem } from '../../components/RcaCapaMatrix';
 
 interface Bone {
     category: string;
     causes: string[];
 }
 
+const DEFAULT_FISHBONE_CAPAS: CapaItem[] = [
+    {
+        id: 'fb-capa-1',
+        sourceCause: 'Machine: Misalignment & Unbalance',
+        actionDescription: 'Perform 4-point precision laser alignment and dynamic dual-plane balancing on motor-pump skid.',
+        actionType: 'Containment',
+        hierarchy: 'Substitution',
+        owner: 'Vibration Analyst',
+        dueDate: '2026-10-08',
+        verificationMetric: '1X and 2X radial vibration peaks below ISO 10816 Zone A (< 1.4 mm/s)',
+        status: 'Closed'
+    },
+    {
+        id: 'fb-capa-2',
+        sourceCause: 'Method: No Alignment Procedure & Wrong Lubrication Schedule',
+        actionDescription: 'Write and publish Standard Operating Procedure (SOP-M-42) for laser alignment tolerances and grease relubrication intervals.',
+        actionType: 'Permanent',
+        hierarchy: 'Administrative',
+        owner: 'Reliability Engineer',
+        dueDate: '2026-10-20',
+        verificationMetric: '100% craft technicians certified on SOP-M-42 with practical audit pass',
+        status: 'In Progress'
+    },
+    {
+        id: 'fb-capa-3',
+        sourceCause: 'Material: Soft Foot & Poor Quality Grease',
+        actionDescription: 'Install pre-cut 316 stainless steel shim packs to eliminate 0.15 mm soft foot; standardize on polyurea high-temp synthetic grease.',
+        actionType: 'Permanent',
+        hierarchy: 'Engineering',
+        owner: 'Lead Millwright',
+        dueDate: '2026-10-22',
+        verificationMetric: 'Dial indicator soft-foot check < 0.05 mm on all 4 foot pads',
+        status: 'In Progress'
+    },
+    {
+        id: 'fb-capa-4',
+        sourceCause: 'Measurement: Sensor loose & Calibration Drift',
+        actionDescription: 'Install permanently mounted stud-threaded accelerometers with quick-connect BNC junction box for route data collection.',
+        actionType: 'Permanent',
+        hierarchy: 'Engineering',
+        owner: 'Condition Monitoring Lead',
+        dueDate: '2026-11-05',
+        verificationMetric: 'Repeatability variance between route readings < 3%',
+        status: 'Open'
+    }
+];
+
 const FishboneDiagramGenerator: React.FC = () => {
     const toolRef = useRef<HTMLDivElement>(null);
     const shareUrl = window.location.href;
     const [problem, setProblem] = useState('Motor Vibration High');
+    const [capas, setCapas] = useState<CapaItem[]>(DEFAULT_FISHBONE_CAPAS);
 
     const [bones, setBones] = useState<Bone[]>([
         { category: 'Machine', causes: ['Misalignment', 'Unbalance', 'Bearing Defect'] },
@@ -71,93 +118,105 @@ const FishboneDiagramGenerator: React.FC = () => {
                         chartRef={toolRef}
                         resultSummary={problem}
                         exportData={[
-                            { Parameter: "Problem Statement", Value: problem },
-                            {},
-                            { Parameter: "--- CAUSES ---", Value: "" },
-                            ...bones.flatMap(b => b.causes.map(c => ({ Parameter: b.category, Value: c })))
-                        ]}
-                    />
-                </div>
-            </div>
-
-
-            {/* Diagram Area */}
-            <div className="overflow-x-auto pb-4">
-                <div id="fishbone-diagram" className="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl min-w-[900px] relative transition-colors">
-
-                    {/* Main Spine */}
-                    <div className="absolute top-1/2 left-10 right-40 h-[4px] bg-slate-900 dark:bg-slate-400 z-0"></div>
-
-                    {/* Head */}
-                    <div className="absolute top-1/2 right-4 -translate-y-1/2 w-36 h-24 border-2 border-slate-900 dark:border-slate-400 rounded-xl flex items-center justify-center p-2 bg-white dark:bg-slate-900 z-10 shadow-sm">
-                        <span className="font-extrabold text-center text-sm text-slate-900 dark:text-white line-clamp-3">{problem}</span>
-                    </div>
-
-                    {/* Ribs Container */}
-                    <div className="grid grid-cols-3 gap-y-32 gap-x-8 relative z-10 py-12">
-                        {bones.map((bone, idx) => (
-                            <div key={idx} className={`relative flex flex-col ${idx < 3 ? 'items-end' : 'items-end'}`}>
-
-                                {/* The Rib Line */}
-                                <div className={`absolute border-l-2 border-slate-400 h-24 ${idx < 3 ? 'bottom-[-48px] rotate-[-60deg] origin-bottom-right right-1/2' : 'top-[-48px] rotate-[60deg] origin-top-right right-1/2'}`}></div>
-
-                                {/* Category Box */}
-                                <div className="mb-2 relative z-20">
-                                    <span className="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-1 rounded font-bold text-sm border border-cyan-200 dark:border-cyan-800">
-                                        {bone.category}
-                                    </span>
-                                </div>
-
-                                {/* Causes List */}
-                                <div className="space-y-1 text-right pr-4">
-                                    {bone.causes.map((cause, cIdx) => (
-                                        <div key={cIdx} className="group relative pr-6">
-                                            <div className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 px-2 py-0.5 rounded shadow-sm border border-slate-100 dark:border-slate-700 inline-block max-w-[150px] truncate">
-                                                {cause}
-                                            </div>
-                                            {/* Connector from cause to rib */}
-                                            <div className="absolute right-0 top-1/2 w-6 h-[1px] bg-slate-300"></div>
-
-                                            <button
-                                                onClick={() => removeCause(idx, cIdx)}
-                                                className="absolute -left-4 top-0 text-red-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-opacity"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </div>
-                                    ))}
-
-                                    {/* Add Cause Input */}
-                                    <div className="relative mt-2">
-                                        {activeCategory === bone.category ? (
-                                            <div className="flex gap-1 items-center justify-end">
-                                                <input
-                                                    autoFocus
-                                                    value={newCause}
-                                                    onChange={e => setNewCause(e.target.value)}
-                                                    onKeyDown={e => e.key === 'Enter' && addCause(idx)}
-                                                    className="w-24 text-xs p-1 border rounded outline-none dark:bg-slate-700 dark:text-white"
-                                                    placeholder="Add..."
-                                                />
-                                                <button onClick={() => addCause(idx)} className="text-green-500"><Plus className="w-4 h-4" /></button>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => setActiveCategory(bone.category)}
-                                                className="text-xs text-cyan-600 hover:underline flex items-center justify-end gap-1 w-full"
-                                            >
-                                                <Plus className="w-3 h-3" /> Add Cause
-                                            </button>
-                                        )}
+                                                { Parameter: "Problem Statement", Value: problem },
+                                                {},
+                                                { Parameter: "--- CAUSES ---", Value: "" },
+                                                ...bones.flatMap(b => b.causes.map(c => ({ Parameter: b.category, Value: c }))),
+                                                {},
+                                                { Parameter: "--- CAPA ACTIONS ---", Value: "" },
+                                                ...capas.map(c => ({ Parameter: `${c.actionType} (${c.hierarchy})`, Value: `${c.actionDescription} | Owner: ${c.owner} | Due: ${c.dueDate} | Status: ${c.status}` }))
+                                            ]}
+                                        />
                                     </div>
                                 </div>
+
+
+                                {/* Diagram Area */}
+                                <div className="overflow-x-auto pb-4">
+                                    <div id="fishbone-diagram" className="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl min-w-[900px] relative transition-colors">
+
+                                        {/* Main Spine */}
+                                        <div className="absolute top-1/2 left-10 right-40 h-[4px] bg-slate-900 dark:bg-slate-400 z-0"></div>
+
+                                        {/* Head */}
+                                        <div className="absolute top-1/2 right-4 -translate-y-1/2 w-36 h-24 border-2 border-slate-900 dark:border-slate-400 rounded-xl flex items-center justify-center p-2 bg-white dark:bg-slate-900 z-10 shadow-sm">
+                                            <span className="font-extrabold text-center text-sm text-slate-900 dark:text-white line-clamp-3">{problem}</span>
+                                        </div>
+
+                                        {/* Ribs Container */}
+                                        <div className="grid grid-cols-3 gap-y-32 gap-x-8 relative z-10 py-12">
+                                            {bones.map((bone, idx) => (
+                                                <div key={idx} className={`relative flex flex-col ${idx < 3 ? 'items-end' : 'items-end'}`}>
+
+                                                    {/* The Rib Line */}
+                                                    <div className={`absolute border-l-2 border-slate-400 h-24 ${idx < 3 ? 'bottom-[-48px] rotate-[-60deg] origin-bottom-right right-1/2' : 'top-[-48px] rotate-[60deg] origin-top-right right-1/2'}`}></div>
+
+                                                    {/* Category Box */}
+                                                    <div className="mb-2 relative z-20">
+                                                        <span className="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-1 rounded font-bold text-sm border border-cyan-200 dark:border-cyan-800">
+                                                            {bone.category}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Causes List */}
+                                                    <div className="space-y-1 text-right pr-4">
+                                                        {bone.causes.map((cause, cIdx) => (
+                                                            <div key={cIdx} className="group relative pr-6">
+                                                                <div className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 px-2 py-0.5 rounded shadow-sm border border-slate-100 dark:border-slate-700 inline-block max-w-[150px] truncate">
+                                                                    {cause}
+                                                                </div>
+                                                                {/* Connector from cause to rib */}
+                                                                <div className="absolute right-0 top-1/2 w-6 h-[1px] bg-slate-300"></div>
+
+                                                                <button
+                                                                    onClick={() => removeCause(idx, cIdx)}
+                                                                    className="absolute -left-4 top-0 text-red-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-opacity"
+                                                                >
+                                                                    <X className="w-3 h-3" />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+
+                                                        {/* Add Cause Input */}
+                                                        <div className="relative mt-2">
+                                                            {activeCategory === bone.category ? (
+                                                                <div className="flex gap-1 items-center justify-end">
+                                                                    <input
+                                                                        autoFocus
+                                                                        value={newCause}
+                                                                        onChange={e => setNewCause(e.target.value)}
+                                                                        onKeyDown={e => e.key === 'Enter' && addCause(idx)}
+                                                                        className="w-24 text-xs p-1 border rounded outline-none dark:bg-slate-700 dark:text-white"
+                                                                        placeholder="Add..."
+                                                                    />
+                                                                    <button onClick={() => addCause(idx)} className="text-green-500"><Plus className="w-4 h-4" /></button>
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => setActiveCategory(bone.category)}
+                                                                    className="text-xs text-cyan-600 hover:underline flex items-center justify-end gap-1 w-full"
+                                                                >
+                                                                    <Plus className="w-3 h-3" /> Add Cause
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                </div>
                             </div>
-                        ))}
-                    </div>
-            </div>
-        </div>
-    </div>
-);
+
+                            {/* Actionable CAPA Matrix */}
+                            <RcaCapaMatrix
+                                capas={capas}
+                                onUpdateCapas={setCapas}
+                                suggestedCauses={bones.flatMap(b => b.causes.map(c => `${b.category}: ${c}`))}
+                                title="Ishikawa RCA-to-CAPA Matrix"
+                                subtitle="Link brainstorming causes across the 6M categories to accountable corrective and preventive engineering actions."
+                            />
+                        </div>
+                    );
 
   const Content = (
     <div className="space-y-8 mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">

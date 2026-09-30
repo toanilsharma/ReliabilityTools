@@ -44,16 +44,14 @@ const MinersRule: React.FC = () => {
   });
 
   const { componentName, criticalDamage, blocks } = state;
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'miners-rule',
-        name: "Miner's Rule Fatigue Calculator",
-        path: '/tools/miners-rule/'
-      });
-    }
+    addRecentTool({
+      id: 'miners-rule',
+      name: "Miner's Rule Fatigue Calculator",
+      path: '/tools/miners-rule/'
+    });
   }, []);
 
   const critD = Math.max(0.1, parseFloat(criticalDamage) || 1.0);
@@ -274,7 +272,8 @@ const MinersRule: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="Miner's Rule Cumulative Fatigue Calculator"
+        toolName="Miner's Rule Cumulative Fatigue Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/miners-rule/"
         inputs={{
           "Component": componentName,
           "Critical Damage Limit": criticalDamage,

@@ -13,6 +13,9 @@ import ToolContentLayout from '../../components/ToolContentLayout';
 import ShareAndExport from '../../components/ShareAndExport';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
+import AnimatedNumber from '../../components/AnimatedNumber';
+import CalculationProofDrawer from '../../components/CalculationProofDrawer';
+import BathtubVisualizer from '../../components/BathtubVisualizer';
 import { useRecentTools } from '../../hooks/useRecentTools';
 import { useLocation, Link } from 'react-router-dom';
 import { BathtubCurveDiagram } from '../../components/TheoryVisuals';
@@ -31,8 +34,21 @@ type Scenario = {
 
 const SCENARIO_COLORS = ['#14b8a6', '#f97316', '#6366f1', '#ef4444', '#eab308'];
 
+export interface CompetingModeSummary {
+  mode: string;
+  color: string;
+  failures: number;
+  censored: number;
+  beta: number;
+  eta: number;
+  b10: number;
+  rSquared: number;
+  diagnosis: { title: string; description: string };
+  result: WeibullResult;
+}
+
 const WeibullAnalysis: React.FC = () => {
-  const [inputData, setInputData] = useState<string>('120\n245+\n310\n550\n900');
+  const [inputData, setInputData] = useState<string>('85:Seal\n140:Seal\n220:Seal\n450:Bearing\n680:Bearing\n890:Bearing\n1150:Bearing\n1400+\n1650+');
   const [result, setResult] = useState<WeibullResult | null>(null);
   const [activeTab, setActiveTab] = useState<ChartTab>('prob');
   const [is3Parameter, setIs3Parameter] = useState(false);
@@ -54,16 +70,65 @@ const WeibullAnalysis: React.FC = () => {
     : '';
 
   const parseRawData = React.useCallback((raw: string) => {
-    return raw
-      .split(/[\n,]+/)
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => {
-        const isSuspended = s.endsWith('+') || s.toLowerCase().endsWith('s');
-        const numStr = s.replace(/[^0-9.]/g, '');
-        return { time: parseFloat(numStr), suspended: isSuspended };
-      })
-      .filter(d => !isNaN(d.time) && d.time > 0);
+    const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(s => s.length > 0);
+    const items: Array<{ time: number; suspended: boolean; mode?: string }> = [];
+
+    for (const line of lines) {
+      const isPureNumbers = line.includes(',') && line.split(',').every(part => {
+        const clean = part.trim().replace('+', '');
+        return !isNaN(Number(clean)) && clean.length > 0;
+      });
+
+      const subParts = isPureNumbers ? line.split(',') : [line];
+
+      for (const part of subParts) {
+        const trimmed = part.trim();
+        if (!trimmed) continue;
+
+        let timePart = trimmed;
+        let modePart: string | undefined = undefined;
+
+        if (trimmed.includes(':')) {
+          const idx = trimmed.indexOf(':');
+          timePart = trimmed.substring(0, idx).trim();
+          modePart = trimmed.substring(idx + 1).trim();
+        } else if (trimmed.includes(',') && isNaN(Number(trimmed.split(',')[1]?.trim()?.replace('+', '') ?? 'x'))) {
+          const idx = trimmed.indexOf(',');
+          timePart = trimmed.substring(0, idx).trim();
+          modePart = trimmed.substring(idx + 1).trim();
+        } else if (trimmed.includes(';') && isNaN(Number(trimmed.split(';')[1]?.trim()?.replace('+', '') ?? 'x'))) {
+          const idx = trimmed.indexOf(';');
+          timePart = trimmed.substring(0, idx).trim();
+          modePart = trimmed.substring(idx + 1).trim();
+        } else if (trimmed.includes('\t')) {
+          const idx = trimmed.indexOf('\t');
+          timePart = trimmed.substring(0, idx).trim();
+          modePart = trimmed.substring(idx + 1).trim();
+        }
+
+        const isSuspended = timePart.endsWith('+') || 
+          timePart.toLowerCase().endsWith('s') || 
+          (modePart?.toLowerCase().startsWith('susp') ?? false) ||
+          (modePart?.toLowerCase().startsWith('cens') ?? false);
+
+        const numStr = timePart.replace(/[^0-9.]/g, '');
+        const timeVal = parseFloat(numStr);
+
+        if (!isNaN(timeVal) && timeVal > 0) {
+          let cleanMode = modePart ? modePart.replace(/[^a-zA-Z0-9_\-\s]/g, '').trim() : undefined;
+          if (cleanMode && (cleanMode.toLowerCase().startsWith('susp') || cleanMode.toLowerCase().startsWith('cens'))) {
+            cleanMode = undefined;
+          }
+          items.push({
+            time: timeVal,
+            suspended: isSuspended,
+            mode: cleanMode || undefined
+          });
+        }
+      }
+    }
+
+    return items;
   }, []);
 
   React.useEffect(() => {
@@ -82,6 +147,10 @@ const WeibullAnalysis: React.FC = () => {
         const dataPts = parseRawData(decoded);
         if (dataPts.filter(d => !d.suspended).length >= 2) setResult(calculateWeibull(dataPts));
       }, 100);
+    } else {
+      // Initialize with default dataset
+      const dataPts = parseRawData(inputData);
+      if (dataPts.filter(d => !d.suspended).length >= 2) setResult(calculateWeibull(dataPts));
     }
   }, [location.search, addRecentTool, parseRawData]);
 
@@ -167,6 +236,68 @@ const WeibullAnalysis: React.FC = () => {
     return failures.filter((p, idx) => residuals[idx] > limit);
   }, [activeModel]);
 
+  const rawEntries = useMemo(() => parseRawData(inputData), [inputData, parseRawData]);
+
+  // Competing Risk Multi-Mode Detection
+  const detectedModes = useMemo(() => {
+    const counts = new Map<string, number>();
+    rawEntries.forEach(item => {
+      if (!item.suspended && item.mode) {
+        counts.set(item.mode, (counts.get(item.mode) || 0) + 1);
+      }
+    });
+    return Array.from(counts.keys()).filter(m => (counts.get(m) || 0) >= 2);
+  }, [rawEntries]);
+
+  const isMultiMode = detectedModes.length >= 2;
+
+  const competingModes = useMemo<CompetingModeSummary[]>(() => {
+    if (!isMultiMode) return [];
+    const colors = ['#06b6d4', '#f59e0b', '#8b5cf6', '#ec4899', '#10b981'];
+
+    return detectedModes.map((modeName, idx) => {
+      // By competing risk theory, units that failed from other modes or were censored
+      // did not fail from this mode up to their logged operating hours.
+      const modeData = rawEntries.map(d => ({
+        time: d.time,
+        suspended: d.mode !== modeName || d.suspended
+      }));
+
+      const res = calculateWeibull(modeData);
+      const failures = modeData.filter(d => !d.suspended).length;
+      const censored = modeData.filter(d => d.suspended).length;
+
+      return {
+        mode: modeName,
+        color: colors[idx % colors.length],
+        failures,
+        censored,
+        beta: res.beta,
+        eta: res.eta,
+        b10: res.b10,
+        rSquared: res.rSquared,
+        diagnosis: getBetaInterpretation(res.beta),
+        result: res
+      };
+    });
+  }, [detectedModes, isMultiMode, rawEntries]);
+
+  // System B10 life when multiple modes compete in series:
+  // R_sys(t) = exp(-sum((t/eta_m)^beta_m)) = 0.90 => sum((t/eta_m)^beta_m) = -ln(0.9)
+  const systemB10 = useMemo(() => {
+    if (competingModes.length < 2) return null;
+    const target = -Math.log(0.9);
+    let low = 0;
+    let high = Math.min(...competingModes.map(c => c.eta));
+    for (let iter = 0; iter < 40; iter++) {
+      const mid = (low + high) / 2;
+      const sum = competingModes.reduce((acc, c) => acc + Math.pow(mid / c.eta, c.beta), 0);
+      if (sum < target) low = mid;
+      else high = mid;
+    }
+    return (low + high) / 2;
+  }, [competingModes]);
+
   const handleAnalyze = () => {
     const dataPoints = parseRawData(inputData);
     const failures = dataPoints.filter(d => !d.suspended);
@@ -245,6 +376,11 @@ const WeibullAnalysis: React.FC = () => {
 
   const WEIBULL_PRESETS = [
     {
+      name: "Multi-Mode (Seal Early + Bearing Wear)",
+      desc: "Competing risk de-mixing",
+      data: "85:Seal\n140:Seal\n220:Seal\n450:Bearing\n680:Bearing\n890:Bearing\n1150:Bearing\n1400+\n1650+"
+    },
+    {
       name: "Bearings Wear-Out (β ~ 2.8)",
       desc: "Mechanical wear failures",
       data: "1250\n1800\n2200\n2600\n2900\n3100\n3500\n3800+\n4200+"
@@ -273,18 +409,19 @@ const WeibullAnalysis: React.FC = () => {
     const csv = [
       '# Weibull Life Data Analysis Template (ISO 14224 / IEC 61649 Compliant)',
       '# Enter failure hours. Append "+" to suspended/censored units that did not fail.',
+      '# For multi-mode competing failure analysis, append ":Mode" (e.g. 120:Seal, 450:Bearing)',
       '# Generated from https://reliabilitytools.co.in/tools/weibull/',
       '',
       'Time to Failure or Suspension,Status,Asset Tag,Component',
-      '1250,Failed,PUMP-101,Bearing DE',
-      '1800,Failed,PUMP-102,Bearing DE',
-      '2200,Failed,PUMP-103,Bearing DE',
-      '2600,Failed,PUMP-104,Bearing DE',
-      '2900,Failed,PUMP-105,Bearing DE',
-      '3100,Failed,PUMP-106,Bearing DE',
-      '3500,Failed,PUMP-107,Bearing DE',
-      '3800+,Suspended (Still Running),PUMP-108,Bearing DE',
-      '4200+,Suspended (Still Running),PUMP-109,Bearing DE'
+      '85:Seal,Failed,PUMP-101,Mechanical Seal',
+      '140:Seal,Failed,PUMP-102,Mechanical Seal',
+      '220:Seal,Failed,PUMP-103,Mechanical Seal',
+      '450:Bearing,Failed,PUMP-104,Bearing DE',
+      '680:Bearing,Failed,PUMP-105,Bearing DE',
+      '890:Bearing,Failed,PUMP-106,Bearing DE',
+      '1150:Bearing,Failed,PUMP-107,Bearing DE',
+      '1400+,Suspended (Still Running),PUMP-108,Pump Train',
+      '1650+,Suspended (Still Running),PUMP-109,Pump Train'
     ].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -303,9 +440,9 @@ const WeibullAnalysis: React.FC = () => {
   };
 
   const getBetaInterpretation = (beta: number) => {
-    if (beta < 0.9) return { title: 'Infant Mortality', description: 'Early failures due to defects.', icon: <AlertTriangle className="w-5 h-5 text-amber-500" /> };
-    if (beta >= 0.9 && beta <= 1.1) return { title: 'Random Failures', description: 'Constant failure rate.', icon: <CheckCircle2 className="w-5 h-5 text-green-500" /> };
-    return { title: 'Wear Out', description: 'Failures increase with time.', icon: <Activity className="w-5 h-5 text-red-500" /> };
+    if (beta < 0.9) return { title: 'Infant Mortality', description: 'Early failures due to defects or installation error.', icon: <AlertTriangle className="w-5 h-5 text-amber-500" /> };
+    if (beta >= 0.9 && beta <= 1.15) return { title: 'Random Failures', description: 'Constant failure rate driven by external stress.', icon: <CheckCircle2 className="w-5 h-5 text-green-500" /> };
+    return { title: 'Wear Out', description: 'Failures increase with time due to aging and mechanical fatigue.', icon: <Activity className="w-5 h-5 text-red-500" /> };
   };
 
   const updateControlPoint = React.useCallback((target: 'start' | 'end', next: { time: number; medianRank: number }) => {
@@ -496,16 +633,22 @@ const WeibullAnalysis: React.FC = () => {
               <div className={`grid ${activeModel.t0 ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
                   <div className="text-xs font-bold text-slate-500 dark:text-slate-400">Beta (Shape &beta;)</div>
-                  <div className="text-3xl font-black text-cyan-600 dark:text-cyan-400 mt-1">{activeModel.beta.toFixed(3)}</div>
+                  <div className="text-3xl font-black text-cyan-600 dark:text-cyan-400 mt-1">
+                    <AnimatedNumber value={activeModel.beta} decimals={3} />
+                  </div>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
                   <div className="text-xs font-bold text-slate-500 dark:text-slate-400">Eta (Scale &eta;)</div>
-                  <div className="text-2xl font-black text-slate-900 dark:text-slate-200 mt-1">{activeModel.eta.toFixed(1)}</div>
+                  <div className="text-2xl font-black text-slate-900 dark:text-slate-200 mt-1">
+                    <AnimatedNumber value={activeModel.eta} decimals={1} />
+                  </div>
                 </div>
                 {activeModel.t0 ? (
                   <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-center shadow-sm border border-slate-100 dark:border-slate-700">
                     <div className="text-xs font-bold text-slate-500 dark:text-slate-400">t_0 (Guar.)</div>
-                    <div className="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1">{activeModel.t0.toFixed(1)}</div>
+                    <div className="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1">
+                      <AnimatedNumber value={activeModel.t0} decimals={1} />
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -519,7 +662,7 @@ const WeibullAnalysis: React.FC = () => {
               </div>
 
               <div className="text-xs text-slate-450 text-center font-mono">
-                R&sup2; Fit: <span className="font-bold">{activeModel.rSquared.toFixed(3)}</span> | B10 Life: <span className="font-bold text-rose-500">{activeModel.b10.toFixed(1)}</span>
+                R&sup2; Fit: <span className="font-bold"><AnimatedNumber value={activeModel.rSquared} decimals={3} /></span> | B10 Life: <span className="font-bold text-rose-500"><AnimatedNumber value={activeModel.b10} decimals={1} /></span>
               </div>
               {outliers.length > 0 && (
                 <div className="text-xs text-amber-600 dark:text-amber-400 text-center font-semibold">
@@ -665,7 +808,29 @@ const WeibullAnalysis: React.FC = () => {
                           lineStyle: { width: 1.8, type: 'dashed', color: s.color },
                           data: comparisonCurve.map((c: any) => [c.t, c[activeTab as keyof typeof c]])
                         };
-                      })
+                      }),
+                      ...(activeTab === 'rel' && isMultiMode ? [
+                        ...competingModes.map(cm => ({
+                          name: `Mode: ${cm.mode} (\u03B2=${cm.beta.toFixed(2)})`,
+                          type: 'line',
+                          showSymbol: false,
+                          lineStyle: { width: 2, type: 'dashed', color: cm.color },
+                          data: curveData.curves.map((c: any) => [
+                            c.t,
+                            Math.exp(-Math.pow(c.t / cm.eta, cm.beta))
+                          ])
+                        })),
+                        {
+                          name: 'Combined System R_sys(t) [\u220F R_m(t)]',
+                          type: 'line',
+                          showSymbol: false,
+                          lineStyle: { width: 3.5, color: '#10b981' },
+                          data: curveData.curves.map((c: any) => [
+                            c.t,
+                            competingModes.reduce((prod, cm) => prod * Math.exp(-Math.pow(c.t / cm.eta, cm.beta)), 1)
+                          ])
+                        }
+                      ] : [])
                     ]
                   }}
                   opts={{ renderer: 'svg' }}
@@ -682,8 +847,173 @@ const WeibullAnalysis: React.FC = () => {
         )}
       </AnimatedContainer>
       
+      {/* Competing Risk Multi-Mode De-Mixing Analysis Card */}
+      {isMultiMode && competingModes.length >= 2 && (
+        <AnimatedContainer animation="slideUp" delay={0.25} className="lg:col-span-3">
+          <div className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                    <Zap className="w-5 h-5" />
+                  </span>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    Competing Failure Mode De-Mixing Analysis
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+                  Disentangle competing failure mechanisms (e.g. Seal infant defects vs. Bearing fatigue). When pooled together, distinct failure modes create false &quot;s-bends&quot; and misleading &beta; parameters.
+                </p>
+              </div>
+              <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 rounded-full text-xs font-bold font-mono">
+                {competingModes.length} Sub-Modes Isolated
+              </span>
+            </div>
+
+            {/* De-Mixing Matrix Table */}
+            <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                  <tr>
+                    <th className="p-3">Failure Mode</th>
+                    <th className="p-3">Isolated Diagnosis</th>
+                    <th className="p-3 text-center">Fails / Censored</th>
+                    <th className="p-3 text-center">Shape (&beta;)</th>
+                    <th className="p-3 text-center">Characteristic Life (&eta;)</th>
+                    <th className="p-3 text-center">B10 Life</th>
+                    <th className="p-3 text-center">R&sup2; Fit</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-800 bg-white dark:bg-slate-900 font-mono">
+                  {competingModes.map((cm) => (
+                    <tr key={cm.mode} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
+                      <td className="p-3 font-bold font-sans flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: cm.color }}></span>
+                        <span className="text-slate-900 dark:text-white">{cm.mode}</span>
+                      </td>
+                      <td className="p-3 font-sans">
+                        <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold ${
+                          cm.beta < 0.9 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' :
+                          cm.beta <= 1.15 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' :
+                          'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300'
+                        }`}>
+                          {cm.diagnosis.title}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center text-slate-600 dark:text-slate-400">
+                        {cm.failures} fails / {cm.censored} cens
+                      </td>
+                      <td className="p-3 text-center font-bold text-cyan-600 dark:text-cyan-400">
+                        {cm.beta.toFixed(3)}
+                      </td>
+                      <td className="p-3 text-center font-bold text-slate-900 dark:text-white">
+                        {cm.eta.toFixed(1)} hrs
+                      </td>
+                      <td className="p-3 text-center text-rose-500 font-bold">
+                        {cm.b10.toFixed(1)} hrs
+                      </td>
+                      <td className="p-3 text-center text-slate-500">
+                        {cm.rSquared.toFixed(3)}
+                      </td>
+                    </tr>
+                  ))}
+
+                  {/* System Combined Row */}
+                  <tr className="bg-emerald-50/50 dark:bg-emerald-950/20 font-bold border-t-2 border-emerald-500/40">
+                    <td className="p-3 font-sans text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
+                      <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+                      Combined System R_sys(t)
+                    </td>
+                    <td className="p-3 font-sans text-emerald-700 dark:text-emerald-300">
+                      Series Competing Risk Envelope [&prod; R_m(t)]
+                    </td>
+                    <td className="p-3 text-center text-slate-600 dark:text-slate-400">
+                      {rawEntries.filter(d => !d.suspended).length} fails / {rawEntries.filter(d => d.suspended).length} cens
+                    </td>
+                    <td className="p-3 text-center text-slate-400">
+                      Multi-Beta
+                    </td>
+                    <td className="p-3 text-center text-slate-400">
+                      Composite
+                    </td>
+                    <td className="p-3 text-center text-emerald-600 dark:text-emerald-400 text-sm font-black">
+                      {systemB10 ? `${systemB10.toFixed(1)} hrs` : 'N/A'}
+                    </td>
+                    <td className="p-3 text-center text-emerald-600 dark:text-emerald-400">
+                      Exact Series
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* System Reliability Formula Card */}
+            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Series Competing Risk Mathematical Formulation (SAE / Abernethy Standard)
+              </span>
+              <BlockMath math={`R_{\\text{sys}}(t) = \\prod_{m=1}^{${competingModes.length}} R_m(t) = \\exp\\left( -\\sum_{m=1}^{${competingModes.length}} \\left(\\frac{t}{\\eta_m}\\right)^{\\beta_m} \\right)`} />
+            </div>
+          </div>
+        </AnimatedContainer>
+      )}
+
       {activeModel && (
-        <AnimatedContainer animation="slideUp" delay={0.3} className="lg:col-span-3">
+        <AnimatedContainer animation="slideUp" delay={0.3} className="lg:col-span-3 space-y-6">
+          {/* Dynamic Bathtub Curve Synchronizer */}
+          <BathtubVisualizer currentBeta={activeModel.beta} interactive={true} />
+
+          {/* Glass-Box Step-by-Step Mathematical Derivation Drawer */}
+          <CalculationProofDrawer
+            title="Weibull Parameter Estimation & Life Audit"
+            standard="IEC 61649 & Abernethy Weibull Analysis Standard"
+            standardClause={is3Parameter ? "3-Parameter Threshold Model" : "2-Parameter Rank Regression"}
+            steps={[
+              {
+                name: "1. Median Ranks Calculation (Bernard's Approximation)",
+                formula: "F(i) = \\frac{i - 0.3}{N + 0.4}",
+                substitution: `F(1) = \\frac{1 - 0.3}{${activeModel.points.length} + 0.4} = ${(0.7 / (activeModel.points.length + 0.4) * 100).toFixed(2)}\\%`,
+                result: `F(1) = ${(0.7 / (activeModel.points.length + 0.4) * 100).toFixed(2)}\\%`,
+                dimensionalAnalysis: "[\\text{cumulative failure probability} \\in [0, 1]]",
+                interpretation: "Establishes non-parametric failure percentiles taking into account sample censorship and finite sample size."
+              },
+              {
+                name: "2. Weibull Double-Log Linearization & Rank Regression",
+                formula: "\\ln\\left( \\ln\\left( \\frac{1}{1 - F(t)} \\right) \\right) = \\beta \\ln(t) - \\beta \\ln(\\eta)",
+                substitution: `\\text{Regression Slope } m = \\beta = ${activeModel.beta.toFixed(3)}, \\quad \\text{Intercept } c = -\\beta \\ln(\\eta)`,
+                result: `\\beta = ${activeModel.beta.toFixed(3)}, \\quad \\eta = ${activeModel.eta.toFixed(1)}\\text{ hours}`,
+                dimensionalAnalysis: "\\beta: [\\text{dimensionless shape}], \\quad \\eta: [\\text{operating hours}]",
+                interpretation: `Regression coefficient of determination R² = ${activeModel.rSquared.toFixed(3)}. ${getBetaInterpretation(activeModel.beta).title}: ${getBetaInterpretation(activeModel.beta).description}`
+              },
+              {
+                name: "3. B10 Reliable Life Threshold (90% Population Survival)",
+                formula: "B_{10} = \\eta \\cdot \\left( -\\ln(0.90) \\right)^{1/\\beta}",
+                substitution: `B_{10} = ${activeModel.eta.toFixed(1)} \\times (0.10536)^{1/${activeModel.beta.toFixed(3)}} = ${activeModel.b10.toFixed(1)}\\text{ hours}`,
+                result: `B_{10} = ${activeModel.b10.toFixed(1)}\\text{ hours}`,
+                dimensionalAnalysis: "[\\text{operating hours}]",
+                interpretation: `90% of identical operating assets will survive beyond ${activeModel.b10.toFixed(1)} hours without failure.`
+              },
+              {
+                name: "4. Characteristic Life (Scale Parameter \u03B7)",
+                formula: "R(\\eta) = \\exp\\left( -\\left(\\frac{\\eta}{\\eta}\\right)^\\beta \\right) = e^{-1} \\approx 36.79\\%",
+                substitution: `R(${activeModel.eta.toFixed(1)}\\text{h}) = e^{-1} = 36.79\\% \\implies F(${activeModel.eta.toFixed(1)}\\text{h}) = 63.21\\%`,
+                result: `\\eta = ${activeModel.eta.toFixed(1)}\\text{ hours}`,
+                dimensionalAnalysis: "[\\text{operating hours}]",
+                interpretation: `Nominal scale metric: exactly 63.2% of all units fail prior to ${activeModel.eta.toFixed(1)} operating hours regardless of \u03B2.`
+              }
+            ]}
+            assumptions={[
+              "Times to failure are identically distributed and statistically independent.",
+              "Operating environments and stress profiles remain statistically stationary over the observation horizon.",
+              `Suspensions (right-censored units) were accounted for via Johnson / Nelson cumulative hazard rank adjustments.`
+            ]}
+            auditChecklist={[
+              "IEC 61649 Compliance: Goodness-of-fit R² exceeds minimum benchmark (> 0.85).",
+              "Outlier residuals checked beyond 2-sigma regression threshold.",
+              "Infant mortality vs wear-out distinction validated prior to prescribing PM overhaul tasks."
+            ]}
+          />
+
           <ShareAndExport 
             toolName="Weibull Analysis"
             shareUrl={shareUrl}
@@ -705,7 +1035,7 @@ const WeibullAnalysis: React.FC = () => {
                 "Failure Mode": getBetaInterpretation(activeModel.beta).title
               },
               formula: `R(t) = exp(-((t - ${activeModel.t0?.toFixed(1) || '0'}) / ${activeModel.eta.toFixed(1)})^${activeModel.beta.toFixed(2)})`,
-              interpretation: `${getBetaInterpretation(activeModel.beta).title}: ${getBetaInterpretation(activeModel.beta).desc} Characteristic life (\u03B7) is ${activeModel.eta.toFixed(1)} operating hours, with B10 reliability life at ${activeModel.b10.toFixed(1)} hours.`
+              interpretation: `${getBetaInterpretation(activeModel.beta).title}: ${getBetaInterpretation(activeModel.beta).description} Characteristic life (\u03B7) is ${activeModel.eta.toFixed(1)} operating hours, with B10 reliability life at ${activeModel.b10.toFixed(1)} hours.`
             }}
             exportData={[
               { Parameter: "Shape Parameter (\u03B2)", Value: activeModel.beta },

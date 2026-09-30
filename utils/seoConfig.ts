@@ -10,7 +10,7 @@ import {
   normalizeRoutePath,
   RouteRegistryEntry,
   RouteBreadcrumb
-} from '../routes-registry.ts';
+} from '../routes-registry';
 
 export const BASE_URL = REGISTRY_BASE_URL;
 

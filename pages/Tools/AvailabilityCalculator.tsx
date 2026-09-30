@@ -8,6 +8,8 @@ import RelatedTools from '../../components/RelatedTools';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
 import ShareAndExport from '../../components/ShareAndExport';
+import AnimatedNumber from '../../components/AnimatedNumber';
+import CalculationProofDrawer from '../../components/CalculationProofDrawer';
 import { AvailabilityTimeline } from '../../components/TheoryVisuals';
 import 'katex/dist/katex.min.css';
 import { BlockMath, InlineMath } from 'react-katex';
@@ -46,7 +48,9 @@ const DonutChart = ({ percentage }: { percentage: number }) => {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-3xl font-bold text-slate-800 dark:text-white">{percentage.toFixed(4)}%</span>
+        <span className="text-3xl font-bold text-slate-800 dark:text-white">
+          <AnimatedNumber value={percentage} decimals={4} suffix="%" />
+        </span>
         <span className="text-xs text-slate-500 uppercase tracking-wider">Availability</span>
       </div>
     </div>
@@ -294,7 +298,9 @@ const AvailabilityCalculator: React.FC = () => {
                     <div className="text-sm text-red-400 dark:text-red-300">Per Year</div>
                   </div>
                 </div>
-                <div className="text-xl font-bold text-red-700 dark:text-red-400 font-mono">{downtimeHoursPerYear.toFixed(1)} hrs</div>
+                <div className="text-xl font-bold text-red-700 dark:text-red-400 font-mono">
+                  <AnimatedNumber value={downtimeHoursPerYear} decimals={1} suffix=" hrs" />
+                </div>
               </div>
 
               <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
@@ -305,11 +311,72 @@ const AvailabilityCalculator: React.FC = () => {
                     <div className="text-sm text-emerald-400 dark:text-emerald-300">Annual Projection</div>
                   </div>
                 </div>
-                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 font-mono">${yearlyLoss.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 font-mono">
+                  <AnimatedNumber value={yearlyLoss} decimals={0} prefix="$" />
+                </div>
               </div>
             </div>
           </AnimatedContainer>
         </div>
+
+        {/* The 9s of Reliability & Annual Downtime Equivalence Table */}
+        <AnimatedContainer animation="slideUp" className="bg-slate-900 text-white rounded-xl shadow-md border border-slate-800 p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <span className="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">
+                Industrial Uptime Tier Benchmark
+              </span>
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <Shield className="w-4 h-4 text-cyan-400" />
+                The &quot;Nine Nines&quot; Scale & Annual Downtime Equivalents (24/7 Basis)
+              </h4>
+            </div>
+            <span className="text-xs font-mono text-slate-400">
+              Active System: <strong className="text-cyan-300 font-mono">{(availability * 100).toFixed(4)}%</strong>
+            </span>
+          </div>
+
+          <div className="overflow-x-auto rounded-lg border border-slate-800">
+            <table className="w-full text-left text-xs font-mono">
+              <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+                <tr>
+                  <th className="p-2.5">Tier / Name</th>
+                  <th className="p-2.5">Availability</th>
+                  <th className="p-2.5">Annual Downtime</th>
+                  <th className="p-2.5">Industry Profile</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/80 bg-slate-900/60">
+                {[
+                  { tier: "One Nine", pct: 90, downtime: "876.0 hours (36.5 days)", profile: "Unmonitored batch equipment / legacy assets" },
+                  { tier: "Two Nines", pct: 99, downtime: "87.6 hours (3.65 days)", profile: "Typical non-critical discrete plant machinery" },
+                  { tier: "Three Nines", pct: 99.9, downtime: "8.76 hours", profile: "High-volume automotive & chemical continuous lines" },
+                  { tier: "Four Nines", pct: 99.99, downtime: "52.6 minutes", profile: "Critical power generation, data centers & refineries" },
+                  { tier: "Five Nines", pct: 99.999, downtime: "5.26 minutes", profile: "Aerospace avionics, emergency medical & telecommunications" },
+                ].map((row) => {
+                  const isCurrentTier =
+                    (row.pct === 90 && availability < 0.95) ||
+                    (row.pct === 99 && availability >= 0.95 && availability < 0.995) ||
+                    (row.pct === 99.9 && availability >= 0.995 && availability < 0.9995) ||
+                    (row.pct === 99.99 && availability >= 0.9995 && availability < 0.99995) ||
+                    (row.pct === 99.999 && availability >= 0.99995);
+
+                  return (
+                    <tr
+                      key={row.tier}
+                      className={isCurrentTier ? "bg-cyan-950/60 text-cyan-200 font-bold border-l-4 border-cyan-400" : "text-slate-400"}
+                    >
+                      <td className="p-2.5">{row.tier}</td>
+                      <td className="p-2.5">{row.pct}%</td>
+                      <td className="p-2.5">{row.downtime}</td>
+                      <td className="p-2.5 text-[11px] font-sans opacity-80">{row.profile}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </AnimatedContainer>
 
         <AnimatedContainer animation="slideUp" className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6">
           <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
@@ -343,6 +410,51 @@ const AvailabilityCalculator: React.FC = () => {
         </AnimatedContainer>
       </AnimatedContainer>
       
+      {/* Glass-Box Step-by-Step Mathematical Trace */}
+      <div className="lg:col-span-12">
+        <CalculationProofDrawer
+          title="Inherent Availability & Production Downtime Audit"
+          standard="IEEE 493 (Gold Book) & MIL-HDBK-338B §5.3"
+          standardClause="Steady-State Operational Readiness Equation"
+          steps={[
+            {
+              name: "1. Inherent Availability (A_i)",
+              formula: "A_i = \\frac{\\text{MTBF}}{\\text{MTBF} + \\text{MTTR}}",
+              substitution: `A_i = \\frac{${mtbf}\\text{ hrs}}{${mtbf}\\text{ hrs} + ${mttr}\\text{ hrs}} = ${(availability * 100).toFixed(4)}\\%`,
+              result: `A_i = ${(availability * 100).toFixed(4)}\\%`,
+              dimensionalAnalysis: "\\frac{[\\text{operating uptime hours}]}{[\\text{uptime} + \\text{corrective repair hours}]}",
+              interpretation: `Maximum inherent hardware uptime when excluding logistics delays, administrative wait time, and scheduled overhauls.`
+            },
+            {
+              name: "2. Annual Unplanned Downtime Hours",
+              formula: "T_{\\text{down}} = T_{\\text{annual}} \\times (1 - A_i)",
+              substitution: `T_{\\text{down}} = ${yearlyHours}\\text{ hrs/yr} \\times (1 - ${(availability).toFixed(6)}) = ${downtimeHoursPerYear.toFixed(2)}\\text{ hours/yr}`,
+              result: `T_{\\text{down}} = ${downtimeHoursPerYear.toFixed(1)}\\text{ hours/year}`,
+              dimensionalAnalysis: "[\\text{hours of unplanned stoppage per calendar year}]",
+              interpretation: `Equipment is offline for repair an average of ${downtimeHoursPerYear.toFixed(1)} hours every operating year.`
+            },
+            {
+              name: "3. Projected Annual Revenue Opportunity Loss",
+              formula: "\\text{Loss} = T_{\\text{down}} \\times C_{\\text{hourly}}",
+              substitution: `\\text{Loss} = ${downtimeHoursPerYear.toFixed(2)}\\text{ hrs} \\times \\$${hourlyRevenue}\\text{/hr} = \\$${Math.round(yearlyLoss).toLocaleString()}`,
+              result: `\\text{Loss} = \\$${Math.round(yearlyLoss).toLocaleString()}/\\text{year}`,
+              dimensionalAnalysis: "\\frac{[\\text{currency loss}]}{[\\text{operating year}]}",
+              interpretation: `Direct top-line throughput loss incurred before factoring in emergency technician expediting or scrap penalties.`
+            }
+          ]}
+          assumptions={[
+            "Corrective repairs return equipment to as-good-as-new functional baseline.",
+            `Annual operating calendar based on ${operationMode} operation (${yearlyHours.toLocaleString()} scheduled hours/yr).`,
+            "Operating failure rate remains constant over the analyzed operational horizon."
+          ]}
+          auditChecklist={[
+            "IEEE 493 Reliability benchmark checked: System meets or exceeds target availability tier.",
+            "Sensitivity curve verifies whether MTBF extension or MTTR reduction yields higher financial ROI.",
+            "Repair logistics buffer (MLD) isolated from pure inherent repair time."
+          ]}
+        />
+      </div>
+
       <div className="lg:col-span-12">
         <ShareAndExport 
           toolName="Availability Calculator"

@@ -139,6 +139,33 @@ export const REDIRECT_MAP: Record<string, string> = {
   '/pareto': '/tools/pareto/',
   '/reliability-allocation': '/tools/reliability-allocation/',
   '/spc': '/tools/spc/',
+
+  // 10 Discipline Tools Aliases & Root paths
+  '/duval-triangle': '/tools/duval-triangle/',
+  '/lopa': '/tools/lopa/',
+  '/miners-rule': '/tools/miners-rule/',
+  '/error-budget': '/tools/error-budget/',
+  '/api-570': '/tools/api-570-remaining-life/',
+  '/tools/api-570': '/tools/api-570-remaining-life/',
+  '/tools/api-570/': '/tools/api-570-remaining-life/',
+  '/api-570-remaining-life': '/tools/api-570-remaining-life/',
+  '/npsh': '/tools/npsh-cavitation/',
+  '/tools/npsh': '/tools/npsh-cavitation/',
+  '/tools/npsh/': '/tools/npsh-cavitation/',
+  '/npsh-cavitation': '/tools/npsh-cavitation/',
+  '/parts-count-mtbf': '/tools/parts-count-mtbf/',
+  '/parts-count': '/tools/parts-count-mtbf/',
+  '/tools/parts-count': '/tools/parts-count-mtbf/',
+  '/tools/parts-count/': '/tools/parts-count-mtbf/',
+  '/eafor': '/tools/eafor/',
+  '/pf-optimizer': '/tools/pf-interval-optimizer/',
+  '/tools/pf-optimizer': '/tools/pf-interval-optimizer/',
+  '/tools/pf-optimizer/': '/tools/pf-interval-optimizer/',
+  '/pf-interval-optimizer': '/tools/pf-interval-optimizer/',
+  '/cpm-turnaround': '/tools/cpm-turnaround/',
+  '/cpm': '/tools/cpm-turnaround/',
+  '/tools/cpm': '/tools/cpm-turnaround/',
+  '/tools/cpm/': '/tools/cpm-turnaround/',
 };
 
 /**

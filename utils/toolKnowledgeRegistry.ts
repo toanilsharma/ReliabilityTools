@@ -229,19 +229,105 @@ export const TOOL_KNOWLEDGE_REGISTRY: Record<string, ToolKnowledge> = {
     interpretation: 'Models multi-state degradations and shared repair resources that cannot be modeled by simple static Reliability Block Diagrams.',
     standards: ['IEC 61165', 'IEEE 352'],
     keyMetricName: 'Steady-State Availability'
+  },
+  'Duval Triangle DGA Calculator': {
+    formula: '\\%\\text{CH}_4 = \\frac{\\text{CH}_4}{\\Sigma} \\times 100 \\quad ; \\quad \\%\\text{C}_2\\text{H}_4 = \\frac{\\text{C}_2\\text{H}_4}{\\Sigma} \\times 100 \\quad ; \\quad \\%\\text{C}_2\\text{H}_2 = \\frac{\\text{C}_2\\text{H}_2}{\\Sigma} \\times 100',
+    formulaDescription: 'Ternary relative gas concentration coordinates per IEC 60599 and IEEE C57.104 for transformer dissolved gas analysis.',
+    interpretation: 'Identifies electrical sparking (D1), high-energy power arcing (D2), partial discharges (PD), and thermal faults (T1: <300°C, T2: 300-700°C, T3: >700°C) in oil-filled transformers.',
+    standards: ['IEC 60599', 'IEEE C57.104', 'ASTM D3612'],
+    keyMetricName: 'Fault Diagnosis'
+  },
+  'LOPA & SIL Determination Calculator': {
+    formula: 'f_i^C = f_i^I \\times \\prod_{j=1}^m \\text{PFD}_{ij} \\quad ; \\quad \\text{RRF} = \\frac{f_i^C}{f^{\\text{tolerable}}}',
+    formulaDescription: 'Layer of Protection Analysis (LOPA) mitigated consequence frequency and Risk Reduction Factor per IEC 61511 and CCPS.',
+    interpretation: 'Determines the target Safety Integrity Level (SIL 1 to SIL 4) required for Safety Instrumented Functions (SIFs) to reduce process risk below tolerable risk criteria.',
+    standards: ['IEC 61511', 'IEC 61508', 'CCPS LOPA'],
+    keyMetricName: 'Allocated SIL'
+  },
+  "Miner's Rule Cumulative Fatigue Calculator": {
+    formula: 'D = \\sum_{i=1}^k \\frac{n_i}{N_i} \\le D_{\\text{crit}} \\quad ; \\quad \\text{Life Consumed} = D \\times 100\\%',
+    formulaDescription: 'Palmgren-Miner linear cumulative fatigue damage sum under variable amplitude cyclical stress loading.',
+    interpretation: 'When cumulative damage D reaches the critical limit (typically 1.0, or 0.5 for high-criticality offshore/aero structures), macroscopic fatigue crack initiation and failure occur.',
+    standards: ['ISO 12107', 'ASTM E1049', 'BS 7608'],
+    keyMetricName: 'Cumulative Damage (D)'
+  },
+  'Error Budget & SLO Calculator': {
+    formula: '\\text{Error Budget} = 1 - \\text{SLO} \\quad ; \\quad \\text{Burn Rate} = \\frac{\\text{Budget Consumed} / \\text{Window Elapsed}}{\\text{Allowed Depletion Rate}}',
+    formulaDescription: 'Site Reliability Engineering (SRE) multi-window error budget consumption and burn rate equations per Google SRE / ISO 25010.',
+    interpretation: 'A burn rate of 1.0 consumes 100% of the error budget over the entire window. Burn rates > 14.4 (consuming 2% budget in 1 hour) warrant immediate on-call engineer paging.',
+    standards: ['ISO 25010', 'IEEE 730', 'Google SRE'],
+    keyMetricName: 'Remaining Budget'
+  },
+  'API 570 UT Remaining Life Calculator': {
+    formula: 'C_r = \\frac{t_{\\text{prev}} - t_{\\text{act}}}{\\Delta T} \\quad ; \\quad \\text{RUL} = \\frac{t_{\\text{act}} - t_{\\text{min}}}{C_r} \\quad ; \\quad I_{\\text{half-life}} = \\min\\left(\\frac{\\text{RUL}}{2}, I_{\\text{max}}\\right)',
+    formulaDescription: 'API 570 piping corrosion rate, remaining useful life, and statutory half-life inspection interval formulas.',
+    interpretation: 'Calculates the years until pipe wall thickness reaches structural/pressure minimum limit t_min. Inspection must occur at or before half remaining life (capped at 5-10 years by service class).',
+    standards: ['API 570', 'API 574', 'ASME B31.3'],
+    keyMetricName: 'Remaining Life (Years)'
+  },
+  'NPSH Cavitation Calculator': {
+    formula: '\\text{NPSHa} = \\frac{P_{\\text{suct}} - P_{\\text{vap}}}{\\rho \\cdot g} \\pm Z_s - h_f \\quad ; \\quad \\text{Margin Ratio} = \\frac{\\text{NPSHa}}{\\text{NPSHr}}',
+    formulaDescription: 'Net Positive Suction Head Available (NPSHa) and Cavitation Margin Ratio per ANSI/HI 9.6.1 and API 610.',
+    interpretation: 'NPSHa must exceed NPSHr by the recommended margin (1.1x for general water, 1.3-1.5x for hydrocarbons, 2.0x for slurries) to prevent impeller cavitation erosion and vibration.',
+    standards: ['ANSI/HI 9.6.1', 'ISO 9906', 'API 610'],
+    keyMetricName: 'Cavitation Margin'
+  },
+  'Parts-Count MTBF Reliability Prediction': {
+    formula: '\\lambda_{\\text{equip}} = \\sum_{i=1}^n N_i \\cdot (\\lambda_{g,i} \\cdot \\pi_{Q,i}) \\cdot \\pi_E \\quad ; \\quad \\text{MTBF} = \\frac{10^9}{\\text{FITs}}',
+    formulaDescription: 'MIL-HDBK-217F and Telcordia SR-332 parts-count reliability prediction method for electronic hardware systems.',
+    interpretation: 'Predicts system failure rate based on bill of materials (BOM) component counts, operating environmental stress factors (Ground Benign, Airborne, Naval), and quality procurement grades.',
+    standards: ['MIL-HDBK-217F', 'Telcordia SR-332', 'IEC 61709'],
+    keyMetricName: 'Predicted MTBF'
+  },
+  'IEEE 762 EAF & EFOR Calculator': {
+    formula: '\\text{EAF} = \\frac{\\text{SH} - (\\text{FOH} + \\text{POH} + \\text{MOH}) - (\\text{EFDH} + \\text{EPDH})}{\\text{PH}} \\times 100\\% \\quad ; \\quad \\text{EFOR} = \\frac{\\text{FOH} + \\text{EFDH}}{\\text{SH} + \\text{FOH} + \\text{EFDH}} \\times 100\\%',
+    formulaDescription: 'Equivalent Availability Factor (EAF) and Equivalent Forced Outage Rate (EFOR) per IEEE Standard 762 and NERC GADS.',
+    interpretation: 'EAF measures commercial generation availability accounting for both complete outages and partial capacity deratings. EFOR measures reliability risk during operating demand periods.',
+    standards: ['IEEE 762', 'NERC GADS', 'ISO 3977'],
+    keyMetricName: 'Equivalent Availability (EAF)'
+  },
+  'P-F Interval Optimization Calculator': {
+    formula: 'T_{\\text{opt}} \\le \\frac{P\\text{-}F \\text{ Interval}}{n} \\quad ; \\quad \\text{Net Savings} = \\text{Avoided Failure Costs} - \\text{PdM Task Cost}',
+    formulaDescription: 'Condition monitoring inspection frequency optimization along the P-F degradation curve per SAE JA1011 and SAE JA1012.',
+    interpretation: 'Inspection frequency must be small enough (typically P-F/2 for non-critical, P-F/3 or P-F/4 for critical) to guarantee detection of potential failure (P) before functional breakdown (F).',
+    standards: ['SAE JA1011', 'SAE JA1012', 'ISO 55000'],
+    keyMetricName: 'Optimal Inspection Interval'
+  },
+  'CPM Turnaround & Shutdown Calculator': {
+    formula: '\\text{ES} + D = \\text{EF} \\quad ; \\quad \\text{LF} - D = \\text{LS} \\quad ; \\quad \\text{Total Float} = \\text{LS} - \\text{ES} = \\text{LF} - \\text{EF}',
+    formulaDescription: 'Critical Path Method (CPM) forward and backward pass equations for turnaround and overhaul outage scheduling.',
+    interpretation: 'Activities with Total Float = 0 define the Critical Path. Any delay on these tasks directly prolongs total plant outage duration and accrues substantial daily downtime revenue losses.',
+    standards: ['ISO 21500', 'PMI PMBOK', 'AACE International 29R-03'],
+    keyMetricName: 'Project Duration'
   }
 };
 
 /**
  * Helper to retrieve knowledge by tool name or path
  */
-export function getToolKnowledge(toolName: string): ToolKnowledge {
+export function getToolKnowledge(toolName?: string): ToolKnowledge {
+  const fallback: ToolKnowledge = {
+    formula: 'R(t) = \\exp\\left(-\\int_0^t \\lambda(u) du\\right) \\quad ; \\quad \\text{Reliability Engineering Model}',
+    formulaDescription: 'Standard mathematical formulation conforming to industrial reliability engineering principles.',
+    interpretation: 'The calculated metrics provide direct technical insight into component and system performance under active operational conditions. Review historical failure records and asset maintenance logs to benchmark outcomes against target KPIs.',
+    standards: ['ISO 14224', 'IEC 60300', 'IEEE Standards'],
+    keyMetricName: 'Calculated Metric'
+  };
+
+  if (!toolName || typeof toolName !== 'string') {
+    return fallback;
+  }
+
   if (TOOL_KNOWLEDGE_REGISTRY[toolName]) {
     return TOOL_KNOWLEDGE_REGISTRY[toolName];
   }
 
   // Attempt fuzzy match
   const normalized = toolName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!normalized) {
+    return fallback;
+  }
+
   for (const [key, val] of Object.entries(TOOL_KNOWLEDGE_REGISTRY)) {
     const keyNorm = key.toLowerCase().replace(/[^a-z0-9]/g, '');
     if (normalized.includes(keyNorm) || keyNorm.includes(normalized)) {
@@ -249,12 +335,5 @@ export function getToolKnowledge(toolName: string): ToolKnowledge {
     }
   }
 
-  // General fallback
-  return {
-    formula: 'R(t) = \\exp\\left(-\\int_0^t \\lambda(u) du\\right) \\quad ; \\quad \\text{Reliability Engineering Model}',
-    formulaDescription: 'Standard mathematical formulation conforming to industrial reliability engineering principles.',
-    interpretation: 'The calculated metrics provide direct technical insight into component and system performance under active operational conditions. Review historical failure records and asset maintenance logs to benchmark outcomes against target KPIs.',
-    standards: ['ISO 14224', 'IEC 60300', 'IEEE Standards'],
-    keyMetricName: 'Calculated Metric'
-  };
+  return fallback;
 }

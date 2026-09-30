@@ -50,16 +50,14 @@ const LopaCalculator: React.FC = () => {
   });
 
   const { scenarioName, ief, pIgnition, pOccupancy, targetFreq, ipls } = state;
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'lopa',
-        name: 'LOPA Calculator',
-        path: '/tools/lopa/'
-      });
-    }
+    addRecentTool({
+      id: 'lopa',
+      name: 'LOPA & SIL Calculator',
+      path: '/tools/lopa/'
+    });
   }, []);
 
   const numIef = Math.max(0, parseFloat(ief) || 0);
@@ -330,7 +328,8 @@ const LopaCalculator: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="LOPA & SIL Determination Calculator"
+        toolName="LOPA & SIL Determination Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/lopa/"
         inputs={{
           "Scenario Name": scenarioName,
           "Initiating Event Frequency": `${ief} events/yr`,

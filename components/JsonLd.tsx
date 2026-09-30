@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import { getRouteByPath, BASE_URL } from '../routes-registry.ts';
+import { getRouteByPath, BASE_URL } from '../routes-registry';
 
 interface JsonLdProps {
   schema?: any | any[];

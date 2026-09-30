@@ -29,11 +29,14 @@ import { trackResultShared, trackReportDownloaded } from '../utils/analytics';
 import { getToolKnowledge } from '../utils/toolKnowledgeRegistry';
 
 export interface ShareAndExportProps {
-  toolName: string;
+  toolName?: string;
+  toolTitle?: string;
   shareUrl?: string;
   exportData?: Record<string, any>[]; // Data for CSV export
   chartRef?: React.RefObject<HTMLElement>; // Ref to the element to capture as image
   resultSummary?: string; // Text summary to share on social
+  inputs?: Record<string, string | number>;
+  results?: Record<string, string | number>;
   pdfData?: {
     inputs: Record<string, string | number>;
     results: Record<string, string | number>;
@@ -43,13 +46,17 @@ export interface ShareAndExportProps {
 }
 
 const ShareAndExport: React.FC<ShareAndExportProps> = ({ 
-  toolName, 
+  toolName: toolNameProp, 
+  toolTitle,
   shareUrl: customShareUrl, 
   exportData, 
   chartRef,
   resultSummary = '',
+  inputs: directInputs,
+  results: directResults,
   pdfData
 }) => {
+  const toolName = toolNameProp || toolTitle || 'Reliability Engineering Calculator';
   const [copied, setCopied] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -70,6 +77,15 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
         results: pdfData.results,
         formula: pdfData.formula,
         interpretation: pdfData.interpretation
+      };
+    }
+
+    if (directResults && Object.keys(directResults).length > 0) {
+      return {
+        inputs: directInputs || {},
+        results: directResults,
+        formula: undefined,
+        interpretation: undefined
       };
     }
 
@@ -110,7 +126,7 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
         'Status': 'Verified Engineering Model'
       }
     };
-  }, [pdfData, exportData, toolName, resultSummary]);
+  }, [pdfData, directInputs, directResults, exportData, toolName, resultSummary]);
 
   // Construct text for WhatsApp (wa.me) & social channels using canonical URL (Rule 3)
   const formattedResultsText = Object.entries(resolvedData.results)

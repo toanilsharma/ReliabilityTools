@@ -28,12 +28,43 @@ import { useLocation, Link } from "react-router-dom";
 // Removed unused useReactToPrint import
 import { useShareableState } from "../../hooks/useShareableState";
 import ShareAndExport from "../../components/ShareAndExport";
+import AnimatedNumber from "../../components/AnimatedNumber";
+import CalculationProofDrawer from "../../components/CalculationProofDrawer";
 import { useRef } from "react";
 import AnimatedContainer from "../../components/AnimatedContainer";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import TheoryBlock from "../../components/TheoryBlock";
 import { BathtubCurveDiagram, AvailabilityTimeline } from "../../components/TheoryVisuals";
 import { trackToolCalculation } from "../../utils/analytics";
+
+// Chi-Square and Normal Quantile Functions for Reliability Confidence Bounds
+function normInv(p: number): number {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+  if (p === 0.5) return 0;
+  const isUpper = p > 0.5;
+  const q = isUpper ? 1 - p : p;
+  const t = Math.sqrt(-2 * Math.log(q));
+  const c0 = 2.515517;
+  const c1 = 0.802853;
+  const c2 = 0.010328;
+  const d1 = 1.432788;
+  const d2 = 0.189269;
+  const d3 = 0.001308;
+  const num = c0 + (c1 + c2 * t) * t;
+  const den = 1 + ((d1 + d2 * t) * t + d3 * t * t) * t;
+  const z = t - num / den;
+  return isUpper ? z : -z;
+}
+
+function chiSquareInv(p: number, df: number): number {
+  if (df <= 0) return 0;
+  if (df === 2) return -2 * Math.log(Math.max(1e-12, 1 - p));
+  const z = normInv(p);
+  const factor = 2 / (9 * df);
+  const term = 1 - factor + z * Math.sqrt(factor);
+  return df * Math.pow(Math.max(0, term), 3);
+}
 
 interface MtbfState {
   mode: "MTBF" | "MTTF";
@@ -47,11 +78,18 @@ const MtbfCalculator: React.FC = () => {
     mode: "MTBF",
     totalHours: "8760",
     failures: "4",
-    result: null,
+    result: 2190,
   });
 
   const { mode, totalHours, failures, result } = state;
   
+  // Statistical Confidence and Sensitivity States
+  const [confidenceLevel, setConfidenceLevel] = useState<90 | 95 | 99>(90);
+  const [testType, setTestType] = useState<'time' | 'failure'>('time');
+  const [missionHours, setMissionHours] = useState<number>(1000);
+  const [stressFactor, setStressFactor] = useState<number>(0);
+  const [mttrHours, setMttrHours] = useState<number>(4);
+
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<{ hours?: string; failures?: string }>({});
   
@@ -172,6 +210,30 @@ const MtbfCalculator: React.FC = () => {
     }));
   };
   const lookupData = generateLookupTable();
+
+  const opTime = Math.max(1, parseFloat(totalHours) || 8760);
+  const failCount = Math.max(0, parseFloat(failures) || 0);
+  const alpha = (100 - confidenceLevel) / 100;
+  
+  // Degrees of freedom for Chi-Square:
+  // Time-truncated (Type I): Lower bound df = 2r + 2, Upper bound df = 2r
+  // Failure-truncated (Type II): Lower bound df = 2r, Upper bound df = 2r
+  const lowerDf = testType === 'time' ? 2 * failCount + 2 : 2 * failCount;
+  const upperDf = 2 * failCount;
+
+  const chi2Lower = chiSquareInv(1 - alpha / 2, lowerDf);
+  const chi2Upper = upperDf > 0 ? chiSquareInv(alpha / 2, upperDf) : 0;
+
+  const mtbfLowerBound = chi2Lower > 0 ? (2 * opTime) / chi2Lower : 0;
+  const mtbfUpperBound = chi2Upper > 0 ? (2 * opTime) / chi2Upper : Infinity;
+
+  // Sensitivity Model
+  const effectiveLambda = result && result > 0 ? (1 / result) * (1 + stressFactor / 100) : 0;
+  const effectiveMtbf = effectiveLambda > 0 ? 1 / effectiveLambda : 0;
+  const survivalProb = effectiveMtbf > 0 ? Math.exp(-missionHours / effectiveMtbf) : 0;
+  const lowerSurvivalProb = mtbfLowerBound > 0 ? Math.exp(-missionHours / mtbfLowerBound) : 0;
+  const upperSurvivalProb = isFinite(mtbfUpperBound) && mtbfUpperBound > 0 ? Math.exp(-missionHours / mtbfUpperBound) : 1;
+  const inherentAvailability = effectiveMtbf > 0 ? (effectiveMtbf / (effectiveMtbf + mttrHours)) * 100 : 0;
 
   // --- Tool Component ---
   const ToolComponent = (
@@ -313,75 +375,170 @@ const MtbfCalculator: React.FC = () => {
         </form>
 
         {result !== null && (
-          <div className="relative group">
-            {/* Glowing blur background halo */}
-            <div className={`absolute -inset-0.5 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-700 ${mode === "MTBF" ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-gradient-to-r from-violet-500 to-fuchsia-600"}`}></div>
-            
-            <AnimatedContainer 
-              animation="scaleUp" 
-              delay={0.1} 
-              className={`relative border rounded-2xl p-6 shadow-xl bg-white dark:bg-slate-900 ${mode === "MTBF" ? "border-cyan-500/25 dark:border-cyan-500/35" : "border-violet-500/25 dark:border-violet-500/35"}`}
-            >
-              <button
-                onClick={handleCopy}
-                className={`absolute top-4 right-4 transition-colors ${mode === "MTBF" ? "text-slate-400 hover:text-cyan-500" : "text-slate-400 hover:text-violet-500"}`}
-              >
-                {copied ? (
-                  <Check className="w-5 h-5" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
-              </button>
-
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${mode === "MTBF" ? "bg-cyan-100 dark:bg-cyan-950/55 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-900" : "bg-violet-100 dark:bg-violet-950/55 text-violet-705 dark:text-violet-300 border border-violet-200 dark:border-violet-900"}`}>
-                  {mode === "MTBF" ? "🛠️ Repairable System" : "🛑 Non-Repairable Asset"}
-                </span>
-              </div>
-
-              <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider mb-0.5">
-                Estimated Mean Time ({mode})
-              </div>
+          <div className="space-y-4">
+            <div className="relative group">
+              <div className={`absolute -inset-0.5 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-700 ${mode === "MTBF" ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-gradient-to-r from-violet-500 to-fuchsia-600"}`}></div>
               
-              <div className="text-3xl font-black text-slate-900 dark:text-white mb-4">
-                {result.toLocaleString(undefined, { maximumFractionDigits: 1 })}{" "}
-                <span className="text-lg text-slate-550 dark:text-slate-450 font-normal">hours</span>
-              </div>
-
-              {/* Detailed failure metrics grid */}
-              <div className="grid grid-cols-3 gap-3 border-t border-slate-200 dark:border-slate-800/80 pt-4 text-left">
-                <div>
-                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Hour</div>
-                  <div className={`text-xs font-black mt-0.5 truncate ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
-                    {(1 / result).toExponential(3)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Year</div>
-                  <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
-                    {(8760 / result).toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failure Rate (FPMH)</div>
-                  <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
-                    {(1000000 / result).toLocaleString(undefined, { maximumFractionDigits: 1 })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Excel / CSV Template Download for High-Intent Search */}
-              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+              <AnimatedContainer 
+                animation="scaleUp" 
+                delay={0.1} 
+                className={`relative border rounded-2xl p-6 shadow-xl bg-white dark:bg-slate-900 ${mode === "MTBF" ? "border-cyan-500/25 dark:border-cyan-500/35" : "border-violet-500/25 dark:border-violet-500/35"}`}
+              >
                 <button
-                  type="button"
-                  onClick={handleDownloadTemplate}
-                  className="w-full py-2.5 px-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-700 dark:text-emerald-300 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-emerald-500/10"
+                  onClick={handleCopy}
+                  className={`absolute top-4 right-4 transition-colors ${mode === "MTBF" ? "text-slate-400 hover:text-cyan-500" : "text-slate-400 hover:text-violet-500"}`}
                 >
-                  <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  Download Free MTBF Excel / CSV Template (.csv)
+                  {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                 </button>
+
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${mode === "MTBF" ? "bg-cyan-100 dark:bg-cyan-950/55 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-900" : "bg-violet-100 dark:bg-violet-950/55 text-violet-705 dark:text-violet-300 border border-violet-200 dark:border-violet-900"}`}>
+                    {mode === "MTBF" ? "🛠️ Repairable System" : "🛑 Non-Repairable Asset"}
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider mb-0.5">
+                  Point Estimate Mean Time ({mode})
+                </div>
+                
+                <div className="text-3xl font-black text-slate-900 dark:text-white mb-4">
+                  <AnimatedNumber value={result} decimals={1} />{" "}
+                  <span className="text-lg text-slate-550 dark:text-slate-450 font-normal">hours</span>
+                </div>
+
+                {/* Detailed failure metrics grid */}
+                <div className="grid grid-cols-3 gap-3 border-t border-slate-200 dark:border-slate-800/80 pt-4 text-left">
+                  <div>
+                    <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Hour</div>
+                    <div className={`text-xs font-black mt-0.5 truncate ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                      {(1 / result).toExponential(3)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failures / Year</div>
+                    <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                      <AnimatedNumber value={8760 / result} decimals={2} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Failure Rate (FPMH)</div>
+                    <div className={`text-xs font-black mt-0.5 ${mode === "MTBF" ? "text-cyan-600 dark:text-cyan-400" : "text-violet-650 dark:text-violet-400"}`}>
+                      <AnimatedNumber value={1000000 / result} decimals={1} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Excel Template Download */}
+                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+                  <button
+                    type="button"
+                    onClick={handleDownloadTemplate}
+                    className="w-full py-2.5 px-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/60 text-emerald-700 dark:text-emerald-300 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-emerald-500/10"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    Download Free MTBF Excel / CSV Template (.csv)
+                  </button>
+                </div>
+              </AnimatedContainer>
+            </div>
+
+            {/* Chi-Square Confidence Limits Card */}
+            <div className="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="p-1 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
+                    <Activity className="w-4 h-4" />
+                  </span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Chi-Square (&chi;&sup2;) Confidence Bounds
+                  </span>
+                </div>
+                
+                {/* Confidence Level Pill Selector */}
+                <div className="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 bg-white dark:bg-slate-800 text-xs font-bold">
+                  {([90, 95, 99] as const).map(lvl => (
+                    <button
+                      key={lvl}
+                      type="button"
+                      onClick={() => setConfidenceLevel(lvl)}
+                      className={`px-2 py-0.5 rounded-md transition-colors ${
+                        confidenceLevel === lvl
+                          ? 'bg-cyan-500 text-white shadow-xs'
+                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                    >
+                      {lvl}%
+                    </button>
+                  ))}
+                </div>
               </div>
-            </AnimatedContainer>
+
+              {/* Truncation Type Selector */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500">Test Censoring Protocol:</span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setTestType('time')}
+                    className={`px-2 py-1 rounded text-[11px] font-semibold border ${
+                      testType === 'time'
+                        ? 'bg-cyan-50 dark:bg-cyan-950/40 border-cyan-400 text-cyan-700 dark:text-cyan-300'
+                        : 'border-slate-200 dark:border-slate-700 text-slate-500'
+                    }`}
+                  >
+                    Time-Truncated (Field)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTestType('failure')}
+                    className={`px-2 py-1 rounded text-[11px] font-semibold border ${
+                      testType === 'failure'
+                        ? 'bg-cyan-50 dark:bg-cyan-950/40 border-cyan-400 text-cyan-700 dark:text-cyan-300'
+                        : 'border-slate-200 dark:border-slate-700 text-slate-500'
+                    }`}
+                  >
+                    Failure-Truncated (Bench)
+                  </button>
+                </div>
+              </div>
+
+              {/* 3-Way Confidence Display */}
+              <div className="grid grid-cols-3 gap-2 text-center pt-1">
+                <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <span className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 block">
+                    Lower Limit ({confidenceLevel}%)
+                  </span>
+                  <div className="text-base font-black font-mono text-slate-900 dark:text-white mt-1">
+                    {Math.round(mtbfLowerBound).toLocaleString()} <span className="text-[10px] font-normal text-slate-400">hrs</span>
+                  </div>
+                  <span className="text-[9px] text-slate-400">Guaranteed min</span>
+                </div>
+
+                <div className="p-3 bg-cyan-50 dark:bg-cyan-950/30 rounded-xl border border-cyan-200 dark:border-cyan-800">
+                  <span className="text-[10px] uppercase font-bold text-cyan-700 dark:text-cyan-300 block">
+                    Point Estimate
+                  </span>
+                  <div className="text-base font-black font-mono text-cyan-600 dark:text-cyan-400 mt-1">
+                    {Math.round(result).toLocaleString()} <span className="text-[10px] font-normal text-slate-400">hrs</span>
+                  </div>
+                  <span className="text-[9px] text-slate-400">T / r</span>
+                </div>
+
+                <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block">
+                    Upper Limit ({confidenceLevel}%)
+                  </span>
+                  <div className="text-base font-black font-mono text-slate-900 dark:text-white mt-1">
+                    {isFinite(mtbfUpperBound) ? `${Math.round(mtbfUpperBound).toLocaleString()} hrs` : '&infin;'}
+                  </div>
+                  <span className="text-[9px] text-slate-400">Optimistic max</span>
+                </div>
+              </div>
+
+              <div className="text-[10px] text-slate-400 text-center font-mono">
+                Degrees of freedom: &nu;_L = {lowerDf}, &nu;_U = {upperDf} &bull; &chi;&sup2; critical: [{chi2Upper.toFixed(2)}, {chi2Lower.toFixed(2)}]
+              </div>
+            </div>
           </div>
         )}
       </AnimatedContainer>
@@ -451,34 +608,211 @@ const MtbfCalculator: React.FC = () => {
           </div>
         </div>
       </AnimatedContainer>
+
+      {/* Interactive Sensitivity Sliders & Survival Modeling */}
+      {result !== null && (
+        <AnimatedContainer animation="slideUp" delay={0.25} className="md:col-span-2">
+          <div className="bg-slate-50 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <span className="text-xs uppercase font-bold text-cyan-600 dark:text-cyan-400 tracking-wider">
+                  Operational Sensitivity & What-If Simulation
+                </span>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Mission Survival Probability & Line Availability
+                </h4>
+              </div>
+              <span className="text-xs text-slate-500">
+                Simulate stress variations and mission horizons
+              </span>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Slider 1: Mission Time */}
+              <div className="space-y-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center text-xs">
+                  <label className="font-bold text-slate-700 dark:text-slate-300">
+                    Target Mission Time (t):
+                  </label>
+                  <span className="font-black font-mono text-cyan-600 dark:text-cyan-400 text-sm">
+                    {missionHours.toLocaleString()} hrs ({ (missionHours / 24).toFixed(1) } days)
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="100"
+                  max="10000"
+                  step="100"
+                  value={missionHours}
+                  onChange={(e) => setMissionHours(parseFloat(e.target.value))}
+                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                />
+                
+                {/* Survival Probability Gauge */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60 space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-500">Survival Probability R({missionHours}h):</span>
+                    <span className="font-black font-mono text-emerald-500 text-sm">
+                      {(survivalProb * 100).toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div 
+                      style={{ width: `${Math.min(100, Math.max(0, survivalProb * 100))}%` }} 
+                      className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full transition-all duration-300"
+                    />
+                  </div>
+                  <div className="flex justify-between text-[10px] text-slate-400">
+                    <span>Lower 90%: {(lowerSurvivalProb * 100).toFixed(1)}%</span>
+                    <span>Failure Risk F(t): {((1 - survivalProb) * 100).toFixed(2)}%</span>
+                    <span>Upper 90%: {(upperSurvivalProb * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Slider 2: Environmental Stress Variation */}
+              <div className="space-y-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center text-xs">
+                  <label className="font-bold text-slate-700 dark:text-slate-300">
+                    Operating Stress Variation:
+                  </label>
+                  <span className={`font-black font-mono text-sm ${stressFactor > 0 ? 'text-rose-500' : stressFactor < 0 ? 'text-emerald-500' : 'text-slate-600 dark:text-slate-300'}`}>
+                    {stressFactor > 0 ? `+${stressFactor}% (Harsh)` : stressFactor < 0 ? `${stressFactor}% (Benign)` : '0% (Nominal)'}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="-50"
+                  max="50"
+                  step="5"
+                  value={stressFactor}
+                  onChange={(e) => setStressFactor(parseFloat(e.target.value))}
+                  className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                />
+
+                {/* Adjusted Metrics */}
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs">
+                  <div className="p-2 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                    <span className="text-[10px] text-slate-400 block">Stress-Adjusted MTBF:</span>
+                    <span className="font-bold font-mono text-slate-900 dark:text-white">
+                      {Math.round(effectiveMtbf).toLocaleString()} hrs
+                    </span>
+                  </div>
+                  <div className="p-2 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                    <span className="text-[10px] text-slate-400 block">Inherent Availability (A):</span>
+                    <span className="font-bold font-mono text-cyan-600 dark:text-cyan-400">
+                      {inherentAvailability.toFixed(3)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AnimatedContainer>
+      )}
+      
+      {result !== null && (
+        <div className="md:col-span-2">
+          <CalculationProofDrawer
+            title={`${mode} Mathematical Derivation & Confidence Bound Audit`}
+            standard="ISO 14224 §B.2.3 & MIL-HDBK-338B §5.4"
+            standardClause={testType === 'time' ? "Time-Truncated Type I Test" : "Failure-Truncated Type II Test"}
+            steps={[
+              {
+                name: `1. Point Estimate Mean Time (${mode})`,
+                formula: `\\text{${mode}} = \\frac{\\sum T_i}{r} = \\frac{T_{\\text{operating}}}{r}`,
+                substitution: `\\text{${mode}} = \\frac{${totalHours}\\text{ op-hours}}{${failures}\\text{ failures}} = ${result.toFixed(1)}\\text{ hours}`,
+                result: `\\text{${mode}} = ${result.toFixed(1)}\\text{ hours/failure}`,
+                dimensionalAnalysis: "\\frac{[\\text{cumulative operating hours}]}{[\\text{unscheduled failures}]}",
+                interpretation: `Expected operational uptime between unscheduled stoppages under constant hazard rate assumption.`
+              },
+              {
+                name: "2. Constant Failure Rate (Hazard Rate \u03BB)",
+                formula: "\\lambda = \\frac{1}{\\text{MTBF}} = \\frac{r}{T}",
+                substitution: `\\lambda = \\frac{1}{${result.toFixed(1)}\\text{ hrs}} = ${(1 / result).toExponential(4)}\\text{ hr}^{-1}`,
+                result: `\\lambda = ${(1 / result).toExponential(4)}\\text{ failures/hour}`,
+                dimensionalAnalysis: "[\\text{failures} \\cdot \\text{hour}^{-1}]",
+                interpretation: `Equivalent to ${(8760 / result).toFixed(2)} expected failure events per continuous operating year (8,760 hrs).`
+              },
+              {
+                name: `3. Wilson-Hilferty ${confidenceLevel}% Chi-Square Lower Confidence Bound`,
+                formula: `\\text{MTBF}_{\\text{lower}} = \\frac{2T}{\\chi^2_{\\alpha/2, \\nu_L}} \\quad \\left(\\nu_L = ${lowerDf}\\right)`,
+                substitution: `\\text{MTBF}_{\\text{lower}} = \\frac{2 \\times ${totalHours}}{${chi2Lower.toFixed(3)}} = ${Math.round(mtbfLowerBound).toLocaleString()}\\text{ hours}`,
+                result: `\\text{MTBF}_{\\text{lower}} = ${Math.round(mtbfLowerBound).toLocaleString()}\\text{ hours}`,
+                dimensionalAnalysis: "\\frac{[\\text{hours}]}{[\\text{dimensionless quantile}]}",
+                interpretation: `With ${confidenceLevel}% statistical confidence, true population MTBF is guaranteed to meet or exceed ${Math.round(mtbfLowerBound).toLocaleString()} hours.`
+              },
+              {
+                name: "4. Target Mission Horizon Survival Probability",
+                formula: "R(t) = e^{-\\lambda t} = \\exp\\left( -\\frac{t}{\\text{MTBF}} \\right)",
+                substitution: `R(${missionHours}\\text{h}) = \\exp\\left( -\\frac{${missionHours}}{${result.toFixed(1)}} \\right) = ${(survivalProb * 100).toFixed(2)}\\%`,
+                result: `R(${missionHours}\\text{h}) = ${(survivalProb * 100).toFixed(2)}\\%`,
+                dimensionalAnalysis: "[\\text{dimensionless probability} \\in [0, 1]]",
+                interpretation: `Probability of completing a uninterrupted ${missionHours}-hour mission without unscheduled breakdown.`
+              },
+              {
+                name: "5. Inherent Equipment Availability (Operational)",
+                formula: "A_i = \\frac{\\text{MTBF}}{\\text{MTBF} + \\text{MTTR}} \\times 100\\%",
+                substitution: `A_i = \\frac{${result.toFixed(1)}}{${result.toFixed(1)} + ${mttrHours}} \\times 100\\% = ${inherentAvailability.toFixed(3)}\\%`,
+                result: `A_i = ${inherentAvailability.toFixed(3)}\\%`,
+                dimensionalAnalysis: "\\frac{[\\text{uptime hours}]}{[\\text{uptime} + \\text{repair hours}]}",
+                interpretation: `Theoretical maximum uptime percentage governed exclusively by inherent reliability and active repair time.`
+              }
+            ]}
+            assumptions={[
+              "Exponential life distribution: Failure rate \u03BB is independent of operating age (constant hazard rate / Poisson process).",
+              "Failures are mutually independent events without cascading or common-cause contagion.",
+              `Confidence bounds calculated via exact Chi-Square inversion with ${lowerDf} lower degrees of freedom.`
+            ]}
+            auditChecklist={[
+              "ISO 14224 Clause B.2.3 compliance: Operating time recorded net of scheduled maintenance outages.",
+              "Type I (time-truncated) or Type II (failure-truncated) testing protocol appropriately specified.",
+              "Point estimate verified against historical equipment class benchmarks."
+            ]}
+          />
+        </div>
+      )}
       
       <div className="md:col-span-2">
         <ShareAndExport 
           toolName="MTBF Calculator"
           shareUrl={shareUrl}
           chartRef={toolRef}
-          resultSummary={result !== null ? `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours` : undefined}
+          resultSummary={result !== null ? `MTBF: ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hrs (${confidenceLevel}% Bounds: [${Math.round(mtbfLowerBound)}, ${isFinite(mtbfUpperBound) ? Math.round(mtbfUpperBound) : '∞'}])` : undefined}
           pdfData={result !== null ? {
             inputs: {
               "Calculation Mode": mode,
               "Operational Time (Hrs)": totalHours,
-              "Number of Failures": failures
+              "Number of Failures": failures,
+              "Confidence Level": `${confidenceLevel}% (${testType === 'time' ? 'Time-Truncated' : 'Failure-Truncated'})`,
+              "Target Mission Time": `${missionHours} hours`,
+              "Operating Stress Variation": `${stressFactor}%`
             },
             results: {
               [`Mean Time (${mode})`]: `${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} Hours`,
+              [`Lower Limit (${confidenceLevel}%)`]: `${Math.round(mtbfLowerBound).toLocaleString()} Hours`,
+              [`Upper Limit (${confidenceLevel}%)`]: isFinite(mtbfUpperBound) ? `${Math.round(mtbfUpperBound).toLocaleString()} Hours` : 'Infinity',
+              "Mission Survival R(t)": `${(survivalProb * 100).toFixed(2)}%`,
+              "Inherent Line Availability": `${inherentAvailability.toFixed(3)}%`,
               "Failure Rate (\u03BB)": `${(1 / result).toFixed(8)} failures/hour`,
               "Reliability Profile": mode === 'MTBF' ? 'Repairable System' : 'Disposable Asset'
             },
-            formula: `${mode} = Total Operational Time / Failures = ${totalHours} hrs / ${failures} events`,
+            formula: `${mode} = Total Operational Time / Failures = ${totalHours} hrs / ${failures} events; Chi-Square Lower Limit = 2T / \u03C7\u00B2(1-\u03B1/2, 2r+2)`,
             interpretation: mode === 'MTBF'
-              ? `Estimated mean operating uptime of ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} hours between unscheduled breakdowns. For continuous production facilities, benchmark this performance against IEEE 493 and OREDA asset failure rates.`
+              ? `Estimated mean operating uptime of ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} hours. With ${confidenceLevel}% statistical confidence, true MTBF is guaranteed to exceed ${Math.round(mtbfLowerBound).toLocaleString()} operating hours. At target mission time of ${missionHours} hours, survival probability is ${(survivalProb * 100).toFixed(2)}%.`
               : `Expected non-repairable component operational lifetime of ${result.toLocaleString(undefined, { maximumFractionDigits: 1 })} hours before failure and disposal.`
           } : undefined}
           exportData={result !== null ? [
             { Parameter: "Calculation Mode", Value: mode },
             { Parameter: "Total Operational Time (Hours)", Value: totalHours },
             { Parameter: "Number of Failures", Value: failures },
-            { Parameter: `Result (${mode} in Hours)`, Value: result },
+            { Parameter: `Point Estimate (${mode} in Hours)`, Value: result },
+            { Parameter: `Lower Confidence Limit (${confidenceLevel}%)`, Value: Math.round(mtbfLowerBound) },
+            { Parameter: `Upper Confidence Limit (${confidenceLevel}%)`, Value: isFinite(mtbfUpperBound) ? Math.round(mtbfUpperBound) : "Infinity" },
+            { Parameter: "Degrees of Freedom (Lower / Upper)", Value: `${lowerDf} / ${upperDf}` },
+            { Parameter: "Target Mission Time (Hours)", Value: missionHours },
+            { Parameter: "Mission Survival Probability R(t)", Value: `${(survivalProb * 100).toFixed(2)}%` },
+            { Parameter: "Inherent Availability (%)", Value: `${inherentAvailability.toFixed(3)}%` },
             { Parameter: "Failure Rate (\u03BB in failures/hour)", Value: (1 / result) }
           ] : undefined}
         />

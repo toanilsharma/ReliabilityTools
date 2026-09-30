@@ -5,6 +5,7 @@ import HelpTooltip from '../../components/HelpTooltip';
 import AnimatedContainer from '../../components/AnimatedContainer';
 import TheoryBlock from '../../components/TheoryBlock';
 import ShareAndExport from '../../components/ShareAndExport';
+import RcaCapaMatrix, { CapaItem } from '../../components/RcaCapaMatrix';
 import { trackToolCalculation } from '../../utils/analytics';
 
 interface WhyRow {
@@ -21,9 +22,57 @@ const DEFAULT_WHYS: WhyRow[] = [
   { id: '5', whyText: 'No priority dispatch protocol exists for critical asset PMs.', countermeasure: 'Establish RCM asset criticality ranking to protect PM schedules.' }
 ];
 
+const DEFAULT_CAPAS: CapaItem[] = [
+  {
+    id: 'capa-1',
+    sourceCause: 'Centrifugal Pump P-101 bearing seized, stopping Line 2 production',
+    actionDescription: 'Replace seized bearing with OEM specification and perform precision laser alignment (< 0.05 mm offset).',
+    actionType: 'Containment',
+    hierarchy: 'Substitution',
+    owner: 'Mechanical Reliability Tech',
+    dueDate: '2026-10-05',
+    verificationMetric: 'Post-install vibration overall RMS < 1.2 mm/s across all axes',
+    status: 'Closed'
+  },
+  {
+    id: 'capa-2',
+    sourceCause: 'The bearing ran out of lubrication and overheated',
+    actionDescription: 'Install automated single-point lubricator (electro-chemical dispenser) with synthetic ISO VG 220 grease.',
+    actionType: 'Permanent',
+    hierarchy: 'Engineering',
+    owner: 'PdM Lubrication Specialist',
+    dueDate: '2026-10-15',
+    verificationMetric: 'Discharge pressure verified, ultrasonic dB reading stable < 20 dBµV',
+    status: 'In Progress'
+  },
+  {
+    id: 'capa-3',
+    sourceCause: 'The manual greasing schedule was missed during the shift',
+    actionDescription: 'Digitize lubrication PM routes with barcode scanning on bearing housings; require scan confirmation in CMMS.',
+    actionType: 'Permanent',
+    hierarchy: 'Administrative',
+    owner: 'Maintenance Systems Planner',
+    dueDate: '2026-10-25',
+    verificationMetric: '100% route completion logs recorded in CMMS without manual overrides',
+    status: 'In Progress'
+  },
+  {
+    id: 'capa-4',
+    sourceCause: 'No priority dispatch protocol exists for critical asset PMs',
+    actionDescription: 'Establish RCM-based PM lockout policy: Category A critical asset preventive tasks cannot be pre-empted without Plant Manager sign-off.',
+    actionType: 'Permanent',
+    hierarchy: 'Elimination',
+    owner: 'Operations & Maintenance Director',
+    dueDate: '2026-11-01',
+    verificationMetric: 'Zero missed Tier-1 PMs due to breakdown reassignment over 90 days',
+    status: 'Open'
+  }
+];
+
 const FiveWhyTool: React.FC = () => {
   const [problemStatement, setProblemStatement] = useState<string>('Unplanned outage on Line 2 due to pump P-101 failure.');
   const [whys, setWhys] = useState<WhyRow[]>(DEFAULT_WHYS);
+  const [capas, setCapas] = useState<CapaItem[]>(DEFAULT_CAPAS);
   const [copiedReport, setCopiedReport] = useState(false);
   const [errors, setErrors] = useState<string>('');
   const toolRef = useRef<HTMLDivElement>(null);
@@ -61,6 +110,10 @@ const FiveWhyTool: React.FC = () => {
     const rootCause = whys.length > 0 ? whys[whys.length - 1].whyText : 'N/A';
     const finalCountermeasure = whys.length > 0 ? whys[whys.length - 1].countermeasure : 'N/A';
 
+    const capaText = capas.map((c, idx) => 
+      `CAPA #${idx + 1} [${c.status.toUpperCase()} | ${c.actionType} | Hierarchy: ${c.hierarchy}]\n  - Cause: ${c.sourceCause}\n  - Action: ${c.actionDescription}\n  - Owner: ${c.owner} (Due: ${c.dueDate})\n  - KPI: ${c.verificationMetric}`
+    ).join('\n\n');
+
     const fullReportText = `ROOT CAUSE ANALYSIS (5-WHY REPORT)
 =======================================
 PROBLEM STATEMENT:
@@ -75,6 +128,10 @@ ${rootCause}
 PRIMARY SYSTEMIC COUNTERMEASURE:
 ${finalCountermeasure}
 
+CORRECTIVE & PREVENTIVE ACTIONS (CAPA MATRIX):
+=======================================
+${capaText}
+
 Generated via Reliability Tools: https://reliabilitytools.co.in/tools/5-why/`;
 
     return {
@@ -82,7 +139,7 @@ Generated via Reliability Tools: https://reliabilitytools.co.in/tools/5-why/`;
       rootCause,
       finalCountermeasure
     };
-  }, [problemStatement, whys]);
+  }, [problemStatement, whys, capas]);
 
   const handleCopyReport = () => {
     navigator.clipboard.writeText(formattedReport.fullReportText);
@@ -240,6 +297,18 @@ Generated via Reliability Tools: https://reliabilitytools.co.in/tools/5-why/`;
           </div>
         </AnimatedContainer>
       </div>
+
+      {/* Actionable CAPA Matrix */}
+      <RcaCapaMatrix
+        capas={capas}
+        onUpdateCapas={setCapas}
+        suggestedCauses={[
+          formattedReport.rootCause,
+          ...whys.map(w => w.whyText).filter(Boolean)
+        ]}
+        title="5-Why RCA-to-CAPA Action Matrix"
+        subtitle="Translate root causes and systemic countermeasures into auditable actions governed by the Hierarchy of Controls."
+      />
     </div>
   );
 

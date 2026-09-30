@@ -50,16 +50,14 @@ const NpshCalculator: React.FC = () => {
     pumpService 
   } = state;
 
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'npsh-cavitation',
-        name: 'NPSH Cavitation Calculator',
-        path: '/tools/npsh-cavitation/'
-      });
-    }
+    addRecentTool({
+      id: 'npsh-cavitation',
+      name: 'NPSH Cavitation Calculator',
+      path: '/tools/npsh-cavitation/'
+    });
   }, []);
 
   const pAbs = Math.max(0, parseFloat(suctionPressureKpa) || 101.3);
@@ -295,7 +293,8 @@ const NpshCalculator: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="NPSH Cavitation Calculator"
+        toolName="NPSH Cavitation Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/npsh-cavitation/"
         inputs={{
           "Pump Tag": pumpTag,
           "Suction Pressure": `${suctionPressureKpa} kPa abs`,

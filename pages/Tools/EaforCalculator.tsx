@@ -43,16 +43,14 @@ const EaforCalculator: React.FC = () => {
   });
 
   const { unitName, capacityMw, ph, sh, rsh, foh, poh, efdh, epdh } = state;
-  const { addRecentTools } = useRecentTools() as any;
+  const { addRecentTool } = useRecentTools();
 
   useEffect(() => {
-    if (typeof addRecentTools === 'function') {
-      addRecentTools({
-        id: 'eafor',
-        name: 'EAF EFOR Calculator',
-        path: '/tools/eafor/'
-      });
-    }
+    addRecentTool({
+      id: 'eafor',
+      name: 'EAF & EFOR Availability',
+      path: '/tools/eafor/'
+    });
   }, []);
 
   const numPh = Math.max(1, parseFloat(ph) || 8760);
@@ -261,7 +259,8 @@ const EaforCalculator: React.FC = () => {
       </div>
 
       <ShareAndExport
-        toolTitle="IEEE 762 EAF & EFOR Calculator"
+        toolName="IEEE 762 EAF & EFOR Calculator"
+        shareUrl="https://reliabilitytools.co.in/tools/eafor/"
         inputs={{
           "Unit Name": unitName,
           "Capacity": `${capacityMw} MW`,
