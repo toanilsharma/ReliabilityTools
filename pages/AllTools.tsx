@@ -35,7 +35,7 @@ const AllTools: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-20">
       <SEO 
         title="Reliability Engineering Tools Directory | Free Online Calculators"
-        description="Comprehensive directory of 38+ free reliability engineering tools. MTBF, Weibull, FMEA, OEE, LCC, Duval Triangle, LOPA, API 570, and more for maintenance professionals and students."
+        description={`Comprehensive directory of ${TOOLS.length} free reliability engineering tools. MTBF, Weibull, FMEA, OEE, LCC, Duval Triangle, LOPA, API 570, and more for maintenance professionals and students.`}
         keywords="reliability tools directory, engineering calculators, MTBF calculator, Weibull analysis, FMEA tool, OEE calculator, Duval Triangle, LOPA"
       />
 
@@ -53,7 +53,7 @@ const AllTools: React.FC = () => {
             Reliability Engineering <span className="text-cyan-600 dark:text-cyan-400">Directory</span>
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
-            Access 38+ professional-grade calculators for industrial maintenance, asset management, and statistical failure analysis.
+            Access {TOOLS.length} professional-grade calculators for industrial maintenance, asset management, and statistical failure analysis.
           </p>
 
           {/* Search and Filter Bar */}

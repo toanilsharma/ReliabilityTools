@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Menu, X, ShieldCheck, ChevronDown, Sun, Moon, AlertTriangle, ExternalLink, Calculator, Zap, Linkedin, Instagram, Facebook, Twitter, Mail, Search } from 'lucide-react';
+import { Menu, X, ShieldCheck, ChevronDown, Sun, Moon, AlertTriangle, ExternalLink, Calculator, Zap, Activity, Linkedin, Instagram, Facebook, Twitter, Mail, Search } from 'lucide-react';
 import { TOOLS, AUTHOR_NAME, AUTHOR_LINKEDIN, ARTICLES } from '../constants';
 import CookieConsent from './CookieConsent';
 import CommandPalette from './CommandPalette';
@@ -216,7 +216,7 @@ const Layout: React.FC = () => {
                   <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Facebook">
                     <Facebook className="h-5 w-5" />
                   </a>
-                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20these%2028%20free%20industrial%20reliability%20engineering%20tools!%20%23ReliabilityEngineering`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
+                  <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20these%20${TOOLS.length}%20free%20industrial%20reliability%20engineering%20tools!%20%23ReliabilityEngineering`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share on Twitter">
                     <Twitter className="h-5 w-5" />
                   </a>
                   <a href={`mailto:?subject=Free%20Reliability%20Engineering%20Tools&body=I%20found%20this%20awesome%20suite%20of%20free%20reliability%20engineering%20calculators%20(MTBF,%20Weibull,%20OEE).%20Check%20it%20out:%20${encodeURIComponent(shareUrl)}`} className="text-slate-400 hover:text-cyan-400 transition-colors" aria-label="Share via Email">
@@ -273,6 +273,16 @@ const Layout: React.FC = () => {
             <div>
               <h3 className="text-base font-bold text-white mb-6">Other websites developed by us</h3>
               <ul className="space-y-4 text-sm text-slate-400">
+                <li>
+                  <a href="https://livesimulators.com" target="_blank" rel="noopener noreferrer" className="group block hover:bg-slate-800/50 -mx-3 p-3 rounded-lg transition-all">
+                    <div className="flex items-center gap-2 font-bold text-slate-200 group-hover:text-cyan-400 mb-1">
+                      <Activity className="w-4 h-4 text-cyan-400" />
+                      Live Simulators
+                      <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-slate-500 group-hover:text-slate-400">Interactive live simulators & engineering dynamics.</p>
+                  </a>
+                </li>
                 <li>
                   <a href="https://designcalculators.co.in" target="_blank" rel="noopener noreferrer" className="group block hover:bg-slate-800/50 -mx-3 p-3 rounded-lg transition-all">
                     <div className="flex items-center gap-2 font-bold text-slate-200 group-hover:text-cyan-400 mb-1">

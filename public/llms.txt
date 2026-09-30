@@ -1,7 +1,7 @@
 # ReliabilityTools - Engineering Directory
 > Free industrial reliability engineering calculators for maintenance engineers
 
-ReliabilityTools provides 28 free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and advanced industrial reliability engineering.
+ReliabilityTools provides 46 free browser-based calculators for MTBF, MTTR, Weibull Analysis, FMEA, OEE, Life Cycle Cost, Spare Parts Optimization, and advanced industrial reliability engineering.
 
 ## Tool Categories & Description
 

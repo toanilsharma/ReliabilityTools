@@ -137,7 +137,7 @@ const Home: React.FC = () => {
     "@type": "WebApplication",
     "name": "Reliability Tools - Free Reliability Engineering Calculators",
     "url": "https://reliabilitytools.co.in",
-    "description": "Access 28 free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling.",
+    "description": `Access ${TOOLS.length} free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling.`,
     "applicationCategory": "Engineering",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -176,7 +176,7 @@ const Home: React.FC = () => {
     <div className="space-y-24 pb-12">
       <SEO
         title="Free Reliability Engineering Tools | MTBF Calculator & Weibull Analysis"
-        description="Access 28 free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling."
+        description={`Access ${TOOLS.length} free tools for engineers and students with no signup. Perform MTBF calculator runs, Weibull analysis, FMEA, OEE, and system reliability modeling.`}
         keywords="free MTBF calculator, Weibull analysis tool India, reliability engineering tools, FMEA calculator, OEE calculator, availability calculator, predictive maintenance, engineering interview preparation, reliability exam preparation"
         canonicalUrl="https://reliabilitytools.co.in/"
         schema={[webAppSchema, faqSchema]}
@@ -210,7 +210,7 @@ const Home: React.FC = () => {
           </h1>
 
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-4 leading-relaxed">
-            <span className="font-semibold text-slate-900 dark:text-white">28 professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
+            <span className="font-semibold text-slate-900 dark:text-white">{TOOLS.length} professional-grade calculators</span> trusted by maintenance professionals, reliability engineers, professors, and students worldwide.
             Master MTBF, Weibull, FMEA, OEE & more - directly in your browser.
           </p>
 
@@ -276,7 +276,7 @@ const Home: React.FC = () => {
           {/* Trust Indicators */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-slate-500 dark:text-slate-400 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8" ref={observeElt}>
             <div className="flex flex-col items-center">
-              <div className="font-bold text-2xl text-slate-900 dark:text-white">28</div>
+              <div className="font-bold text-2xl text-slate-900 dark:text-white">{TOOLS.length}</div>
               <div className="text-sm">Engineering Tools</div>
             </div>
             <div className="flex flex-col items-center">
@@ -734,7 +734,7 @@ const Home: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 mt-12">
           <div>
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Reliability Calculators</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">28 professional-grade tools. Free. No signup required.</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1">{TOOLS.length} professional-grade tools. Free. No signup required.</p>
           </div>
           <Link
             to="/tools/"

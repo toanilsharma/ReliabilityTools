@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { BASE_URL } from '../utils/seoConfig';
+import { TOOLS } from '../constants';
 
 const PressKit: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -83,7 +84,7 @@ const PressKit: React.FC = () => {
           <div className="w-12 h-12 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-500 mx-auto">
             <BarChart2 className="w-6 h-6" />
           </div>
-          <div className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">28+</div>
+          <div className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">{TOOLS.length}+</div>
           <div className="text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Free Engineering Calculators</div>
         </div>
 
