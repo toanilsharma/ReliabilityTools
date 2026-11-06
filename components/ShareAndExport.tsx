@@ -13,7 +13,9 @@ import {
   Eye,
   Download,
   X,
-  ExternalLink
+  ExternalLink,
+  GraduationCap,
+  BookOpen
 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import html2canvas from 'html2canvas';
@@ -64,10 +66,35 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewCardUrl, setPreviewCardUrl] = useState<string | null>(null);
   const [copiedImage, setCopiedImage] = useState(false);
+  const [isCiteOpen, setIsCiteOpen] = useState(false);
+  const [citeFormat, setCiteFormat] = useState<'bibtex' | 'ieee' | 'apa'>('bibtex');
+  const [copiedCite, setCopiedCite] = useState(false);
 
   // Determine current active URL and clean canonical URL (stripped of query parameters)
   const currentUrl = customShareUrl || (typeof window !== 'undefined' ? window.location.href : 'https://reliabilitytools.co.in');
   const canonicalUrl = currentUrl.split('?')[0].split('#')[0];
+
+  const cleanSlug = canonicalUrl.split('/').filter(Boolean).pop() || 'calculator';
+  const currentYear = new Date().getFullYear();
+  const todayFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  const citations = {
+    bibtex: `@misc{reliabilitytools_${cleanSlug.replace(/[^a-zA-Z0-9_]/g, '_')},
+  author = {{Reliability Tools Engineering Group}},
+  title = {${toolName}: Online Interactive Reliability Calculator},
+  year = {${currentYear}},
+  url = {${canonicalUrl}},
+  note = {Accessed: ${todayFormatted}}
+}`,
+    ieee: `[1] Reliability Tools, "${toolName}," Reliability Tools Engineering Suite, ${currentYear}. [Online]. Available: ${canonicalUrl}. [Accessed: ${todayFormatted}].`,
+    apa: `Reliability Tools. (${currentYear}). ${toolName} [Computer software]. Retrieved ${todayFormatted}, from ${canonicalUrl}`
+  };
+
+  const copyCitation = () => {
+    navigator.clipboard.writeText(citations[citeFormat]);
+    setCopiedCite(true);
+    setTimeout(() => setCopiedCite(false), 2000);
+  };
 
   // Resolves structured inputs & results even if tool only provided exportData or resultSummary
   const resolvedData = React.useMemo(() => {
@@ -329,16 +356,28 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
             </div>
           </div>
 
-          {/* Quick 1200x630 Card Preview Button */}
-          <button
-            onClick={handleOpenPreview}
-            disabled={isGeneratingCard}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors border border-slate-200 dark:border-slate-600"
-            title="Preview 1200×630 Open Graph share card"
-          >
-            <Eye className="w-3.5 h-3.5 text-cyan-500" />
-            <span>{isGeneratingCard ? 'Rendering...' : 'Preview 1200×630 Card'}</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Academic Citation Button */}
+            <button
+              onClick={() => setIsCiteOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 rounded-lg transition-colors border border-indigo-200 dark:border-indigo-800/60"
+              title="Generate BibTeX, IEEE, or APA academic citation"
+            >
+              <GraduationCap className="w-3.5 h-3.5 text-indigo-500" />
+              <span>Cite Calculator</span>
+            </button>
+
+            {/* Quick 1200x630 Card Preview Button */}
+            <button
+              onClick={handleOpenPreview}
+              disabled={isGeneratingCard}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition-colors border border-slate-200 dark:border-slate-600"
+              title="Preview 1200×630 Open Graph share card"
+            >
+              <Eye className="w-3.5 h-3.5 text-cyan-500" />
+              <span>{isGeneratingCard ? 'Rendering...' : 'Preview 1200×630 Card'}</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -564,6 +603,80 @@ const ShareAndExport: React.FC<ShareAndExportProps> = ({
                   <span>Download PNG (1200×630)</span>
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Academic Citation Modal */}
+      {isCiteOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setIsCiteOpen(false)}
+        >
+          <div 
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl relative space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-200 dark:border-indigo-800/50">
+                  <GraduationCap className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                    Cite This Reliability Calculator
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Standard format for research papers, course assignments, dissertations, and technical reports.
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsCiteOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Format Selector Tabs */}
+            <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+              {(['bibtex', 'ieee', 'apa'] as const).map((fmt) => (
+                <button
+                  key={fmt}
+                  onClick={() => setCiteFormat(fmt)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                    citeFormat === fmt
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  {fmt === 'bibtex' ? 'BibTeX (LaTeX)' : fmt.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
+            {/* Citation Box */}
+            <div className="relative">
+              <pre className="p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-mono text-slate-800 dark:text-slate-200 overflow-x-auto whitespace-pre-wrap select-all">
+                {citations[citeFormat]}
+              </pre>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5" />
+                Persistent canonical link & ISO date included
+              </span>
+              <button
+                onClick={copyCitation}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:shadow-indigo-500/20"
+              >
+                {copiedCite ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedCite ? 'Copied to Clipboard!' : 'Copy Citation'}</span>
+              </button>
             </div>
           </div>
         </div>

@@ -15,7 +15,9 @@ import {
   Cpu, 
   Wrench, 
   Share2, 
-  ExternalLink 
+  ExternalLink,
+  FlaskConical,
+  Award
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { BASE_URL } from '../utils/seoConfig';
@@ -97,8 +99,72 @@ const EMBED_SNIPPETS = [
   }
 ];
 
+interface LabAssignment {
+  id: string;
+  courseCode: string;
+  title: string;
+  objective: string;
+  toolPath: string;
+  toolName: string;
+  problemStatement: string;
+  givenData: string;
+  questions: string[];
+}
+
+const LAB_ASSIGNMENTS: LabAssignment[] = [
+  {
+    id: 'lab-weibull',
+    courseCode: 'ME-402',
+    title: 'Wind Turbine Main Bearing Fatigue Analysis',
+    objective: 'Estimate Weibull parameters (η, β) and determine B10 life from accelerated life test data.',
+    toolPath: '/tools/weibull/',
+    toolName: 'Weibull Analysis Calculator',
+    problemStatement: 'Ten high-capacity spherical roller bearings were run on an accelerated endurance test rig until spalling failure was detected via vibration monitoring.',
+    givenData: 'Failure times in hours: 1240, 1850, 2190, 2750, 3120, 3680, 4210, 4950, 5600, 6800',
+    questions: [
+      'Fit a 2-parameter Weibull model using Median Rank Regression. What are the characteristic life (η) and slope (β)?',
+      'Based on the slope β, is the failure mechanism infant mortality, random stress, or mechanical wear-out fatigue?',
+      'Calculate the B10 life (time at which 10% of bearings are expected to fail) for warranty declaration.',
+      'Estimate the cumulative reliability R(t) at 2,000 operating hours.'
+    ]
+  },
+  {
+    id: 'lab-sil',
+    courseCode: 'EM-501',
+    title: 'Process Separator High-Pressure Trip Loop SIL Verification',
+    objective: 'Evaluate Safety Instrumented Function (SIF) PFDavg under 1oo1 and 2oo3 voting architectures per IEC 61508 / 61511.',
+    toolPath: '/tools/sil/',
+    toolName: 'SIL Verification Calculator',
+    problemStatement: 'A high-pressure flare separator requires a dedicated Safety Instrumented System to prevent overpressure vessel rupture in a petrochemical unit.',
+    givenData: 'Sensor λDU = 1.2×10⁻⁶/hr, Logic Solver λDU = 0.1×10⁻⁶/hr, Final Element λDU = 2.4×10⁻⁶/hr. Proof Test Interval TI = 8,760 hours (1 year), Mean Time to Restoration MTTR = 8 hours.',
+    questions: [
+      'Calculate the subsystem PFDavg and total loop PFDavg for a simplex 1oo1 architecture.',
+      'What Safety Integrity Level (SIL 1, SIL 2, SIL 3) does the simplex loop achieve?',
+      'Re-evaluate the sensor subsystem using a 2oo3 voting architecture with a 5% Common Cause Factor (β = 0.05). Does it upgrade the SIL rating?',
+      'What happens to PFDavg if the proof test interval is shortened to 6 months (4,380 hours)?'
+    ]
+  },
+  {
+    id: 'lab-api570',
+    courseCode: 'ME-312',
+    title: 'Hydrocarbon Piping Ultrasonic Thickness & Remaining Life Survey',
+    objective: 'Calculate short-term/long-term corrosion rates, minimum structural thickness per ASME B31.3, and API 570 inspection intervals.',
+    toolPath: '/tools/api570/',
+    toolName: 'API 570 Piping Inspection Calculator',
+    problemStatement: 'An 8-inch Schedule 40 ASTM A106 Grade B hydrocarbon transfer line operating at 320 psig and 350°F is inspected via ultrasonic thickness gauging at a designated CML (Condition Monitoring Location).',
+    givenData: 'Nominal wall = 0.322 in, Initial baseline (10 yrs ago) = 0.320 in, Previous inspection (5 yrs ago) = 0.285 in, Current actual thickness = 0.250 in, Allowable stress S = 20,000 psi, Joint efficiency E = 1.0, Piping OD = 8.625 in.',
+    questions: [
+      'Calculate the Long-Term (LT) and Short-Term (ST) corrosion rates in mils per year (mpy). Why might they differ?',
+      'Calculate the ASME B31.3 minimum pressure design thickness t_min and add structural minimum thickness.',
+      'Determine the remaining life (RL) of the piping circuit in years.',
+      'Determine the maximum allowable inspection interval per API 570 Section 6 (half-life rule vs. maximum cap).'
+    ]
+  }
+];
+
 const ProfessorsToolkit: React.FC = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedLabId, setCopiedLabId] = useState<string | null>(null);
   const [isGeneratingCheatSheet, setIsGeneratingCheatSheet] = useState(false);
 
   const canonicalUrl = `${BASE_URL}/professors/`;
@@ -108,6 +174,27 @@ const ProfessorsToolkit: React.FC = () => {
     navigator.clipboard.writeText(snippet);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleCopyLabAssignment = (lab: LabAssignment) => {
+    const text = `Assignment: ${lab.title} (${lab.courseCode})
+Objective: ${lab.objective}
+Interactive Tool: ${BASE_URL}${lab.toolPath}
+
+Problem Statement:
+${lab.problemStatement}
+
+Given Data:
+${lab.givenData}
+
+Student Tasks:
+${lab.questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+Verify your calculations at: ${BASE_URL}${lab.toolPath}`;
+
+    navigator.clipboard.writeText(text);
+    setCopiedLabId(lab.id);
+    setTimeout(() => setCopiedLabId(null), 2000);
   };
 
   const handleDownloadCheatSheet = async () => {
@@ -245,6 +332,121 @@ const ProfessorsToolkit: React.FC = () => {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Ready-to-Assign Problem Sets Section */}
+      <section className="space-y-8">
+        <div className="text-center max-w-3xl mx-auto space-y-2">
+          <span className="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center justify-center gap-1.5">
+            <FlaskConical className="w-4 h-4" /> Ready-to-Assign Labs
+          </span>
+          <h2 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white">
+            University Problem Sets & Laboratory Assignments
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">
+            Complete, syllabus-ready industrial case studies with real operational datasets. Copy directly to Canvas, Blackboard, or homework handouts:
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {LAB_ASSIGNMENTS.map((lab) => (
+            <div
+              key={lab.id}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 shadow-sm hover:border-cyan-500/40 transition-all space-y-6"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/60 uppercase">
+                      {lab.courseCode} Lab Assignment
+                    </span>
+                    <span className="text-xs text-slate-400">•</span>
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                      Standard Industrial Case Study
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white">
+                    {lab.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <strong>Objective:</strong> {lab.objective}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleCopyLabAssignment(lab)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded-xl transition-all border border-slate-200 dark:border-slate-700"
+                    title="Copy formatted assignment text to clipboard"
+                  >
+                    {copiedLabId === lab.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-cyan-500" />}
+                    <span>{copiedLabId === lab.id ? 'Copied Prompt!' : 'Copy Assignment Prompt'}</span>
+                  </button>
+                  <Link
+                    to={lab.toolPath}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-xl transition-all shadow-sm hover:shadow-cyan-500/20"
+                  >
+                    <span>Open Calculator</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-850/60 rounded-2xl p-5 border border-slate-100 dark:border-slate-800">
+                <div className="space-y-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Industrial Scenario:
+                  </span>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {lab.problemStatement}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                    Given Operational Data:
+                  </span>
+                  <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 font-mono text-xs text-slate-800 dark:text-slate-200 break-words select-all">
+                    {lab.givenData}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+                  Student Assignment Questions:
+                </span>
+                <ol className="grid sm:grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-400 list-decimal list-inside">
+                  {lab.questions.map((q, qIdx) => (
+                    <li key={qIdx} className="bg-slate-50/80 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-100 dark:border-slate-800 leading-relaxed">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{q}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Academic Workshop & Guest Lecture Banner */}
+      <section className="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-3xl p-8 md:p-10 text-white border border-indigo-500/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2 max-w-2xl text-center md:text-left">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 rounded-full text-xs font-bold uppercase tracking-wider">
+            <Award className="w-3.5 h-3.5" /> University Partnerships
+          </div>
+          <h3 className="text-2xl font-black">
+            Invite Reliability Tools for an Engineering Guest Lecture
+          </h3>
+          <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
+            We provide interactive virtual seminars and customized case-study data files for university courses and ASME, IEEE, SRE, and IISE student chapters worldwide at zero cost.
+          </p>
+        </div>
+        <Link
+          to="/contact"
+          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-indigo-600/30 shrink-0"
+        >
+          Request Class Workshop / Seminar
+        </Link>
       </section>
 
       {/* Downloadable Cheat Sheet Banner */}
