@@ -256,6 +256,50 @@ const OeeCalculator: React.FC = () => {
 
       {/* Input Panel */}
       <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-1 space-y-6">
+
+        {/* Manufacturing Benchmark Presets */}
+        <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+              <Sparkles className="w-3.5 h-3.5" /> Production Line Benchmarks
+            </span>
+            <span className="text-[10px] text-slate-400 font-normal">Click to test line data</span>
+          </div>
+          <div className="grid grid-cols-1 gap-2">
+            {[
+              {
+                name: "Automotive Stamping Press",
+                desc: "8h shift • 60s cycle • 420 parts • OEE ~76%",
+                data: { shiftLength: '480', breaks: '30', downtime: '45', idealCycle: '60', totalCount: '420', rejects: '12' }
+              },
+              {
+                name: "High-Speed Beverage Bottling",
+                desc: "8h shift • 1.2s cycle • 19,500 units • OEE ~84%",
+                data: { shiftLength: '480', breaks: '40', downtime: '35', idealCycle: '1.2', totalCount: '19500', rejects: '220' }
+              },
+              {
+                name: "Pharma Packaging Line",
+                desc: "7.5h shift • 3.5s cycle • 5,800 packs • OEE ~68%",
+                data: { shiftLength: '450', breaks: '40', downtime: '75', idealCycle: '3.5', totalCount: '5800', rejects: '85' }
+              }
+            ].map(p => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => setState(s => ({ ...s, ...p.data }))}
+                className="text-left p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 transition-all group"
+              >
+                <div className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                  {p.name}
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                  {p.desc}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="space-y-4 bg-slate-100 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
           <h3 className="font-black text-slate-800 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> Production Data
@@ -564,6 +608,61 @@ const OeeCalculator: React.FC = () => {
       {/* Advanced Theory Sections */}
       <SixBigLossesMatrix />
       <TeepVsOeeCard />
+
+      {/* Step-by-Step Worked Industrial Example */}
+      <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-2xl p-6 mt-10">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Target className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+          Worked Industrial Example: Automotive Stamping Press Line (8-Hour Shift)
+        </h3>
+        <p className="text-sm text-slate-700 dark:text-slate-300 mb-4">
+          A tier-1 automotive supplier operates a metal body panel stamping press during an 8-hour shift. Here is the step-by-step OEE breakdown showing how Six Big Losses reduce overall line efficiency:
+        </p>
+
+        <div className="space-y-4 text-xs">
+          <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 1: Planned Operating Time & Availability</span>
+            <p className="text-slate-700 dark:text-slate-300">
+              • Total Shift Duration: <strong>480 minutes</strong> (8 hours).<br />
+              • Planned Breaks & Toolbox Talk: <strong>30 minutes</strong> &rarr; Planned Production Time = 480 − 30 = <strong>450 minutes</strong>.<br />
+              • Unplanned Downtime: <strong>45 minutes</strong> (die jam clearance + hydraulic leak repair).<br />
+              • Operating Time = 450 − 45 = <strong>405 minutes</strong>.<br />
+              • <strong>Availability Score:</strong> <code className="font-bold text-cyan-600">405 / 450 = 90.0%</code>
+            </p>
+          </div>
+
+          <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 2: Ideal Operating Speed & Performance</span>
+            <p className="text-slate-700 dark:text-slate-300">
+              • Engineering Ideal Cycle Time: <strong>60 seconds/part</strong> (1.0 minute/part).<br />
+              • Total Stamped Panels Produced: <strong>360 panels</strong>.<br />
+              • Net Operating Time: 360 panels × 1.0 min = <strong>360 minutes</strong>.<br />
+              • Actual Operating Time: 405 minutes (45 minutes lost to minor stops & feed speed throttling).<br />
+              • <strong>Performance Score:</strong> <code className="font-bold text-cyan-600">360 / 405 = 88.89%</code>
+            </p>
+          </div>
+
+          <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 3: Defect Rate & Quality Score</span>
+            <p className="text-slate-700 dark:text-slate-300">
+              • Total Panels Stamped: <strong>360 panels</strong>.<br />
+              • Rejected Scrap/Rework Panels: <strong>12 defective panels</strong> (draw wrinkles & dimensional split).<br />
+              • Good Quality Panels = 360 − 12 = <strong>348 panels</strong>.<br />
+              • <strong>Quality Score:</strong> <code className="font-bold text-cyan-600">348 / 360 = 96.67%</code>
+            </p>
+          </div>
+
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-500/30">
+            <span className="font-bold text-emerald-700 dark:text-emerald-300 text-sm block mb-1">Final OEE Calculation & Loss Analysis</span>
+            <p className="text-slate-800 dark:text-slate-200 font-mono text-sm font-bold">
+              OEE = 90.0% (Availability) × 88.89% (Performance) × 96.67% (Quality) = 77.34%
+            </p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs mt-2">
+              <strong>Root Cause Attribution:</strong> World-class benchmark is 85%. While Quality (96.67%) is high, 45 minutes of mechanical jamming (Availability loss) and 45 minutes of minor feed throttling (Performance loss) represent the primary capacity recovery opportunities under TPM Autonomous Maintenance.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 

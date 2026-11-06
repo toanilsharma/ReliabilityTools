@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { DollarSign, Clock, Package, Wrench, AlertTriangle, CheckCircle2, Copy, Check, Share2, TrendingUp, BarChart2, Shield } from 'lucide-react';
+import { DollarSign, Clock, Package, Wrench, AlertTriangle, CheckCircle2, Copy, Check, Share2, TrendingUp, BarChart2, Shield, Zap } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import RelatedTools from '../../components/RelatedTools';
@@ -126,6 +126,51 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/downtime-
     }
   ];
 
+  const DOWNTIME_PRESETS = [
+    {
+      name: "Automotive Stamping & Body",
+      duration: "4",
+      productionRate: "60",
+      profitPerUnit: "2500",
+      laborCost: "3500",
+      desc: "60 cars/hr, $153.5k/hr loss"
+    },
+    {
+      name: "Pharma Packaging Line",
+      duration: "8",
+      productionRate: "3000",
+      profitPerUnit: "4.50",
+      laborCost: "450",
+      desc: "3k vials/hr, $13.95k/hr loss"
+    },
+    {
+      name: "Beverage Bottling Line",
+      duration: "12",
+      productionRate: "20000",
+      profitPerUnit: "0.15",
+      laborCost: "300",
+      desc: "20k cans/hr, $3.3k/hr loss"
+    },
+    {
+      name: "Semiconductor Lithography",
+      duration: "6",
+      productionRate: "120",
+      profitPerUnit: "850",
+      laborCost: "5000",
+      desc: "120 wafers/hr, $107k/hr loss"
+    }
+  ];
+
+  const applyDowntimePreset = (p: typeof DOWNTIME_PRESETS[0]) => {
+    setState({
+      duration: p.duration,
+      productionRate: p.productionRate,
+      profitPerUnit: p.profitPerUnit,
+      laborCost: p.laborCost
+    });
+    setErrors({});
+  };
+
   const toolUI = (
     <div ref={toolRef} className="space-y-8">
       <div className="grid lg:grid-cols-3 gap-8">
@@ -136,6 +181,29 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/downtime-
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
               <DollarSign className="w-4 h-4 text-cyan-500" /> Operational Inputs
             </h3>
+
+            {/* Presets */}
+            <div className="bg-white dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+                  <Zap className="w-3.5 h-3.5" /> Industry Outage Presets
+                </span>
+                <span className="text-[10px] text-slate-400 font-normal">Click to load</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {DOWNTIME_PRESETS.map((p) => (
+                  <button
+                    key={p.name}
+                    type="button"
+                    onClick={() => applyDowntimePreset(p)}
+                    className="px-2 py-1.5 rounded-lg text-left text-xs bg-slate-50 dark:bg-slate-900/60 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-slate-700/60 hover:border-cyan-500/40 transition-all flex flex-col justify-center"
+                  >
+                    <span className="font-bold truncate text-[11px]">{p.name}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">{p.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
@@ -302,6 +370,62 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/downtime-
         <li><strong>Labor & Overhead:</strong> Salaries paid to idle operators plus baseline facility expenses incurred without producing output.</li>
         <li><strong>Recovery Period:</strong> The number of operating days required solely to earn back the lost financial margin.</li>
       </ul>
+
+      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+        📖 Step-by-Step Worked Industrial Example: Automotive Body Conveyor Breakdown
+      </h3>
+      <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+        <p>
+          An automotive assembly plant suffers a main transfer conveyor gearbox failure during prime shift, shutting down the entire body welding line for <strong>4.0 hours</strong>:
+        </p>
+
+        <ul className="list-disc pl-6 space-y-1">
+          <li><strong>Breakdown Outage Duration (<InlineMath math="d" />):</strong> 4.0 hours</li>
+          <li><strong>Nameplate Line Speed (<InlineMath math="r" />):</strong> 60 vehicles/hour (1 car per minute)</li>
+          <li><strong>Contribution Margin / Profit (<InlineMath math="p" />):</strong> $2,500 per completed vehicle</li>
+          <li><strong>Idle Labor & Overhead Rate (<InlineMath math="l" />):</strong> $3,500/hour (line operators, robotics techs, facility energy)</li>
+        </ul>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 1: Calculate Lost Production & Foregone Profit Margin</span>
+          <div className="my-2">
+            <BlockMath math="\text{Lost Units} = 4.0\text{ hrs} \times 60\text{ vehicles/hr} = 240\text{ vehicles}" />
+            <BlockMath math="\text{Lost Profit} = 240\text{ vehicles} \times \$2{,}500/\text{vehicle} = \$600{,}000" />
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 2: Calculate Unabsorbed Labor & Facility Overhead</span>
+          <div className="my-2">
+            <BlockMath math="\text{Labor Overhead} = 4.0\text{ hrs} \times \$3{,}500/\text{hr} = \$14{,}000" />
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 3: Total Downtime Financial Loss & Hourly Loss Rate</span>
+          <div className="my-2">
+            <BlockMath math="\text{Total Outage Loss} = \$600{,}000 + \$14{,}000 = \$614{,}000" />
+            <BlockMath math="\text{Hourly Cost of Downtime} = \frac{\$614{,}000}{4.0\text{ hrs}} = \$153{,}500/\text{hour}" />
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 4: Payback Recovery Timeline</span>
+          <p className="mt-1">
+            At a normal net earning rate of <InlineMath math="60 \times \$2{,}500 = \$150{,}000/\text{operating hr}" />, recovering this single 4-hour breakdown requires:
+          </p>
+          <div className="my-2">
+            <BlockMath math="\text{Payback Time} = \frac{\$614{,}000}{\$150{,}000/\text{hr}} \approx 4.09\text{ full operating hours (half a 24-hr production day)}" />
+          </div>
+        </div>
+
+        <div className="p-4 bg-gradient-to-r from-rose-500/10 to-amber-500/10 border border-rose-500/20 rounded-xl">
+          <span className="font-bold text-slate-800 dark:text-slate-100">💡 Financial Justification for Reliability Upgrades:</span>
+          <p className="mt-1 text-slate-650 dark:text-slate-400">
+            "At <strong>$153,500/hr</strong> in downtime losses, an investment in dual redundant VFDs, automated vibration monitoring sensors ($15,000), and a pre-staged spare gearbox ($40,000) achieves an immediate ROI within the very first <strong>25 minutes of prevented downtime</strong>."
+          </p>
+        </div>
+      </div>
     </div>
   );
 

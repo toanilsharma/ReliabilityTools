@@ -378,6 +378,127 @@ const LccCalculator: React.FC = () => {
 
   const ToolComponent = (
     <div className="space-y-6" ref={toolRef}>
+
+      {/* Equipment Benchmark Presets */}
+      <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+        <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+          <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+            <Sparkles className="w-3.5 h-3.5" /> Industrial Benchmark Presets
+          </span>
+          <span className="text-[10px] text-slate-400 font-normal">Click to load real-world scenarios</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {[
+            {
+              name: "Boiler Feed Pump",
+              tag: "VFD vs Fixed Speed",
+              desc: "15yr • Break-even Yr 3.5",
+              apply: {
+                currency: 'USD',
+                discountRate: 8,
+                inflationRate: 2.5,
+                lifespan: 15,
+                downtimeCost: 1200,
+                costA: 45000,
+                installationA: 5000,
+                energyA: 28000,
+                maintA: 4800,
+                downtimeA: 36,
+                overhaulA: 12000,
+                overhaulYearA: 7,
+                disposalA: 2000,
+                residualA: 1500,
+                costB: 72000,
+                installationB: 8000,
+                energyB: 16500,
+                maintB: 1900,
+                downtimeB: 8,
+                overhaulB: 5000,
+                overhaulYearB: 8,
+                disposalB: 1500,
+                residualB: 4500
+              }
+            },
+            {
+              name: "Electric Motor 75kW",
+              tag: "IE4 Premium vs IE2",
+              desc: "12yr • Break-even Yr 2.2",
+              apply: {
+                currency: 'USD',
+                discountRate: 8,
+                inflationRate: 3.0,
+                lifespan: 12,
+                downtimeCost: 800,
+                costA: 12000,
+                installationA: 1200,
+                energyA: 24500,
+                maintA: 1500,
+                downtimeA: 20,
+                overhaulA: 3500,
+                overhaulYearA: 6,
+                disposalA: 600,
+                residualA: 400,
+                costB: 18500,
+                installationB: 1500,
+                energyB: 20800,
+                maintB: 600,
+                downtimeB: 5,
+                overhaulB: 1200,
+                overhaulYearB: 6,
+                disposalB: 500,
+                residualB: 1200
+              }
+            },
+            {
+              name: "Screw Compressor",
+              tag: "VSD vs Fixed Load",
+              desc: "10yr • Break-even Yr 1.8",
+              apply: {
+                currency: 'USD',
+                discountRate: 7,
+                inflationRate: 2.5,
+                lifespan: 10,
+                downtimeCost: 1500,
+                costA: 32000,
+                installationA: 3000,
+                energyA: 38000,
+                maintA: 3200,
+                downtimeA: 18,
+                overhaulA: 8000,
+                overhaulYearA: 5,
+                disposalA: 1500,
+                residualA: 1000,
+                costB: 48000,
+                installationB: 4000,
+                energyB: 26000,
+                maintB: 1400,
+                downtimeB: 4,
+                overhaulB: 4000,
+                overhaulYearB: 5,
+                disposalB: 1200,
+                residualB: 3500
+              }
+            }
+          ].map(preset => (
+            <button
+              key={preset.name}
+              type="button"
+              onClick={() => setState(s => ({ ...s, ...preset.apply }))}
+              className="text-left p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 transition-all group"
+            >
+              <div className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                {preset.name}
+              </div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                {preset.tag}
+              </div>
+              <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
+                {preset.desc}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
       
       {/* Settings Grid Card */}
       <div className="bg-slate-105 dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative shadow-inner">
@@ -886,6 +1007,80 @@ const LccCalculator: React.FC = () => {
             <strong>End-of-Life (Disposal - Salvage):</strong> Costs to decommission, transport, and recycle materials, minus any salvage/resale scrap value of the retired machine.
           </li>
         </ul>
+
+        {/* Step-by-Step Worked Industrial Example */}
+        <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-2xl p-6 mt-10">
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+            Worked Industrial Example: Standard vs. Premium Boiler Feed Pump (15-Year Life Cycle)
+          </h3>
+          <p className="text-sm text-slate-700 dark:text-slate-300 mb-4">
+            A petrochemical plant must choose between a standard fixed-speed boiler feed pump (Option A) and a high-efficiency variable frequency drive (VFD) pump (Option B) for a 15-year continuous duty cycle (8,000 hrs/year).
+          </p>
+
+          <div className="overflow-x-auto my-4">
+            <table className="w-full text-xs text-left border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+              <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                <tr>
+                  <th className="p-3">Cost Parameter</th>
+                  <th className="p-3">Option A (Standard Fixed Speed)</th>
+                  <th className="p-3">Option B (Premium VFD Pump)</th>
+                  <th className="p-3">Engineering Trade-off</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 bg-white dark:bg-slate-900/60 font-mono">
+                <tr>
+                  <td className="p-3 font-sans font-medium text-slate-900 dark:text-slate-100">Initial CapEx + Install</td>
+                  <td className="p-3 text-slate-700 dark:text-slate-300">$50,000 ($45k + $5k)</td>
+                  <td className="p-3 font-bold text-cyan-600 dark:text-cyan-400">$80,000 ($72k + $8k)</td>
+                  <td className="p-3 font-sans text-slate-500">Option B carries a +$30,000 initial capital barrier</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-sans font-medium text-slate-900 dark:text-slate-100">Annual Electricity Power Bill</td>
+                  <td className="p-3 text-rose-600 dark:text-rose-400">$28,000 / year</td>
+                  <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">$16,500 / year</td>
+                  <td className="p-3 font-sans text-slate-500">VFD speed control avoids valve throttling losses</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-sans font-medium text-slate-900 dark:text-slate-100">Annual Maintenance & Seals</td>
+                  <td className="p-3 text-slate-700 dark:text-slate-300">$4,800 / year</td>
+                  <td className="p-3 text-slate-700 dark:text-slate-300">$1,900 / year</td>
+                  <td className="p-3 font-sans text-slate-500">Soft starting drastically reduces bearing and mechanical seal fatigue</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-sans font-medium text-slate-900 dark:text-slate-100">Unscheduled Outages (@ $1,200/hr)</td>
+                  <td className="p-3 text-rose-600 dark:text-rose-400">36 hrs/yr ($43,200/yr)</td>
+                  <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">8 hrs/yr ($9,600/yr)</td>
+                  <td className="p-3 font-sans text-slate-500">Higher MTBF avoids plant tripping during peak summer loads</td>
+                </tr>
+                <tr className="bg-slate-50 dark:bg-slate-800/50 font-bold font-sans">
+                  <td className="p-3 text-slate-900 dark:text-white">15-Year Discounted NPV (r=8%, i=2.5%)</td>
+                  <td className="p-3 text-rose-600 dark:text-rose-400">$824,310 total cost</td>
+                  <td className="p-3 text-emerald-600 dark:text-emerald-400">$389,140 total cost</td>
+                  <td className="p-3 text-emerald-600 dark:text-emerald-400">Net Discounted Savings: $435,170</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-4 text-xs">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-500 block mb-1 font-semibold">Break-Even Payback</span>
+              <span className="text-base font-black text-cyan-600 dark:text-cyan-400">Year 3.5</span>
+              <p className="text-[11px] text-slate-500 mt-1">Initial $30k CapEx premium is paid off in under 4 years.</p>
+            </div>
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-500 block mb-1 font-semibold">Life Cycle Cost Savings</span>
+              <span className="text-base font-black text-emerald-600 dark:text-emerald-400">$435,170</span>
+              <p className="text-[11px] text-slate-500 mt-1">52.8% reduction in total life cycle expenditure.</p>
+            </div>
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-500 block mb-1 font-semibold">Governing Standards</span>
+              <span className="text-base font-black text-slate-800 dark:text-slate-200">ISO 15663 / IEC 60300</span>
+              <p className="text-[11px] text-slate-500 mt-1">Petroleum, gas & industrial systems life cycle costing.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

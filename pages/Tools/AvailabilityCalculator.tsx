@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Settings, Clock, DollarSign, Shield, Activity, AlertTriangle, CheckCircle2, Save, Loader2, Download, BookOpen, TrendingUp, Cpu, Wrench } from 'lucide-react';
+import { Settings, Clock, DollarSign, Shield, Activity, AlertTriangle, CheckCircle2, Save, Loader2, Download, BookOpen, TrendingUp, Cpu, Wrench, Sparkles } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import HelpTooltip from '../../components/HelpTooltip';
 import { downloadSvgAsEps, downloadSvgElement } from '../../services/exportUtils';
@@ -208,6 +208,41 @@ const AvailabilityCalculator: React.FC = () => {
     <div className="grid lg:grid-cols-12 gap-6">
       <AnimatedContainer animation="slideUp" delay={0.1} className="lg:col-span-4 space-y-6">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden p-6 h-full border-t-4 border-t-cyan-500">
+
+          {/* Industry Benchmark Presets */}
+          <div className="bg-slate-50 dark:bg-slate-900/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 mb-6">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+                <Sparkles className="w-3.5 h-3.5" /> Industry Benchmarks
+              </span>
+              <span className="text-[10px] text-slate-400 font-normal">Click to load</span>
+            </div>
+            <div className="grid grid-cols-1 gap-1.5">
+              {[
+                { name: "Continuous Refinery Unit", desc: "MTBF: 5,000h • MTTR: 18h • 99.64%", mtbf: 5000, mttr: 18 },
+                { name: "Batch Chemical Reactor", desc: "MTBF: 1,200h • MTTR: 12h • 99.01%", mtbf: 1200, mttr: 12 },
+                { name: "Power Grid Substation", desc: "MTBF: 25,000h • MTTR: 24h • 99.90%", mtbf: 25000, mttr: 24 }
+              ].map(p => (
+                <button
+                  key={p.name}
+                  type="button"
+                  onClick={() => {
+                    setDraftMtbf(p.mtbf);
+                    setDraftMttr(p.mttr);
+                  }}
+                  className="text-left p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 transition-all group"
+                >
+                  <div className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                    {p.name}
+                  </div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                    {p.desc}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
             <Settings className="w-5 h-5" /> Input Parameters
           </h3>
@@ -561,6 +596,51 @@ const AvailabilityCalculator: React.FC = () => {
         <p>
           To justify the cost of purchasing higher-quality components or installing redundant backup systems, engineers should model the Total Cost of Ownership (TCO) using our <Link to="/tools/lcc/" className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">Life Cycle Cost (LCC) Calculator</Link>.
         </p>
+
+        {/* Step-by-Step Worked Industrial Example */}
+        <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-2xl p-6 my-8">
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+            Worked Industrial Example: Continuous Refinery Fluid Catalytic Cracking Unit (FCCU)
+          </h3>
+          <p className="text-sm text-slate-700 dark:text-slate-300 mb-4">
+            A refinery operates an FCCU feed pump train continuously 24/7 (8,760 hours/year). Here is the availability audit calculating both Inherent ($A_i$) and Operational ($A_o$) availability along with financial risk:
+          </p>
+
+          <div className="space-y-4 text-xs">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 1: Inherent Availability (Hardware Reliability Benchmark)</span>
+              <p className="text-slate-700 dark:text-slate-300">
+                • Observed MTBF = <strong>4,200 operating hours</strong>.<br />
+                • Active Mechanical Repair Time (MTTR) = <strong>14.0 hours</strong> per breakdown.<br />
+                • <strong>Inherent Availability:</strong> <code className="font-bold text-cyan-600">A_i = 4,200 / (4,200 + 14) = 99.6678%</code>.<br />
+                • Projected Inherent Downtime: (1 − 0.996678) × 8,760 = <strong>29.1 hours/year</strong>.
+              </p>
+            </div>
+
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 2: Operational Availability (Logistics & Administrative Delay Impact)</span>
+              <p className="text-slate-700 dark:text-slate-300">
+                • In reality, each breakdown requires 4.5 hours of hot-work permit sign-off and 6.5 hours of warehouse spares staging.<br />
+                • Mean Down Time (MDT) = 14.0 (repair) + 11.0 (logistics) = <strong>25.0 hours</strong>.<br />
+                • <strong>Operational Availability:</strong> <code className="font-bold text-cyan-600">A_o = 4,200 / (4,200 + 25) = 99.4083%</code>.<br />
+                • Real-World Annual Downtime: (1 − 0.994083) × 8,760 = <strong>51.8 hours/year</strong>.
+              </p>
+            </div>
+
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-500/30">
+              <span className="font-bold text-emerald-700 dark:text-emerald-300 text-sm block mb-1">Revenue Loss & Logistics Opportunity Assessment</span>
+              <p className="text-slate-800 dark:text-slate-200 font-mono text-sm font-bold">
+                Hourly Outage Revenue Loss = $8,500/hour
+              </p>
+              <p className="text-slate-600 dark:text-slate-400 text-xs mt-2">
+                • Inherent Downtime Loss: 29.1 hrs × $8,500 = <strong>$247,350/year</strong>.<br />
+                • Real Operational Downtime Loss: 51.8 hrs × $8,500 = <strong>$440,300/year</strong>.<br />
+                • <strong>Logistics Revenue Penalty:</strong> $440,300 − $247,350 = <strong>$192,950/year lost solely to administrative and spares delays</strong>. Pre-kitting pump seal replacement packs in satellite tool cribs will recapture up to $193,000 annually without modifying equipment hardware.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-8 mb-4">
           Availability and Overall Equipment Effectiveness (OEE)

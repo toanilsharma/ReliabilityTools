@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { calculateSpareParts } from '../../services/reliabilityMath';
 import { SERVICE_LEVELS } from '../../constants';
-import { Package, ShoppingCart, Info, BookOpen, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Package, ShoppingCart, Info, BookOpen, Target, TrendingUp, AlertTriangle, Sparkles } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import TheoryBlock from '../../components/TheoryBlock';
@@ -153,7 +153,77 @@ const SparePartEstimator: React.FC = () => {
   const ToolComponent = (
     <div className="grid lg:grid-cols-3 gap-8" ref={toolRef}>
 
-      <div className="lg:col-span-1">
+      <div className="lg:col-span-1 space-y-4">
+        {/* MRO Benchmark Presets */}
+        <div className="bg-slate-50 dark:bg-slate-900/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+              <Sparkles className="w-3.5 h-3.5" /> MRO Spares Presets
+            </span>
+            <span className="text-[10px] text-slate-400 font-normal">One-click plant data</span>
+          </div>
+          <div className="grid grid-cols-1 gap-1.5">
+            {[
+              {
+                name: "Mechanical Seal Cartridge",
+                desc: "Pump • Vital • $1,500 • 30d Lead • Qty 6",
+                apply: () => {
+                  setPartName("Centrifugal Pump Mechanical Seal Cartridge");
+                  setUnitCost("1500");
+                  setVedCategory("V");
+                  setMtbf("8760");
+                  setUsage("8760");
+                  setQuantity("6");
+                  setLeadTime("30");
+                  setServiceLevelIdx(1); // 95%
+                }
+              },
+              {
+                name: "Spherical Roller Bearing 22218",
+                desc: "Conveyor • Vital • $650 • 21d Lead • Qty 8",
+                apply: () => {
+                  setPartName("Spherical Roller Bearing 22218 CC/W33");
+                  setUnitCost("650");
+                  setVedCategory("V");
+                  setMtbf("18000");
+                  setUsage("8760");
+                  setQuantity("8");
+                  setLeadTime("21");
+                  setServiceLevelIdx(1); // 95%
+                }
+              },
+              {
+                name: "Solenoid Valve Coil 24VDC",
+                desc: "Actuator • Essential • $120 • 14d Lead • Qty 16",
+                apply: () => {
+                  setPartName("Namur Solenoid Valve Coil 24VDC");
+                  setUnitCost("120");
+                  setVedCategory("E");
+                  setMtbf("35000");
+                  setUsage("8760");
+                  setQuantity("16");
+                  setLeadTime("14");
+                  setServiceLevelIdx(2); // 99%
+                }
+              }
+            ].map(p => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={p.apply}
+                className="text-left p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 hover:border-cyan-500/50 hover:bg-cyan-50/30 dark:hover:bg-cyan-950/20 transition-all group"
+              >
+                <div className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+                  {p.name}
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                  {p.desc}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <form onSubmit={handleCalculate} className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
           <h3 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <ShoppingCart className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /> Part & Reliability Inputs
@@ -601,6 +671,47 @@ const SparePartEstimator: React.FC = () => {
             <li><strong>FSN:</strong> Fast moving (&gt; 5/yr), Slow (1-5/yr), Non-moving (Insurance spares).</li>
           </ul>
         </TheoryBlock>
+      </div>
+
+      {/* Step-by-Step Worked Industrial Example */}
+      <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border border-cyan-500/20 rounded-2xl p-6 mt-8">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Target className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+          Worked Industrial Example: Pump Mechanical Seal Spares Calculation
+        </h3>
+        <p className="text-sm text-slate-700 dark:text-slate-300 mb-4">
+          A chemical plant operates a bank of <strong>6 identical slurry pumps</strong> running 24/7 (8,760 hours/year). Each cartridge seal costs $1,500 with a historical MTBF of 8,760 hours and a vendor delivery lead time of 30 days. Management targets a <strong>95% Service Level</strong> (Z = 1.645).
+        </p>
+
+        <div className="space-y-4 text-xs">
+          <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 1: Expected Annual & Lead Time Demand</span>
+            <p className="text-slate-700 dark:text-slate-300">
+              • Fleet Operating Hours/Year: 6 pumps × 8,760 hrs = <strong>52,560 pump-hours/yr</strong>.<br />
+              • Expected Annual Seal Failures (Demand): 52,560 / 8,760 = <strong>6.00 seals/year</strong>.<br />
+              • Lead Time Demand ($\mu_{LT}$): 6.00 × (30 days / 365 days) = <strong>0.493 seals during replenishment window</strong>.
+            </p>
+          </div>
+
+          <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="font-bold text-cyan-600 dark:text-cyan-400 block mb-1">Step 2: Safety Stock & Reorder Point (ROP)</span>
+            <p className="text-slate-700 dark:text-slate-300">
+              • Safety Stock: <code className="font-bold text-cyan-600">SS = Z × &radic;(&mu;_LT) = 1.645 × &radic;(0.493) = 1.15 &rarr; 2 seals</code>.<br />
+              • Reorder Point: <code className="font-bold text-cyan-600">ROP = Lead Time Demand + Safety Stock = 0.493 + 2 = 2.49 &rarr; 3 seals</code>.<br />
+              • <strong>Inventory Policy:</strong> Trigger an emergency purchase order the moment warehouse stock drops to <strong>3 units</strong>.
+            </p>
+          </div>
+
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-500/30">
+            <span className="font-bold text-emerald-700 dark:text-emerald-300 text-sm block mb-1">MRO Financial Governance Classification</span>
+            <p className="text-slate-800 dark:text-slate-200 font-mono text-sm font-bold">
+              Matrix Profile: Vital Criticality (V) • Class A Capital ($1,500/ea) • Fast Moving Velocity (F)
+            </p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs mt-2">
+              <strong>Holding Capital:</strong> Maintaining 2 safety stock seals locks up $3,000 in working capital. Compared to the $15,000/day plant downtime cost of waiting 30 days for an overseas replacement, this inventory policy yields a &gt;500% ROI in risk avoidance.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

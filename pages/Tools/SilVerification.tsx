@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { calculateSIL } from '../../services/reliabilityMath';
-import { ShieldAlert, Activity, ChevronRight, ChevronLeft, Loader2, Landmark } from 'lucide-react';
+import { ShieldAlert, Activity, ChevronRight, ChevronLeft, Loader2, Landmark, Sparkles } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import 'katex/dist/katex.min.css';
@@ -178,10 +178,79 @@ const SilVerification: React.FC = () => {
     }
   ];
 
+  const SIF_PRESETS = [
+    {
+      name: "ESD Valve (1oo1)",
+      arch: '1oo1' as const,
+      lambdaDU: '1.5e-6',
+      testInterval: '8760',
+      desc: '1oo1 Emergency Shutdown Valve, 1-yr test (SIL 1)'
+    },
+    {
+      name: "High-Pressure Trip (1oo2)",
+      arch: '1oo2' as const,
+      lambdaDU: '1.2e-6',
+      testInterval: '8760',
+      desc: '1oo2 Dual Pressure Transmitter, 1-yr test (SIL 3)'
+    },
+    {
+      name: "Flame Scanner Voting (2oo3)",
+      arch: '2oo3' as const,
+      lambdaDU: '1.2e-6',
+      testInterval: '8760',
+      desc: '2oo3 Triple Flame Detectors, 1-yr test (SIL 3)'
+    },
+    {
+      name: "Boiler Level Switch (2oo2)",
+      arch: '2oo2' as const,
+      lambdaDU: '2.0e-6',
+      testInterval: '4380',
+      desc: '2oo2 Level Switch, 6-mo test (SIL 1 / Spurious Avoidance)'
+    }
+  ];
+
+  const applySifPreset = (p: typeof SIF_PRESETS[0]) => {
+    setArch(p.arch);
+    setLambdaDU(p.lambdaDU);
+    setTestInterval(p.testInterval);
+    const lVal = parseFloat(p.lambdaDU);
+    const tVal = parseFloat(p.testInterval);
+    if (!isNaN(lVal) && !isNaN(tVal) && lVal > 0 && tVal > 0) {
+      setComputed(calculateSIL(lVal, tVal, p.arch));
+    }
+  };
+
   const ToolComponent = (
     <div className="grid lg:grid-cols-2 gap-8" ref={toolRef}>
 
       <div className="space-y-6">
+        {/* Industry SIF Benchmark Presets */}
+        <div className="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+              <Sparkles className="w-3.5 h-3.5" /> Functional Safety SIF Presets
+            </span>
+            <span className="text-[10px] text-slate-400 font-normal">Click to test IEC 61508 loops</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {SIF_PRESETS.map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => applySifPreset(p)}
+                className={`p-2.5 rounded-xl text-left text-xs border transition-all ${
+                  arch === p.arch && lambdaDU === p.lambdaDU && testInterval === p.testInterval
+                    ? "bg-cyan-50 dark:bg-cyan-950/40 border-cyan-500 text-cyan-800 dark:text-cyan-200 font-bold shadow-sm"
+                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-cyan-400 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                <div className="font-bold truncate text-[11px]">{p.name}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{p.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-855 rounded-xl w-fit relative border border-slate-200 dark:border-slate-800">
           <button
             onClick={() => setMode('wizard')}

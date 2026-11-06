@@ -7,7 +7,8 @@ import {
   Calendar, 
   Activity, 
   ShieldAlert,
-  TrendingDown
+  TrendingDown,
+  Sparkles
 } from 'lucide-react';
 import ToolContentLayout from '../../components/ToolContentLayout';
 import RelatedTools from '../../components/RelatedTools';
@@ -108,6 +109,48 @@ const Api570Calculator: React.FC = () => {
     statusText = 'Moderate Corrosion (Short Inspection Interval Required)';
   }
 
+  const PIPING_PRESETS = [
+    {
+      name: "Sour Gas Overhead Line",
+      circuitId: "HC-SGR-08-C102-CS",
+      initialThickness: "12.70",
+      prevThickness: "11.10",
+      actualThickness: "9.20",
+      minThickness: "4.80",
+      initialYear: "2014",
+      prevYear: "2020",
+      currYear: "2024",
+      pipingClass: "Class 1" as const,
+      desc: "NPS 8 Sch 80 (Class 1, accelerated acid gas)"
+    },
+    {
+      name: "Superheated Steam Line",
+      circuitId: "STM-HP-06-B401-A106B",
+      initialThickness: "8.56",
+      prevThickness: "7.80",
+      actualThickness: "6.90",
+      minThickness: "3.80",
+      initialYear: "2010",
+      prevYear: "2020",
+      currYear: "2024",
+      pipingClass: "Class 2" as const,
+      desc: "NPS 6 Sch 40 (Class 2, moderate FAC erosion)"
+    },
+    {
+      name: "Cooling Water Return Header",
+      circuitId: "CWR-12-HDR-A53B",
+      initialThickness: "9.53",
+      prevThickness: "8.90",
+      actualThickness: "8.10",
+      minThickness: "3.20",
+      initialYear: "2012",
+      prevYear: "2019",
+      currYear: "2024",
+      pipingClass: "Class 3" as const,
+      desc: "NPS 12 Sch 40 (Class 3, oxygen pitting)"
+    }
+  ];
+
   const ToolComponent = (
     <div className="space-y-8">
       {/* Parameter Inputs */}
@@ -124,6 +167,45 @@ const Api570Calculator: React.FC = () => {
           <span className={`text-xs px-3 py-1.5 rounded-full border font-bold ${statusBadge}`}>
             {statusText}
           </span>
+        </div>
+
+        {/* Industrial Benchmark Presets */}
+        <div className="bg-white dark:bg-slate-800/80 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400">
+              <Sparkles className="w-3.5 h-3.5" /> Industry Piping Presets
+            </span>
+            <span className="text-[10px] text-slate-400 font-normal">Click to load real-world circuit inspection</span>
+          </div>
+          <div className="grid md:grid-cols-3 gap-2">
+            {PIPING_PRESETS.map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => {
+                  setState({
+                    circuitId: p.circuitId,
+                    initialThickness: p.initialThickness,
+                    prevThickness: p.prevThickness,
+                    actualThickness: p.actualThickness,
+                    minThickness: p.minThickness,
+                    initialYear: p.initialYear,
+                    prevYear: p.prevYear,
+                    currYear: p.currYear,
+                    pipingClass: p.pipingClass
+                  });
+                }}
+                className={`p-2.5 rounded-lg text-left text-xs border transition-all ${
+                  circuitId === p.circuitId
+                    ? "bg-cyan-50 dark:bg-cyan-950/40 border-cyan-500 text-cyan-800 dark:text-cyan-200 font-bold shadow-sm"
+                    : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-700 hover:border-cyan-400 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                <div className="font-bold truncate text-[11px]">{p.name}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{p.desc}</div>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">

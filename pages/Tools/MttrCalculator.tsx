@@ -1032,6 +1032,80 @@ const MttrCalculator: React.FC = () => {
         <p>
           Reducing logistics delays (MDT) to approach inherent limits (MTTR) is often the fastest and most cost-effective path to achieving "five-nines" availability, compared to attempting costly design modifications to boost MTBF.
         </p>
+
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+          📖 Step-by-Step Worked Industrial Example: Slurry Pump Mechanical Seal Failure
+        </h3>
+        <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          <p>
+            Consider a continuous petrochemical refinery unit with a critical heavy hydrocarbon slurry pump train. The pump has a historical baseline <InlineMath math="\text{MTBF} = 500\text{ operating hours}" /> and the facility incurs a revenue loss of <strong>$5,000/hour</strong> during unplanned pump tripping:
+          </p>
+
+          <div className="grid md:grid-cols-4 gap-3 my-4">
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-xl">
+              <span className="text-xs font-bold text-rose-600 dark:text-rose-400 block mb-1">1. Detection & Diagnosis</span>
+              <p className="text-lg font-black text-slate-900 dark:text-white">1.5 hrs</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">High seal pot pressure alarm & technician inspection.</p>
+            </div>
+            <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">2. Logistics Delay</span>
+              <p className="text-lg font-black text-slate-900 dark:text-white">4.5 hrs</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Warehouse dispatch, hot-work permit sign-offs, LOTO.</p>
+            </div>
+            <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 block mb-1">3. Active Wrench Time</span>
+              <p className="text-lg font-black text-slate-900 dark:text-white">3.0 hrs</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Uncoupling, cartridge removal, seal replacement, bolt torquing.</p>
+            </div>
+            <div className="p-3.5 bg-cyan-500/10 border border-cyan-500/20 rounded-xl">
+              <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400 block mb-1">4. Recommissioning</span>
+              <p className="text-lg font-black text-slate-900 dark:text-white">1.0 hr</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Laser shaft alignment check, static pressure test, startup.</p>
+            </div>
+          </div>
+
+          <div>
+            <span className="font-bold text-orange-600 dark:text-orange-400">Step 1: Compute Technical MTTR vs. Mean Down Time (MDT)</span>
+            <div className="my-2">
+              <BlockMath math="\text{MTTR (Technical Active Work)} = 1.5 + 3.0 + 1.0 = 5.5\text{ hours}" />
+              <BlockMath math="\text{MDT (Total Downtime)} = 1.5 + 4.5 + 3.0 + 1.0 = 10.0\text{ hours}" />
+            </div>
+          </div>
+
+          <div>
+            <span className="font-bold text-orange-600 dark:text-orange-400">Step 2: Calculate Wrench Time Efficiency</span>
+            <p className="mt-1">
+              Wrench time efficiency reveals what fraction of downtime was spent on actual physical correction:
+            </p>
+            <div className="my-2">
+              <BlockMath math="\text{Wrench Time Ratio} = \frac{\text{Active Repair Time}}{\text{MDT}} \times 100\% = \frac{3.0\text{ hrs}}{10.0\text{ hrs}} \times 100\% = 30.0\%" />
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              A 30% ratio indicates that <strong>70% of total outage duration is non-productive waiting waste</strong> (permits, warehouse transit, and staging).
+            </p>
+          </div>
+
+          <div>
+            <span className="font-bold text-orange-600 dark:text-orange-400">Step 3: Availability & Financial Delay Penalty</span>
+            <div className="my-2">
+              <BlockMath math="A_i = \frac{500}{500 + 5.5} \times 100\% = 98.91\% \quad (\text{Inherent Availability})" />
+              <BlockMath math="A_o = \frac{500}{500 + 10.0} \times 100\% = 98.04\% \quad (\text{Operational Availability})" />
+            </div>
+            <p className="mt-2">
+              The 0.87% availability penalty translates over 8,760 annual operating hours to:
+            </p>
+            <div className="my-2">
+              <BlockMath math="\text{Annual Logistics Penalty} = 8{,}760 \times (0.9891 - 0.9804) \times \$5{,}000/\text{hr} = 76.2\text{ hrs/year} \times \$5{,}000 = \$381{,}000/\text{year}" />
+            </div>
+          </div>
+
+          <div className="p-4 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 rounded-xl">
+            <span className="font-bold text-slate-800 dark:text-slate-100">💡 Maintenance Strategy Takeaway:</span>
+            <p className="mt-1 text-slate-650 dark:text-slate-400">
+              "By introducing a pre-packaged <strong>Spares Kitting System</strong> and digital mobile permits, logistics wait drops from 4.5 hours to 0.5 hours. This recovers <strong>$340,000+ per year</strong> in lost throughput without buying new pumps or altering machinery metallurgy."
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -392,6 +392,50 @@ Calculated via Reliability Tools: https://reliabilitytools.co.in/tools/bearing-l
       <h3>Converting to Operating Hours</h3>
       <p>To convert millions of revolutions <InlineMath math="L_{10}" /> to operating hours <InlineMath math="L_{10h}" /> at a constant speed RPM:</p>
       <BlockMath math="L_{10h} = \frac{10^6 \times L_{10}}{60 \times \text{RPM}}" />
+
+      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-10 mb-4 flex items-center gap-2">
+        📖 Step-by-Step Worked Industrial Example: Slurry Pump DE Bearing (SKF 6312)
+      </h3>
+      <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+        <p>
+          A continuous mining process operates a heavy centrifugal slurry pump driven by a 2-pole electric motor running at <strong>2,950 RPM</strong>. The pump drive-end (DE) position is fitted with a single-row deep groove ball bearing (Designation <strong>6312</strong>):
+        </p>
+
+        <ul className="list-disc pl-6 space-y-1">
+          <li><strong>Bearing Type:</strong> Deep Groove Ball Bearing (point contact, <InlineMath math="p = 3" />)</li>
+          <li><strong>Catalog Dynamic Load Rating (<InlineMath math="C" />):</strong> <InlineMath math="85.2\text{ kN}" /></li>
+          <li><strong>Equivalent Dynamic Radial + Thrust Load (<InlineMath math="P" />):</strong> <InlineMath math="8.5\text{ kN}" /></li>
+          <li><strong>Shaft Rotational Speed (<InlineMath math="n" />):</strong> <InlineMath math="2{,}950\text{ RPM}" /></li>
+        </ul>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 1: Calculate Rating Life in Millions of Revolutions</span>
+          <div className="my-2">
+            <BlockMath math="L_{10} = \left(\frac{C}{P}\right)^p = \left(\frac{85.2}{8.5}\right)^3 = (10.024)^3 \approx 1{,}007.2\text{ Million Revolutions}" />
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 2: Convert to Basic Rating Life Hours (<InlineMath math="L_{10h}" />)</span>
+          <div className="my-2">
+            <BlockMath math="L_{10h} = \frac{10^6 \times 1{,}007.2}{60 \times 2{,}950} = \frac{1{,}007{,}200{,}000}{177{,}000} \approx 5{,}690\text{ Operating Hours}" />
+          </div>
+        </div>
+
+        <div>
+          <span className="font-bold text-cyan-600 dark:text-cyan-400">Step 3: Evaluate Replacement Interval in 24/7 Operation</span>
+          <div className="my-2">
+            <BlockMath math="\text{Operating Life} = \frac{5{,}690\text{ hours}}{8{,}760\text{ hours/year}} \approx 0.65\text{ Years (approx 7.8 Months)}" />
+          </div>
+        </div>
+
+        <div className="p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl">
+          <span className="font-bold text-slate-800 dark:text-slate-100">💡 Reliability Engineering Assessment:</span>
+          <p className="mt-1 text-slate-650 dark:text-slate-400">
+            "An <InlineMath math="L_{10h}" /> of 5,690 hours means 10% of bearings in this slurry pump service will suffer fatigue flaking within 8 months. To achieve a 3-year turnaround overhaul target (25,000+ hours), the pump housing should be upgraded to a spherical roller bearing (e.g. <strong>22312</strong>, <InlineMath math="C = 280\text{ kN}, p = 10/3" />), which extends <InlineMath math="L_{10h}" /> to over <strong>54,000 hours</strong> under the identical load."
+          </p>
+        </div>
+      </div>
     </div>
   );
 
