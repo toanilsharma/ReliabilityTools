@@ -16,6 +16,8 @@ interface PipelineStep {
 interface Pipeline {
   id: string;
   name: string;
+  solutionSlug?: string;
+  solutionName?: string;
   steps: PipelineStep[];
 }
 
@@ -23,27 +25,51 @@ const PIPELINES: Pipeline[] = [
   {
     id: 'reliability-core',
     name: 'Reliability & Availability Analysis',
+    solutionSlug: 'maintenance-optimization',
+    solutionName: 'Maintenance Optimization',
     steps: [
       { slug: 'mtbf', name: 'MTBF Calculator', path: '/tools/mtbf/', description: 'Calculate Mean Time Between Failures' },
       { slug: 'mttr', name: 'MTTR Calculator', path: '/tools/mttr/', description: 'Calculate Mean Time To Repair' },
       { slug: 'availability', name: 'Availability Calculator', path: '/tools/availability/', description: 'Determine system availability from MTBF & MTTR' },
       { slug: 'lcc', name: 'Life Cycle Cost', path: '/tools/lcc/', description: 'Evaluate total cost of ownership' },
       { slug: 'spares', name: 'Spare Part Estimator', path: '/tools/spares/', description: 'Optimize spare parts inventory levels' },
+      { slug: 'pf-interval-optimizer', name: 'P-F Interval Optimizer', path: '/tools/pf-interval-optimizer/', description: 'Optimize condition monitoring frequency' },
+      { slug: 'cpm-turnaround', name: 'CPM Turnaround Planner', path: '/tools/cpm-turnaround/', description: 'Critical Path Method shutdown optimization' }
+    ]
+  },
+  {
+    id: 'process-safety',
+    name: 'Functional Safety & Process Integrity',
+    solutionSlug: 'process-safety-sil',
+    solutionName: 'Functional Safety & SIL',
+    steps: [
+      { slug: 'lopa', name: 'LOPA Risk Calculator', path: '/tools/lopa/', description: 'Quantify independent protection layers' },
+      { slug: 'sil', name: 'SIL Verification', path: '/tools/sil/', description: 'Verify Safety Integrity Levels (IEC 61508)' },
+      { slug: 'fta', name: 'Fault Tree Analysis', path: '/tools/fta/', description: 'Model top-down failure pathways' },
+      { slug: 'api-570-remaining-life', name: 'API 570 Remaining Life', path: '/tools/api-570-remaining-life/', description: 'Piping wall thinning and half-life inspection' },
+      { slug: 'duval-triangle', name: 'Duval Triangle DGA', path: '/tools/duval-triangle/', description: 'Transformer dissolved gas fault diagnosis' },
+      { slug: 'npsh-cavitation', name: 'NPSH & Cavitation', path: '/tools/npsh-cavitation/', description: 'Centrifugal pump cavitation margin analysis' }
     ]
   },
   {
     id: 'failure-analysis',
-    name: 'Failure Analysis Pipeline',
+    name: 'Statistical Life Data Modeling',
+    solutionSlug: 'statistical-life-data',
+    solutionName: 'Life Data & Weibull',
     steps: [
       { slug: 'weibull', name: 'Weibull Analysis', path: '/tools/weibull/', description: 'Determine failure distribution parameters' },
+      { slug: 'confidence-interval', name: 'MTBF Confidence Interval', path: '/tools/confidence-interval/', description: 'Chi-Square statistical confidence bounds' },
       { slug: 'hazard-rate', name: 'Hazard Rate Calculator', path: '/tools/hazard-rate/', description: 'Compute instantaneous failure rates' },
       { slug: 'optimal-replacement', name: 'Optimal Replacement', path: '/tools/optimal-replacement/', description: 'Find cost-optimal replacement intervals' },
-      { slug: 'pm', name: 'PM Optimizer', path: '/tools/pm/', description: 'Optimize preventive maintenance schedules' },
+      { slug: 'growth', name: 'Reliability Growth', path: '/tools/growth/', description: 'Crow-AMSAA test tracking' },
+      { slug: 'miners-rule', name: 'Miner\'s Rule', path: '/tools/miners-rule/', description: 'Cumulative fatigue damage modeling' }
     ]
   },
   {
     id: 'risk-assessment',
-    name: 'Risk Assessment Pipeline',
+    name: 'Risk & Strategy Assessment',
+    solutionSlug: 'process-safety-sil',
+    solutionName: 'Functional Safety & SIL',
     steps: [
       { slug: 'fmea', name: 'FMEA Calculator', path: '/tools/fmea/', description: 'Evaluate failure modes and risk priority' },
       { slug: 'fta', name: 'Fault Tree Analysis', path: '/tools/fta/', description: 'Model top-down failure pathways' },
@@ -54,26 +80,34 @@ const PIPELINES: Pipeline[] = [
   {
     id: 'system-design',
     name: 'System Reliability Design',
+    solutionSlug: 'statistical-life-data',
+    solutionName: 'Life Data & Weibull',
     steps: [
       { slug: 'rbd', name: 'Reliability Block Diagram', path: '/tools/rbd/', description: 'Model series/parallel system configurations' },
       { slug: 'k-out-of-n', name: 'K-out-of-N Calculator', path: '/tools/k-out-of-n/', description: 'Calculate redundant system reliability' },
       { slug: 'reliability-allocation', name: 'Reliability Allocation', path: '/tools/reliability-allocation/', description: 'Distribute reliability targets across components' },
+      { slug: 'parts-count-mtbf', name: 'Parts Count MTBF', path: '/tools/parts-count-mtbf/', description: 'MIL-HDBK-217F electronic component predictions' },
       { slug: 'validator', name: 'System Validator', path: '/tools/validator/', description: 'Validate total system reliability compliance' },
     ]
   },
   {
     id: 'production-efficiency',
-    name: 'Production Efficiency Analysis',
+    name: 'Manufacturing OEE & Downtime Loss',
+    solutionSlug: 'manufacturing-oee',
+    solutionName: 'Manufacturing OEE',
     steps: [
       { slug: 'oee', name: 'OEE Calculator', path: '/tools/oee/', description: 'Measure Overall Equipment Effectiveness' },
       { slug: 'downtime-cost', name: 'Downtime Cost Calculator', path: '/tools/downtime-cost/', description: 'Quantify the financial impact of downtime' },
       { slug: 'pareto', name: 'Pareto Chart', path: '/tools/pareto/', description: 'Identify the vital few causes of losses' },
-      { slug: 'fishbone', name: 'Fishbone Diagram', path: '/tools/fishbone/', description: 'Root cause analysis with Ishikawa diagrams' },
+      { slug: 'spc', name: 'SPC Calculator', path: '/tools/spc/', description: 'Statistical Process Control and Cpk' },
+      { slug: 'error-budget', name: 'Error Budget Calculator', path: '/tools/error-budget/', description: 'Manage system availability budgets' }
     ]
   },
   {
     id: 'equipment-health',
-    name: 'Equipment Health Monitoring',
+    name: 'Rotating Equipment Health',
+    solutionSlug: 'maintenance-optimization',
+    solutionName: 'Maintenance Optimization',
     steps: [
       { slug: 'vibration-severity', name: 'Vibration Severity', path: '/tools/vibration-severity/', description: 'Check vibration levels per ISO 10816' },
       { slug: 'bearing-life', name: 'Bearing Life Calculator', path: '/tools/bearing-life/', description: 'Estimate bearing L10 fatigue life' },
@@ -83,7 +117,9 @@ const PIPELINES: Pipeline[] = [
   },
   {
     id: 'root-cause',
-    name: 'Root Cause Analysis Pipeline',
+    name: 'Root Cause Problem Solving',
+    solutionSlug: 'manufacturing-oee',
+    solutionName: 'Manufacturing OEE',
     steps: [
       { slug: 'fishbone', name: 'Fishbone Diagram', path: '/tools/fishbone/', description: 'Brainstorm potential root causes visually' },
       { slug: '5-why', name: '5 Why Analysis', path: '/tools/5-why/', description: 'Drill down to the true root cause' },
@@ -142,18 +178,30 @@ const CalculationPipeline: React.FC = () => {
 
         <div className="relative z-10">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
-              <Zap className="w-5 h-5 text-white" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">
+                  Next Step in Your Analysis
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  {best.pipeline.name} — Step {best.currentIndex + 1} of {best.pipeline.steps.length}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">
-                Next Step in Your Analysis
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                {best.pipeline.name} — Step {best.currentIndex + 1} of {best.pipeline.steps.length}
-              </p>
-            </div>
+
+            {best.pipeline.solutionSlug && (
+              <Link
+                to={`/solutions/${best.pipeline.solutionSlug}/`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-700 dark:text-cyan-300 rounded-xl text-xs font-bold transition-all w-fit"
+              >
+                <span>{best.pipeline.solutionName || 'Solution Hub'}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            )}
           </div>
 
           {/* Pipeline Progress Bar */}

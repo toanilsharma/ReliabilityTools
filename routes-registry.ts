@@ -1428,6 +1428,84 @@ export const ROUTES_REGISTRY: RouteRegistryEntry[] = [
   },
 
   // ==========================================
+  // 5B. TOPIC CLUSTERS & SOLUTIONS (type: industry)
+  // ==========================================
+  {
+    path: '/solutions/',
+    type: 'industry',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['CollectionPage', 'BreadcrumbList'],
+    titleTemplate: 'Industrial Reliability Engineering Solutions | Reliability Tools',
+    descriptionTemplate: 'Explore comprehensive reliability solution workflows: Maintenance Optimization, Functional Safety (SIL), Manufacturing OEE, and Statistical Life Data Modeling.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Solutions', path: '/solutions/' }
+    ]
+  },
+  {
+    path: '/solutions/maintenance-optimization/',
+    type: 'industry',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+    titleTemplate: 'Plant Maintenance & Asset Availability Solutions | Reliability Tools',
+    descriptionTemplate: 'Master industrial maintenance scheduling, MTBF, MTTR, availability modeling, and spare part optimization per ISO 14224 and SMRP standards.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Solutions', path: '/solutions/' },
+      { name: 'Maintenance & Availability', path: '/solutions/maintenance-optimization/' }
+    ]
+  },
+  {
+    path: '/solutions/process-safety-sil/',
+    type: 'industry',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+    titleTemplate: 'Functional Safety & Process Risk Solutions (SIL / IEC 61508) | Reliability Tools',
+    descriptionTemplate: 'Verify Safety Integrity Levels (SIL), calculate PFDavg, perform LOPA and Fault Tree Analysis compliant with IEC 61508, IEC 61511, and API 570.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Solutions', path: '/solutions/' },
+      { name: 'Functional Safety & SIL', path: '/solutions/process-safety-sil/' }
+    ]
+  },
+  {
+    path: '/solutions/manufacturing-oee/',
+    type: 'industry',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+    titleTemplate: 'Manufacturing OEE & Downtime Reduction Solutions | Reliability Tools',
+    descriptionTemplate: 'Eliminate production bottlenecks, quantify breakdown financial costs, and optimize Overall Equipment Effectiveness (OEE) per JIPM and ISO 22400.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Solutions', path: '/solutions/' },
+      { name: 'Manufacturing OEE', path: '/solutions/manufacturing-oee/' }
+    ]
+  },
+  {
+    path: '/solutions/statistical-life-data/',
+    type: 'industry',
+    indexable: true,
+    sitemapPriority: 0.9,
+    changefreq: 'weekly',
+    schemaTypes: ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+    titleTemplate: 'Statistical Life Data Analysis & Weibull Modeling Solutions | Reliability Tools',
+    descriptionTemplate: 'Perform Weibull 2P/3P regression, calculate MTBF confidence intervals, and model complex system reliability block diagrams per IEC 61649.',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Solutions', path: '/solutions/' },
+      { name: 'Life Data & Weibull', path: '/solutions/statistical-life-data/' }
+    ]
+  },
+
+  // ==========================================
   // 6. SKILL TEST & CERTIFICATION (type: utility)
   // ==========================================
   {

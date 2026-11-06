@@ -68,6 +68,8 @@ const InteractiveHub = lazy(() => import('./pages/InteractiveHub'));
 const ArticleView = lazy(() => import('./pages/ArticleView'));
 const IndustriesHub = lazy(() => import('./pages/IndustriesHub'));
 const IndustryView = lazy(() => import('./pages/IndustryView'));
+const SolutionsHub = lazy(() => import('./pages/Solutions/SolutionsHub'));
+const SolutionView = lazy(() => import('./pages/Solutions/SolutionView'));
 const ProfessorsToolkit = lazy(() => import('./pages/ProfessorsToolkit'));
 const PressKit = lazy(() => import('./pages/PressKit'));
 const WidgetBuilder = lazy(() => import('./pages/WidgetBuilder'));
@@ -187,6 +189,8 @@ const App: React.FC = () => {
 
               <Route path="industries" element={<IndustriesHub />} />
               <Route path="industries/:industrySlug" element={<IndustryView />} />
+              <Route path="solutions" element={<SolutionsHub />} />
+              <Route path="solutions/:solutionSlug" element={<SolutionView />} />
               <Route path="professors" element={<ProfessorsToolkit />} />
               <Route path="press" element={<PressKit />} />
               <Route path="embed" element={<WidgetBuilder />} />

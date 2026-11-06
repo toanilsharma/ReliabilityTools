@@ -544,6 +544,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://reliabilitytools.co.in/solutions/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/solutions/maintenance-optimization/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/solutions/process-safety-sil/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/solutions/manufacturing-oee/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reliabilitytools.co.in/solutions/statistical-life-data/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://reliabilitytools.co.in/skill-test/</loc>
     <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
