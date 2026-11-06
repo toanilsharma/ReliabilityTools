@@ -4,7 +4,13 @@ import { useLocation, Link } from 'react-router-dom';
 import ContextGlossaryPanel from './ContextGlossaryPanel';
 import SEO from './SEO';
 import { getSeoMetadata } from '../utils/seoConfig';
-import { createToolSchema, createFaqSchema } from '../utils/schemaGenerator';
+import { 
+    createToolSchema, 
+    createFaqSchema, 
+    createBreadcrumbSchema, 
+    createHowToSchema, 
+    BASE_URL 
+} from '../utils/schemaGenerator';
 
 import ToolToArticleBanner from './ToolToArticleBanner';
 import LearnByPlayingCard from './LearnByPlayingCard';
@@ -51,13 +57,23 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
         : null;
     const canonicalUrl = cleanCustomCanonical || defaultSeo.canonical;
 
-    // Structured JSON-LD Schemas
+    // Structured JSON-LD Schemas: WebApplication, FAQPage, BreadcrumbList, and HowTo
     const toolWebAppSchema = createToolSchema(title, description, canonicalUrl, customSchema);
-    const faqSchema = createFaqSchema(faqs);
+    const faqSchema = createFaqSchema(faqs || []);
+    const breadcrumbSchema = createBreadcrumbSchema([
+        { name: 'Home', url: `${BASE_URL}/` },
+        { name: 'Reliability Calculators', url: `${BASE_URL}/tools/mtbf/` },
+        { name: title, url: canonicalUrl }
+    ]);
+    const howToSchema = createHowToSchema(title, canonicalUrl);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <SEO canonicalUrl={canonicalUrl} keywords={keywords} schema={[toolWebAppSchema, faqSchema]} />
+            <SEO 
+                canonicalUrl={canonicalUrl} 
+                keywords={keywords} 
+                schema={[toolWebAppSchema, faqSchema, breadcrumbSchema, howToSchema].filter(Boolean)} 
+            />
 
             <div className="mb-10 text-center max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
@@ -121,42 +137,44 @@ const ToolContentLayout: React.FC<ToolContentLayoutProps> = ({
 
                     <CalculationPipeline />
 
-                    <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
-                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>
-                        <div className="space-y-4">
-                            {faqs.map((faq, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-all duration-200 hover:border-cyan-500/50 dark:hover:border-cyan-500/50"
-                                >
-                                    <button
-                                        onClick={() => toggleFaq(index)}
-                                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
-                                    >
-                                        <span className="text-lg font-semibold text-slate-900 dark:text-white pr-8">{faq.question}</span>
-                                        {openFaqIndex === index ? (
-                                            <ChevronUp className="w-5 h-5 text-cyan-500 flex-shrink-0" />
-                                        ) : (
-                                            <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                                        )}
-                                    </button>
+                    {faqs && faqs.length > 0 && (
+                        <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
+                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>
+                            <div className="space-y-4">
+                                {faqs.map((faq, index) => (
                                     <div
-                                        className={`transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                                            }`}
+                                        key={index}
+                                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-all duration-200 hover:border-cyan-500/50 dark:hover:border-cyan-500/50"
                                     >
-                                        <div className="px-6 pb-6 text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700/50 pt-4 mt-2">
-                                            <div dangerouslySetInnerHTML={{
-                                                __html: faq.answer
-                                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                                                    .replace(/\(\$\\beta\$\)/g, '(&beta;)')
-                                                    .replace(/\$\\beta\$/g, '&beta;')
-                                            }} />
+                                        <button
+                                            onClick={() => toggleFaq(index)}
+                                            className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                                        >
+                                            <span className="text-lg font-semibold text-slate-900 dark:text-white pr-8">{faq.question}</span>
+                                            {openFaqIndex === index ? (
+                                                <ChevronUp className="w-5 h-5 text-cyan-500 flex-shrink-0" />
+                                            ) : (
+                                                <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                                            )}
+                                        </button>
+                                        <div
+                                            className={`transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                                                }`}
+                                        >
+                                            <div className="px-6 pb-6 text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700/50 pt-4 mt-2">
+                                                <div dangerouslySetInnerHTML={{
+                                                    __html: faq.answer
+                                                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                                        .replace(/\(\$\\beta\$\)/g, '(&beta;)')
+                                                        .replace(/\$\\beta\$/g, '&beta;')
+                                                }} />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </div>
 
                 <div className="lg:col-span-1 space-y-8">

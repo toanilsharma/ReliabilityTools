@@ -126,6 +126,16 @@
 /tools/system-reliability/*       /tools/validator/          301!
 
 # --- Mechanical, Diagnostic & Problem Solving ---
+/api-570                          /tools/api-570-remaining-life/  301!
+/api-570/*                        /tools/api-570-remaining-life/  301!
+/api570                           /tools/api-570-remaining-life/  301!
+/api570/*                         /tools/api-570-remaining-life/  301!
+/tools/api-570                    /tools/api-570-remaining-life/  301!
+/tools/api-570/*                  /tools/api-570-remaining-life/  301!
+/tools/api570                     /tools/api-570-remaining-life/  301!
+/tools/api570/*                   /tools/api-570-remaining-life/  301!
+/tools/api-570-calculator         /tools/api-570-remaining-life/  301!
+/tools/api-570-calculator/*       /tools/api-570-remaining-life/  301!
 /fishbone                         /tools/fishbone/           301!
 /fishbone/*                       /tools/fishbone/           301!
 /5-why                            /tools/5-why/              301!

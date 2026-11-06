@@ -149,7 +149,7 @@ const LAB_ASSIGNMENTS: LabAssignment[] = [
     courseCode: 'ME-312',
     title: 'Hydrocarbon Piping Ultrasonic Thickness & Remaining Life Survey',
     objective: 'Calculate short-term/long-term corrosion rates, minimum structural thickness per ASME B31.3, and API 570 inspection intervals.',
-    toolPath: '/tools/api570/',
+    toolPath: '/tools/api-570-remaining-life/',
     toolName: 'API 570 Piping Inspection Calculator',
     problemStatement: 'An 8-inch Schedule 40 ASTM A106 Grade B hydrocarbon transfer line operating at 320 psig and 350°F is inspected via ultrasonic thickness gauging at a designated CML (Condition Monitoring Location).',
     givenData: 'Nominal wall = 0.322 in, Initial baseline (10 yrs ago) = 0.320 in, Previous inspection (5 yrs ago) = 0.285 in, Current actual thickness = 0.250 in, Allowable stress S = 20,000 psi, Joint efficiency E = 1.0, Piping OD = 8.625 in.',
