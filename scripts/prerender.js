@@ -568,17 +568,16 @@ function generateStaticHtml(route, templateHtml) {
     const semanticNoscript = `<noscript>${fullLandingHtml}</noscript>`;
     html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, semanticNoscript);
 
-    // If game or play route, also inject the landing shell inside #root alongside hidden loader
-    // This allows crawlers reading the DOM before JS executes to index full H1, how-to-play, FAQs!
-    // React replaces #root cleanly upon client hydration/mount.
-    if (isGameRoute || normalizedRoute === '/play/' || normalizedRoute === '/skill-test/') {
-      const rootShell = `
+    // Inject the landing shell inside #root alongside hidden loader for all non-root routes
+    // This allows search engine crawlers and LLM grounding bots reading the initial DOM to index
+    // full H1, descriptions, formulas, standards, and FAQs immediately without executing JS.
+    // React replaces #root cleanly via createRoot upon client mount with zero hydration mismatch.
+    const rootShell = `
   <div id="root">
     <div class="initial-loader" style="display:none;" aria-hidden="true"></div>
     ${fullLandingHtml}
   </div>`;
-      html = html.replace(/<div id="root">[\s\S]*?<\/div>/i, rootShell);
-    }
+    html = html.replace(/<div id="root">[\s\S]*?<\/div>/i, rootShell);
   }
 
   return html;
