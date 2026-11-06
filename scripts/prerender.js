@@ -564,11 +564,7 @@ function generateStaticHtml(route, templateHtml) {
       </div>
     `;
 
-    // Replace noscript
-    const semanticNoscript = `<noscript>${fullLandingHtml}</noscript>`;
-    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, semanticNoscript);
-
-    // Inject the landing shell inside #root alongside hidden loader for all non-root routes
+    // 1. Inject the landing shell inside #root alongside hidden loader for all non-root routes
     // This allows search engine crawlers and LLM grounding bots reading the initial DOM to index
     // full H1, descriptions, formulas, standards, and FAQs immediately without executing JS.
     // React replaces #root cleanly via createRoot upon client mount with zero hydration mismatch.
@@ -576,8 +572,12 @@ function generateStaticHtml(route, templateHtml) {
   <div id="root">
     <div class="initial-loader" style="display:none;" aria-hidden="true"></div>
     ${fullLandingHtml}
-  </div>`;
-    html = html.replace(/<div id="root">[\s\S]*?<\/div>/i, rootShell);
+  </div>\n\n  `;
+    html = html.replace(/<div id="root">[\s\S]*?(?=\s*<noscript>)/i, rootShell);
+
+    // 2. Replace noscript cleanly
+    const semanticNoscript = `<noscript>${fullLandingHtml}</noscript>`;
+    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, semanticNoscript);
   }
 
   return html;
